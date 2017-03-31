@@ -46,11 +46,11 @@ describe('LogoItem', function() {
     expect(updateMock.mock.calls.length).toBe(2)
   })
 
-  it('should link SPs to the network section', () => {
+  it('should link SPs to the dashboard section', () => {
     const serviceProvider = Immutable.Map({account_id: 1, roles: Immutable.List([3])})
     const component = subject({user: serviceProvider})
     component.instance().componentDidMount()
-    expect(component.state().logoLink).toBe('/network/udn/1')
+    expect(component.state().logoLink).toBe('/dashboard/udn/1')
   })
 
   it('should link non-SPs to the content section', () => {

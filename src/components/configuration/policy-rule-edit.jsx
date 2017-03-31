@@ -121,12 +121,15 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      const set = this.props.config.getIn(path.slice(0, -2))
+
+      const set = this.props.config.getIn(path)
+      const oldIndex = path.get(path.size - 1)
       const updated = this.props.config
-        .getIn(path.slice(0, -3))
-        .filterNot((val, i) => i === path.get(path.size-3))
+        .getIn(path.slice(0, -1))
+        .delete(oldIndex)
         .insert(newIndex, set)
-      this.props.changeValue(path.slice(0, -3), updated)
+
+      this.props.changeValue(path.slice(0, -1), updated)
       this.props.activateSet(null)
     }
   }

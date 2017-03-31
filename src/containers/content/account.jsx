@@ -42,6 +42,7 @@ import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 import checkPermissions, { getLocationPermissions } from '../../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
 
 export class Account extends React.Component {
   constructor(props) {
@@ -168,7 +169,7 @@ export class Account extends React.Component {
     const { accountManagementModal, activeAccount, activeGroup, roles, user } = this.props
 
     const nextPageURLBuilder = (groupID) => {
-      if (activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
+      if ((activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) || (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)) {
         return getContentUrl('group', groupID, this.props.params)
       } else {
         return getNetworkUrl('group', groupID, this.props.params)
