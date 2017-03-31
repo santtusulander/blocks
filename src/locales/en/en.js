@@ -342,7 +342,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.matcher.equals.text': 'Equals',
   'portal.policy.edit.matcher.doesntEqual.text': 'Does not equal',
   'portal.policy.edit.matcher.empty.text': 'Empty',
-  'portal.policy.edit.matcher.doesntEmpty.text': 'Does not empty',
+  'portal.policy.edit.matcher.doesntEmpty.text': 'Not empty',
   'portal.policy.edit.matcher.name.text': 'Name',
   'portal.policy.edit.mimetype.header': 'MIME Type',
   'portal.policy.edit.mimetype.disclaimer': 'Match one or more MIME types like text/html, application/javascript',

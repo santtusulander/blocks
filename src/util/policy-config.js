@@ -1,5 +1,6 @@
+import React from 'react'
 import Immutable, { fromJS, List } from 'immutable'
-
+import { FormattedMessage } from 'react-intl'
 import { flatten } from '../util/helpers'
 import {
   POLICY_TYPES
@@ -51,25 +52,25 @@ export function getMatchFilterType(item) {
 export function getConditionFilterText(match) {
   switch(match.filterType) {
     case 'exists':
-      return 'Exists'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.exists.text"/>
     case 'does_not_exist':
-      return 'Does not exist'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntExist.text"/>
     case 'contains':
-      return `Contains: ${match.values}`
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.contains.text" values={match}/>
     case 'does_not_contain':
-      return `Does not contain: ${match.values}`
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
     case 'in':
-      return 'Users from'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.from.text"/>
     case 'not_in':
-      return 'Users not from'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.notFrom.text"/>
     case 'equals':
-      return 'Equals'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
     case 'does_not_equal':
-      return 'Does not equal'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text"/>
     case 'empty':
-      return 'Is empty'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
-      return 'Is not empt'
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
   }
 }
 
