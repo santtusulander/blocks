@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
-import countries from '../../../constants/country-list'
+import countriesList from '../../../constants/country-list'
 import { checkForErrors } from '../../../util/helpers'
 
 import Typeahead from '../../form/field-form-group-typeahead'
@@ -30,7 +30,7 @@ const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmi
         component={Typeahead}
         placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.country.input.placeholder" })}
         multiple={true}
-        options={countries}
+        options={countriesList}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.country" />}/>
       <FormFooterButtons>
         <Button

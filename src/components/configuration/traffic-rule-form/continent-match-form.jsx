@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
-import continents from '../../../constants/continents'
+import continentsList from '../../../constants/continents'
 import { checkForErrors } from '../../../util/helpers'
 
 import Typeahead from '../../form/field-form-group-typeahead'
@@ -13,7 +13,7 @@ const validate = ({ continents }) => checkForErrors({ continents })
 
 const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
-  const options = continents.map(({ id, labelId }) => ({ id, label: intl.formatMessage({ id: labelId }) }))
+  const options = continentsList.map(({ id, labelId }) => ({ id, label: intl.formatMessage({ id: labelId }) }))
 
   const saveMatch = values => {
     const labelText = values.continents.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
