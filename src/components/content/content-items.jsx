@@ -127,16 +127,16 @@ class ContentItems extends React.Component {
   getCustomSortPath(tag) {
     const [sortBy] = this.props.sortValuePath
 
-    if( sortBy === 'items') {
-      if(tag === 'storages') {
+    if (sortBy === 'items') {
+      if (tag === 'storages') {
         return Immutable.fromJS(['ingest_point_id'])
       }
-      if(tag === 'properties') {
+      if (tag === 'properties') {
         return Immutable.fromJS(['published_host_id'])
       }
     }
 
-    return Immutable.fromJS(['published_host_id'])
+    return Immutable.fromJS(['totalTraffic'])
   }
 
   showNotification(message) {
