@@ -5,7 +5,6 @@ import { Button, Modal, Table, Nav, NavItem, FormControl } from 'react-bootstrap
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import moment from 'moment'
 
 import HasServicePermission from '../../has-service-permission'
 
@@ -143,7 +142,7 @@ export class TokenAuth extends React.Component {
       okButton: true,
       cancelButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog()
-      // UDNP-**** this part should be uncommented whenever we have the sample codes
+      // UDNP-3154 this part should be uncommented whenever we have the sample codes
       // auxiliaryButton: {
       //   handler: () => this.showSampleCodeDialog(),
       //   text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text" />
@@ -184,7 +183,7 @@ export class TokenAuth extends React.Component {
   }
 
   showNotification(message) {
-    // UDNP-**** toast notification element won't be visible because it's under the Token Authentication modal!
+    // UDNP-3154 toast notification element won't be visible because it's under the Token Authentication modal!
     // So if we want to show a message about copy operation status we should find another way
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeSidePanelNotification(message)
@@ -204,14 +203,10 @@ export class TokenAuth extends React.Component {
     const schemaOptions = schema.map(item => (
       SCHEMA_OPTIONS.filter(({value}) => value === item)[0]
     ))
-    const tokenValues = {
-      USER_AGENT: navigator.userAgent,
-      EXPIRES: moment().add(6, 'hour')
-    }
-    const schemaRows = generateStaticTokenTableData(schema, tokenValues)
-    const tokenData = generateTokenData(schema, tokenValues)
+    const schemaRows = generateStaticTokenTableData(schema)
+    const tokenData = generateTokenData(schema)
     const tokenHash = generateTokenHash(encryption, sharedKey, tokenData)
-    const finalURL = generateFinalURL(undefined, tokenHash, getQueryArguments(schema, tokenValues))
+    const finalURL = generateFinalURL(tokenHash, getQueryArguments(schema))
 
     const tableRows = [
       {

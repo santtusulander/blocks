@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const deploymentModes = {
   production: 'portal.configuration.details.deploymentMode.production',
   trial: 'portal.configuration.details.deploymentMode.trial',
@@ -53,7 +55,9 @@ export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
 export const STATIC_TOKEN_SAMPLE_VALUES = {
   IP:'10.130.1.2',
   URL: 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8',
-  REFERRER: 'www.video.com'
+  REFERRER: 'www.video.com',
+  EXPIRES: moment().add(6, 'hour'),
+  USER_AGENT: navigator.userAgent
 }
 
 export const SCHEMA_DEFAULT = ['URL']

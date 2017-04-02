@@ -3,9 +3,9 @@ import moment from 'moment'
 
 import { SCHEMA_LABEL_MAP, STATIC_TOKEN_SAMPLE_VALUES } from '../constants/configuration'
 
-export const generateStaticTokenTableData = (schema, values) => (
+export const generateStaticTokenTableData = (schema, values = STATIC_TOKEN_SAMPLE_VALUES) => (
   schema.map(item => {
-    let value = values[item] || STATIC_TOKEN_SAMPLE_VALUES[item]
+    let value = values[item]
     if (item === 'EXPIRES') {
       value = moment(value).utc()
     }
@@ -17,7 +17,7 @@ export const generateStaticTokenTableData = (schema, values) => (
   })
 )
 
-export const generateTokenData = (schema, values) => (
+export const generateTokenData = (schema, values = STATIC_TOKEN_SAMPLE_VALUES) => (
   schema.reduce((tokenDataString, item) => {
     switch (item) {
       case 'EXPIRES':
@@ -43,8 +43,8 @@ export const generateTokenHash = (method, key, string) => {
   }
 }
 
-export const generateFinalURL = (url = STATIC_TOKEN_SAMPLE_VALUES.URL, token, queryArguments) => {
-  let finalURL = url
+export const generateFinalURL = (token, queryArguments) => {
+  let finalURL = STATIC_TOKEN_SAMPLE_VALUES.URL
   if (finalURL.indexOf('http') !== 0) {
     finalURL = `http://${finalURL}`
   }
@@ -54,7 +54,7 @@ export const generateFinalURL = (url = STATIC_TOKEN_SAMPLE_VALUES.URL, token, qu
   ), finalURL)
 }
 
-export const getQueryArguments = (schema, values) => {
+export const getQueryArguments = (schema, values = STATIC_TOKEN_SAMPLE_VALUES) => {
   let queryArguments = []
   if (schema.indexOf('EXPIRES') > -1) {
     queryArguments.push(`expires=${values.EXPIRES}`)
