@@ -1,4 +1,6 @@
-import { HmacMD5, HmacSHA1, HmacSHA256, MD5, enc } from 'crypto-js'
+// import { HmacMD5, HmacSHA1, HmacSHA256, MD5, enc } from 'crypto-js'
+import md5 from 'blueimp-md5'
+import jsSHA from 'jssha'
 import moment from 'moment'
 
 import { SCHEMA_LABEL_MAP, STATIC_TOKEN_SAMPLE_VALUES } from '../constants/configuration'
@@ -33,29 +35,39 @@ export const generateTokenData = (schema, values = STATIC_TOKEN_SAMPLE_VALUES) =
 export const generateTokenHash = (method, key, string) => {
   switch (method) {
     case 'HMAC_MD5':
-      return HmacMD5(string, key).toString(enc.Hex)
+      return md5(string, key)
+      // return HmacMD5(string, key).toString(enc.Hex)
     case 'HMAC_SHA1':
-      return HmacSHA1(string, key).toString(enc.Hex)
+      const sha1Obj = new jsSHA('SHA-1', "TEXT")
+      sha1Obj.setHMACKey(key, "TEXT")
+      sha1Obj.update(string)
+      return sha1Obj.getHMAC("HEX")
+      // return HmacSHA1(string, key).toString(enc.Hex)
     case 'HMAC_SHA256':
-      return HmacSHA256(string, key).toString(enc.Hex)
+      const sha256Obj = new jsSHA('SHA-256', "TEXT")
+      sha256Obj.setHMACKey(key, "TEXT")
+      sha256Obj.update(string)
+      return sha256Obj.getHMAC("HEX")
+      // return HmacSHA256(string, key).toString(enc.Hex)
     case 'MD5':
-      return MD5(string).toString(enc.Hex)
+      return md5(string)
+      // return MD5(string).toString(enc.Hex)
   }
 }
 
 export const generateFinalURL = (token, queryArguments) => {
-  let finalURL = STATIC_TOKEN_SAMPLE_VALUES.URL
-  if (finalURL.indexOf('http') !== 0) {
-    finalURL = `http://${finalURL}`
+  let url = STATIC_TOKEN_SAMPLE_VALUES.URL
+  if (url.indexOf('http') !== 0) {
+    url = `http://${url}`
   }
-  finalURL = `${finalURL}?token=${token}`
+  url = `${url}?token=${token}`
   return queryArguments.reduce((finalURL, argument) => (
     `${finalURL}&${argument}`
-  ), finalURL)
+  ), url)
 }
 
 export const getQueryArguments = (schema, values = STATIC_TOKEN_SAMPLE_VALUES) => {
-  let queryArguments = []
+  const queryArguments = []
   if (schema.indexOf('EXPIRES') > -1) {
     queryArguments.push(`expires=${values.EXPIRES}`)
   }

@@ -21,8 +21,9 @@ const getAlignStyle = (textAlign) => {
  */
 const FormFooterButtons = ({children, align, className}) => {
   const alignItems = getAlignStyle(align);
+  const cssClasses = className ? `modal-footer ${className}` : 'modal-footer'
   return (
-    <div className={`modal-footer ${className}`} style={alignItems}>
+    <div className={cssClasses} style={alignItems}>
       <ButtonToolbar>
         {children}
       </ButtonToolbar>
