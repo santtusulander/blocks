@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -30,6 +30,9 @@ import * as filterActionCreators from '../redux/modules/filters'
 import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
+
+import accountActions from '../redux/modules/entities/accounts/actions'
+import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
 import groupActions from '../redux/modules/entities/groups/actions'
 import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
@@ -91,7 +94,8 @@ export class Dashboard extends React.Component {
     if (this.props.activeAccount !== nextProps.activeAccount) {
       this.props.filterActions.resetContributionFilters()
     }
-    if ((prevParams !== params || this.props.filters !== nextProps.filters || this.props.activeAccount !== nextProps.activeAccount) && nextProps.activeAccount.size !== 0) {
+
+    if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
     // TODO: remove this timeout as part of UDNP-1426
@@ -111,9 +115,12 @@ export class Dashboard extends React.Component {
   fetchData(urlParams, filters, activeAccount) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
+      const {brand, account: id} = urlParams
+      this.props.fetchAccount({brand, id})
+
       const params = { brand: urlParams.brand, account: urlParams.account }
 
-      let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
       const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
         ? ACCOUNT_TYPE_CONTENT_PROVIDER
@@ -145,7 +152,7 @@ export class Dashboard extends React.Component {
             groupIds = this.props.getGroupIds()
           }
           return Promise.all([
-            ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
+            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
             this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
           ])
         })
@@ -155,7 +162,8 @@ export class Dashboard extends React.Component {
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
         fetchProviders,
         fetchStorageData
-      ]).then(this.props.dashboardActions.finishFetching)
+      ])
+      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
     }
   }
 
@@ -174,9 +182,9 @@ export class Dashboard extends React.Component {
   }
 
   getCityData(south, west, north, east) {
-    const { params, filters } = this.props
+    const { params: { brand, account }, filters } = this.props
     return getCitiesWithinBounds({
-      params,
+      params: { brand, account },
       filters,
       coordinates: { south, west, north, east },
       actions: this.props.trafficActions
@@ -187,7 +195,7 @@ export class Dashboard extends React.Component {
     const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
 
     if (!activeAccount.size) {
-      return(
+      return (
         <div className="text-center">
           <FormattedMessage id="portal.dashboard.selectAccount.text" values={{br: <br/>}} />
         </div>
@@ -444,6 +452,7 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
+  fetchAccount: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -465,7 +474,7 @@ Dashboard.propTypes = {
 
 Dashboard.contextTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(List)
+  roles: PropTypes.instanceOf(Map)
 }
 
 Dashboard.defaultProps = {
@@ -475,10 +484,10 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
-function mapStateToProps(state, { params: { account } }) {
+const mapStateToProps = (state, { params: { account } }) => {
   return {
     getGroupIds: () => getIdsByAccount(state, account),
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: getAccountById(state, account),
     dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
@@ -490,8 +499,9 @@ function mapStateToProps(state, { params: { account } }) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
     fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),

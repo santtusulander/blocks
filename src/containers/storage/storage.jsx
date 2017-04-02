@@ -3,13 +3,13 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { withRouter } from 'react-router'
+import moment from 'moment'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getStorageAccessKey } from '../../redux/modules/user'
 
-import { UPLOAD_FILE } from '../../redux/modules/http-file-upload/actionTypes'
-import actions from '../../redux/modules/http-file-upload/actions'
+import uploadActions from '../../redux/modules/http-file-upload/actions'
 
 import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -38,17 +38,18 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
-import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+
+const FORMAT = '0,0.0'
 
 class Storage extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      asperaUpload: false
+      asperaUpload: false,
+      fileUploader: null
     }
-
-    this.fileUploader = null
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
@@ -59,16 +60,25 @@ class Storage extends Component {
 
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
+      const { brand, account, group, storage } = this.props.params
       this.props.fetchStorage({
-        brand: this.props.params.brand,
-        account: this.props.params.account,
-        group: this.props.params.group,
-        id: this.props.params.storage
+        brand: brand,
+        account: account,
+        group: group,
+        id: storage
       })
 
-      const { params, filters } = this.props
-      const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
-      this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+      const metricsOpts = {
+        brand: brand,
+        account: account,
+        group: group,
+        ingest_point: storage,
+        list_children: false,
+        startDate: moment().utc().startOf('month').format('X'),
+        endDate: moment.utc().endOf('day').format('X')
+      }
+
+      this.props.fetchStorageMetrics({...metricsOpts})
 
       this.props.fetchClusters({})
     }
@@ -93,8 +103,10 @@ class Storage extends Component {
    * @param action {object} - action with type and payload
    */
   initFileUploader(action) {
-    const { gatewayHostname, initUploadProgressHandler } = this.props
-    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, initUploadProgressHandler)
+    const { gatewayHostname, uploadHandlers } = this.props
+    this.setState({
+      fileUploader: FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers)
+    })
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -165,7 +177,7 @@ class Storage extends Component {
                 contents={storageContents}
                 asperaUpload={this.state.asperaUpload}
                 onMethodToggle={this.toggleUploadMehtod}
-                fileUploader={this.fileUploader}
+                fileUploader={this.state.fileUploader}
               />
             </PageContainer>
 
@@ -196,18 +208,17 @@ Storage.propTypes = {
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
-  filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
   initStorageAccessKey: PropTypes.func,
-  initUploadProgressHandler: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
   storageContents: PropTypes.array,
   storageMetrics: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uploadHandlers: PropTypes.object
 }
 
 Storage.defaultProps = {
@@ -228,10 +239,8 @@ Storage.defaultProps = {
   }
 }
 
-const getMockContents = (storage) => (
-  storage === 'with-contents'
-  ?
-  [
+const getMockContents = (storage) => {
+  return storage === 'with-contents' ? [
     {
       type: 'file',
       lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
@@ -254,16 +263,14 @@ const getMockContents = (storage) => (
       status: 'Failed',
       noOfFiles: 800
     }
-  ]
-  :
-    []
-  )
+  ] : []
+}
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const average = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'average']) : 0
-  const current = formatBytesToUnit(average, unit)
-  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
+  const ending = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'ending']) : 0
+  const current = formatBytesToUnit(ending, unit, FORMAT)
+  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit, FORMAT) : 0
   const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
   const locations = storage.get('clusters').map((cluster) => {
@@ -328,11 +335,11 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
-    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
-    fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
-    initUploadProgressHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params)),
+    uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
     toggleModal: uiActions.toggleAccountManagementModal
   }

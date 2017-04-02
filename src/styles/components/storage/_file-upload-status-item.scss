@@ -33,6 +33,9 @@ $upload-status-item-icon-width: rem(45px);
 
   > svg {
     fill: $pale-blue !important;
+    .error & {
+      fill: rgba($red-60, 0.4) !important;
+    }
   }
 }
 
@@ -46,6 +49,9 @@ $upload-status-item-icon-width: rem(45px);
 .file-upload-status-item-name {
   color: $pale-blue;
   white-space: nowrap;
+  .error & {
+    color: rgba($red-60, 0.8);
+  }
 }
 
 .file-upload-status-progress {

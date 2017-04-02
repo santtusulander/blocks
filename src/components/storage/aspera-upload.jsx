@@ -75,7 +75,7 @@ class AsperaUpload extends Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
     }
@@ -282,13 +282,13 @@ class AsperaUpload extends Component {
     )
 
     return (
-      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+      <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
              className="filedrop-container"
              onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
 
           <div className={classNames}>
-            <div className="welcome-text">
+            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
               { this.displayInsideDropZone() }
             </div>
           </div>

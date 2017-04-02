@@ -2,8 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 
 const SectionContainer = ({ className, children }) => {
-  let customClassName = className || '';
-  let finalClassName = classNames(
+  const customClassName = className || '';
+  const finalClassName = classNames(
     'section-container',
     customClassName
   );

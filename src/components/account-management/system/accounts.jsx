@@ -45,7 +45,7 @@ class AccountList extends Component {
     router.setRouteLeaveHook(route, this.shouldLeave)
 
     //TODO: get brand from redux
-    accountActions.fetchAccounts( this.props.params.brand )
+    accountActions.fetchAccounts(this.props.params.brand)
 
     //fetch serviceInfo from API
     fetchServiceInfo()
@@ -78,14 +78,14 @@ class AccountList extends Component {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
       }
-      else if(aVal > bVal) {
+      else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -134,8 +134,8 @@ class AccountList extends Component {
       this.state.sortDir
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
-    const services = values => values.map( service => {
-      const serviceDetails = this.props.servicesInfo.find( obj => obj.get('id') === service.get('id') )
+    const services = values => values.map(service => {
+      const serviceDetails = this.props.servicesInfo.find(obj => obj.get('id') === service.get('id'))
       return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
@@ -234,7 +234,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

@@ -28,11 +28,11 @@ const validate = (values) => {
     serviceType
   } = values
 
-  if(!hostName) {
+  if (!hostName) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.required" />
   }
 
-  if( hostName && !isValidHostName(hostName)) {
+  if (hostName && !isValidHostName(hostName)) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.invalid" />
   }
 
@@ -55,7 +55,7 @@ class AddHost extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }){
+  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }) {
     const res = this.props.createHost(hostName, deploymentMode, serviceType)
 
     return res.catch((error) => {
@@ -65,7 +65,7 @@ class AddHost extends React.Component {
     })
   }
 
-  onCancel(){
+  onCancel() {
     return this.props.cancelChanges()
   }
 
@@ -183,7 +183,7 @@ function mapStateToProps(state, ownProps) {
   let hasMDSupport = false
 
   enabledServices.forEach((service) => {
-    let serviceId = service.get('service_id')
+    const serviceId = service.get('service_id')
     if (serviceId === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     } else if (serviceId === MEDIA_DELIVERY_SERVICE_ID) {

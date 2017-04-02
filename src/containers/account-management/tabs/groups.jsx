@@ -59,7 +59,7 @@ class AccountManagementAccountGroups extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account !== this.props.params.account) {
       const { brand, account } = nextProps.params
       this.props.userActions.fetchUsers(brand, account)
     }
@@ -92,7 +92,7 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
-  validateInlineAdd({name = ''}){
+  validateInlineAdd({name = ''}) {
     const conditions = {
       name: [
         {
@@ -133,7 +133,7 @@ class AccountManagementAccountGroups extends React.Component {
     return true
   }
 
-  filteredData( groupName ) {
+  filteredData(groupName) {
     return this.props.groups.filter((group) => {
       return group.get('name').toLowerCase().includes(groupName)
     })
@@ -196,6 +196,7 @@ class AccountManagementAccountGroups extends React.Component {
                 user.get('group_id').includes(group.get('id'))
               )
               .map(user => user.get('email'))
+            const disabledDeleteButton = String(group.get('id')) === String(this.props.params.group)
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
@@ -206,7 +207,7 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                    <ActionButtons onEdit={() => {this.props.showGroupModal(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                    <ActionButtons onEdit={() => {this.props.showGroupModal(group)}} onDelete={() => {this.props.deleteGroup(group)}} deleteDisabled={disabledDeleteButton}/>
                   </IsAllowed>
                 </td>
               </tr>

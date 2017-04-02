@@ -11,11 +11,11 @@ const FieldTelephoneInput = ({ input, meta, label, required, disabled, ErrorComp
     <FormGroup controlId={input.name} validationState={meta.error ? 'error' : null}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
       <ReactTelephoneInput
-        initialValue={`+${input.value.phone_country_code} ${input.value.phone_number}`}
-        onChange={(val, {dialCode})=> {
+        value={`+${input.value.phone_country_code} ${input.value.phone_number}`}
+        onChange={(val, {dialCode}) => {
 
           const countryCode = dialCode
-          const phoneNumber = stripNonNumeric( stripCountryCode( val, countryCode ) )
+          const phoneNumber = stripNonNumeric(stripCountryCode(val, countryCode))
 
           input.onChange({phone_number: phoneNumber, phone_country_code: countryCode})
         }}

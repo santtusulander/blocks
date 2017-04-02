@@ -1,35 +1,42 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, {PropTypes} from 'react'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl';
 
 import {
   getAnalyticsUrlFromParams,
   getContentUrl,
-  getNetworkUrl
-} from '../util/routes.js'
+  getDashboardUrl
+} from '../../util/routes.js'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as uiActionCreators from '../redux/modules/ui'
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
+import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
+import * as accountActionCreators from '../../redux/modules/account'
+
+import * as metricsActionCreators from '../../redux/modules/metrics'
+import * as uiActionCreators from '../../redux/modules/ui'
+
 
 import {
   filterMetricsByAccounts,
   userIsCloudProvider,
   userIsServiceProvider
-} from '../util/helpers'
+} from '../../util/helpers'
 
-import ContentItems from '../components/content/content-items'
+import ContentItems from '../../components/content/content-items'
 
-import * as PERMISSIONS from '../constants/permissions'
-import checkPermissions from '../util/permissions'
-import PROVIDER_TYPES from '../constants/provider-types'
-import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
+import * as PERMISSIONS from '../../constants/permissions'
+import checkPermissions from '../../util/permissions'
+import PROVIDER_TYPES from '../../constants/provider-types'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
-import { FormattedMessage } from 'react-intl';
 
-export class Accounts extends React.Component {
+export class Brand extends React.Component {
   constructor(props) {
     super(props);
     this.deleteAccount = this.deleteAccount.bind(this)
@@ -48,17 +55,28 @@ export class Accounts extends React.Component {
   }
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
   createAccount(brand, id, data) {
-    return this.props.accountActions.createAccount(brand, data)
+    return this.props.createAccount({brand, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   editAccount(brand, id, data) {
-    return this.props.accountActions.updateAccount(brand, id, data)
+    return this.props.updateAccount({brand, id, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   deleteAccount(id) {
-    this.props.accountActions.deleteAccount(this.props.params.brand, id)
+    const {brand} = this.props.params
+    return this.props.removeAccount({brand, id})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
+
   render() {
     const { brand } = this.props.params
     const {
@@ -80,7 +98,7 @@ export class Accounts extends React.Component {
     const showAccountList = activeAccount.isEmpty() && userIsCloudProvider(currentUser)
     const contentItems = showAccountList
                       ? accounts
-                      : Immutable.List.of(activeAccount)
+                      : List.of(activeAccount)
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
@@ -92,7 +110,7 @@ export class Accounts extends React.Component {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
         return getContentUrl('groups', accountID, this.props.params)
       } else {
-        return getNetworkUrl('groups', accountID, this.props.params)
+        return getDashboardUrl('account', accountID, this.props.params)
       }
     }
     const analyticsURLBuilder = (...account) => {
@@ -129,48 +147,56 @@ export class Accounts extends React.Component {
         type={CONTENT_ITEMS_TYPES.ACCOUNT}
         user={user}
         viewingChart={viewingChart}
-        fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
+        fetchItem={(id) => {
+          /*eslint-disable no-console */
+          //console.warn('fetchItem will be deprecated in UDNP-3177')
+          return this.props.oldAccountActions.fetchAccount(brand, id)
+        }}
       />
     )
   }
 }
 
-Accounts.displayName = 'Accounts'
-Accounts.propTypes = {
-  accountActions: React.PropTypes.object,
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  fetchData: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  sortDirection: React.PropTypes.number,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
-}
-Accounts.defaultProps = {
-  accounts: Immutable.List(),
-  activeAccount: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  metrics: Immutable.List(),
-  roles: Immutable.List(),
-  user: Immutable.Map()
+Brand.displayName = 'Brand'
+Brand.propTypes = {
+  accounts: PropTypes.instanceOf(List),
+  activeAccount: PropTypes.instanceOf(Map),
+  createAccount: PropTypes.func,
+  dailyTraffic: PropTypes.instanceOf(List),
+  fetchData: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  metrics: PropTypes.instanceOf(List),
+  oldAccountActions: PropTypes.object,
+  params: PropTypes.object,
+  removeAccount: PropTypes.func,
+  roles: PropTypes.instanceOf(Map),
+  sortDirection: PropTypes.number,
+  sortValuePath: PropTypes.instanceOf(List),
+  uiActions: PropTypes.object,
+  updateAccount: PropTypes.func,
+  user: PropTypes.instanceOf(Map),
+  viewingChart: PropTypes.bool
 }
 
-function mapStateToProps(state) {
+Brand.defaultProps = {
+  accounts: List(),
+  activeAccount: Map(),
+  dailyTraffic: List(),
+  metrics: List(),
+  roles: Map(),
+  user: Map()
+}
+
+const mapStateToProps = (state, ownProps) => {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    accounts: state.account.get('allAccounts'),
+    activeAccount: getAccountById(state, ownProps.params.account),
+    accounts: getByBrand(state, ownProps.params.brand),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
-    fetching: state.account.get('fetching'),
+    fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),
@@ -178,10 +204,14 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+const mapDispatchToProps = (dispatch, ownProps) => {
+
+  const {brand, account} = ownProps.params
+
+  const oldAccountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  let metricsOpts = {
+
+  const metricsOpts = {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
@@ -189,13 +219,14 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
       if (!canListAccounts) {
-        metricsOpts.account = ownProps.params.account;
+        metricsOpts.account = ownProps.params.account
+        metricsOpts.list_children = false
+        dispatch(accountActions.fetchOne({brand, id: account}))
+      } else {
+        metricsOpts.list_children = true
+        dispatch(accountActions.fetchAll({brand}))
       }
-      metricsOpts.list_children = !!canListAccounts;
-      if(accounts.isEmpty() && canListAccounts) {
-        accountActions.startFetching()
-        accountActions.fetchAccounts(ownProps.params.brand)
-      }
+
       metricsActions.startAccountFetching()
       metricsActions.fetchAccountMetrics(metricsOpts)
       // TODO: Replace metrics endpoint with traffic endpoint after 0.7
@@ -204,9 +235,14 @@ function mapDispatchToProps(dispatch, ownProps) {
       //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
       metricsActions.fetchDailyAccountTraffic(metricsOpts)
     },
-    accountActions: accountActions,
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+
+    oldAccountActions,
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+
+    createAccount: (params) => dispatch(accountActions.create(params)),
+    updateAccount: (params) => dispatch(accountActions.update(params)),
+    removeAccount: (params) => dispatch(accountActions.remove(params))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Accounts);
+export default connect(mapStateToProps, mapDispatchToProps)(Brand);

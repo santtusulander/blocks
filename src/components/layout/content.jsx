@@ -3,7 +3,7 @@ import React from 'react'
 class Content extends React.Component {
   render() {
     let className = 'content-layout';
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className;
     }
     return (

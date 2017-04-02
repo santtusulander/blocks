@@ -16,7 +16,7 @@ const colorThemeOptions = [
   { id: '1', themeName: 'Theme Name 1' },
   { id: '2', themeName: 'Theme Name 2' },
   { id: '3', themeName: 'Theme Name 3' }
-].map( (e) => {
+].map((e) => {
   return [ e.id, e.themeName]
 });
 
@@ -45,7 +45,9 @@ const BrandEditForm = (props) => {
         title={title}
         className="brand-edit-form-sidebar"
         subTitle="PLACEHOLDER"
-        cancel={() => {}}>
+        cancel={() => {
+          // no-op
+        }}>
 
         <form onSubmit={props.handleSubmit(onSubmit)}>
 

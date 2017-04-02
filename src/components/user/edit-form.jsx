@@ -42,8 +42,8 @@ const validate = (values) => {
   } = values
 
   if (changingPassword) {
-    if ( !(current_password && new_password && validPass) ) errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
-    if ( new_password && !validPass ) errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
+    if (!(current_password && new_password && validPass)) errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
+    if (new_password && !validPass) errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
   } else {
     if (!first_name) {
       errors.first_name = <FormattedMessage id="portal.user.edit.firstNameRequired.text" />
@@ -95,14 +95,14 @@ class UserEditForm extends React.Component {
     }
   }
 
-  onSubmit(values){
+  onSubmit(values) {
     //strip out unneeded values
     const {tfa_toggle, tfa} = values;
 
     const data = {
       first_name: values.first_name,
       middle_name: values.middle_name,
-      last_name:  values.last_name,
+      last_name: values.last_name,
       phone_country_code: values.phone.phone_country_code,
       phone_number: values.phone.phone_number
     }
@@ -130,7 +130,7 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          throw new SubmissionError( {'current_password': response.payload.message})
+          throw new SubmissionError({'current_password': response.payload.message})
         } else {
           /* eslint-disable no-unused-vars */
           /* stip unneeded vars from values */
@@ -142,7 +142,7 @@ class UserEditForm extends React.Component {
           } = values
           /* eslint-enable no-unused-vars */
 
-          this.props.initialize( {...formData, changingPassword: false} )
+          this.props.initialize({...formData, changingPassword: false})
 
         }
       })
@@ -157,7 +157,7 @@ class UserEditForm extends React.Component {
   }
 
   tfaMethodOptions() {
-    let tfaOptions = []
+    const tfaOptions = []
 
     TWO_FA_METHODS_OPTIONS.forEach((option) => {
       tfaOptions.push({
@@ -369,7 +369,7 @@ class UserEditForm extends React.Component {
 
           <Col xs={3}>
             <div className="select-box-tooltip">
-              {this.renderTwoFAMethodsTooltips( tfa )}
+              {this.renderTwoFAMethodsTooltips(tfa)}
             </div>
           </Col>
         </Row>
@@ -411,9 +411,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) ),
-    changeSelectedTFAMethod: (method) => dispatch( change('user-edit-form', 'tfa', method) ),
-    clearPasswordRow: (values) => dispatch( initialize('user-edit-form', values) )
+    resetForm: () => dispatch(initialize('user-edit-form', ownProps.initialValues)),
+    changeSelectedTFAMethod: (method) => dispatch(change('user-edit-form', 'tfa', method)),
+    clearPasswordRow: (values) => dispatch(initialize('user-edit-form', values))
   }
 }
 
@@ -421,8 +421,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'user-edit-form',
   validate: validate,
   onSubmitFail: (errors, dispatch) => {
-    if(errors.current_password) {
-      dispatch( blur('user-edit-form', 'current_password', '') )
+    if (errors && errors.current_password) {
+      dispatch(blur('user-edit-form', 'current_password', ''))
     }
   }
 })(injectIntl(UserEditForm)))

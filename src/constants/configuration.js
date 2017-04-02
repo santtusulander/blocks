@@ -64,8 +64,11 @@ export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 export const STREAMING_ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 export const SAMPLE_CODE_LANGUAGE_DEFAULT = 1
+export const TA_TYPE_DEFAULT = 'standard'
 
 export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
+
+export const CT_DEFAULT_STATUS_CODE = 200
 
 export const DEFAULT_HOST_SERVICE_TYPE = 'large'

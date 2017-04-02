@@ -17,6 +17,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
@@ -38,6 +39,7 @@ import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
+import IsAdmin from '../components/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
@@ -98,6 +100,7 @@ export class Configuration extends React.Component {
   getActiveConfig() {
     return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
+
   changeValue(path, value) {
     return this.changeValues([[path, value]])
   }
@@ -150,7 +153,7 @@ export class Configuration extends React.Component {
       this.props.params.property,
       this.props.activeHost.toJS()
     ).then((action) => {
-      if(action.error) {
+      if (action.error) {
         this.showNotification(this.props.intl.formatMessage(
                               {id: 'portal.configuration.updateFailed.text'},
                               {reason: action.payload.data.message}))
@@ -218,8 +221,8 @@ export class Configuration extends React.Component {
       newHost.toJS()
     ).then((action) => {
       // env === 1 is retiring
-      if(env === 1) {
-        if(action.error) {
+      if (env === 1) {
+        if (action.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.retireFailed.text'},
                                 {reason: action.payload.data.message}))
@@ -228,7 +231,7 @@ export class Configuration extends React.Component {
         }
       // env !== 1 is publishing
       } else {
-        if(action.error) {
+        if (action.error) {
           this.togglePublishModal()
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.publishFailed.text'},
@@ -254,7 +257,7 @@ export class Configuration extends React.Component {
   }
   render() {
     const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
-    if(this.props.fetching && (!activeHost || !activeHost.size)
+    if (this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
     }
@@ -369,6 +372,14 @@ export class Configuration extends React.Component {
             </Link>
           </li>
 
+          <IsAdmin>
+            <li data-eventKey='advanced'>
+              <Link to={baseUrl + '/advanced'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.advanced.text" />
+              </Link>
+            </li>
+          </IsAdmin>
+
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -443,7 +454,7 @@ export class Configuration extends React.Component {
           invalid={true}
           verifyDelete={true}>
           <p>
-            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete: "Property"}}/>
           </p>
         </ModalWindow>
         }
@@ -453,7 +464,7 @@ export class Configuration extends React.Component {
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
             <Modal.Header>
-              <h1>Publish Version</h1>
+              <h1><FormattedMessage id="portal.configuration.sidebar.pubVer.text" /></h1>
               <p>{this.props.params.property}</p>
             </Modal.Header>
             <Modal.Body>
@@ -499,7 +510,7 @@ Configuration.propTypes = {
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
@@ -520,10 +531,12 @@ Configuration.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { group, roles } = state
+  const { group } = state
   const activeGroup = group.get('activeGroup') || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-  const storagePermission = getStoragePermissions(roles.get('roles'), state.user.get('currentUser'))
+
+  const roles = getRoles(state)
+  const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -534,7 +547,7 @@ function mapStateToProps(state) {
     policyActiveMatch: state.ui.get('policyActiveMatch'),
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
-    roles: state.roles.get('roles'),
+    roles: roles,
     groupHasStorageService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
@@ -550,7 +563,7 @@ function mapDispatchToProps(dispatch) {
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    fetchStorage : (brand, account, group, format) => dispatch(storageActions.fetchAll({ brand, account, group, format }))
+    fetchStorage: (brand, account, group, format) => dispatch(storageActions.fetchAll({ brand, account, group, format }))
   };
 }
 

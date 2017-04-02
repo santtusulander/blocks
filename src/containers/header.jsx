@@ -43,7 +43,7 @@ class Header extends React.Component {
     } = this.props
 
     let className = 'header'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 
@@ -121,7 +121,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   theme: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map)

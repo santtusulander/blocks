@@ -22,7 +22,7 @@ describe('Header', function() {
   const logOut = jest.fn()
   const params = {account: "1", brand: "udn"}
   const pathname = ""
-  const roles = new List()
+  const roles = new Map()
   const router = fakeRouterMaker()
   const theme = ""
   const user = new Map()

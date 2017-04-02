@@ -4,7 +4,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 class Confirmation extends React.Component {
   render() {
     let className = 'confirmation-slider'
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     return (

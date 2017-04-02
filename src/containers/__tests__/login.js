@@ -18,9 +18,16 @@ function userActionsMaker(cbResponse) {
   }
 }
 
+function uiActionsMaker() {
+  return {
+    changeBannerNotification: jest.fn()
+  }
+}
+
 const subject = () => {
   return (
     <Login
+      uiActions={uiActionsMaker()}
       userActions={userActionsMaker({})}
       location={{query: {}}}
     />

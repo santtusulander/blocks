@@ -83,7 +83,7 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
 
   /* TODO, refactor checkForErrors, so field which not required still able to check for conditions
      UDNP-2772 Validation function does not support validation for optional fields */
-  if(description && !isValidFootprintDescription(description)) {
+  if (description && !isValidFootprintDescription(description)) {
     errors.description = (
       <MultilineTextFieldError
         fieldLabel="portal.common.description"
@@ -260,6 +260,7 @@ class FootprintForm extends React.Component {
       onSave,
       onCSVSave,
       submitting,
+      readOnly,
       udnTypeOptions
     } = this.props
 
@@ -283,6 +284,7 @@ class FootprintForm extends React.Component {
               value="manual"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
+              disabled={readOnly}
             />
 
             <Field
@@ -291,6 +293,7 @@ class FootprintForm extends React.Component {
               value="addfile"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
+              disabled={readOnly}
             />
           </div>
         }
@@ -303,6 +306,7 @@ class FootprintForm extends React.Component {
             placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
+            disabled={readOnly}
           />
 
           <Field
@@ -312,6 +316,7 @@ class FootprintForm extends React.Component {
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
             required={false}
+            disabled={readOnly}
           />
 
           <ControlLabel>
@@ -324,6 +329,7 @@ class FootprintForm extends React.Component {
             value="ipv4cidr"
             component={FieldRadio}
             label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
+            disabled={readOnly}
           />
 
           <Field
@@ -332,6 +338,7 @@ class FootprintForm extends React.Component {
             value="asnlist"
             component={FieldRadio}
             label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
+            disabled={readOnly}
           />
 
           { dataType === 'ipv4cidr' &&
@@ -343,6 +350,7 @@ class FootprintForm extends React.Component {
               multiple={true}
               options={[]}
               validation={validateCIDRToken}
+              disabled={readOnly}
             />
           }
 
@@ -350,6 +358,7 @@ class FootprintForm extends React.Component {
             <FieldFormGroupAsnLookup
               name="value_asnlist"
               withoutLabel={true}
+              disabled={readOnly}
             />
           }
 
@@ -359,6 +368,7 @@ class FootprintForm extends React.Component {
             component={FieldFormGroupSelect}
             options={filteredUdnTypeOptions}
             label={<FormattedMessage id="portal.network.footprintForm.UDNType.title.text"/>}
+            disabled={readOnly}
           />
         </div>
         }

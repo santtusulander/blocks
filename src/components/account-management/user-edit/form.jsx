@@ -15,18 +15,18 @@ const validate = (values) => {
 
   const { first_name, last_name, email, role } = values
 
-  if(!first_name) {
+  if (!first_name) {
     errors.first_name = <FormattedMessage id="portal.account.editUser.firstNameRequired.text"/>
   }
-  if(!last_name) {
+  if (!last_name) {
     errors.last_name = <FormattedMessage id="portal.account.editUser.lastNameRequired.text"/>
   }
 
-  if(!email) {
+  if (!email) {
     errors.email = <FormattedMessage id="portal.account.editUser.emailRequired.text"/>
   }
 
-  if(!role) {
+  if (!role) {
     errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
   }
 

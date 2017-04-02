@@ -25,8 +25,12 @@ import {
 } from '../../../redux/modules/entities/locations/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
+
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -39,11 +43,11 @@ class PopFormContainer extends Component {
     super(props)
     this.notificationTimeout = null
     this.state = {
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const {brand, accountId, groupId, networkId, popId} = this.props
 
     // If editing => fetch data from API
@@ -57,7 +61,7 @@ class PopFormContainer extends Component {
     this.props.fetchServiceInfo()
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     const {brand, accountId, groupId, networkId} = nextProps
 
     // If editing => fetch data from API
@@ -115,7 +119,7 @@ class PopFormContainer extends Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( () => {
+      .then(() => {
 
         const message = edit ? <FormattedMessage id="portal.network.popEditForm.updatePop.status"/> :
          <FormattedMessage id="portal.network.popEditForm.createPop.status"/>
@@ -146,7 +150,7 @@ class PopFormContainer extends Component {
     return this.props.onDelete(params)
       .then(() => {
         // Unselect POP item
-        if (this.props.selectedEntityId == popId) {
+        if (this.props.selectedEntityId === popId) {
           this.props.handleSelectedEntity(popId)
         }
         this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)
@@ -163,7 +167,7 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const { initialValues, iata, onCancel, group, network, popId, popPermissions } = this.props
+    const { initialValues, iata, onCancel, group, network, popId, allowModify } = this.props
 
     const { showDeleteModal } = this.state
 
@@ -197,7 +201,7 @@ class PopFormContainer extends Component {
             onDelete={() => this.onToggleDeleteModal(true)}
             onSave={(values) => this.onSave(edit, values)}
             onCancel={() => onCancel()}
-            popPermissions={popPermissions}
+            readOnly={!allowModify}
           />
 
         </SidePanel>
@@ -223,6 +227,7 @@ class PopFormContainer extends Component {
 PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -244,7 +249,6 @@ PopFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  popPermissions: PropTypes.object,
   selectedEntityId: PropTypes.string,
   showNotification: PropTypes.func
 }
@@ -253,6 +257,8 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+  const roles = getRoles(state)
+  const currentUser = state.user.get('currentUser')
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 
@@ -278,6 +284,7 @@ const mapStateToProps = (state, ownProps) => {
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP),
 
     initialValues: {
       id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,
@@ -296,19 +303,19 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( popActions.remove(params)),
+    onCreate: (params, data) => dispatch(popActions.create({...params, data })),
+    onUpdate: (params, data) => dispatch(popActions.update({...params, data })),
+    onDelete: (params) => dispatch(popActions.remove(params)),
 
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
-    fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
-    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
+    fetchPop: (params) => dispatch(popActions.fetchOne(params)),
+    fetchPods: (params) => dispatch(podActions.fetchAll(params)),
+    fetchLocations: (params) => dispatch(locationActions.fetchAll(params)),
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
 
-    showNotification: (message) => dispatch( changeNotification(message) )
+    showNotification: (message) => dispatch(changeNotification(message))
   }
 }
 

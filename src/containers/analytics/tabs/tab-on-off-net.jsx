@@ -23,8 +23,8 @@ class AnalyticsTabOnOffNet extends React.Component {
     )
   }
 
-  componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps) ||
+  componentWillReceiveProps(nextProps) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
         nextProps.params,
@@ -35,8 +35,8 @@ class AnalyticsTabOnOffNet extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, location, hostConfiguredName) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })
@@ -54,7 +54,7 @@ class AnalyticsTabOnOffNet extends React.Component {
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
   }
 
-  render(){
+  render() {
     const { activeAccount, currentUser } = this.props
 
     // Check for Cloud Providers / UDN Admins
