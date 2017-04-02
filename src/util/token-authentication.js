@@ -36,22 +36,18 @@ export const generateTokenHash = (method, key, string) => {
   switch (method) {
     case 'HMAC_MD5':
       return md5(string, key)
-      // return HmacMD5(string, key).toString(enc.Hex)
     case 'HMAC_SHA1':
       const sha1Obj = new jsSHA('SHA-1', "TEXT")
       sha1Obj.setHMACKey(key, "TEXT")
       sha1Obj.update(string)
       return sha1Obj.getHMAC("HEX")
-      // return HmacSHA1(string, key).toString(enc.Hex)
     case 'HMAC_SHA256':
       const sha256Obj = new jsSHA('SHA-256', "TEXT")
       sha256Obj.setHMACKey(key, "TEXT")
       sha256Obj.update(string)
       return sha256Obj.getHMAC("HEX")
-      // return HmacSHA256(string, key).toString(enc.Hex)
     case 'MD5':
       return md5(string)
-      // return MD5(string).toString(enc.Hex)
   }
 }
 
