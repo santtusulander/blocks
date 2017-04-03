@@ -239,7 +239,8 @@ export class Account extends React.Component {
           user={this.props.user}
           viewingChart={this.props.viewingChart}
           fetchItem={(id) => {
-            console.warn('UDNP-3177 fetchItem will be deprecated'); return this.props.oldGroupActions.fetchGroup(brand, account, id) 
+            console.warn('UDNP-3177 fetchItem will be deprecated')
+            return this.props.oldGroupActions.fetchGroup(brand, account, id)
           }}
         />
 
