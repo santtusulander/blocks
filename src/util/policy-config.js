@@ -265,28 +265,32 @@ export const getActiveConfiguration = (property) => {
  */
 export const getTokenAuthRules = (properties) => {
   let tokenAuthRules = []
+
   for( let key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach( (rule, key) => {
-      const {sets} = parsePolicy(fromJS(rule), [])
-      if ( actionIsTokenAuth( sets ) ) {
-        const tokenAuthConfig = fromJS(rule).getIn(sets[0].path).toJS()
-        const returnObj = {
-          ruleId: key,
-          propertyName: property.published_host_id,
-          type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
-          accountId: property.accountId,
-          groupId: property.groupId,
-          encryption: tokenAuthConfig.encryption,
-          streaming_encryption: tokenAuthConfig.streaming_encryption,
-          schema: tokenAuthConfig.schema,
-          created: config.config_created
+    if (config && config.request_policy && config.request_policy.policy_rules) {
+      config.request_policy.policy_rules.forEach((rule, key) => {
+        const {sets} = parsePolicy(fromJS(rule), [])
+
+        if (actionIsTokenAuth(sets)) {
+          const tokenAuthConfig = fromJS(rule).getIn(sets[0].path).toJS()
+          const returnObj = {
+            ruleId: key,
+            propertyName: property.published_host_id,
+            type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' : 'portal.security.tokenAuth.static.text',
+            accountId: property.accountId,
+            groupId: property.groupId,
+            encryption: tokenAuthConfig.encryption,
+            streaming_encryption: tokenAuthConfig.streaming_encryption,
+            schema: tokenAuthConfig.schema,
+            created: config.config_created
+          }
+          tokenAuthRules.push(returnObj)
         }
-        tokenAuthRules.push(returnObj)
-      }
-    })
+      })
+    }
   }
 
   return tokenAuthRules
