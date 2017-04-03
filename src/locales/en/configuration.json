@@ -46,6 +46,10 @@
   "portal.policy.edit.tokenauth.sampleCodeDialog.copyCodeButton.text": "Copy code",
   "portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.successful.message": "Code sample copied to clipboard successfully.",
   "portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.unsuccessful.message": "Copying code sample to clipboard was unsuccessful! Please copy the sample manually.",
+  "portal.policy.edit.tokenauth.sampleCodeDialog.code.language.java.text": "Java",
+  "portal.policy.edit.tokenauth.sampleCodeDialog.code.language.python.text": "Python",
+  "portal.policy.edit.tokenauth.sampleCodeDialog.code.language.javascript.text": "Javascript",
+
 
   "portal.policy.edit.policies.header.text": "Header",
   "portal.policy.edit.matchesSelection.url.text": "URL",

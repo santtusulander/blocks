@@ -47,9 +47,9 @@ export const STREAMING_ENCRYPTION_OPTIONS = [
 ]
 
 export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
-  {label: 'Java', value: 1},
-  {label: 'Python', value: 2},
-  {label: 'Javascript', value: 3}
+  {label: 'portal.policy.edit.tokenauth.sampleCodeDialog.code.language.java.text', value: 1},
+  {label: 'portal.policy.edit.tokenauth.sampleCodeDialog.code.language.python.text', value: 2},
+  {label: 'portal.policy.edit.tokenauth.sampleCodeDialog.code.language.javascript.text', value: 3}
 ]
 
 export const STATIC_TOKEN_SAMPLE_VALUES = {

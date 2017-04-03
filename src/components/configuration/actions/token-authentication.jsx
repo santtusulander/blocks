@@ -228,7 +228,6 @@ export class TokenAuth extends React.Component {
       }
     ]
 
-
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -259,7 +258,7 @@ export class TokenAuth extends React.Component {
         {
           SAMPLE_CODE_LANGUAGE_OPTIONS.map(option => (
             <NavItem key={option.value} eventKey={option.value}>
-              {option.label}
+              <FormattedMessage id={option.label} />
             </NavItem>
           ))
         }
