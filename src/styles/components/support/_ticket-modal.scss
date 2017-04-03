@@ -1,5 +1,5 @@
 .ticket-sidebar {
-  @extend .modal-form-panel;
+  @extend .modal-form-panel; // sass-lint:disable-line placeholder-in-extend
 
   .form-group.border-bottom {
     padding-bottom: 25px;
@@ -38,7 +38,8 @@
       width: 100%;
     }
 
-    th, td {
+    th,
+    td {
       padding: 10px 0;
     }
   }
@@ -48,8 +49,8 @@
     align-items: center;
 
     h3 {
-      flex: 1;
       margin: 0;
+      flex: 1;
     }
   }
 
@@ -59,14 +60,14 @@
     align-items: center;
 
     &-icon {
-      margin: 0 5px 0 -5px;
-      width: 30px;
       display: flex;
+      width: 30px;
+      margin: 0 5px 0 -5px;
       align-items: center;
 
       svg {
-        width: 100%;
         display: block;
+        width: 100%;
       }
 
       .support-ticket__priority-icon {
