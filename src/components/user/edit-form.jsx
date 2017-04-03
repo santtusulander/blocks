@@ -349,32 +349,44 @@ class UserEditForm extends React.Component {
             <FormattedMessage id="portal.user.edit.2FA.text" />
           </ControlLabel>
 
-          <Col xs={3}>
-            <Field
-              name="tfa_toggle"
-              component={FieldFormGroupToggle}
-            />
-          </Col>
+          <Col xs={9}>
+            <Row>
+              <Col xs={3}>
+                <Field
+                  name="tfa_toggle"
+                  component={FieldFormGroupToggle}
+                />
+              </Col>
 
-          <Col xs={2}>
-            <p className="form-control-static">
-              <FormattedMessage id="portal.user.edit.2FA.method.text" />
-            </p>
-          </Col>
+              <Col xs={2}>
+                <p className="form-control-static">
+                  <FormattedMessage id="portal.user.edit.2FA.method.text" />
+                </p>
+              </Col>
 
-          <Col xs={1}>
-            <Field
-              name="tfa"
-              component={FieldFormGroupSelect}
-              disabled={!tfa_toggle}
-              options={this.tfaMethodOptions()}
-            />
-          </Col>
+              <Col xs={1}>
+                <Field
+                  name="tfa"
+                  component={FieldFormGroupSelect}
+                  disabled={!tfa_toggle}
+                  options={this.tfaMethodOptions()}
+                />
+              </Col>
 
-          <Col xs={3}>
-            <div className="select-box-tooltip">
-              {this.renderTwoFAMethodsTooltips(tfa)}
-            </div>
+              <Col xs={3}>
+                <div className="select-box-tooltip">
+                  {this.renderTwoFAMethodsTooltips(tfa)}
+                </div>
+              </Col>
+            </Row>
+            { tfa_toggle &&
+              <Row>
+              <Button bsStyle="primary" onClick={this.togglePasswordEditing}>
+                <FormattedMessage id="portal.button.CHANGE"/>
+              </Button>
+              <div>You can use one-time recovery key to access your account if you lose your phone or otherwise have problems with accessing your account.</div>
+            </Row>
+            }
           </Col>
         </Row>
 

@@ -80,7 +80,7 @@ class User extends React.Component {
 
     return (
       <Content>
-        <PageHeader pageSubTitle={getRolesForUser(currentUser, roles)[0][1]}>
+        <PageHeader pageSubTitle={'UDN admin'}>
           <h1>{currentUser.get('first_name')} {currentUser.get('last_name')}</h1>
         </PageHeader>
         <PageContainer>
