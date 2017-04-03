@@ -50,7 +50,7 @@ class Tabs extends React.Component {
     clearTimeout(this.timeout)
   }
   measureTabs() {
-    if (!this.props.children || !this.props.children.length) return
+    if (!this.props.children || !this.props.children.length) {return}
 
     const hiddenTabs = []
     this.setState({ hiddenTabs: hiddenTabs })

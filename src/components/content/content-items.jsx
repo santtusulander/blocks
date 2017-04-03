@@ -345,8 +345,8 @@ class ContentItems extends React.Component {
       valB = b.get('totalTraffic')
     }
 
-    if (valA > valB) return sortDirection
-    if (valA < valB) return -1 * sortDirection
+    if (valA > valB) {return sortDirection}
+    if (valA < valB) {return -1 * sortDirection}
 
     return 0
   }
@@ -366,8 +366,8 @@ class ContentItems extends React.Component {
       valB = b.get('totalTraffic')
     }
 
-    if (valA > valB) return sortDirection
-    if (valA < valB) return -1 * sortDirection
+    if (valA > valB) {return sortDirection}
+    if (valA < valB) {return -1 * sortDirection}
 
     return 0
   }

@@ -214,10 +214,10 @@ export const withPagination = (WrappedComponent, config = {}) => {
       const subscribers = [];
       return Map({
         register: (subscriber) => {
-          if (typeof subscriber === 'function') subscribers.push(subscriber);
+          if (typeof subscriber === 'function') {subscribers.push(subscriber);}
         },
         notify: (payload) => {
-          if (subscribers.length) subscribers.forEach((s) => s(payload))
+          if (subscribers.length) {subscribers.forEach((s) => s(payload))}
         },
         reset: () => { subscribers.length = 0 }
       });
@@ -244,12 +244,12 @@ export const withPagination = (WrappedComponent, config = {}) => {
      * @param nextProps {object}
      */
     componentWillReceiveProps(nextProps) {
-      if (nextProps.isPristine) return;
+      if (nextProps.isPristine) {return;}
 
       const queryParams = this.getQueryParams(nextProps);
       const diff = !fromJS(queryParams).equals(fromJS(this.getQueryParams(this.props)));
 
-      if (diff) this.paginationSubscribers.get('notify')(queryParams);
+      if (diff) {this.paginationSubscribers.get('notify')(queryParams);}
     }
 
     /**

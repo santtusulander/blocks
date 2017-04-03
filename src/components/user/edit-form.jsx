@@ -42,8 +42,8 @@ const validate = (values) => {
   } = values
 
   if (changingPassword) {
-    if (!(current_password && new_password && validPass)) errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
-    if (new_password && !validPass) errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
+    if (!(current_password && new_password && validPass)) {errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />}
+    if (new_password && !validPass) {errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />}
   } else {
     if (!first_name) {
       errors.first_name = <FormattedMessage id="portal.user.edit.firstNameRequired.text" />

@@ -85,7 +85,7 @@ class PodFormContainer extends React.Component {
     const { brand, accountId } = nextProps
 
     if (this.props.accountId !== nextProps.accountId)
-      this.props.fetchFootprints({ brand, account: accountId })
+      {this.props.fetchFootprints({ brand, account: accountId })}
   }
 
   initFootprints() {
@@ -131,9 +131,9 @@ class PodFormContainer extends React.Component {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
     const { bgp_router_ip, bgp_as_number, bgp_password } = values
-    if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
-    if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
-    if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
+    if (bgp_router_ip) {setFormVal('UIsp_bgp_router_ip', bgp_router_ip)}
+    if (bgp_as_number) {setFormVal('UIsp_bgp_router_as', bgp_as_number)}
+    if (bgp_password) {setFormVal('UIsp_bgp_router_password', bgp_password)}
   }
 
   clearBGP() {
@@ -217,7 +217,7 @@ class PodFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.pod_name
+    if (edit) {params.id = values.pod_name}
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
 

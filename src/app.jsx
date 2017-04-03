@@ -157,7 +157,7 @@ let startApp = runApp
 
 if (useRaven) {
   /* eslint-disable no-undef */
-  if (!Raven.isSetup()) Raven.config(SENTRY_DSN, {release: VERSION}).install()
+  if (!Raven.isSetup()) {Raven.config(SENTRY_DSN, {release: VERSION}).install()}
   /* eslint-enable no-undef */
 
   startApp = Raven.wrap(runApp)

@@ -234,7 +234,7 @@ const PodForm = ({
 
   /*eslint-disable no-unused-vars */
   const addFootprint = ([footprint, ...rest]) => {
-    if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+    if (footprint) {dispatch(arrayPush('pod-form', 'UIFootprints', footprint))}
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')

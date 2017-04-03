@@ -26,7 +26,7 @@ class AnalysisFileError extends React.Component {
   }
 
   hasKeys(val, keyList) {
-    if (keyList.includes('all')) return true;
+    if (keyList.includes('all')) {return true;}
 
     let found = false
     // eslint-disable-next-line array-callback-return
@@ -68,8 +68,8 @@ class AnalysisFileError extends React.Component {
     let clientErrs=[], serverErrs=[];
     filteredErrorSummary.forEach((err, key) => {
       const errorCode = parseInt(key.substr(1))
-      if (errorCode < 500) clientErrs.push({value: err, code: errorCode})
-      else serverErrs.push({value: err, code: errorCode})
+      if (errorCode < 500) {clientErrs.push({value: err, code: errorCode})}
+      else {serverErrs.push({value: err, code: errorCode})}
     })
     clientErrs = clientErrs.sort(this.sortByCode)
     serverErrs = serverErrs.sort(this.sortByCode)

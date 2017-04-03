@@ -30,7 +30,7 @@ const fileUploadAdapter = (resolve, reject, config) => {
 
   /* EVENT HANDLERS */
   xhr[loadEvent] = () => {
-    if (!xhr || xhr.readyState !== 4 || xhr.status === 0) return
+    if (!xhr || xhr.readyState !== 4 || xhr.status === 0) {return}
 
     const respHeaders = 'getAllResponseHeaders' in xhr ? parseHeaders(xhr.getAllResponseHeaders()) : null
     const responseData = !config.responseType || config.responseType === 'text' ? xhr.responseText : xhr.response
@@ -94,7 +94,7 @@ const fileUploadAdapter = (resolve, reject, config) => {
     try {
       xhr.responseType = responseType
     } catch (e) {
-      if (xhr.responseType !== 'json') throw e
+      if (xhr.responseType !== 'json') {throw e}
     }
   }
 

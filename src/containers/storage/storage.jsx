@@ -83,7 +83,7 @@ class Storage extends Component {
       this.props.fetchClusters({})
     }
     //fetch Active group if there is none in redux
-    if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
+    if (!this.props.group && this.props.params) {this.props.fetchGroupData(this.props.params)}
   }
 
   componentDidMount() {

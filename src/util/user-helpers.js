@@ -29,7 +29,7 @@ export const tokenDidExpire = () => {
   const expiresAt = tokenMeta.expires_at
   const currentUnixTime = Math.floor(Date.now() / 1000)
 
-  if (currentUnixTime < expiresAt) return false
+  if (currentUnixTime < expiresAt) {return false}
 
   return true
 }

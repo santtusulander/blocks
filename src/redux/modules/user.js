@@ -515,7 +515,7 @@ export const getUserRoles = (state) => {
  * @return {Boolean}
  */
 export const isUdnAdmin = (state) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {return true}
 
   return false
 }

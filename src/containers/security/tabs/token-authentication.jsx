@@ -60,7 +60,7 @@ class TabTokenAuthentication extends Component {
     }
 
     if (isFetching)
-      return <LoadingSpinner />
+      {return <LoadingSpinner />}
 
     const tokenAuthRules = getTokenAuthRules(properties.toJS())
 

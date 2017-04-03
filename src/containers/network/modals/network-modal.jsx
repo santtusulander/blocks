@@ -90,7 +90,7 @@ class NetworkFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.name;
+    if (edit) {params.id = values.name;}
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)

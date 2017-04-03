@@ -115,7 +115,7 @@ class PopFormContainer extends Component {
       payload: data
     }
 
-    if (edit) params.id = this.props.popId
+    if (edit) {params.id = this.props.popId}
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)

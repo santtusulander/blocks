@@ -12,8 +12,8 @@ export default (actionTypes) => {
   const mappedActions = {}
 
   for (const actionType in actionTypes) {
-    if (actionType === 'REQUEST') mappedActions[ actionTypes[actionType] ] = fetchingReducers.set
-    else  mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear
+    if (actionType === 'REQUEST') {mappedActions[ actionTypes[actionType] ] = fetchingReducers.set}
+    else  {mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear}
   }
 
   return handleActions(mappedActions, Map())

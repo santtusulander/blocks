@@ -205,8 +205,8 @@ class AccountSelector extends Component {
       const aLower = a.get(1).toLowerCase()
       const bLower = b.get(1).toLowerCase()
 
-      if (aLower < bLower) return -1
-      if (aLower > bLower) return 1
+      if (aLower < bLower) {return -1}
+      if (aLower > bLower) {return 1}
       return 0
     })
   }

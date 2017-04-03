@@ -255,7 +255,7 @@ export function buildAnalyticsOpts(params, filters, location) {
 const createToggledFilter = (options) => {
   //FIXME: this only works when there are only 2 options
   //if all opts selected - remove filter
-  if (options.size > 1) return undefined
+  if (options.size > 1) {return undefined}
 
   return options.toJS()
 }
@@ -586,7 +586,7 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
  * @return {List} sorted list
  */
 export const sortByKey = (list, key = 'name', direction = 'asc') => {
-  if (!list || list.isEmpty()) return
+  if (!list || list.isEmpty()) {return}
 
   return list.sort(
       (a, b) => {
@@ -598,8 +598,8 @@ export const sortByKey = (list, key = 'name', direction = 'asc') => {
             : - valA.toString().localeCompare(String(valB.toString()))
         }
 
-        if (a > b && direction === 'asc') return 1
-        if (a > b && direction === 'desc') return -1
+        if (a > b && direction === 'asc') {return 1}
+        if (a > b && direction === 'desc') {return -1}
 
         return 0
       }
