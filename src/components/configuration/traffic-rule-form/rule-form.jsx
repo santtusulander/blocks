@@ -154,7 +154,7 @@ RuleForm.propTypes = {
   activeCondition: PropTypes.string,
   chooseMatch: PropTypes.func,
   disabled: PropTypes.bool,
-  edit: PropTypes.func,
+  edit: PropTypes.bool,
   handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
   invalid: PropTypes.bool,
