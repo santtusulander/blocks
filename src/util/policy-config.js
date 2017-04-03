@@ -69,7 +69,7 @@ export function getConditionFilterText(match) {
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
-    default: 
+    default:
       return ''
   }
 }
@@ -79,7 +79,7 @@ const getContentTargetingActionName = (action) => {
   const { code, location } = action
   const redirLocationPart = location ? (': ' + location) : ''
   let actionTypePart = null
- 
+
   if (code < 300) {
     actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
   } else if (code < 400) {
@@ -87,7 +87,7 @@ const getContentTargetingActionName = (action) => {
   } else {
     actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
   }
- 
+
   return (
     <span>
       <FormattedMessage id={actionTypePart}/>
@@ -234,29 +234,31 @@ export const getTokenAuthRules = (properties) => {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach((rule, request_policy_key) => {
-      const { sets, default_sets } = parsePolicy(fromJS(rule), [])
-      const tokenAuthActions = filterActionIsTokenAuth(sets.concat(default_sets))
+    if (config && config.request_policy && config.request_policy.policy_rules) {
+      config.request_policy.policy_rules.forEach((rule, request_policy_key) => {
+        const { sets, default_sets } = parsePolicy(fromJS(rule), [])
+        const tokenAuthActions = filterActionIsTokenAuth(sets.concat(default_sets))
 
-      if (tokenAuthActions.length) {
-        tokenAuthActions.forEach(set => {
-          const tokenAuthConfig = fromJS(rule).getIn(set.path.concat('tokenauth')).toJS()
-          const returnObj = {
-            ruleId: request_policy_key,
-            propertyName: property.published_host_id,
-            type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
-            accountId: property.accountId,
-            groupId: property.groupId,
-            encryption: tokenAuthConfig.encryption,
-            streaming_encryption: tokenAuthConfig.streaming_encryption,
-            schema: tokenAuthConfig.schema,
-            created: config.config_created
-          }
+        if (tokenAuthActions.length) {
+          tokenAuthActions.forEach(set => {
+            const tokenAuthConfig = fromJS(rule).getIn(set.path.concat('tokenauth')).toJS()
+            const returnObj = {
+              ruleId: request_policy_key,
+              propertyName: property.published_host_id,
+              type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' : 'portal.security.tokenAuth.static.text',
+              accountId: property.accountId,
+              groupId: property.groupId,
+              encryption: tokenAuthConfig.encryption,
+              streaming_encryption: tokenAuthConfig.streaming_encryption,
+              schema: tokenAuthConfig.schema,
+              created: config.config_created
+            }
 
-          tokenAuthRules.push(returnObj)
-        })
-      }
-    })
+            tokenAuthRules.push(returnObj)
+          })
+        }
+      })
+    }
   }
 
   return tokenAuthRules
