@@ -1,7 +1,7 @@
-@import "../../styles/components/modal-form-panel";
+@import '../../styles/components/modal-form-panel';
 
 .brand-edit-form-sidebar {
-  @extend .modal-form-panel;
+  @extend .modal-form-panel; // sass-lint:disable-line placeholder-in-extend
 
   .input-group-addon {
     width: auto;

@@ -123,9 +123,11 @@ class CacheKeyQueryStringForm extends React.Component {
           id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>)
     const qNameInputs = this.state.queryArgs.map((queryArg, i) =>
       <FormGroup key={`query-arg-${i}`}>
-        <ControlLabel>
-          {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
-        </ControlLabel>
+        { !horizontal &&
+          <ControlLabel>
+            {formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
+          </ControlLabel>
+        }
         <FormControl
           disabled={disabled}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}
