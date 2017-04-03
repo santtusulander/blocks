@@ -51,28 +51,28 @@ class AnalysisContribution extends React.Component {
     const isOffNet = this.props.onOffFilter.includes('off')
 
     const barModels = []
-    if (isHttps && isOffNet)      {
+    if (isHttps && isOffNet) {
       barModels.push({
         dataKey: 'offNetHttps',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.offNetHttps.label'}),
         className: 'line-3'
       })
     }
-    if (isHttp && isOffNet)      {
+    if (isHttp && isOffNet) {
       barModels.push({
         dataKey: 'offNetHttp',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.offNetHttp.label'}),
         className: 'line-2'
       })
     }
-    if (isHttps && isOnNet)      {
+    if (isHttps && isOnNet) {
       barModels.push({
         dataKey: 'onNetHttps',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.onNetHttps.label'}),
         className: 'line-1'
       })
     }
-    if (isHttp && isOnNet)      {
+    if (isHttp && isOnNet) {
       barModels.push({
         dataKey: 'onNetHttp',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.onNetHttp.label'}),

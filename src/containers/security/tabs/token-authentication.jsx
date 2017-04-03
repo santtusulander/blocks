@@ -59,7 +59,7 @@ class TabTokenAuthentication extends Component {
       return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
     }
 
-    if (isFetching)      {
+    if (isFetching) {
       return <LoadingSpinner />
     }
 

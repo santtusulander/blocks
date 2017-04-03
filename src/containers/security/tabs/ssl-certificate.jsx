@@ -119,7 +119,7 @@ class TabSslCertificate extends Component {
       )
     }
 
-    if (isFetching)      {
+    if (isFetching) {
       return <LoadingSpinner />
     }
 

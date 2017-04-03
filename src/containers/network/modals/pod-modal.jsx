@@ -84,7 +84,7 @@ class PodFormContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { brand, accountId } = nextProps
 
-    if (this.props.accountId !== nextProps.accountId)      {
+    if (this.props.accountId !== nextProps.accountId) {
       this.props.fetchFootprints({ brand, account: accountId })
     }
   }
