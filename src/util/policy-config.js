@@ -7,10 +7,11 @@ import {
 } from '../constants/property-config'
 
 import { TOKEN_AUTH_STREAMING } from '../constants/configuration'
+import { availableActions } from '../constants/property-config'
 
 export const ALLOW_RESPONSE_CODES = [200]
-export const DENY_RESPONSE_CODES = [401,404,500]
-export const REDIRECT_RESPONSE_CODES = [301,302]
+export const DENY_RESPONSE_CODES = [401, 403, 404, 500]
+export const REDIRECT_RESPONSE_CODES = [301, 302]
 
 export const WILDCARD_REGEXP = '.*';
 
@@ -60,10 +61,6 @@ export function getConditionFilterText(match) {
       return <FormattedMessage id="portal.policy.edit.rule.matcher.contains.text" values={match}/>
     case 'does_not_contain':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
-    case 'in':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.from.text"/>
-    case 'not_in':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.notFrom.text"/>
     case 'equals':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
     case 'does_not_equal':
@@ -72,7 +69,47 @@ export function getConditionFilterText(match) {
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
+    default: 
+      return ''
   }
+}
+
+/* eslint-disable react/no-multi-comp */
+const getContentTargetingActionName = (action) => {
+  const { code, location } = action
+  const redirLocationPart = location ? (': ' + location) : ''
+  let actionTypePart = null
+ 
+  if (code < 300) {
+    actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
+  } else if (code < 400) {
+    actionTypePart = 'portal.policy.edit.allowBlock.redirect.text'
+  } else {
+    actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
+  }
+ 
+  return (
+    <span>
+      <FormattedMessage id={actionTypePart}/>
+      {redirLocationPart}
+    </span>
+  )
+}
+
+const getActionName = (actionName, action) => {
+  if (actionName === '_temp') {
+    return 'New ACtion'
+  }
+
+  if (actionName === 'reply') {
+    const actionCT = action.get(actionName).toJS()
+
+    return getContentTargetingActionName(actionCT)
+  }
+
+  const actionConfig = availableActions.find(item => item.key === actionName)
+
+  return actionConfig ? <FormattedMessage id={actionConfig.name}/> : actionName
 }
 
 export function policyContainsMatchField(policy, field, count) {
@@ -114,7 +151,7 @@ const parseActions = (items, path) => {
 
     return {
       setkey: actionName,
-      name: actionName,
+      name: getActionName(actionName, item),
       path: path.concat([i]),
       _temp: item.get('_temp')
     }
