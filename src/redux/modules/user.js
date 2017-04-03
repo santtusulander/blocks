@@ -186,8 +186,7 @@ export function userTokenChecked(state, action) {
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
-  }
-  else {
+  }  else {
     deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -198,8 +197,7 @@ export function userTokenChecked(state, action) {
 export function userNameSave(state, action) {
   if (action.payload) {
     setUserName(action.payload)
-  }
-  else {
+  }  else {
     deleteUserName()
   }
   return state.set('username', action.payload)
@@ -515,7 +513,9 @@ export const getUserRoles = (state) => {
  * @return {Boolean}
  */
 export const isUdnAdmin = (state) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {return true}
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {
+    return true
+  }
 
   return false
 }

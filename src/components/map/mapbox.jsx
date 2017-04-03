@@ -635,7 +635,9 @@ class Mapbox extends React.Component {
 
     return (
       <ReactMapboxGl
-        ref={ref => { this.mapbox = ref }}
+        ref={ref => {
+          this.mapbox = ref 
+        }}
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{

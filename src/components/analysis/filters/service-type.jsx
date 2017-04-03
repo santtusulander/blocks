@@ -23,8 +23,7 @@ class FilterServiceType extends React.Component {
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         });
-      }
-      else {
+      }      else {
         this.props.toggleServiceType(type)
       }
     }

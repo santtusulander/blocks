@@ -24,8 +24,7 @@ class TableSorter extends React.Component {
     if (this.props.column === this.props.activeColumn) {
       if (this.props.activeDirection < 0) {
         caret = <IconArrowDown />
-      }
-      else {
+      }      else {
         caret = <IconArrowUp />
       }
     }

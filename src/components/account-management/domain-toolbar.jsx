@@ -19,8 +19,12 @@ import IconCaretDown from '../icons/icon-caret-down'
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, onDeleteDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
   const sortedDomains = domains.sort((a,b) => {
-    if (a.id.toLowerCase() < b.id.toLowerCase()) {return -1}
-    if (a.id.toLowerCase() > b.id.toLowerCase()) {return 1}
+    if (a.id.toLowerCase() < b.id.toLowerCase()) {
+      return -1
+    }
+    if (a.id.toLowerCase() > b.id.toLowerCase()) {
+      return 1
+    }
     return 0
   })
   return (

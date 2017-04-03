@@ -42,7 +42,9 @@ class AnalysisVisitors extends React.Component {
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
@@ -82,8 +84,7 @@ class AnalysisVisitors extends React.Component {
     let trending = endVis ? startVis / endVis : 0
     if (trending > 1) {
       trending = numeral((trending - 1) * -1).format('0%')
-    }
-    else {
+    }    else {
       trending = numeral(trending).format('+0%');
     }
     return trending
@@ -96,8 +97,7 @@ class AnalysisVisitors extends React.Component {
       sortFunc = data.sort((a, b) => {
         if (this.getTrending(a) < this.getTrending(b)) {
           return -1 * sortDir
-        }
-        else if (this.getTrending(a) > this.getTrending(b)) {
+        }        else if (this.getTrending(a) > this.getTrending(b)) {
           return 1 * sortDir
         }
         return 0
@@ -108,8 +108,7 @@ class AnalysisVisitors extends React.Component {
         const _b = typeof b.get(sortBy) === 'string' ? b.get(sortBy).toLowerCase() : b.get(sortBy)
         if (_a < _b) {
           return -1 * sortDir
-        }
-        else if (_a > _b) {
+        }        else if (_a > _b) {
           return 1 * sortDir
         }
         return 0

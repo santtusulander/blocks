@@ -59,8 +59,9 @@ class TabTokenAuthentication extends Component {
       return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
     }
 
-    if (isFetching)
-      {return <LoadingSpinner />}
+    if (isFetching)      {
+      return <LoadingSpinner />
+    }
 
     const tokenAuthRules = getTokenAuthRules(properties.toJS())
 

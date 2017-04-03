@@ -94,7 +94,9 @@ const StorageHeader = ({
         <IsAllowed to={PERMISSIONS.MODIFY_STORAGE}>
           <Button
             className="btn btn-primary btn-icon"
-            onClick={() => {toggleConfigModal()}}>
+            onClick={() => {
+              toggleConfigModal()
+            }}>
             <IconConfiguration/>
           </Button>
 

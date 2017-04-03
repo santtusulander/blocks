@@ -115,8 +115,7 @@ class AnalyticsContainer extends React.Component {
 
     // service providers cannot see properties, UDNP-1498
     if (!userIsServiceProvider(this.props.user) &&
-        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group)
-    {
+        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group)    {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }

@@ -154,7 +154,9 @@ export function isValidHostName(hostName) {
     - doesn't begin or end with a hyphen;
     - can end with a dot.
   */
-  if (hostName.length > 255) {return false}
+  if (hostName.length > 255) {
+    return false
+  }
   return matchesRegexp(hostName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }
 
@@ -258,7 +260,9 @@ export function isValidPhoneNumber(str) {
  */
 export function isValidASN(asn) {
 
-  if (!matchesRegexp(asn, /^[0-9]+$/)) {return}
+  if (!matchesRegexp(asn, /^[0-9]+$/)) {
+    return
+  }
   let isValid = false
 
   if (asn >= ASN_MIN && asn <= ASN_MAX) {
@@ -338,7 +342,9 @@ export function isValidStorageName(storageName) {
     - consists only of allowed characters [a-z0-9-];
     - hyphen is not allowed;
   */
-  if (storageName.length > 255) {return false}
+  if (storageName.length > 255) {
+    return false
+  }
   return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/, true)
 }
 
@@ -356,6 +362,8 @@ export function isValidCName(cName) {
     - doesn't begin or end with a hyphen;
     - can end with a dot.
   */
-  if (cName.length > 255) {return false}
+  if (cName.length > 255) {
+    return false
+  }
   return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }

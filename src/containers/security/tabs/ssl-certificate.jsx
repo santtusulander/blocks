@@ -111,14 +111,17 @@ class TabSslCertificate extends Component {
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
 
-    if (!this.props.params.group) {return (
+    if (!this.props.params.group) {
+      return (
       <p className='text-center'>
         <FormattedMessage id="portal.security.ssl.selectGroup.text" />
       </p>
-    )}
+      )
+    }
 
-    if (isFetching)
-      {return <LoadingSpinner />}
+    if (isFetching)      {
+      return <LoadingSpinner />
+    }
 
 
     return (

@@ -5,7 +5,9 @@ import { FormattedMessage } from 'react-intl'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 const FilterServiceProvider = (props) => {
-  const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
+  const arrayMapping = (option) => {
+    return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) 
+  }
   const serviceProviderOptions = Immutable.fromJS(props.serviceProviderOptions.map(arrayMapping))
   const serviceProviderGroupOptions = Immutable.fromJS(props.serviceProviderGroupOptions.map(arrayMapping))
 

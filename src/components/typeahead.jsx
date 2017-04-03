@@ -11,7 +11,9 @@ class Typeahead extends React.Component {
   }
 
   handleBlur(e) {
-    if (this.props.onBlur) {this.props.onBlur()}
+    if (this.props.onBlur) {
+      this.props.onBlur()
+    }
     e.target.removeEventListener('keydown', this.handleKeyDown)
   }
 

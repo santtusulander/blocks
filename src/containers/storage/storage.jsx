@@ -83,7 +83,9 @@ class Storage extends Component {
       this.props.fetchClusters({})
     }
     //fetch Active group if there is none in redux
-    if (!this.props.group && this.props.params) {this.props.fetchGroupData(this.props.params)}
+    if (!this.props.group && this.props.params) {
+      this.props.fetchGroupData(this.props.params)
+    }
   }
 
   componentDidMount() {
@@ -152,7 +154,9 @@ class Storage extends Component {
             <StorageHeader
               currentUser={currentUser}
               params={params}
-              toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
+              toggleConfigModal={() => {
+                this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))
+              }}
             />
 
             <PageContainer>
@@ -294,7 +298,8 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     },
     gain,
     locations
-  }}
+  }
+}
 
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')

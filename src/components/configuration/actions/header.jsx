@@ -78,8 +78,7 @@ class Header extends React.Component {
       if (newSet.has('value')) {
         newSet = newSet.delete('value')
       }
-    }
-    else if (this.state.activeActivity === 'set') {
+    }    else if (this.state.activeActivity === 'set') {
       newSet = this.props.set.merge({
         action: "set",
         header: this.state.to_header,
@@ -137,9 +136,11 @@ class Header extends React.Component {
                 <FormControl
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
                   value={to_header}
-                  onChange={(e) => {this.setState({
-                    to_header: e.target.value
-                  })}}/>
+                  onChange={(e) => {
+                    this.setState({
+                      to_header: e.target.value
+                    })
+                  }}/>
               </FormGroup>
             </Panel>
 
@@ -152,9 +153,11 @@ class Header extends React.Component {
                 <FormControl
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
                   value={to_value}
-                  onChange={(e) => {this.setState({
-                    to_value: e.target.value
-                  })}}/>
+                  onChange={(e) => {
+                    this.setState({
+                      to_value: e.target.value
+                    })
+                  }}/>
               </FormGroup>
             </Panel>
 
@@ -169,9 +172,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
                       value={from_header}
-                      onChange={(e) => {this.setState({
-                        from_header: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          from_header: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -182,9 +187,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
                       value={to_header}
-                      onChange={(e) => {this.setState({
-                        to_header: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          to_header: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -195,9 +202,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
                       value={from_value}
-                      onChange={(e) => {this.setState({
-                        from_value: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          from_value: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -208,9 +217,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
                       value={to_value}
-                      onChange={(e) => {this.setState({
-                        to_value: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          to_value: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
               </Row>

@@ -26,7 +26,9 @@ const emptyTopology = Immutable.Map({
 
 export const getCountryTopo = (state) => {
   const countries = state.topo.get('countries')
-  if (countries) {return countries.toJS()}
+  if (countries) {
+    return countries.toJS()
+  }
 
   return {}
 }

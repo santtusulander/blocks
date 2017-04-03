@@ -42,7 +42,9 @@ class AnalysisTraffic extends React.Component {
     }
 
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 300)
   }
 
   componentWillUnmount() {
@@ -68,8 +70,7 @@ class AnalysisTraffic extends React.Component {
     return data.sort((a, b) => {
       if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
-      }
-      else if (a.get(sortBy) > b.get(sortBy)) {
+      }      else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0

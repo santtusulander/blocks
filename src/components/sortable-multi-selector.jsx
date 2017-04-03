@@ -30,9 +30,13 @@ const SortableItem = SortableElement(({value, idx, size, actions, getLabel}) => 
       <div className='sortable-item-actions'>
         <ActionButtons
           className="secondary"
-          onArrowUp={() => {idx > 0 ? moveItem(value, idx, idx - 1) : () => false}}
+          onArrowUp={() => {
+            idx > 0 ? moveItem(value, idx, idx - 1) : () => false
+          }}
           arrowUpDisabled={idx <= 0}
-          onArrowDown={() => {idx < size - 1 ? moveItem(value, idx, idx + 1) : () => false}}
+          onArrowDown={() => {
+            idx < size - 1 ? moveItem(value, idx, idx + 1) : () => false
+          }}
           arrowDownDisabled={idx >= size - 1}
           onDelete={() => deleteItem(idx)}
         />

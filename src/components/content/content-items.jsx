@@ -71,8 +71,7 @@ const sortContent = (path, direction) => (item1, item2) => {
 
   if (val1 > val2 || val2 === undefined) {
     return direction
-  }
-  else if (val1 < val2 || val1 === undefined) {
+  }  else if (val1 < val2 || val1 === undefined) {
     return -1 * direction
   }
   return 0
@@ -345,8 +344,12 @@ class ContentItems extends React.Component {
       valB = b.get('totalTraffic')
     }
 
-    if (valA > valB) {return sortDirection}
-    if (valA < valB) {return -1 * sortDirection}
+    if (valA > valB) {
+      return sortDirection
+    }
+    if (valA < valB) {
+      return -1 * sortDirection
+    }
 
     return 0
   }
@@ -366,8 +369,12 @@ class ContentItems extends React.Component {
       valB = b.get('totalTraffic')
     }
 
-    if (valA > valB) {return sortDirection}
-    if (valA < valB) {return -1 * sortDirection}
+    if (valA > valB) {
+      return sortDirection
+    }
+    if (valA < valB) {
+      return -1 * sortDirection
+    }
 
     return 0
   }
@@ -545,7 +552,8 @@ class ContentItems extends React.Component {
                       propertyId={property.get('published_host_id')}
                       params={params}
                       viewingChart={viewingChart}
-                    />)}
+                    />)
+                }
                   )
                 }
 

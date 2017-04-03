@@ -64,8 +64,7 @@ class AnalysisHorizontalBar extends React.Component {
                   </text>
                 </g>
               )
-            }
-            else {
+            }            else {
               return null
             }
           })}

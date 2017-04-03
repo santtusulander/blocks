@@ -73,8 +73,7 @@ export class SetPassword extends React.Component {
       ).then(action => {
         if (!action.error) {
           this.goToLoginPage()
-        }
-        else {
+        }        else {
           this.goToResetTokenExpiredPage()
         }
       })

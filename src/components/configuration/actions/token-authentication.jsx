@@ -128,8 +128,12 @@ export class TokenAuth extends React.Component {
 
     let sidePanelTitle = ''
 
-    if (this.state.detailForm === 'schema') {sidePanelTitle = <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
-    if (this.state.detailForm === 'streaming') {sidePanelTitle = <FormattedMessage id="portal.policy.edit.tokenauth.streaming.text" />}
+    if (this.state.detailForm === 'schema') {
+      sidePanelTitle = <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />
+    }
+    if (this.state.detailForm === 'streaming') {
+      sidePanelTitle = <FormattedMessage id="portal.policy.edit.tokenauth.streaming.text" />
+    }
 
     return (
       <div>
