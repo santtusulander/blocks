@@ -646,7 +646,7 @@ class ContentItems extends React.Component {
               accountId={account}
               groupId={group}
               storageId={this.state.itemToEdit}
-              show= {true}
+              show={true}
               editing={false}
               fetching={false}
               onCancel={this.hideStorageModal}
