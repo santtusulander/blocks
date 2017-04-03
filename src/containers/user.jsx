@@ -10,8 +10,6 @@ import * as userActionCreators from '../redux/modules/user'
 import roleNameActions from '../redux/modules/entities/role-names/actions'
 import { getById as getRoleNameById } from '../redux/modules/entities/role-names/selectors'
 
-//import { getRolesForUser } from '../util/helpers'
-
 import PageContainer from '../components/layout/page-container'
 import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
@@ -72,7 +70,7 @@ class User extends React.Component {
   }
 
   render() {
-    const { currentUser /*, roles*/ } = this.props;
+    const { currentUser } = this.props;
     const initialValues = currentUser ? {
       email: currentUser.get('email'),
       first_name: currentUser.get('first_name'),
@@ -87,7 +85,7 @@ class User extends React.Component {
 
     return (
       <Content>
-        <PageHeader pageSubTitle={this.props.currentUserRoleName/*getRolesForUser(currentUser, roles)[0][1]*/}>
+        <PageHeader pageSubTitle={this.props.currentUserRoleName}>
           <h1>{currentUser.get('first_name')} {currentUser.get('last_name')}</h1>
         </PageHeader>
         <PageContainer>
