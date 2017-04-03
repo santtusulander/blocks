@@ -82,16 +82,16 @@ class AnalysisContribution extends React.Component {
 
     const chartData = this.props.stats.map(provider => {
       const dataObject = {}
-      if (isHttp && isOnNet)        {
+      if (isHttp && isOnNet) {
         dataObject.onNetHttp = provider.getIn(['http','net_on_bytes'])
       }
-      if (isHttps && isOnNet)        {
+      if (isHttps && isOnNet) {
         dataObject.onNetHttps = provider.getIn(['https','net_on_bytes'])
       }
-      if (isHttp && isOffNet)        {
+      if (isHttp && isOffNet) {
         dataObject.offNetHttp = provider.getIn(['http','net_off_bytes'])
       }
-      if (isHttps && isOffNet)        {
+      if (isHttps && isOffNet) {
         dataObject.offNetHttps = provider.getIn(['https','net_off_bytes'])
       }
 
