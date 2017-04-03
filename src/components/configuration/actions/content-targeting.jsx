@@ -74,7 +74,9 @@ class ContentTargeting extends React.Component {
 
     const denyStatusCodeOptions = StatusCodes
                                 .getPickedResponseCodes([401, 403, 404], false)
-                                .map(code => { return { value: code.code, label: code.message } })
+                                .map(code => {
+                                  return { value: code.code, label: code.message } 
+                                })
 
     return (
       <div>
