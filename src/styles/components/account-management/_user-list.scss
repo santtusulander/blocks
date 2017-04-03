@@ -1,8 +1,8 @@
 .cell-text-left {
   text-align: left;
+
   & .form-group {
-    padding-bottom: 0;
     padding-top: 5px;
+    padding-bottom: 0;
   }
 }
-

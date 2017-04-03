@@ -1,5 +1,5 @@
 .ticket-form-sidebar {
-  @extend .modal-form-panel;
+  @extend .modal-form-panel; // sass-lint:disable-line placeholder-in-extend
 
   .form-group.border-bottom {
     padding-bottom: 25px;
@@ -14,8 +14,8 @@
     align-items: center;
 
     label {
-      flex: 1;
       margin: 0;
+      flex: 1;
     }
   }
 }
