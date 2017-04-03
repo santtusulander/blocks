@@ -53,8 +53,7 @@ class RolesList extends React.Component {
       }
       if (aVal < bVal) {
         return -1 * sortDir
-      }
-      else if (aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0

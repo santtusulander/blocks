@@ -84,8 +84,9 @@ class PodFormContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { brand, accountId } = nextProps
 
-    if (this.props.accountId !== nextProps.accountId)
+    if (this.props.accountId !== nextProps.accountId) {
       this.props.fetchFootprints({ brand, account: accountId })
+    }
   }
 
   initFootprints() {
@@ -131,9 +132,15 @@ class PodFormContainer extends React.Component {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
     const { bgp_router_ip, bgp_as_number, bgp_password } = values
-    if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
-    if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
-    if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
+    if (bgp_router_ip) {
+      setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
+    }
+    if (bgp_as_number) {
+      setFormVal('UIsp_bgp_router_as', bgp_as_number)
+    }
+    if (bgp_password) {
+      setFormVal('UIsp_bgp_router_password', bgp_password)
+    }
   }
 
   clearBGP() {
@@ -217,7 +224,9 @@ class PodFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.pod_name
+    if (edit) {
+      params.id = values.pod_name
+    }
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
@@ -462,7 +471,9 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
   initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
-  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map(ip => { return {id: ip, label: ip} }).toJS() || []
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map(ip => {
+    return {id: ip, label: ip} 
+  }).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),

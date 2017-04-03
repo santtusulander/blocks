@@ -240,7 +240,9 @@ class FootprintForm extends React.Component {
           multiple={false}
           uploadModalOnClick={true}
           onDropCompleted={this.onDropComplete}
-          onDeleteCompleted={() => { this.setState({ csvValues: {} }) }}/>
+          onDeleteCompleted={() => {
+            this.setState({ csvValues: {} }) 
+          }}/>
 
         { templateLink }
       </div>

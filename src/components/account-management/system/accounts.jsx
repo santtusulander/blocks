@@ -84,8 +84,7 @@ class AccountList extends Component {
       }
       if (aVal < bVal) {
         return -1 * sortDir
-      }
-      else if (aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -154,7 +153,9 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {
+            this.props.editAccount()
+          }}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -183,7 +184,9 @@ class AccountList extends Component {
                 <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
                 <td className="nowrap-column">
                   <ActionButtons
-                    onEdit={() => {this.props.editAccount(account)}}
+                    onEdit={() => {
+                      this.props.editAccount(account)
+                    }}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>

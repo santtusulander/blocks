@@ -37,7 +37,9 @@ class AnalysisOnOffNetReport extends React.Component {
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
@@ -66,8 +68,12 @@ class AnalysisOnOffNetReport extends React.Component {
         const rhs = b.get(sortBy[0])
 
         // the following conditionals handle cases where a & b contain null data
-        if (!lhs && rhs) { return -1 * sortDir }
-        if (lhs && !rhs) { return 1 * sortDir }
+        if (!lhs && rhs) {
+          return -1 * sortDir 
+        }
+        if (lhs && !rhs) {
+          return 1 * sortDir 
+        }
         if (lhs && rhs) {
           if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {
             return -1 * sortDir
@@ -82,8 +88,7 @@ class AnalysisOnOffNetReport extends React.Component {
       sortFunc = data.sort((a, b) => {
         if (a.get(sortBy) < b.get(sortBy)) {
           return -1 * sortDir
-        }
-        else if (a.get(sortBy) > b.get(sortBy)) {
+        } else if (a.get(sortBy) > b.get(sortBy)) {
           return 1 * sortDir
         }
         return 0
