@@ -13,7 +13,7 @@ const rolePermissionSchema = new schema.Entity('roles', {}, {
   processStrategy: (value, parent, key) => {
 
     //To provide compability with the old permissionMapping
-    const reduced = value.services.reduce((acc, val) => {
+    const reduced = value.services.reduce((acc,val) => {
       acc[val.service.toLowerCase()] = val.permissions.resources
       return acc;
     }, {})
