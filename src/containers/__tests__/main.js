@@ -154,7 +154,10 @@ describe('Main', () => {
         hostActions: hostActionsMaker(),
         params: fakeParams,
         roles: fromJS(roles),
-        fetchAccountData: fakeFetchAccountData
+        fetchAccountData: fakeFetchAccountData,
+        fetchAccount: jest.fn(),
+        fetchGroup: jest.fn(),
+        fetchProperty: jest.fn()
       }
       return shallow(<Main {...props}/>)
     }
