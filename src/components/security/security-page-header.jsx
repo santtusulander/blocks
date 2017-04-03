@@ -7,13 +7,13 @@ import TruncatedTitle from '../truncated-title'
 import IconCaretDown from '../icons/icon-caret-down'
 
 const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc, params }) => {
-  const { account, group } = params
+  const { account } = params
   const restriction = account ? "group" : null
   let headerText = intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})
 
-  if (group) {
+  if (activeGroup) {
     headerText = activeGroup
-  } else if (account) {
+  } else if (activeAccount) {
     headerText = activeAccount
   }
 
