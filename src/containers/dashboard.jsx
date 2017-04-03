@@ -102,7 +102,9 @@ export class Dashboard extends React.Component {
     if (this.measureContainersTimeout) {
       clearTimeout(this.measureContainersTimeout)
     }
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
   }
 
   componentWillUnmount() {
@@ -145,10 +147,9 @@ export class Dashboard extends React.Component {
           let groupIds = []
           if (response) {
             groupIds = Object.keys(response.entities.groups)
-          }
-          // We don't always have to fetch groups because of caching, in those cases use selector
-          // to get group IDs for this account from the store.
-          else {
+          } else {
+            // We don't always have to fetch groups because of caching, in those cases use selector
+            // to get group IDs for this account from the store.
             groupIds = this.props.getGroupIds()
           }
           return Promise.all([

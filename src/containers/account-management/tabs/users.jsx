@@ -105,8 +105,7 @@ export class AccountManagementAccountUsers extends React.Component {
     return createUser(requestBody).then(res => {
       if (res.error) {
         throw new SubmissionError({email: res.payload.message})
-      }
-      else {
+      } else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
@@ -244,8 +243,7 @@ export class AccountManagementAccountUsers extends React.Component {
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
-    }
-    else {
+    } else {
       this.props.deleteUser(user)
     }
   }
@@ -393,7 +391,9 @@ export class AccountManagementAccountUsers extends React.Component {
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_USER}>
                       <ActionButtons
-                        onEdit={() => {this.editUser(user)}}
+                        onEdit={() => {
+                          this.editUser(user)
+                        }}
                         onDelete={() => this.deleteUser(user.get('email'))} />
                     </IsAllowed>
                   </td>
@@ -449,7 +449,8 @@ export class AccountManagementAccountUsers extends React.Component {
                             <td className="no-border">{permissionTitle}</td>
                             <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
                           </tr>
-                        )}
+                        )
+                      }
                       )}
                       </tbody>
                     </Table>

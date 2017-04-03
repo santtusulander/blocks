@@ -58,7 +58,9 @@ export class Main extends React.Component {
 
         return this.props.userActions.fetchUser(action.payload.username)
           .then(() => {
-            this.props.currentUser.get('roles').map(id => { return this.props.fetchRole(id) })
+            this.props.currentUser.get('roles').map(id => {
+              return this.props.fetchRole(id) 
+            })
           })
 
       })

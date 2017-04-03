@@ -127,8 +127,7 @@ export function analysisServiceTypeToggled(state, action) {
   let newServiceTypes = state.get('analysisServiceTypes')
   if (newServiceTypes.includes(action.payload)) {
     newServiceTypes = newServiceTypes.filter(type => type !== action.payload)
-  }
-  else {
+  } else {
     newServiceTypes = newServiceTypes.push(action.payload)
   }
   return state.set('analysisServiceTypes', newServiceTypes)

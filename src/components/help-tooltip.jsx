@@ -17,7 +17,7 @@ const HelpTooltip = (props) => {
 
 HelpTooltip.displayName = "HelpTooltip"
 HelpTooltip.propTypes = {
-  buttonText: PropTypes.string,
+  buttonText: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]),
   children: PropTypes.node,
   id: PropTypes.string.isRequired,
   placement: PropTypes.string,

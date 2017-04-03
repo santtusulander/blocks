@@ -31,7 +31,9 @@ class FileExtension extends React.Component {
     const rawExtensionList = value.match(FILE_EXTENSION_REGEXP)[1];
 
     if (rawExtensionList) {
-      return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
+      return rawExtensionList.split('|').map(extension => {
+        return { id: extension, label: extension } 
+      })
     } else {
       return []
     }

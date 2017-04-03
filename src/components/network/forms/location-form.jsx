@@ -286,7 +286,8 @@ const NetworkLocationForm = (props) => {
         </IsAllowed>
       </FormFooterButtons>
     </form>
-  )};
+  )
+};
 
 NetworkLocationForm.displayName = 'NetworkLocationEditForm';
 NetworkLocationForm.propTypes = {

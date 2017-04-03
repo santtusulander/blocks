@@ -37,8 +37,7 @@ class AnalysisContribution extends React.Component {
     return data.sort((a, b) => {
       if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
-      }
-      else if (a.get(sortBy) > b.get(sortBy)) {
+      } else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0
@@ -52,41 +51,49 @@ class AnalysisContribution extends React.Component {
     const isOffNet = this.props.onOffFilter.includes('off')
 
     const barModels = []
-    if (isHttps && isOffNet)
+    if (isHttps && isOffNet) {
       barModels.push({
         dataKey: 'offNetHttps',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.offNetHttps.label'}),
         className: 'line-3'
       })
-    if (isHttp && isOffNet)
+    }
+    if (isHttp && isOffNet) {
       barModels.push({
         dataKey: 'offNetHttp',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.offNetHttp.label'}),
         className: 'line-2'
       })
-    if (isHttps && isOnNet)
+    }
+    if (isHttps && isOnNet) {
       barModels.push({
         dataKey: 'onNetHttps',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.onNetHttps.label'}),
         className: 'line-1'
       })
-    if (isHttp && isOnNet)
+    }
+    if (isHttp && isOnNet) {
       barModels.push({
         dataKey: 'onNetHttp',
         name: this.props.intl.formatMessage({id: 'portal.analytics.serviceProviderContribution.onNetHttp.label'}),
         className: 'line-0'
       })
+    }
 
     const chartData = this.props.stats.map(provider => {
       const dataObject = {}
-      if (isHttp && isOnNet)
+      if (isHttp && isOnNet) {
         dataObject.onNetHttp = provider.getIn(['http','net_on_bytes'])
-      if (isHttps && isOnNet)
+      }
+      if (isHttps && isOnNet) {
         dataObject.onNetHttps = provider.getIn(['https','net_on_bytes'])
-      if (isHttp && isOffNet)
+      }
+      if (isHttp && isOffNet) {
         dataObject.offNetHttp = provider.getIn(['http','net_off_bytes'])
-      if (isHttps && isOffNet)
+      }
+      if (isHttps && isOffNet) {
         dataObject.offNetHttps = provider.getIn(['https','net_off_bytes'])
+      }
 
       return {
         name: provider.get('name'),
