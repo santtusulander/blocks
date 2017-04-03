@@ -22,7 +22,7 @@ import Content from '../../components/layout/content'
 import { getUrl } from '../../util/routes.js'
 
 export class Security extends Component {
-  componentWillMount(){
+  componentWillMount() {
     const {brand, account, group} = this.props.params
 
     if (account) {
@@ -120,10 +120,10 @@ Security.defaultProps = {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params)),
-    fetchAccounts: (params) => dispatch( accountActions.fetchAll(params)),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params)),
-    fetchGroups: (params) => dispatch( groupActions.fetchAll(params))
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll(params))
   }
 }
 
