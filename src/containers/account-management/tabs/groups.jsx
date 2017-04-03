@@ -268,7 +268,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
 
   return {
-    fetchGroups: (params) => dispatch( groupActions.fetchAll(params) ),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll(params)),
 
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
