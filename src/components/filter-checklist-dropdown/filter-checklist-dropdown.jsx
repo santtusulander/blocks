@@ -150,8 +150,9 @@ export class FilterChecklistDropdown extends React.Component {
             {open &&
               <li role="presentation" className="action-container">
                 <FormControl
-                  inputRef={ref => {
-                    this.filterInput = ref 
+                  inputRef={(ref) => {
+                    this.filterInput = ref
+                    return this.filterInput
                   }}
                   className="header-search-input"
                   type="text"

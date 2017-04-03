@@ -6,7 +6,8 @@ export function SidebarLink({ active, activate, label }) {
       <a
         className={active ? 'active version-link' : 'version-link'}
         onClick={e => {
-          e.stopPropagation(); activate() 
+          e.stopPropagation()
+          activate() 
         }}>
         <div className="version-title">
           {label}

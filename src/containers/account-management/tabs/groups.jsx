@@ -207,11 +207,15 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                    <ActionButtons onEdit={() => {
-                      this.props.showGroupModal(group)
-                    }} onDelete={() => {
-                      this.props.deleteGroup(group)
-                    }} deleteDisabled={disabledDeleteButton}/>
+                    <ActionButtons
+                      onEdit={() => {
+                        this.props.showGroupModal(group)
+                      }}
+                      onDelete={() => {
+                        this.props.deleteGroup(group)
+                      }}
+                      deleteDisabled={disabledDeleteButton}
+                    />
                   </IsAllowed>
                 </td>
               </tr>
@@ -230,8 +234,8 @@ class AccountManagementAccountGroups extends React.Component {
   }
 }
 
-AccountManagementAccountGroups.displayName  = 'AccountManagementAccountGroups'
-AccountManagementAccountGroups.propTypes    = {
+AccountManagementAccountGroups.displayName = 'AccountManagementAccountGroups'
+AccountManagementAccountGroups.propTypes = {
   deleteGroup: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),

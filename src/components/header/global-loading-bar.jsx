@@ -43,7 +43,8 @@ class GlobalLoadingBar extends React.Component {
     return (
       <div
         ref={ref => {
-          this.gradient = ref 
+          this.gradient = ref
+          return this.gradient
         }}
         className={animating ? 'header__gradient animated' : 'header__gradient'}
       />
