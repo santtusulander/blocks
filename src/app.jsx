@@ -112,14 +112,14 @@ axios.interceptors.response.use(function (response) {
             })
         }
       }
-    }    else if (status === 403) {
+    }  else if (status === 403) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
         okButton: true,
         cancel: () => store.dispatch(hideInfoDialog())
       }));
-    }    else if (status === 500 || status === 404) {
+    }  else if (status === 500 || status === 404) {
       if (Raven.isSetup()) {
         captureAndShowRavenError(store, error.data.message, null, true)
       } else {

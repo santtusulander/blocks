@@ -53,7 +53,7 @@ class CacheKeyQueryStringForm extends React.Component {
     if (currentNames) {
       if (currentNames.find(name => name.get('field') === 'request_query')) {
         activeFilter = 'include_all_query_parameters'
-      }      else {
+      }  else {
         const currentQueryArgs = currentNames
           .filter(name => name.get('field') === 'request_query_arg')
           .map(name => name.get('field_detail'))
@@ -84,7 +84,7 @@ class CacheKeyQueryStringForm extends React.Component {
 
     if (this.state.activeFilter === 'include_all_query_parameters') {
       newName = newName.push(Map({field: 'request_query'}))
-    }    else if (this.state.activeFilter === 'include_some_parameters') {
+    }  else if (this.state.activeFilter === 'include_some_parameters') {
       if (!this.state.queryArgs.size) {
         newName = newName.push(Map({
           field: 'request_query_arg',

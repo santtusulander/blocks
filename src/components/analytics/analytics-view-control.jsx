@@ -128,13 +128,13 @@ const AnalyticsViewControl = (props) => {
     if (active) {
       if (active.hideHierarchy) {
         title = active.label
-      }      else if (storage) {
+      }  else if (storage) {
         title = active.titles.storage
-      }      else if (property) {
+      }  else if (property) {
         title = active.titles.property
-      }      else if (group) {
+      }  else if (group) {
         title = active.titles.group
-      }      else {
+      }  else {
         title = active.titles.account
       }
     }

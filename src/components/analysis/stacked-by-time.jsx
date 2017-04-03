@@ -9,7 +9,7 @@ class AnalysisStackedByTime extends React.Component {
   formatY(data) {
     if (this.props.yAxisCustomFormat) {
       return this.props.yAxisCustomFormat(data)
-    }    else {
+    }  else {
       return numeral(data).format('0 a')
     }
   }

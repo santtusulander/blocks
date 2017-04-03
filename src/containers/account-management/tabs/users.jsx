@@ -105,7 +105,7 @@ export class AccountManagementAccountUsers extends React.Component {
     return createUser(requestBody).then(res => {
       if (res.error) {
         throw new SubmissionError({email: res.payload.message})
-      }      else {
+      }  else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
@@ -243,7 +243,7 @@ export class AccountManagementAccountUsers extends React.Component {
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
-    }    else {
+    }  else {
       this.props.deleteUser(user)
     }
   }

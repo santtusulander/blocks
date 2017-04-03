@@ -386,14 +386,14 @@ export function checkForErrors(fields, customConditions, requiredTexts = {}) {
     const isEmptyArray = field instanceof Array && field.length === 0
     if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
-    }    else if (customConditions) {
+    }  else if (customConditions) {
       if (Array.isArray(customConditions[fieldName])) {
         for (const customCondition in customConditions[fieldName]) {
           if (customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
             errors[fieldName] = customConditions[fieldName][customCondition].errorText
           }
         }
-      }      else if (customConditions[fieldName] && customConditions[fieldName].condition) {
+      }  else if (customConditions[fieldName] && customConditions[fieldName].condition) {
         errors[fieldName] = customConditions[fieldName].errorText
       }
     }
@@ -558,7 +558,7 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
       }
       if (aVal < bVal) {
         return -1 * sortDir
-      }      else if (aVal > bVal) {
+      }  else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0

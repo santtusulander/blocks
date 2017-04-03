@@ -63,7 +63,7 @@ export function qsBuilder(params) {
 
     if (key === 'startDate') {
       param = 'start'
-    }    else if (key === 'endDate') {
+    }  else if (key === 'endDate') {
       param = 'end'
     }
     return [...arr, `${param}=${params[key]}`]

@@ -27,7 +27,7 @@ const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManageme
         onSelect={account => {
           if (account === 'add') {
             toggleAccountManagementModal(ADD_ACCOUNT)
-          }          else {
+          }  else {
             //FIXME: this is NOT 100% accurate
             const currentRoute = routes[routes.length - 1].path
             //replace :account with selected valye
