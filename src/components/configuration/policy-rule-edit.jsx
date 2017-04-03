@@ -155,9 +155,18 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
   renderConditionName(match) {
     if (match.field === 'content_targeting_country_code') {
+      let filterType = ''
+
+      if (match.filterType === 'in') {
+        filterType = <FormattedMessage id="portal.policy.edit.rule.matcher.from.text"/>
+      } else {
+        filterType = <FormattedMessage id="portal.policy.edit.rule.matcher.notFrom.text"/>
+      }
+
       return (
         <div className="condition-name">
-          {'Countries: '}
+          {filterType}&nbsp;
+          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}:&nbsp;
           <TruncatedTitle
             content={match.values.map(getFormattedCountry).join(', ')}
           />
@@ -167,7 +176,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     
     return (
       <div className="condition-name">
-        {match.field}&nbsp;:&nbsp;
+        {match.field}:&nbsp;
         <TruncatedTitle
           content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
         />
@@ -212,8 +221,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   render() {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
-
-    const disableAddMatchButton = () => !flattenedPolicy.sets.length || flattenedPolicy.sets.reduce((acc, set) => acc || set._temp, false)
 
     const disableButton = () => {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
@@ -262,9 +269,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
             <Col sm={4} className="text-right">
-              <Button bsStyle="primary" className="btn-icon btn-add-new"
+              <Button
+                bsStyle="primary"
+                className="btn-icon btn-add-new"
                 onClick={this.addCondition()}
-                disabled={disableAddMatchButton()}>
+              >
                 <IconAdd />
               </Button>
             </Col>
@@ -282,8 +291,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
-                    {match.field ?
-                      this.renderConditionName(match)
+                    {match.field
+                      ? this.renderConditionName(match)
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>

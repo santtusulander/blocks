@@ -2,22 +2,22 @@
 
 .stacked-area-chart-container {
 
-/**
- * Fallback color for unknown dataset
- */
+  /**
+   * Fallback color for unknown dataset
+   */
 
-.non-stacked {
-   .recharts-area {
-     path {
-       &:last-child {
-         fill: $pale-blue;
-       }
-     }
-   }
- }
+  .non-stacked {
+    .recharts-area {
+      path {
+        &:last-child {
+          fill: $pale-blue;
+        }
+      }
+    }
+  }
 
- .stacked,
- .two-stacked-comparison {
+  .stacked,
+  .two-stacked-comparison {
     .recharts-area {
       &:first-of-type {
         path {
@@ -37,7 +37,7 @@
     }
   }
 
-.comparison {
+  .comparison {
     .recharts-area {
       &:first-of-type {
         path {
@@ -102,87 +102,89 @@
    * Defined color for analytic area chart
    */
 
-   .stacked,
-   .non-stacked,
-   .two-stacked-comparison {
-     .recharts-area {
-       &.http {
-         path {
-           &:last-child {
-             fill: $pale-blue;
-           }
-         }
-       }
+  // sass-lint:disable-all
+  .stacked,
+  .non-stacked,
+  .two-stacked-comparison {
+    .recharts-area {
+      &.http {
+        path {
+          &:last-child {
+            fill: $pale-blue;
+          }
+        }
+      }
 
-       &.https {
-         path {
-           &:last-child {
-             fill: $gradient-teal;
-           }
-         }
-       }
-     }
-   }
+      &.https {
+        path {
+          &:last-child {
+            fill: $gradient-teal;
+          }
+        }
+      }
+    }
+  }
 
-   .comparison {
-     .recharts-area {
-       &.http {
-         path {
-           &:first-child {
-             stroke: $yellow;
-             stroke-width: 4px;
-           }
+  .comparison {
+    .recharts-area {
+      &.http {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 4px;
+          }
 
-           &:last-child {
-             fill: $dark-blue;
-           }
-         }
-       }
-
-       &.comparison_http {
-         path {
-           &:first-child {
-             stroke: $pale-blue;
-             stroke-width: 2px;
-           }
-
-           &:last-child {
-             fill: $black-20;
-           }
+          &:last-child {
+            fill: $dark-blue;
          }
        }
      }
-   }
 
-   .two-stacked-comparison {
-     .recharts-area {
-       &.comparison_http {
-         path {
-           &:first-child {
-             stroke: $purple;
-             stroke-width: 4px;
-           }
+      &.comparison_http {
+        path {
+          &:first-child {
+            stroke: $pale-blue;
+            stroke-width: 2px;
+          }
 
-           &:last-child {
-             fill: $dark-blue;
-           }
-         }
-       }
+          &:last-child {
+            fill: $black-20;
+          }
+        }
+      }
+    }
+  }
 
-       &.comparison_https {
-         path {
-           &:first-child {
-             stroke: $yellow;
-             stroke-width: 2px;
-           }
+  .two-stacked-comparison {
+    .recharts-area {
+      &.comparison_http {
+        path {
+          &:first-child {
+            stroke: $purple;
+            stroke-width: 4px;
+          }
 
-           &:last-child {
-             fill: $black-20;
-           }
-         }
-       }
-     }
-   }
+          &:last-child {
+            fill: $dark-blue;
+          }
+        }
+      }
+
+      &.comparison_https {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 2px;
+          }
+
+          &:last-child {
+            fill: $black-20;
+          }
+        }
+      }
+    }
+  }
+  // sass-lint:enable-all
 
   .stacked-area-chart-label {
     position: absolute;
@@ -190,5 +192,4 @@
     left: 30px;
     font-weight: bold;
   }
-
 }
