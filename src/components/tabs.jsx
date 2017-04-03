@@ -50,7 +50,9 @@ class Tabs extends React.Component {
     clearTimeout(this.timeout)
   }
   measureTabs() {
-    if (!this.props.children || !this.props.children.length) return
+    if (!this.props.children || !this.props.children.length) {
+      return
+    }
 
     const hiddenTabs = []
     this.setState({ hiddenTabs: hiddenTabs })
@@ -89,14 +91,18 @@ class Tabs extends React.Component {
           children.filter((tab, i) => !hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
               tab, {
-                ref: (tabEl) => {this.tabElements[i] = tabEl},
+                ref: (tabEl) => {
+                  this.tabElements[i] = tabEl
+                },
                 key: i
               }
             )
           })
           : children
         }
-        <li ref={(node) => {this.hiddenTabsElement = node}}>
+        <li ref={(node) => {
+          this.hiddenTabsElement = node
+        }}>
           {hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
               <Dropdown.Toggle className="tabs-dropdown-toggle" noCaret={true}>
