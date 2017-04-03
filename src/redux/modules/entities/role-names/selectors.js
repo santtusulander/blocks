@@ -16,5 +16,5 @@ export const getById = (state, id) => {
  * @return Map
  */
 export const getAll = (state) => {
-  return state.entities.roleNames
+  return state.entities.roleNames.toList()
 }
