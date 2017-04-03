@@ -219,6 +219,7 @@
     "react/display-name": [1, { "ignoreTranspilerName": true }],
     "react/jsx-boolean-value": [1, "always"],
     "react/jsx-curly-spacing": 1,
+    "react/jsx-equals-spacing": 1,
     "react/jsx-no-duplicate-props": 1,
     "react/jsx-no-undef": 1,
     "react/sort-prop-types": 1,
