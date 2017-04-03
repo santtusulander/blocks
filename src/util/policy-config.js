@@ -109,7 +109,7 @@ const getActionName = (actionName, action) => {
 
   const actionConfig = availableActions.find(item => item.key === actionName)
 
-  return actionConfig ? <FormattedMessage id={actionConfig.name}/> : ''
+  return actionConfig ? <FormattedMessage id={actionConfig.name}/> : actionName
 }
 
 export function policyContainsMatchField(policy, field, count) {
