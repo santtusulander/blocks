@@ -33,8 +33,8 @@ class AnalyticsTabStorage extends Component {
     } else if (params.group) {
       this.props.fetchAllCISIngestPoints(params)
     } else {
-      if(this.props.groups) {
-        this.props.groups.forEach( (group) => {
+      if (this.props.groups) {
+        this.props.groups.forEach((group) => {
           const groupId = group.get('id')
           this.props.fetchAllCISIngestPoints({brand: this.props.params.brand, account: this.props.params.account, group: groupId})
         })
