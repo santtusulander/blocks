@@ -5,6 +5,12 @@ jest.unmock('blueimp-md5')
 import { generateTokenHash } from '../token-authentication'
 
 describe('Token Authentication Hash Utils', () => {
+  it('Should output hashed string correctly (MD5)', () => {
+    const actual = generateTokenHash('MD5', null, 'string')
+    const expected = 'b45cffe084dd3d20d928bee85e7b0f21'
+    expect(actual).toBe(expected)
+  })
+
   it('Should output hashed string correctly (HMA-MD5)', () => {
     const actual = generateTokenHash('HMAC_MD5', 'key', 'string')
     const expected = '38fc25be306abaee29caa95a980cd645'
