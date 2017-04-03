@@ -81,7 +81,14 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
       { hasContents
         ? <StorageContentBrowser contents={contents} />
         : asperaUpload
-        ? <AsperaUpload multiple={true} brandId={brandId} accountId={accountId} groupId={groupId} storageId={storageId} asperaGetaway={gatewayHostname} />
+        ? <AsperaUpload
+            multiple={true}
+            brandId={brandId}
+            accountId={accountId}
+            groupId={groupId}
+            storageId={storageId}
+            asperaGetaway={gatewayHostname}
+          />
         : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
       }
     </SectionContainer>

@@ -1036,7 +1036,16 @@ class Styleguide extends React.Component {
           </DashboardPanels>
 
           <h1 className="page-header">Pagination</h1>
-          <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+          <Pagination
+            items={10}
+            maxButtons={5}
+            activePage={5}
+            prev={true}
+            next={true}
+            first={true}
+            last={true}
+            ellipsis={true}
+          />
 
           <h1 className="page-header">CsvUpload</h1>
           <CsvUploadArea

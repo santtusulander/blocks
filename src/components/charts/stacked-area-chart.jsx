@@ -65,7 +65,14 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
         <AreaChart data={data} margin={{left: 50, bottom: 30, top: 100}} className={chartClassName}>
           { renderAreas(areas) }
 
-          <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
+          <XAxis
+            dataKey='timestamp'
+            ticks={getTicks(data)}
+            tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)}
+            tickLine={false}
+            tick={{ transform: 'translate(0, 20)' }}
+            axisLine={false}
+          />
           <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
           <Legend
