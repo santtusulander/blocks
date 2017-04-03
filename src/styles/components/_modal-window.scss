@@ -154,3 +154,7 @@ $form-error-color: $red;
 .modal-button-toolbar {
   width: 100%;
 }
+
+div[role='dialog'] {
+  background: rgba($black, .5);
+}
