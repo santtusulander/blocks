@@ -53,6 +53,40 @@ $input-height: 36px;
   }
 }
 
+.primary-side-modal .condition {
+  display: flex;
+  padding-top: 0;
+  margin-right: 0;
+  margin-left: 0;
+  align-items: center;
+
+  .light-theme & {
+    background-color: rgba($black, 0.04);
+  }
+}
+
+.secondary-side-modal {
+  width: 600px;
+
+  .condition-selection {
+    margin: 0;
+
+    .light-theme & a {
+      color: $lt-text-color;
+
+      &:hover {
+        color: rgba($lt-text-color, 0.7);
+      }
+    }
+
+    & > li {
+      padding-left: 0;
+      border-bottom: 1px solid rgba($black, 0.2);
+
+    }
+  }
+}
+
 
 .configuration-gtm-rules {
   width: 100%;
