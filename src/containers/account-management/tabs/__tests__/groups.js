@@ -35,9 +35,7 @@ const groupsElem =
     userActions={{
       fetchUsers: genAsyncMock
     }}
-    groupActions={{
-      fetchGroups: genAsyncMock
-    }}
+    fetchGroups={jest.fn()}
     router= { routerMock }
     intl={intlMaker()}
   />

@@ -40,6 +40,7 @@
       }
     }
   }
+
   .light-theme & {
     color: $lt-text-color;
     background-color: $white;
@@ -51,6 +52,7 @@
       &.active {
         color: $white;
       }
+
       &:hover {
         color: rgba($black, 0.4);
       }
