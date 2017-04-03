@@ -186,7 +186,9 @@ class AccountManagementSystemDNS extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={this.hideDeleteModal}
-          onSubmit={() => {this.deleteDomain()}}
+          onSubmit={() => {
+            this.deleteDomain()
+          }}
           invalid={true}
           verifyDelete={true}>
           <p>

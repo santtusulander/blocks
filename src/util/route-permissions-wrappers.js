@@ -93,8 +93,7 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
         let path = ownProps.location.pathname.replace(/\/$/, '')
         path = path.substr(0, path.lastIndexOf('/'))
         return `${path}/${fallback[1]}`
-      }
-      else {
+      } else {
         // TODO: Where should we send them? Wrap these checks to 404 on error?
         throw ("User doesn't have permission to see any analytics tabs.")
       }

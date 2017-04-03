@@ -33,7 +33,9 @@ const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
           numericValues={numericValues}
           disabled={disabled}
           className={className}
-          onSelect={e => {input.onChange(e)}}
+          onSelect={e => {
+            input.onChange(e)
+          }}
           onTouch={e => input.onBlur(e)}
           options={options}
           emptyLabel={emptyLabel}

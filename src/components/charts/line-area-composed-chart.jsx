@@ -16,7 +16,9 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
   const haveEstimate = data && data[0] && data[0].estimate
   const containerProps = isMiniChart ? { width: width, height: height} : { minHeight: 300, aspect: 2}
   const getTicks = (data) => {
-    if (!data || !data.length || isMiniChart) {return [];}
+    if (!data || !data.length || isMiniChart) {
+      return [];
+    }
 
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()

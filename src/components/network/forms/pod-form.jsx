@@ -234,7 +234,9 @@ const PodForm = ({
 
   /*eslint-disable no-unused-vars */
   const addFootprint = ([footprint, ...rest]) => {
-    if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+    if (footprint) {
+      dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+    }
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
@@ -276,7 +278,9 @@ const PodForm = ({
         <Field
           name="status"
           component={FieldFormGroupSelect}
-          options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+          options={STATUS_OPTIONS.map(({value, label}) => {
+            return { value, label: intl.formatMessage({id: label}) }
+          })}
           label={<FormattedMessage id="portal.network.item.status.label" />}
           disabled={readOnly}
         />
@@ -286,7 +290,9 @@ const PodForm = ({
         className="input-select"
         name="UILbMethod"
         component={FieldFormGroupSelect}
-        options={LBMETHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        options={LBMETHOD_OPTIONS.map(({value, label}) => {
+          return { value, label: intl.formatMessage({id: label}) }
+        })}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
         disabled={readOnly}
         addonAfter={
@@ -301,7 +307,9 @@ const PodForm = ({
         name="pod_type"
         className="input-select"
         component={FieldFormGroupSelect}
-        options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        options={POD_TYPE_OPTIONS.map(({value, label}) => {
+          return { value, label: intl.formatMessage({id: label}) }
+        })}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
         disabled={readOnly}
         addonAfter={
@@ -332,7 +340,9 @@ const PodForm = ({
         className="input-select"
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
-        options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => {
+          return { value, label: intl.formatMessage({id: label}) }
+        })}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
         disabled={readOnly}
         addonAfter={
@@ -387,7 +397,9 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed || readOnly}
-        options={DISCOVERY_METHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        options={DISCOVERY_METHOD_OPTIONS.map(({value, label}) => {
+          return { value, label: intl.formatMessage({id: label}) }
+        })}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
           <HelpTooltip

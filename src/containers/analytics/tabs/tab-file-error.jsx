@@ -50,9 +50,11 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   render() {
-    if (this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0) return (
+    if (this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0) {
+      return (
       <FormattedMessage id="portal.analytics.fileErrors.noData.text" />
-    )
+      )
+    }
 
     return (
       <AnalysisFileError
