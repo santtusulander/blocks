@@ -1,13 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
-import { Map, List } from 'immutable'
+import { Map } from 'immutable'
 
 import ToggleElement from '../global-account-selector/toggle-element'
 
 import autoClose from '../../decorators/select-auto-close'
 
-import SelectorItems from './menu-items'
-import SelectorHeader from './menu-header'
+import DrillableMenuItems from './menu-items'
+import DrillableMenuHeader from './menu-header'
 
 class DrillableMenu extends Component {
 
@@ -18,7 +18,7 @@ class DrillableMenu extends Component {
   static get contextTypes() {
     return {
       currentUser: PropTypes.instanceOf(Map),
-      roles: PropTypes.instanceOf(List)
+      roles: PropTypes.instanceOf(Map)
     }
   }
 
@@ -80,7 +80,7 @@ class DrillableMenu extends Component {
       const { idKey = 'id', nodeInfo } = node
       const nodeId = node[idKey]
 
-      if (nodeId == this.state.activeNode) {
+      if (String(nodeId) === String(this.state.activeNode)) {
 
         found = node
         break
@@ -108,7 +108,7 @@ class DrillableMenu extends Component {
       const { parentNodeId, labelKey = 'name', nodeInfo } = nodeToView
       return (
           <Dropdown.Menu>
-            <SelectorHeader
+            <DrillableMenuHeader
               parentId={parentNodeId}
               subtitle={nodeInfo.headerSubtitle}
               goToParent={this.changeActiveNode}
@@ -116,7 +116,7 @@ class DrillableMenu extends Component {
               onSearchChange={this.onSearchChange}
               activeNodeName={nodeToView[labelKey]} />
 
-            <SelectorItems
+            <DrillableMenuItems
               onItemClick={this.props.onItemClick}
               handleCaretClick={this.handleCaretClick}
               goToChild={this.changeActiveNode}

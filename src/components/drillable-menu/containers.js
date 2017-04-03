@@ -5,6 +5,8 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { getGroups, getBrands, getAccounts } from './menu-selectors'
 
 import {
@@ -15,7 +17,7 @@ import {
 
 import checkPermissions from '../../util/permissions'
 
-import Selector from './'
+import DrillableMenu from './'
 
 /**
  * Runs check for a permission to determine whether the entity tree
@@ -29,7 +31,7 @@ import Selector from './'
 const permissionCheck = (levels, user, roles) => permission => {
   let hasLevel = false
 
-  switch(permission) {
+  switch (permission) {
 
     case VIEW_CONTENT_ACCOUNTS:
       hasLevel = levels.includes('brand')
@@ -89,7 +91,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   */
 const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
-  const canView = permissionCheck(levels, state.user.get('currentUser'), state.roles.get('roles'))
+  const canView = permissionCheck(levels, state.user.get('currentUser'), getRoles(state))
 
   const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
   const canViewAccount = canView(VIEW_CONTENT_GROUPS)
@@ -124,4 +126,4 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
   }
 }
 
-export const AccountSelector = connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(Selector)
+export const AccountSelector = connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(DrillableMenu)

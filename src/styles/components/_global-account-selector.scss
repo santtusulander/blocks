@@ -88,20 +88,25 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
   .dropdown-menu {
     width: $dropdown-selector-width;
-    height: 400px;
     max-height: none;
-    overflow-y: auto !important;
+    overflow-y: hidden !important;
     background: #161927;
 
     .menu-container {
       position: relative;
-      height: 100%;
+      height: 337px;
 
       .scrollable-menu {
         position: absolute;
         top: 0;
         left: 0;
         height: 100%;
+
+        .name-container {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
     }
 

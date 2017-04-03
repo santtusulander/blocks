@@ -21,7 +21,7 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
             menuItems.push(
               <li key={i}>
 
-                <a onClick={() => onItemClick(node)}>{nodeName}</a>
+                <a className="name-container" onClick={() => onItemClick(node)}>{nodeName}</a>
 
                 {nodes &&
                   <a
