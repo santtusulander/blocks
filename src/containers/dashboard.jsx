@@ -75,6 +75,7 @@ export class Dashboard extends React.Component {
   }
 
   componentWillMount() {
+    this.props.filterActions.resetDefaults()
     this.fetchData(this.props.params, this.props.filters)
   }
 
