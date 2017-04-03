@@ -76,7 +76,9 @@ class HTTPUpload extends Component {
    * @param container {DOMElement}
    */
   bindEventsHandlers(container) {
-    if (container === null) return
+    if (container === null) {
+      return
+    }
 
     for (const [e, h] of this.getEventsHandlersMap()) {
       container.addEventListener(e, h, false)
@@ -98,7 +100,9 @@ class HTTPUpload extends Component {
         progress: stats.get('progress', 0),
         error: stats.get('error', false),
         cancel: () => {
-          if (stats.has('xhr')) stats.get('xhr')['abort']()
+          if (stats.has('xhr')) {
+            stats.get('xhr')['abort']()
+          }
           this.props[actionTypes.UPLOAD_FINISHED](name)
         }
       })).toArray()

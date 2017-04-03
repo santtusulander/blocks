@@ -39,7 +39,9 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
   const customLegendAreas = areas.length > 1 ? areas.concat().sort((area1, area2) => area1.stackId - area2.stackId) : areas
   const chartClassName = getChartClassName(areas)
   const getTicks = (data) => {
-    if (!data || !data.length) {return [];}
+    if (!data || !data.length) {
+      return [];
+    }
 
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()

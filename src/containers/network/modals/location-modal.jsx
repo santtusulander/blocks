@@ -152,7 +152,9 @@ class NetworkLocationFormContainer extends Component {
       lat: parseFloat(values.latitude),
       lon: parseFloat(values.longitude)
     }
-    if (values.cloudProvider) data.cloud_provider = values.cloudProvider
+    if (values.cloudProvider) {
+      data.cloud_provider = values.cloudProvider
+    }
 
     const params = {
       brand: brand,

@@ -93,7 +93,9 @@ const NetworkPopForm = (props) => {
           <Field
             name="status"
             component={FieldFormGroupSelect}
-            options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+            options={STATUS_OPTIONS.map(({value, label}) => {
+              return { value, label: intl.formatMessage({id: label}) }
+            })}
             label={<FormattedMessage id="portal.network.item.status.label" />}
             disabled={readOnly}
           />
