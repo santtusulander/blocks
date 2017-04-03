@@ -11,7 +11,9 @@ class Typeahead extends React.Component {
   }
 
   handleBlur(e) {
-    if (this.props.onBlur) this.props.onBlur()
+    if (this.props.onBlur) {
+      this.props.onBlur()
+    }
     const label = e.target.value
     if (label) {
       const id = `label-${new Date().valueOf()}`
