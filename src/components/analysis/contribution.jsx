@@ -37,7 +37,7 @@ class AnalysisContribution extends React.Component {
     return data.sort((a, b) => {
       if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
-      }  else if (a.get(sortBy) > b.get(sortBy)) {
+      } else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0

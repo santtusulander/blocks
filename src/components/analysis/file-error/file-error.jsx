@@ -45,7 +45,7 @@ class AnalysisFileError extends React.Component {
   sortByCode(error1, error2) {
     if (error1.code > error2.code) {
       return 1;
-    }  else if (error1.code < error2.code) {
+    } else if (error1.code < error2.code) {
       return -1;
     }
     return 0;
@@ -71,7 +71,7 @@ class AnalysisFileError extends React.Component {
       const errorCode = parseInt(key.substr(1))
       if (errorCode < 500) {
         clientErrs.push({value: err, code: errorCode})
-      }  else {
+      } else {
         serverErrs.push({value: err, code: errorCode})
       }
     })

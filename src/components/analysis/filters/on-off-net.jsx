@@ -17,7 +17,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
         okButton: true,
         cancel: () => hideInfoDialog()
       });
-    }  else {
+    } else {
       toggleFilter(type)
     }
   }

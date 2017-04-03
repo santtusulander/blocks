@@ -46,7 +46,7 @@ export class ForgotPassword extends React.Component {
       .then(action => {
         if (!action.error) {
           this.setState({submitted: true})
-        }  else {
+        } else {
           this.setState({
             formError: action.payload.data.message || action.payload.message,
             recaptcha: ''

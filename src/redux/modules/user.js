@@ -186,7 +186,7 @@ export function userTokenChecked(state, action) {
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
-  }  else {
+  } else {
     deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -197,7 +197,7 @@ export function userTokenChecked(state, action) {
 export function userNameSave(state, action) {
   if (action.payload) {
     setUserName(action.payload)
-  }  else {
+  } else {
     deleteUserName()
   }
   return state.set('username', action.payload)

@@ -30,13 +30,13 @@ export function formatBytes(bytes, setMax, customFormat) {
 
   if ((setMax || bytes) < BYTE_BASE) {
     formatted = numeral(bytes).format(customFormat || '0,0') + ' B'
-  }  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
+  } else if ((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bytes / BYTE_BASE).format(customFormat || '0,0') + ' KB'
-  }  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
+  } else if ((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format(customFormat || '0,0') + ' MB'
-  }  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
+  } else if ((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format(customFormat || '0,0') + ' GB'
-  }  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
+  } else if ((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format(customFormat || '0,0') + ' TB'
   }
   return formatted
@@ -80,13 +80,13 @@ export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
 
   if ((setMax || bits_per_second) < BYTE_BASE) {
     formatted = numeral(bits_per_second).format(digits) + ' bps'
-  }  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 2)) {
+  } else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bits_per_second / BYTE_BASE).format(digits) + ' Kbps'
-  }  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 3)) {
+  } else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 2)).format(digits) + ' Mbps'
-  }  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 4)) {
+  } else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 3)).format(digits) + ' Gbps'
-  }  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 5)) {
+  } else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 4)).format(digits) + ' Tbps'
   }
   return formatted
@@ -98,7 +98,7 @@ export function formatTime(milliseconds) {
 
   if (milliseconds >= 60000) {
     formatted = numeral(milliseconds / 60000).format('0,0') + ' m'
-  }  else if (milliseconds >= 1000) {
+  } else if (milliseconds >= 1000) {
     formatted = numeral(milliseconds / 1000).format('0,0') + ' s'
   }
   return formatted
@@ -386,14 +386,14 @@ export function checkForErrors(fields, customConditions, requiredTexts = {}) {
     const isEmptyArray = field instanceof Array && field.length === 0
     if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
-    }  else if (customConditions) {
+    } else if (customConditions) {
       if (Array.isArray(customConditions[fieldName])) {
         for (const customCondition in customConditions[fieldName]) {
           if (customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
             errors[fieldName] = customConditions[fieldName][customCondition].errorText
           }
         }
-      }  else if (customConditions[fieldName] && customConditions[fieldName].condition) {
+      } else if (customConditions[fieldName] && customConditions[fieldName].condition) {
         errors[fieldName] = customConditions[fieldName].errorText
       }
     }
@@ -558,7 +558,7 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
       }
       if (aVal < bVal) {
         return -1 * sortDir
-      }  else if (aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0

@@ -51,7 +51,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
               </text>
             </g>
           )
-        }  else {
+        } else {
           return null
         }
       })}

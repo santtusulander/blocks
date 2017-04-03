@@ -71,7 +71,7 @@ const sortContent = (path, direction) => (item1, item2) => {
 
   if (val1 > val2 || val2 === undefined) {
     return direction
-  }  else if (val1 < val2 || val1 === undefined) {
+  } else if (val1 < val2 || val1 === undefined) {
     return -1 * direction
   }
   return 0

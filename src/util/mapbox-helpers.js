@@ -19,7 +19,7 @@ export const calculateMedian = (values) => {
 
   if (values.length % 2)    {
     return values[half];
-  }  else    {
+  } else    {
     return (values[half-1] + values[half]) / 2.0;
   }
 }

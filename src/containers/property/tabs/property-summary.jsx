@@ -107,12 +107,12 @@ class PropertySummary extends React.Component {
     if (params !== prevParams) {
       this.fetchHost(nextProps.params.property)
       fetch()
-    }  else if (newQuery.startDate !== oldQuery.startDate ||
+    } else if (newQuery.startDate !== oldQuery.startDate ||
       newQuery.endDate !== oldQuery.endDate) {
       this.setState({
         activeSlice: null
       }, fetch)
-    }  else if (this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+    } else if (this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       fetch()
     }
     this.measureContainers()
@@ -228,7 +228,7 @@ class PropertySummary extends React.Component {
             value={{ reason: action.payload.message }}
           />
         )
-      }  else {
+      } else {
         this.setState({ purgeActive: false })
         this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
       }
@@ -256,7 +256,7 @@ class PropertySummary extends React.Component {
         activeSlice: activeSlice,
         activeSliceX: xPos
       })
-    }  else {
+    } else {
       this.setState({ activeSlice: null })
     }
   }

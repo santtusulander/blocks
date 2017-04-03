@@ -78,7 +78,7 @@ class Header extends React.Component {
       if (newSet.has('value')) {
         newSet = newSet.delete('value')
       }
-    }  else if (this.state.activeActivity === 'set') {
+    } else if (this.state.activeActivity === 'set') {
       newSet = this.props.set.merge({
         action: "set",
         header: this.state.to_header,

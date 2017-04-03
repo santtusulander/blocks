@@ -34,7 +34,7 @@ export class FilterChecklistDropdown extends React.Component {
       newVals = valIndex === -1 ?
         initialVals.push(optionVal) :
         initialVals.delete(valIndex)
-    }  else {
+    } else {
       newVals = this.props.value.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
     }
     if (this.props.handleCheck) {
@@ -57,7 +57,7 @@ export class FilterChecklistDropdown extends React.Component {
       return this.props.options.filter(
         option => option.get('label').toString().toLowerCase().indexOf(inputVal) !== -1
       )
-    }  else {
+    } else {
       return this.props.options
     }
   }
@@ -79,11 +79,11 @@ export class FilterChecklistDropdown extends React.Component {
       .map(opt => opt.get('label'))
     if (!numVals || !labels.size) {
       return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
-    }  else if (numVals === 1) {
+    } else if (numVals === 1) {
       return labels.first()
-    }  else if (numVals === this.props.options.size) {
+    } else if (numVals === this.props.options.size) {
       return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
-    }  else {
+    } else {
       return <FormattedMessage id="portal.analytics.dropdownMenu.labelsSelected" values={{firstLabel: labels.first(), rest: numVals - 1}}/>
     }
   }
