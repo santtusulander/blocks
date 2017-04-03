@@ -257,7 +257,7 @@ class ConfigurationDetails extends React.Component {
                 <FormattedMessage id="portal.configuration.details.hostHeaderValue.text"/>
               </ControlLabel>
             </Col>
-            <Col xs={9} xsOffset={3}>
+            <Col xs={9}>
               <InputGroup>
                 <Select
                   className="input-select"
