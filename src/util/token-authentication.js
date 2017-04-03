@@ -1,4 +1,3 @@
-// import { HmacMD5, HmacSHA1, HmacSHA256, MD5, enc } from 'crypto-js'
 import md5 from 'blueimp-md5'
 import jsSHA from 'jssha'
 import moment from 'moment'
