@@ -63,8 +63,8 @@ class DrillableMenu extends Component {
       .then(() => this.changeActiveNode(nodeId))
   }
 
-  changeActiveNode = activeNode => {
-    this.setState({ activeNode, search: '' })
+  changeActiveNode = nodeId => {
+    this.setState({ activeNode: nodeId, search: '' })
   }
 
   toggleMenu = () => {

@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
 import MiniLoadingSpinner from '../loading-spinner/loading-spinner-sm'
 
-export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
+const DrillableMenuItems = ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
 
   return (
     <li className="menu-container">
@@ -47,3 +47,13 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
     </li>
   )
 }
+
+DrillableMenuItems.displayName = 'DrillableMenuItems'
+DrillableMenuItems.propTypes = {
+  handleCaretClick: PropTypes.func,
+  menuNodes: PropTypes.array,
+  onItemClick: PropTypes.func,
+  searchValue: PropTypes.string
+}
+
+export default DrillableMenuItems

@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { FormControl } from 'react-bootstrap'
 
 import IconArrowLeft from '../icons/icon-arrow-left'
 
-export default ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent }) => {
+const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent }) => {
 
   const handleParentCaretClick = event => {
     event.nativeEvent.stopImmediatePropagation()
@@ -34,3 +34,15 @@ export default ({ searchValue, onSearchChange, subtitle, parentId, activeNodeNam
     </li>
   )
 }
+
+DrillableMenuHeader.displayName = 'DrillableMenuHeader'
+DrillableMenuHeader.propTypes = {
+  activeNodeName: PropTypes.string,
+  goToParent: PropTypes.func,
+  onSearchChange: PropTypes.func,
+  parentId: PropTypes.string,
+  searchValue: PropTypes.string,
+  subtitle: PropTypes.string
+}
+
+export default DrillableMenuHeader
