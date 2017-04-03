@@ -1,25 +1,22 @@
 @import '../styles/base/colors';
 @import '../styles/base/variables';
-// @import '../styles/base/buttons';
 
 .udn-file-input {
 
-  input{
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
+  input {
     position: absolute;
     z-index: -1;
+    width: 0.1px;
+    height: 0.1px;
+    overflow: hidden;
+    opacity: 0;
   }
 
-  label.file-input-label {
-    // @extend .btn-primary;
-
-    font-weight: normal;
+  label.file-input-label { // sass-lint:disable-line no-qualifying-elements
     height: 40px;
     min-width: 120px;
     padding: 0 20px;
+    font-weight: normal;
     line-height: 40px;
   }
 
