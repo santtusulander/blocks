@@ -1036,7 +1036,16 @@ class Styleguide extends React.Component {
           </DashboardPanels>
 
           <h1 className="page-header">Pagination</h1>
-          <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+          <Pagination
+            items={10}
+            maxButtons={5}
+            activePage={5}
+            prev={true}
+            next={true}
+            first={true}
+            last={true}
+            ellipsis={true}
+          />
 
           <h1 className="page-header">CsvUpload</h1>
           <CsvUploadArea
@@ -1077,60 +1086,60 @@ class Styleguide extends React.Component {
               configurationLink='#'
               name="Storage 01"
               locations={["Hong Kong"]}
-              currentUsage = {0}
-              estimate = {100e12}
-              peak = {0}
-              lastMonthUsage = {0}
-              lastMonthEstimate = {0}
-              lastMonthPeak = {0} />
+              currentUsage={0}
+              estimate={100e12}
+              peak={0}
+              lastMonthUsage={0}
+              lastMonthEstimate={0}
+              lastMonthPeak={0} />
 
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
               name="Storage 02"
               locations={["Hong Kong"]}
-              currentUsage = {80.2e12}
-              estimate = {250e12}
-              peak = {160e12}
-              lastMonthUsage = {100e12}
-              lastMonthEstimate = {210e12}
-              lastMonthPeak = {160e12} />
+              currentUsage={80.2e12}
+              estimate={250e12}
+              peak={160e12}
+              lastMonthUsage={100e12}
+              lastMonthEstimate={210e12}
+              lastMonthPeak={160e12} />
 
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
               name="Storage very very very long name"
               locations={["Hong Kong", "Finland"]}
-              currentUsage = {270e12}
-              estimate = {300e12}
-              peak = {380e12}
-              lastMonthUsage = {240e12}
-              lastMonthEstimate = {250e12}
-              lastMonthPeak = {260e12} />
+              currentUsage={270e12}
+              estimate={300e12}
+              peak={380e12}
+              lastMonthUsage={240e12}
+              lastMonthEstimate={250e12}
+              lastMonthPeak={260e12} />
 
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
               name="Storage 04"
               locations={["Hong Kong", "Finland", "United States"]}
-              currentUsage = {520e12}
-              estimate = {500e12}
-              peak = {600e12}
-              lastMonthUsage = {470e12}
-              lastMonthEstimate = {450e12}
-              lastMonthPeak = {480e12} />
+              currentUsage={520e12}
+              estimate={500e12}
+              peak={600e12}
+              lastMonthUsage={470e12}
+              lastMonthEstimate={450e12}
+              lastMonthPeak={480e12} />
 
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
               name="Storage 05"
               locations={["Hong Kong", "Finland"]}
-              currentUsage = {270e12}
-              estimate = {300e12}
-              peak = {380e12}
-              lastMonthUsage = {240e12}
-              lastMonthEstimate = {250e12}
-              lastMonthPeak = {260e12}
+              currentUsage={270e12}
+              estimate={300e12}
+              peak={380e12}
+              lastMonthUsage={240e12}
+              lastMonthEstimate={250e12}
+              lastMonthPeak={260e12}
               diameter={300} />
 
           </div>

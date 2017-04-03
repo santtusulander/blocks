@@ -50,8 +50,12 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on'}, {label: 'Off-Net', value: 'off'}],
-    errorCodes: getAnalysisErrorCodes().map((obj) => { return { label: obj, value: obj } }),
-    statusCodes: getAnalysisStatusCodes().map((obj) => { return { label: obj, value: obj } })
+    errorCodes: getAnalysisErrorCodes().map((obj) => {
+      return { label: obj, value: obj } 
+    }),
+    statusCodes: getAnalysisStatusCodes().map((obj) => {
+      return { label: obj, value: obj } 
+    })
   },
   fetching: false
 })

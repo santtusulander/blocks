@@ -47,9 +47,17 @@ class ConfigurationGTMTrafficRules extends React.Component {
       'or': "portal.configuration.condition.or",
       'and': "portal.configuration.condition.and"
     }
+
+    const lastIndex = input.value.matchArray.length - 1
+    const conditionString = this.props.intl.formatMessage({ id: conditionOptions[input.value.condition] })
+
     const matches = input.value.matchArray
-      .map(({ label }) => label)
-      .join(` ${this.props.intl.formatMessage({ id: conditionOptions[input.value.condition] })} `)
+      .map(({ label }, i) =>
+        <span key={i}>
+          {label}
+          {i < lastIndex && ` ${conditionString} `}
+        </span>
+      )
 
     const policyWeight = input.value.policyWeight
     const trafficSplit = policyWeight < 100

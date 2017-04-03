@@ -39,7 +39,9 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
   const customLegendAreas = areas.length > 1 ? areas.concat().sort((area1, area2) => area1.stackId - area2.stackId) : areas
   const chartClassName = getChartClassName(areas)
   const getTicks = (data) => {
-    if (!data || !data.length) {return [];}
+    if (!data || !data.length) {
+      return [];
+    }
 
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()
@@ -65,7 +67,14 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
         <AreaChart data={data} margin={{left: 50, bottom: 30, top: 100}} className={chartClassName}>
           { renderAreas(areas) }
 
-          <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
+          <XAxis
+            dataKey='timestamp'
+            ticks={getTicks(data)}
+            tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)}
+            tickLine={false}
+            tick={{ transform: 'translate(0, 20)' }}
+            axisLine={false}
+          />
           <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
           <Legend

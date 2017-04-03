@@ -55,14 +55,15 @@ export function qsBuilder(params) {
   const qs = Object.keys(params).reduce((arr, key) => {
 
     //remove undefined values
-    if (params[key] === undefined) return arr
+    if (params[key] === undefined) {
+      return arr
+    }
 
     let param = key
 
     if (key === 'startDate') {
       param = 'start'
-    }
-    else if (key === 'endDate') {
+    } else if (key === 'endDate') {
       param = 'end'
     }
     return [...arr, `${param}=${params[key]}`]

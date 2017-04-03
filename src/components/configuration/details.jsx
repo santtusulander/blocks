@@ -50,8 +50,7 @@ class ConfigurationDetails extends React.Component {
   handleUDNOriginSelection(value) {
     if (value === 'option_new_storage') {
       this.toggleAddStorageModal()
-    }
-    else {
+    } else {
       this.props.changeValues([
         [['edge_configuration', 'origin_host_name'], value],
         [['edge_configuration', 'origin_host_port'], CIS_ORIGIN_HOST_PORT]
@@ -73,8 +72,7 @@ class ConfigurationDetails extends React.Component {
   toggleUDNOrigin(val) {
     if (val) {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
-    }
-    else {
+    } else {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'custom')
     }
   }
@@ -257,7 +255,7 @@ class ConfigurationDetails extends React.Component {
                 <FormattedMessage id="portal.configuration.details.hostHeaderValue.text"/>
               </ControlLabel>
             </Col>
-            <Col xs={9} xsOffset={3}>
+            <Col xs={9}>
               <InputGroup>
                 <Select
                   className="input-select"

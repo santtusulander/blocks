@@ -166,7 +166,9 @@ class ConfigurationPolicies extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.policies.policyRules.text"/>}>
           <IsAllowed to={MODIFY_PROPERTY}>
             <Button bsStyle="success" className="btn-icon"
-              onClick={() => { this.addRule(POLICY_TYPES.REQUEST) }}>
+              onClick={() => {
+                this.addRule(POLICY_TYPES.REQUEST) 
+              }}>
               <IconAdd />
             </Button>
           </IsAllowed>

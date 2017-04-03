@@ -128,17 +128,13 @@ const AnalyticsViewControl = (props) => {
     if (active) {
       if (active.hideHierarchy) {
         title = active.label
-      }
-      else if (storage) {
+      } else if (storage) {
         title = active.titles.storage
-      }
-      else if (property) {
+      } else if (property) {
         title = active.titles.property
-      }
-      else if (group) {
+      } else if (group) {
         title = active.titles.group
-      }
-      else {
+      } else {
         title = active.titles.account
       }
     }
@@ -147,11 +143,9 @@ const AnalyticsViewControl = (props) => {
   let activeItem;
   if (property) {
     activeItem = property
-  }
-  else if (group && props.activeGroup) {
+  } else if (group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
-  }
-  else if (account && props.activeAccount) {
+  } else if (account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
   const topBarTexts = {
