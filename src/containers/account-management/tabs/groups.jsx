@@ -1,23 +1,20 @@
 import React from 'react'
-import { Tooltip, FormControl, FormGroup, Table, Button } from 'react-bootstrap'
+import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { Field } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import FieldFormGroup from '../../../components/form/field-form-group'
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
-import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import IsAllowed from '../../../components/is-allowed'
@@ -41,12 +38,9 @@ class AccountManagementAccountGroups extends React.Component {
       sortDir: 1
     }
 
-    this.addGroup        = this.addGroup.bind(this)
     this.changeSort      = this.changeSort.bind(this)
     this.deleteGroup     = this.deleteGroup.bind(this)
     this.editGroup       = this.editGroup.bind(this)
-    this.saveEditedGroup = this.saveEditedGroup.bind(this)
-    this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
@@ -65,7 +59,7 @@ class AccountManagementAccountGroups extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account !== this.props.params.account) {
       const { brand, account } = nextProps.params
       this.props.userActions.fetchUsers(brand, account)
     }
@@ -75,14 +69,6 @@ class AccountManagementAccountGroups extends React.Component {
     this.setState({
       adding: false,
       editing: null
-    })
-  }
-
-  addGroup(e) {
-    e.stopPropagation()
-    this.setState({
-      adding: true,
-      newUsers: Immutable.List()
     })
   }
 
@@ -106,7 +92,7 @@ class AccountManagementAccountGroups extends React.Component {
     }
   }
 
-  validateInlineAdd({name = ''}){
+  validateInlineAdd({name = ''}) {
     const conditions = {
       name: [
         {
@@ -116,27 +102,6 @@ class AccountManagementAccountGroups extends React.Component {
       ]
     }
     return checkForErrors({ name }, conditions)
-  }
-
-  // TODO: Now that this is a container, no need to pass this in
-  saveEditedGroup(group) {
-    return name => this.props.editGroup(group, name).then(this.cancelAdding)
-  }
-
-  // TODO: Now that this is a container, no need to pass this in
-  saveNewGroup(values) {
-    this.props.addGroup(values)
-      .then(newGroup => {
-        return Promise.all(this.state.newUsers.map(email => {
-          const foundUser = this.props.users
-            .find(user => user.get('email') === email)
-          const newUser = {
-            group_id: foundUser.get('group_id').push(newGroup.id).toJS()
-          }
-          return this.props.userActions.updateUser(email, newUser)
-        }))
-      })
-      .then(this.cancelAdding)
   }
 
   changeSearch(e) {
@@ -168,7 +133,7 @@ class AccountManagementAccountGroups extends React.Component {
     return true
   }
 
-  filteredData( groupName ) {
+  filteredData(groupName) {
     return this.props.groups.filter((group) => {
       return group.get('name').toLowerCase().includes(groupName)
     })
@@ -184,37 +149,6 @@ class AccountManagementAccountGroups extends React.Component {
 
     const sortedGroups = getSortData(filteredGroups, this.state.sortBy, this.state.sortDir)
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-    const errorTooltip = ({ error, active }) =>
-      !active &&
-        <Tooltip placement="bottom" className="in" id="tooltip-bottom">
-          {error}
-        </Tooltip>
-    const inlineAddInputs = [
-      [
-        {
-          input: <Field
-            name="name"
-            id="name"
-            ErrorComponent={errorTooltip}
-            placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}
-            component={FieldFormGroup}/>
-        }
-      ],
-      [
-        // Disable until API support allows listing groups for user with some assigned
-        // {
-        //   input: <FilterChecklistDropdown
-        //     id='members'
-        //     value={this.state.newUsers}
-        //     handleCheck={this.changeNewUsers}
-        //     options={this.props.users.map(user => Immutable.Map({
-        //       label: user.get('email') || this.props.intl.formatMessage({id: 'portal.account.groups.email.notSet.placeholder'}),
-        //       value: user.get('email')
-        //     }))}/>
-        // }
-      ],
-      []
-    ]
     const groupSize = sortedGroups.size
     const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
@@ -231,7 +165,7 @@ class AccountManagementAccountGroups extends React.Component {
               onChange={this.changeSearch} />
           </FormGroup>
           <IsAllowed to={CREATE_GROUP}>
-            <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
+            <Button bsStyle="success" className="btn-icon" onClick={() => this.props.showGroupModal()}>
               <IconAdd />
             </Button>
           </IsAllowed>
@@ -254,11 +188,7 @@ class AccountManagementAccountGroups extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {this.state.adding && <InlineAdd
-            validate={this.validateInlineAdd}
-            inputs={inlineAddInputs}
-            unmount={this.cancelAdding}
-            save={this.saveNewGroup}/>}
+
           {sortedGroups.map((group, i) => {
             const userEmails = this.props.users
               .filter(user => user.get('group_id') &&
@@ -266,6 +196,7 @@ class AccountManagementAccountGroups extends React.Component {
                 user.get('group_id').includes(group.get('id'))
               )
               .map(user => user.get('email'))
+            const disabledDeleteButton = String(group.get('id')) === String(this.props.params.group)
             return (
               <tr key={i}>
                 <td>{group.get('name')}</td>
@@ -276,7 +207,7 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                    <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                    <ActionButtons onEdit={() => {this.props.showGroupModal(group)}} onDelete={() => {this.props.deleteGroup(group)}} deleteDisabled={disabledDeleteButton}/>
                   </IsAllowed>
                 </td>
               </tr>
@@ -297,15 +228,14 @@ class AccountManagementAccountGroups extends React.Component {
 
 AccountManagementAccountGroups.displayName  = 'AccountManagementAccountGroups'
 AccountManagementAccountGroups.propTypes    = {
-  addGroup: React.PropTypes.func,
   deleteGroup: React.PropTypes.func,
-  editGroup: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showGroupModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)

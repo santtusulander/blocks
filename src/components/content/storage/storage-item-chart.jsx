@@ -43,10 +43,10 @@ const StorageItemChart = (
      /****** This Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: peak - (estimate / 360),            className: 'current-month'},
+    [{value: peak && peak - (estimate / 360),            className: 'current-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: estimate / 360,                     className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
+     {value: peak && estimate / 360,                     className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: estimate - peak,                    className: 'current-month'}],
@@ -60,10 +60,10 @@ const StorageItemChart = (
      /****** Last Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: lastMonthPeak - (estimate / 360),   className: 'last-month'},
+    [{value: lastMonthPeak && lastMonthPeak - (lastMonthEstimate / 360),   className: 'last-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: lastMonthEstimate / 360,            className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
+     {value: lastMonthPeak && lastMonthEstimate / 360,            className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthPeak,  className: 'last-month'}]]
@@ -159,7 +159,11 @@ const StorageItemChart = (
 
 StorageItemChart.displayName = 'StorageItemChart'
 StorageItemChart.defaultProps = {
-  locations: List()
+  currentUsage: 0,
+  lastMonthPeak: 0,
+  lastMonthUsage: 0,
+  locations: List(),
+  peak: 0
 }
 
 StorageItemChart.propTypes = {
@@ -176,9 +180,5 @@ StorageItemChart.propTypes = {
   peak: PropTypes.number,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
-
-StorageItemChart.defaultProps = {
-  locations: []
-}
 
 export default StorageItemChart

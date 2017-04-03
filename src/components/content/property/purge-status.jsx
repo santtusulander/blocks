@@ -39,7 +39,9 @@ const PurgeHistoryReport = (props) => {
     }
   ];
 
-  const getSectionContent = () => historyData.size ? grid : filter_value && filter_by ? msgNoResult : msgNoData;
+  const getSectionContent = () => {
+    return historyData.size ? grid : filter_value && filter_by ? msgNoResult : msgNoData
+  }
 
   const msgNoData = (
     <div className="text-capitalize text-center">

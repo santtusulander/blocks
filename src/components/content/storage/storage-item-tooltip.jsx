@@ -14,14 +14,13 @@ const StorageItemTooltip = ({ name, valuesFormat, currentUsage, peak, lastMonthU
         <FormattedMessage id="portal.account.storage.tooltip.peakThisMonth"/>
         <span className="tooltip-storage-value">{formatBytes(peak, null, valuesFormat)}</span>
       </div>
-      {lastMonthUsage && lastMonthPeak &&
-        <div className="storage-month-info">
-          <FormattedMessage id="portal.account.storage.tooltip.endOfLastMonth"/>
-          <span className="tooltip-storage-value">{formatBytes(lastMonthUsage, null, valuesFormat)}</span>
-          <br />
-          <FormattedMessage id="portal.account.storage.tooltip.peakLastMonth"/>
-          <span className="tooltip-storage-value">{formatBytes(lastMonthPeak, null, valuesFormat)}</span>
-        </div>}
+      <div className="storage-month-info">
+        <FormattedMessage id="portal.account.storage.tooltip.endOfLastMonth"/>
+        <span className="tooltip-storage-value">{formatBytes(lastMonthUsage, null, valuesFormat)}</span>
+        <br />
+        <FormattedMessage id="portal.account.storage.tooltip.peakLastMonth"/>
+        <span className="tooltip-storage-value">{formatBytes(lastMonthPeak, null, valuesFormat)}</span>
+      </div>
     </div>
   )
 }
@@ -32,7 +31,7 @@ StorageItemTooltip.propTypes = {
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  peak:PropTypes.number,
+  peak: PropTypes.number,
   valuesFormat: PropTypes.string
 }
 

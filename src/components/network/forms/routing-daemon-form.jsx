@@ -8,7 +8,7 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import IsAllowed from '../../is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, formatASN } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isValidIP, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
@@ -73,7 +73,7 @@ class RoutingDaemonForm extends React.Component {
   fetchBGPName(value) {
     const BGPNumber = value
 
-    if (!BGPNumber || BGPNumber.length == 0) {
+    if (!BGPNumber || BGPNumber.length === 0) {
       this.setState({ BGPNumberIsEmpty: true })
       return
     }
@@ -101,16 +101,16 @@ class RoutingDaemonForm extends React.Component {
     })
 
     fetchASOverview(BGPNumber)
-      .then(({ data: { holder } }) => {
-        holder = holder ? holder : ''
+      .then((resp) => {
+        const organization = resp[0].organization ? formatASN(resp[0]) : ''
         this.setState({
           BGPNumber,
-          BGPName: holder.length ? holder : null,
-          BGPNameNotFound: !holder.length,
+          BGPName: organization.length ? organization : null,
+          BGPNameNotFound: !organization.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false,
           BGPNumberInvalid: false
-        }, () => this.setBGPName(holder, BGPNumber))
+        }, () => this.setBGPName(organization, BGPNumber))
       })
       .catch(() => {
         this.setState({
@@ -133,7 +133,8 @@ class RoutingDaemonForm extends React.Component {
       invalid,
       onCancel,
       onSubmit,
-      submitting
+      submitting,
+      readOnly
     } = this.props
 
     const { BGPNameNotFound, BGPNumberInvalid, isFetchingBGPName, BGPNumberIsEmpty } = this.state
@@ -167,6 +168,7 @@ class RoutingDaemonForm extends React.Component {
           component={FieldFormGroup}
           onBlur={(e) => this.fetchBGPName(e.target.value)}
           props={BGB_AS_NUMBER_PROPS}
+          disabled={readOnly}
         />
 
         <Field
@@ -187,6 +189,7 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <Field
@@ -196,6 +199,7 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <FormFooterButtons>
@@ -224,6 +228,7 @@ RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
 
   ...reduxFormPropTypes
 }

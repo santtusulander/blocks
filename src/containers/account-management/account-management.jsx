@@ -41,6 +41,7 @@ import Tabs from '../../components/tabs'
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
+  ADD_GROUP,
   DELETE_ACCOUNT,
   DELETE_GROUP,
   EDIT_GROUP,
@@ -78,7 +79,7 @@ export class AccountManagement extends Component {
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
-    this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
+    this.showGroupModal = this.showGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
@@ -97,7 +98,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
 
-    else if(this.props.accounts.size) {
+    else if (this.props.accounts.size) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
     }
@@ -113,7 +114,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
 
-    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+    else if (!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
@@ -155,11 +156,23 @@ export class AccountManagement extends Component {
       .then(() => this.props.toggleModal(null))
   }
 
-  addGroupToActiveAccount(data) {
-    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
-      .then(action => {
-        this.props.hostActions.clearFetchedHosts()
-        return action.payload
+  addGroupToActiveAccount({ data, usersToAdd }) {
+    const {activeAccount, groupActions, hostActions, users, userActions, toggleModal } = this.props
+    return groupActions.createGroup('udn', activeAccount.get('id'), data)
+      .then(({ payload }) => {
+        hostActions.clearFetchedHosts()
+        return Promise.all(usersToAdd.map(email => {
+          const foundUser = users
+            .find(user => user.get('email') === email)
+          const newUser = {
+            group_id: foundUser.get('group_id').push(payload.id).toJS()
+          }
+          return userActions.updateUser(email, newUser)
+        }))
+      })
+      .then(() => {
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groups.created"/>)
+        toggleModal()
       })
   }
 
@@ -170,13 +183,17 @@ export class AccountManagement extends Component {
       group.get('id')
     ).then(response => {
       this.props.toggleModal(null)
-      response.error &&
+      if (response.error) {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
+      } else {
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groups.delete"/>)
+      }
+
     })
   }
 
@@ -210,17 +227,23 @@ export class AccountManagement extends Component {
       })
   }
 
-  toggleEditGroupModal(group) {
+  showGroupModal(group) {
     const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
     if (!group) {
-      this.setState({ groupToUpdate: null })
-      toggleModal()
+      toggleModal(ADD_GROUP)
     } else {
       fetchGroup(brand, account, group.get('id')).then(() => {
         this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
     }
+  }
+
+  hideGroupModal() {
+    if (this.state.groupToUpdate) {
+      this.setState({ groupToUpdate: null })
+    }
+    this.props.toggleModal()
   }
 
   editAccount(brandId, accountId, data) {
@@ -323,7 +346,10 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancelButton: true,
           cancel: () => toggleModal(null),
-          onSubmit: () => onDelete(brand, this.state.accountToDelete, router)
+          onSubmit: () => {
+            onDelete(brand, this.state.accountToDelete, router)
+              .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+          }
         }
         break
       case DELETE_GROUP:
@@ -341,10 +367,11 @@ export class AccountManagement extends Component {
 
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
+      showNotification: this.showNotification,
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
-      editGroup: this.toggleEditGroupModal,
+      showGroupModal: this.showGroupModal,
       account: activeAccount,
       toggleModal,
       params,
@@ -490,9 +517,21 @@ export class AccountManagement extends Component {
             locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
-            onCancel={() => this.toggleEditGroupModal()}
+            onCancel={() => this.hideGroupModal()}
             onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.editGroupInActiveAccount}
+          />
+        }
+
+        {accountManagementModal === ADD_GROUP &&
+          <EntityEdit
+            type='group'
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            currentUser={this.props.currentUser}
+            params={this.props.params}
+            onCancel={() => this.hideGroupModal()}
+            onSave={this.addGroupToActiveAccount}
           />
         }
       </Content>
@@ -507,6 +546,7 @@ AccountManagement.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   // activeRecordType: PropTypes.string,
+  changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
   // dnsActions: PropTypes.object,
@@ -584,6 +624,7 @@ function mapDispatchToProps(dispatch) {
 
   return {
     accountActions: accountActions,
+    changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     groupActions: groupActions,

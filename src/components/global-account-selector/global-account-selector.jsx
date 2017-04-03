@@ -15,6 +15,8 @@ import ProviderTypes from '../../constants/provider-types'
 
 import SelectorComponent from './selector-component.jsx'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 const tierHierarchy = [
   'property',
   'group',
@@ -45,7 +47,7 @@ class AccountSelector extends Component {
     const { params, getChangedItem } = this.props
     const prevChangedItem = getChangedItem(this.tier)
     const nextChangedItem = nextProps.getChangedItem(this.tier)
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(params) ||
+    if (JSON.stringify(nextProps.params) !== JSON.stringify(params) ||
       (nextChangedItem && !is(prevChangedItem, nextChangedItem))) {
       this.fetchByTier(nextProps.params)
       this.props.accountSelectorActions.setOpen(false)
@@ -103,7 +105,7 @@ class AccountSelector extends Component {
     const { property, group, account, brand } = params
     let initTier = this.props.startTier || property && 'property' ||
       group && 'group' || account && 'account' || brand && 'brand'
-    if(!this.canSeeAccounts() && (initTier === 'account' || initTier === 'brand')) {
+    if (!this.canSeeAccounts() && (initTier === 'account' || initTier === 'brand')) {
       initTier = 'group'
     }
     this.tier = initTier
@@ -120,16 +122,16 @@ class AccountSelector extends Component {
 
   fetchItems(nextTier, brand, account, group) {
     let fetchParams = [brand]
-    if(!this.canSeeAccounts() && (nextTier === 'account' || nextTier === 'brand')) {
+    if (!this.canSeeAccounts() && (nextTier === 'account' || nextTier === 'brand')) {
       nextTier = 'group'
     }
-    if(!this.canSeeAccounts() && !account) {
+    if (!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
-    if(nextTier === 'property') {
+    if (nextTier === 'property') {
       fetchParams = [brand, account, group]
     }
-    else if(nextTier === 'group') {
+    else if (nextTier === 'group') {
       fetchParams = [brand, account]
     }
     this.props.accountSelectorActions.fetchItems(...fetchParams).then(() => {
@@ -143,8 +145,10 @@ class AccountSelector extends Component {
    * in brand and account tiers, in both cases 'account' gets passed
    */
   onItemClick(value) {
-    let { onSelect, params: { brand, account, group }, accountSelectorActions } = this.props
-    if(!this.canSeeAccounts() && !account) {
+    const { onSelect, params: { brand, group }, accountSelectorActions } = this.props
+    let { params: { account } } = this.props
+
+    if (!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
     this.props.accountSelectorActions.setOpen(false)
@@ -164,8 +168,9 @@ class AccountSelector extends Component {
     * top bar pressed -> calls to function from parent with desired effects
     */
   onTopbarClick() {
-    let { topBarAction, params: { brand, account, group, property } } = this.props
-    if(!this.canSeeAccounts() && !account) {
+    const { topBarAction, params: { brand, group, property } } = this.props
+    let { params: { account } } = this.props
+    if (!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
     topBarAction(
@@ -182,7 +187,7 @@ class AccountSelector extends Component {
 
   onCaretClick(value, providerType) {
     let fetchArgs;
-    if(this.tier === 'group') {
+    if (this.tier === 'group') {
       this.group = value
       fetchArgs = ['property', 'udn', this.account, this.group]
     }
@@ -201,17 +206,17 @@ class AccountSelector extends Component {
       this.props.items.filter(item => item.get(1).toLowerCase().includes(searchValue)) :
       this.props.items
     return itemsToSort.sort((a,b) => {
+      const aLower = a.get(1).toLowerCase()
+      const bLower = b.get(1).toLowerCase()
 
-      const aLower = `${a.first()}`.toLowerCase()
-      const bLower = `${b.first()}`.toLowerCase()
-      if ( aLower < bLower ) return -1
-      if ( aLower > bLower ) return 1
+      if (aLower < bLower) return -1
+      if (aLower > bLower) return 1
       return 0
     })
   }
 
   isDrillable() {
-    let { restrictedTo } = this.props
+    const { restrictedTo } = this.props
 
     if (!this.canSeeProperties() && this.tier === 'group') {
       return false
@@ -261,7 +266,7 @@ AccountSelector.propTypes = {
   params: PropTypes.object,
   resetChanged: PropTypes.func,
   restrictedTo: PropTypes.string,
-  roles: React.PropTypes.instanceOf(List),
+  roles: React.PropTypes.instanceOf(Map),
   searchValue: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
@@ -269,7 +274,7 @@ AccountSelector.propTypes = {
 }
 AccountSelector.defaultProps = {
   items: List(),
-  roles: List(),
+  roles: Map(),
   currentUser: Map()
 }
 
@@ -277,14 +282,14 @@ function mapStateToProps(state, {as}) {
   const accountSelector = state.accountSelectors[as]
   return {
     getChangedItem: tier => {
-      switch(tier) {
+      switch (tier) {
         case 'brand':
         case 'account': return state.account.get('changedAccount')
       }
     },
     items: accountSelector.get('items'),
     open: accountSelector.get('open'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     searchValue: accountSelector.get('searchValue'),
     currentUser: state.user.get('currentUser')
   }
@@ -294,7 +299,7 @@ function mapDispatchToProps(dispatch, {as}) {
   return {
     accountSelectorActions: bindActionCreators(accountSelectorActionCreators, dispatch, as),
     resetChanged: tier => {
-      switch(tier) {
+      switch (tier) {
         case 'brand':
         case 'account':
           dispatch(resetChangedAccount())

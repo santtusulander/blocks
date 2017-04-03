@@ -31,8 +31,8 @@ class DNSList extends Component {
       intl,
       hiddenRecordCount,
       visibleRecordCount } = this.props
-    let tables = []
-    let recordsByType = {}
+    const tables = []
+    const recordsByType = {}
 
     /**
      * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain
@@ -40,7 +40,7 @@ class DNSList extends Component {
      * to array under the current record type key in recordsByType.
      */
     records.forEach(record => {
-      if(!recordsByType[record.type]) {
+      if (!recordsByType[record.type]) {
         recordsByType[record.type] = []
       }
       recordsByType[record.type].push(record)

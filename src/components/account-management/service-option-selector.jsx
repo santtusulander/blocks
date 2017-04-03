@@ -40,18 +40,18 @@ class ServiceOptionSelector extends React.Component {
     if (typeof serviceIndex === 'undefined') {
       return false
     }
- 
-    if(option.requires_charge_number) {
-      this.props.showServiceItemForm(serviceId, optionId, callback)
+
+    if (option.requires_charge_number) {
+      this.props.showServiceItemForm(serviceId, optionId, callback, optionValue)
     } else {
       this.changeOptionValue(serviceId, optionId, optionValue, serviceIndex, optionIndex)
     }
   }
 
   togglePanel (index) {
-    let openPanels = this.state.openPanels
+    const openPanels = this.state.openPanels
     const panelIndex = openPanels.indexOf(index)
-    if ( panelIndex === -1) {
+    if (panelIndex === -1) {
       openPanels.push(index)
     } else {
       openPanels.splice(panelIndex, 1)
@@ -81,7 +81,7 @@ class ServiceOptionSelector extends React.Component {
                 onClick={(e) => {
                   if (isService) {
                     e.stopPropagation()
-                    this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback)
+                    this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback, isEnabled)
                   }
                 }}
               >
@@ -121,12 +121,12 @@ class ServiceOptionSelector extends React.Component {
                   <Table striped={true} className="table-simple">
                     <tbody>
                       {option.options.map((subOption, j) => {
-                        const options = serviceIndex >= 0 ? input.value.get(serviceIndex).get('options') : List()
-                        const subOptionsIds = options.map(item => item.get('option_id'))
+                        const inputOptions = serviceIndex >= 0 ? input.value.get(serviceIndex).get('options') : List()
+                        const subOptionsIds = inputOptions.map(item => item.get('option_id'))
                         const subOptionIndex = subOptionsIds ? subOptionsIds.indexOf(subOption.value) : -1
                         const subOptionValue = subOptionIndex >= 0
                         const optionRegions = (subOptionValue && subOption.requires_charge_number)
-                                              ? options.get(subOptionIndex).get('billing_meta').get('regions')
+                                              ? inputOptions.get(subOptionIndex).get('billing_meta').get('regions')
                                               : List()
 
                         return (
@@ -135,7 +135,7 @@ class ServiceOptionSelector extends React.Component {
                             onClick={() => this.handleOptionClick(subOption, option.value, subOption.value, subOptionValue, serviceIndex, subOptionIndex, input.onChange)}
                           >
                             <td>
-                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange )}
+                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange)}
                             </td>
                           </tr>
                         )

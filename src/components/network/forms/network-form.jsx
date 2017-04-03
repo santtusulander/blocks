@@ -37,7 +37,7 @@ const validate = ({ name, description }) => {
 }
 
 const NetworkForm = ({
-  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete
+  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete, readOnly
 }) => {
   const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
@@ -63,14 +63,15 @@ const NetworkForm = ({
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.name.placeholder'})}
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.common.name" />}
-        disabled={edit ? true : false}
+        disabled={(edit || readOnly) ? true : false}
         required={edit ? false : true} />
 
       <Field
         name="description"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.description.placeholder'})}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.common.description" />} />
+        label={<FormattedMessage id="portal.common.description" />}
+        disabled={readOnly} />
 
       <FormFooterButtons>
         { edit &&
@@ -81,7 +82,7 @@ const NetworkForm = ({
             disabled={deleteButtonDisabled}
             onClick={handleSubmit(() => onDelete(initialValues.name))}
             tooltipId="tooltip-help"
-            tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
+            tooltipMessage={{text: intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
             {
               //Commented out: as submitting is also true when 'saving'.
               //Should show DELETE -modal and ask for confirmation
@@ -123,6 +124,7 @@ NetworkForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
+  readOnly: PropTypes.bool,
   ...reduxFormPropTypes
 }
 

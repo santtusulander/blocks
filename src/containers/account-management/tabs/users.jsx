@@ -55,7 +55,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
@@ -76,7 +75,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account) {
+    if (this.props.params.account !== nextProps.params.account) {
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
     }
@@ -86,11 +85,6 @@ export class AccountManagementAccountUsers extends React.Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
-  showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
 
   changeSort(column, direction) {
     this.setState({
@@ -109,10 +103,11 @@ export class AccountManagementAccountUsers extends React.Component {
       group_id: this.state.usersGroups.toJS()
     }
     return createUser(requestBody).then(res => {
-      if(res.error){
+      if (res.error) {
         throw new SubmissionError({email: res.payload.message})
       }
       else {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
     })
@@ -242,7 +237,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   deleteUser(user) {
-    if(user === this.props.currentUser) {
+    if (user === this.props.currentUser) {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
@@ -270,13 +265,10 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   saveUser(user) {
-    // Get the username from the user we have in state for editing purposes.
-    //user.username = this.state.userToEdit.get('username')
-
     return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
+          this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
@@ -302,7 +294,7 @@ export class AccountManagementAccountUsers extends React.Component {
       activeDirection: this.state.sortDir
     }
     const filteredUsersByRole = users.filter((user) => {
-      if(this.state.filteredRoles === 'all') {
+      if (this.state.filteredRoles === 'all') {
         return true
       } else {
         return user.get('roles').find(role => {
@@ -311,7 +303,7 @@ export class AccountManagementAccountUsers extends React.Component {
       }
     })
     const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if(this.state.filteredGroups === 'all') {
+      if (this.state.filteredGroups === 'all') {
         return true
       } else {
         return user.get('group_id').find(group => {
@@ -324,7 +316,7 @@ export class AccountManagementAccountUsers extends React.Component {
     })
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
 
     const groupOptions = this.props.groups.map(group => [
@@ -443,17 +435,17 @@ export class AccountManagementAccountUsers extends React.Component {
             closeModal={true}
             closeButton={true}
             cancel={this.togglePermissionModal}>
-              {this.props.roles.map((role, i) => (
-                role.getIn(['permissions', 'ui']) ?
-                <PanelGroup accordion={true} key={i} defaultActiveKey="">
-                  <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
-                    <Table striped={true} key={i}>
+              {this.props.roles.map((role, roleIndex) => {
+                return role.getIn(['permissions', 'ui']) ?
+                (<PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
+                  <Panel header={role.get('name')} className="permission-panel" eventKey={roleIndex}>
+                    <Table striped={true} key={roleIndex}>
                       <tbody>
-                      {this.props.permissions.get('ui').map((uiPermission, i) => {
+                      {this.props.permissions.get('ui').map((uiPermission, uiPermissionIndex) => {
                         const permissionTitle = uiPermission.get('title')
                         const permissionName = uiPermission.get('name')
-                        return(
-                          <tr key={i}>
+                        return (
+                          <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
                             <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
                           </tr>
@@ -462,8 +454,8 @@ export class AccountManagementAccountUsers extends React.Component {
                       </tbody>
                     </Table>
                   </Panel>
-                </PanelGroup> : null
-              ))}
+                </PanelGroup>) : null
+              })}
           </ModalWindow>
         }
       </PageContainer>
@@ -485,6 +477,7 @@ AccountManagementAccountUsers.propTypes = {
   rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showNotification: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)

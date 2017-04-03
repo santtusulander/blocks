@@ -82,7 +82,7 @@ class SupportTicketForm extends React.Component {
       onSave
     } = this.props
 
-    let data = {
+    const data = {
       subject: values.subject,
       description: values.description,
       status: values.status,

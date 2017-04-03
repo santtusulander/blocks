@@ -14,11 +14,19 @@ import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuratio
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
   const getSchemaLabel = (schema) => {
-    const items = schemaOptions.filter(item => schema.indexOf(item.value) > -1)
-
-    return items.map(item => item.label).join(' + ')
+    return schema.reduce((acc, singleSchema) => {
+      return acc.concat([schemaOptions.find(option => option.value === singleSchema).label])
+    }, []).join(' + ')
   }
-  const getEncryptionLabel = (value) => ENCRYPTION_OPTIONS.find(item => item.value === value).label
+
+  const getEncryptionLabel = ({encryption, streaming_encryption}) => {
+    if (streaming_encryption) {
+      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label}
+              ${intl.formatMessage({id: 'portal.security.tokenAuth.chunk.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
+    } else {
+      return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label
+    }
+  }
 
   return (
       <table className="table table-striped cell-text-left">
@@ -36,7 +44,7 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
 
         </thead>
         <tbody>
-          { rules.map( (rule, index) => {
+          { rules.map((rule, index) => {
 
             const routeTo = editUrlBuilder(rule.propertyName, { policyId: rule.ruleId, policyType: 'request_policy' })
 
@@ -44,7 +52,7 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
               <tr key={index}>
                 <td>{rule.propertyName}</td>
                 <td>{intl.formatMessage({id: rule.type})}</td>
-                <td>{getEncryptionLabel(rule.encryption)}</td>
+                <td>{getEncryptionLabel(rule)}</td>
                 <td>{getSchemaLabel(rule.schema)}</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <IsAllowed to={MODIFY_PROPERTY}>

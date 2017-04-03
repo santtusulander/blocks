@@ -17,7 +17,7 @@ const baseURL = (brand, account) => `${BASE_URL_AAA}/brands/${brand}/accounts/${
 
 export const fetch = ({brand, account, id}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
-    .then( ({data}) => {
+    .then(({data}) => {
 
       const accountGroups = {
         id: account,
@@ -30,7 +30,7 @@ export const fetch = ({brand, account, id}) => {
 
 export const fetchAll = ({ brand, account }) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
-    .then( ({data}) => {
+    .then(({data}) => {
 
       const accountGroups = {
         id: account,
@@ -41,7 +41,7 @@ export const fetchAll = ({ brand, account }) => {
 }
 
 export const create = ({ brand, account, payload }) =>
-  axios.post(baseURL(brand, account), payload)
+  axios.post(baseURL(brand, account), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const accountGroups = {
@@ -53,7 +53,7 @@ export const create = ({ brand, account, payload }) =>
     })
 
 export const update = ({ brand, account, id, payload }) =>
-  axios.put(`${baseURL(brand, account)}/${id}`, payload)
+  axios.put(`${baseURL(brand, account)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const accountGroups = {

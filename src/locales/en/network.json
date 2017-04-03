@@ -1,4 +1,5 @@
 {
+  "portal.network.network.title": "Network",
   "portal.network.account.title": "Account",
   "portal.network.groups.title": "Groups",
   "portal.network.networks.title": "Networks",
@@ -141,6 +142,10 @@
   "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
   "portal.network.podForm.discoveryMethod.options.bgp.label": "BGP",
   "portal.network.podForm.discoveryMethod.options.footprints.label": "Footprints",
+  "portal.network.podForm.saltRole.label": "Salt Role",
+  "portal.network.podForm.saltRole.options.cache.label": "Cache",
+  "portal.network.podForm.saltRole.options.gslb.label": "GSLB",
+  "portal.network.podForm.saltRole.required.error": "Salt Role is required",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
@@ -161,8 +166,7 @@
   "portal.network.footprintForm.description.required.text": "Footprint description is required",
   "portal.network.footprintForm.CIRD.required.text": "At least one valid IPV4 CIDR is required",
   "portal.network.footprintForm.CIRD.invalid.text": "You should remove all invalid IPV4 CIDR items",
-  "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
-  "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
+  "portal.network.footprintForm.ASN.required.text": "At least one ASN is required",
   "portal.network.footprintForm.file.label": "CSV File",
   "portal.network.footprintForm.file.help.label": "CSV File",
   "portal.network.footprintForm.file.help.text": "Adding to Footprint from a CSV file - What fields can I import? \n\nAll required fields shown in the upload template must be provided. The first row in your CSV file must contain the name of the field that is contained in that column. \n\nThe available fields are listed below: \nname, description, data_type, value, udn_type \n\ne.g. net1, Specific Network, ipv4cidr, '10.10.10.0/24,11.11.11.0/24', on_net_off_net",

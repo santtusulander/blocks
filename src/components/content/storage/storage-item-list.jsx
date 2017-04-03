@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import Immutable from 'immutable'
+import { List } from 'immutable'
 import { ButtonToolbar, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage } from 'react-intl'
@@ -12,7 +12,6 @@ import { formatBitsPerSecond } from '../../../util/helpers'
 import TruncatedTitle from '../../truncated-title'
 import LinkWrapper from '../link-wrapper'
 
-import { composedChartData as fakeData } from '../../../containers/__mocks__/chart-data'
 class StorageItemList extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +30,8 @@ class StorageItemList extends React.Component {
       average,
       currentUsage,
       estimate,
-      fetchingMetrics
+      fetchingMetrics,
+      chartData
     } = this.props
 
     return (
@@ -88,12 +88,15 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
 
               {!fetchingMetrics &&
-                // TODO : UDNP-2938 | replace storage mock data with redux
-                <LineAreaComposedChart
-                  isMiniChart={true}
-                  data={fakeData}
-                  valueFormatter={formatBitsPerSecond}
-                />
+                (chartData.length > 0
+                  ? <LineAreaComposedChart
+                    isMiniChart={true}
+                    data={chartData}
+                    dataKey='bytes'
+                    valueFormatter={formatBitsPerSecond}
+                  />
+                  : <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+                )
               }
 
             </ReactCSSTransitionGroup>
@@ -109,27 +112,27 @@ StorageItemList.displayName = 'StorageItemList'
 StorageItemList.propTypes = {
   analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   average: PropTypes.number,
-
+  chartData: PropTypes.array,
   configurationLink: PropTypes.string,
-  currentUsage:  PropTypes.number,
+  currentUsage: PropTypes.number,
 
   estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
 
-  locations: PropTypes.array,
-  low:PropTypes.number,
+  locations: PropTypes.instanceOf(List),
+  low: PropTypes.number,
 
   name: PropTypes.string,
 
   onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  peak:PropTypes.number,
+  peak: PropTypes.number,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 
 }
 
 StorageItemList.defaultProps = {
-  primaryData: Immutable.List(),
-  locations: []
+  locations: [],
+  chartData: []
 }
 
 export default StorageItemList

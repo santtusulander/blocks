@@ -22,6 +22,8 @@ describe('AddHost', () => {
       props = {
         intl: intlMaker(),
         handleSubmit: jest.fn(),
+        activeGroup: Immutable.Map(),
+        hasVODSupport: true,
         createHost,
         cancelChanges,
       }

@@ -18,7 +18,7 @@ const fileTypes = [
 ]
 
 class ExportFileForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -30,19 +30,19 @@ class ExportFileForm extends React.Component {
     this.onDownload = this.onDownload.bind(this)
   }
 
-  onChange( val ){
+  onChange(val) {
     return () => {
       this.setState({fileType: val})
     }
   }
 
-  onDownload( fileType ){
+  onDownload(fileType) {
     return () => {
       this.props.onDownload(fileType);
     }
   }
 
-  onCancel(){
+  onCancel() {
     this.props.onCancel();
   }
 
@@ -57,7 +57,7 @@ class ExportFileForm extends React.Component {
               <Radio
                 key={`radio-${index}`}
                 name="exportFile"
-                checked={fileType.value == this.state.fileType}
+                checked={fileType.value === this.state.fileType}
                 className="export-input-list-item"
                 onChange={this.onChange(fileType.value)}
               ><span>{fileType.label}</span></Radio>

@@ -5,46 +5,21 @@ import d3 from 'd3'
 import ContentItemChart from '../../components/content/content-item-chart'
 import ContentItemList from '../../components/content/content-item-list'
 
-import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
+import {
+  getById as getPropertyById,
+  getPropertyMetricsById,
+  getPropertyDailyTrafficById,
+  getTotalTraffics
+} from '../../redux/modules/entities/properties/selectors'
 
-import { isTrialHost, getConfiguredName } from '../../util/helpers'
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
+import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
-
-
-const getPropertyMetricsById = (state, propertyId) => {
-
-  const entity = getPropertyById(state, propertyId)
-  const configuredName = getConfiguredName(entity)
-
-  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
-}
-
-/**
- * getPropertyDailyTrafficById
- * @param  {Object} redux state
- * @param  {String|Number} propertyId
- * @return {Map} dailyTraffic of a property
- */
-const getPropertyDailyTrafficById = (state, propertyId) => {
-
-  const entity = getPropertyById(state, propertyId)
-  const configuredName = getConfiguredName(entity)
-
-  return state.metrics.get('hostDailyTraffic').find( metric => metric.get('property') === configuredName )
-}
-
-/**
- * getTotalTraffics
- * @param  {Object} state
- * @return {List} List of totalTraffics
- */
-const getTotalTraffics = (state) => {
-  return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
-}
 
 const PropertyItemContainer = props => {
 
-  const { published_host_id  } = props.entity.toJS()
+  const { published_host_id } = props.entity ? props.entity.toJS() : {}
   const { entityMetrics, dailyTraffic, totalTraffics, params, roles, user } = props
 
   const analyticsURLBuilder = (property) => {
@@ -55,13 +30,13 @@ const PropertyItemContainer = props => {
     )
   }
 
-  const isTrial = isTrialHost( props.entity )
+  const isTrial = isTrialHost(props.entity)
 
   //Scale starbursts based on totalTraffic
   let trafficMin = Math.min(...totalTraffics)
-  let trafficMax = Math.max(...totalTraffics)
+  const trafficMax = Math.max(...totalTraffics)
 
-  trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+  trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
   const rangeMin = 400
   const rangeMax = 500
@@ -73,10 +48,10 @@ const PropertyItemContainer = props => {
   const totalTraffic = entityMetrics.get('totalTraffic')
 
   //set to smallest size if no totalTraffic in metricsData
-  const scaledWidth = totalTraffic ? trafficScale( totalTraffic ) : rangeMin
+  const scaledWidth = totalTraffic ? trafficScale(totalTraffic) : rangeMin
 
   if (!props.viewingChart) {
-    return(
+    return (
       <ContentItemList
         id={published_host_id}
         name={published_host_id}
@@ -171,7 +146,7 @@ const makeMapStateToProps = () => {
       dailyTraffic: getPropertyDailyTrafficById(state, propertyId),
       totalTraffics: getTotalTraffics(state),
       user: state.user,
-      roles: state.roles
+      roles: getRoles(state)
     }
   }
 

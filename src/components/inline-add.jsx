@@ -19,12 +19,12 @@ const InlineAdd = ({ inputs, invalid, unmount, formValues, save, handleSubmit, e
         <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
 
           {cell.map(
-            ({input, positionClass}, index) => {
+            ({input, positionClass}, cellIndex) => {
 
               const fieldName = input.props.name
               const className = getClassNames(getMetaData(fieldName).touched, errors[fieldName], input.props.className);
               return (
-                <div className={positionClass} key={index}>
+                <div className={positionClass} key={cellIndex}>
                   {cloneElement(input, { className })}
                 </div>
               )

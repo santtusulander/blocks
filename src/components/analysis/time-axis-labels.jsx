@@ -18,7 +18,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
      but only if it's not so close to the end of the month that it'll overlap
      the next month's label */
   const dayTicksStartDate = moment(dayTicks[0]).date()
-  if(dayTicksStartDate < 25 && dayTicksStartDate > 1) {
+  if (dayTicksStartDate < 25 && dayTicksStartDate > 1) {
     monthTicks.unshift(dayTicks[0])
   }
   return (
@@ -42,7 +42,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
         )
       })}
       {monthTicks.map((tick, i) => {
-        if(tick) {
+        if (tick) {
           return (
             <g key={i}>
               <text x={xScale(tick)}

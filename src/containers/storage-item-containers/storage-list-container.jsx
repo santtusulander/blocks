@@ -13,7 +13,7 @@ import StorageItemList from '../../components/content/storage/storage-item-list'
 const StorageChartContainer = props => {
 
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
-  const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
+  const { detail, totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
 
   return (
       <StorageItemList
@@ -22,12 +22,17 @@ const StorageChartContainer = props => {
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
-        currentUsage={bytes.average}
+        currentUsage={bytes.ending}
         estimate={estimated_usage}
         peak={bytes.peak}
-        lastMonthUsage={historical_bytes.average}
+        low={bytes.low}
+        average={bytes.average}
+        lastMonthUsage={historical_bytes.ending}
         lastMonthEstimate={estimated_usage}
-        lastMonthPeak={historical_bytes.peak} />
+        lastMonthPeak={historical_bytes.peak}
+
+        chartData={detail}
+       />
   )
 }
 

@@ -27,7 +27,7 @@ class SidePanel extends Component {
   render() {
     const { children, className, dim, overlapping, show, subTitle, subSubTitle, title, notification } = this.props
     let subTitleElements = ''
-    let dialogClassName = classNames(
+    const dialogClassName = classNames(
       'side-panel',
       className,
       dim ? modalClassDim : null,

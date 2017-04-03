@@ -10,6 +10,8 @@
   "portal.security.tokenAuth.sharedSecretValue.text": "Secret",
   "portal.security.tokenAuth.created.text": "Created",
   "portal.security.tokenAuth.noRules.text": "No Token Auth rules found",
+  "portal.security.tokenAuth.manifest.text": "Manifest",
+  "portal.security.tokenAuth.chunk.text": "Chunk",
 
   "portal.security.ssl.selectGroup.text": "Please select a group from top left to see SSL Certificates",
   "portal.security.ssl.noCertificates.text": "No certificates",
@@ -26,5 +28,18 @@
   "portal.security.ssl.sslIsUpdated.text": "SSL Certificate successfully updated",
   "portal.security.ssl.sslIsCreated.text": "SSL Certificate successfully created",
   "portal.security.ssl.sslIsRemoved.text": "SSL Certificate successfully removed",
-  "portal.security.ssl.updateFailed.text": "Saving configurations failed: {reason}"
+  "portal.security.ssl.updateFailed.text": "Saving configurations failed: {reason}",
+
+  "portal.security.sslCertificate.text": "SSL CERTIFICATE",
+  "portal.security.tokenAuth.text": "TOKEN AUTHENTICATION",
+  "portal.security.contentTargeting.text": "CONTENT TARGETING",
+  "portal.security.editCertificate.text": "Edit Certificate",
+  "portal.security.uploadCertificate.text": "Upload Certificate",
+
+  "portal.security.header.text": "SECURITY",
+
+  "portal.security.ssl.title.text": "TITLE",
+  "portal.security.ssl.commonName.text": "COMMON NAME",
+  "portal.security.ssl.group.text": "GROUP"
+
 }

@@ -1,5 +1,5 @@
 {
-  "portal.storage.uploadContent.uploading.text": "Uploading {number} items",
+  "portal.storage.uploadContent.uploading.text": "Uploading {number, plural, one {# item} other {# items}}",
   "portal.storage.uploadContent.cancel.text": "Cancel All",
 
   "portal.storage.kpi.gain.title": "Gain",
@@ -11,11 +11,16 @@
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
 
+  "portal.storage.storageForm.add.success.status": "Storage created successfully",
+  "portal.storage.storageForm.update.success.status": "Storage updated successfully",
+  "portal.storage.storageForm.delete.success.status": "Storage deleted successfully",
+  "portal.storage.storageForm.delete.failed.status": "Deleting storage failed",
+
   "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
   "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
   "portal.storage.storageForm.name.required.error": "Storage name is required",
   "portal.storage.storageForm.name.placeholder": "Enter Storage Name",
-  "portal.storage.storageForm.name.validation.error": "Storage Name is invalid",
+  "portal.storage.storageForm.name.validation.error": "Storage Name is invalid. Only alphanumeric lowercase letters are allowed.",
   "portal.storage.storageForm.locations.label": "Locations",
   "portal.storage.storageForm.locations.required.error": "At least one location is required",
   "portal.storage.storageForm.estimate.label": "Estimated Usage",

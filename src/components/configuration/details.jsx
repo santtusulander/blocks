@@ -31,7 +31,7 @@ class ConfigurationDetails extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!Immutable.is(this.props.storages, nextProps.storages)) {
+    if (!Immutable.is(this.props.storages, nextProps.storages)) {
       this.storageListOptions = this.generateStorageListOptions(nextProps.storages)
     }
   }
@@ -48,7 +48,7 @@ class ConfigurationDetails extends React.Component {
   }
 
   handleUDNOriginSelection(value) {
-    if(value === 'option_new_storage') {
+    if (value === 'option_new_storage') {
       this.toggleAddStorageModal()
     }
     else {
@@ -66,12 +66,12 @@ class ConfigurationDetails extends React.Component {
 
   toggleAddStorageModal() {
     this.setState({
-      showStorageModal : !this.state.showStorageModal
+      showStorageModal: !this.state.showStorageModal
     })
   }
 
   toggleUDNOrigin(val) {
-    if(val) {
+    if (val) {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
     }
     else {
@@ -80,14 +80,14 @@ class ConfigurationDetails extends React.Component {
   }
 
   generateStorageListOptions(storages) {
-    const {storagePermission: { createAllowed : storageCreationIsAllowed } } = this.props
+    const {storagePermission: { createAllowed: storageCreationIsAllowed } } = this.props
     let options = storageCreationIsAllowed
                   ? [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
                   : []
 
-    if(!storages.isEmpty()) {
+    if (!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
-        value: storage.getIn(['gateway', 'hostname']),
+        value: storage.getIn(['origin', 'hostname']),
         label: storage.get('ingest_point_id')
       }), options)
     }
@@ -95,7 +95,7 @@ class ConfigurationDetails extends React.Component {
   }
 
   render() {
-    if(!this.props.edgeConfiguration) {
+    if (!this.props.edgeConfiguration) {
       return (
         <LoadingSpinner/>
       )
@@ -129,6 +129,19 @@ class ConfigurationDetails extends React.Component {
             </Col>
             <Col xs={9}>
               <FormControl.Static>{this.props.deploymentMode}</FormControl.Static>
+            </Col>
+          </FormGroup>
+        </Row>
+
+        <Row>
+          <FormGroup>
+            <Col xs={3}>
+              <ControlLabel>
+                <FormattedMessage id="portal.configuration.details.serviceType.text"/>
+              </ControlLabel>
+            </Col>
+            <Col xs={9}>
+              <FormControl.Static>{this.props.serviceTypeText}</FormControl.Static>
             </Col>
           </FormGroup>
         </Row>
@@ -408,6 +421,7 @@ ConfigurationDetails.propTypes = {
   params: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
+  serviceTypeText: React.PropTypes.string,
   storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List)
 }

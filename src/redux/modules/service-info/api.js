@@ -24,7 +24,7 @@ const Schemas = {
 
 export const fetchAll = () => {
   return axios.get(`${BASE_URL_AAA}/service_info`)
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize(data, Schemas.serviceInfo)
     })
 }

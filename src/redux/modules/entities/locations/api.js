@@ -42,14 +42,14 @@ export const fetch = ({ id, ...params }) =>
       return normalize(data, locationSchema)
     })
 
-export const fetchIds = ( params ) => {
+export const fetchIds = (params) => {
   return axios.get(baseUrl(params), PAGINATION_MOCK)
     .then(({data}) => {
       return data
     })
 }
 
-export const fetchAll = ( params ) =>
+export const fetchAll = (params) =>
   axios.get(baseUrl(params), PAGINATION_MOCK)
     .then(({ data }) => {
       return normalize(data.data, [ locationSchema ])

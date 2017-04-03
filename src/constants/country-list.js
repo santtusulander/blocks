@@ -232,7 +232,7 @@ const country_list = [
   { id: 'UG', label: 'Uganda (UG)' },
   { id: 'UA', label: 'Ukraine (UA)' },
   { id: 'AE', label: 'United Arab Emirates (AE)' },
-  { id: 'GB', label: 'United Kingdom (GB)' },
+  { id: 'UK', label: 'United Kingdom (UK)' },
   { id: 'US', label: 'United States of America (US)' },
   { id: 'UM', label: 'United States Minor Outlying Islands (UM)' },
   { id: 'UY', label: 'Uruguay (UY)' },

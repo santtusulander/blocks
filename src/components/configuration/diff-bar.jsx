@@ -28,7 +28,7 @@ class ConfigurationDiffBar extends React.Component {
         transitionLeaveTimeout={350}
         transitionAppear={true}
         transitionAppearTimeout={10}>
-        {configDiff.size != 0 &&
+        {configDiff.size !== 0 &&
           <Dialog className="configuration-diff-bar">
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary"
@@ -47,7 +47,7 @@ class ConfigurationDiffBar extends React.Component {
               </p>
               <p>
                 {configDiff.map((change, i) => {
-                  return(
+                  return (
                     <span key={i}>
                       [{change.get('op')} {change.get('path')}]
                     </span>

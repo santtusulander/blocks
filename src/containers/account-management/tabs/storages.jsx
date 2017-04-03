@@ -20,7 +20,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import {fetchGroupsMetrics} from '../../../redux/modules/entities/storage-metrics/actions'
+import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -28,6 +29,7 @@ import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-cl
 import { getByGroups as getPropetiesByGroups } from '../../../redux/modules/entities/properties/selectors'
 import { getByGroups as getMetricsByGroups } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
@@ -61,13 +63,18 @@ class AccountManagementStorages extends Component {
     const accountId = account.get('id')
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
 
-
-    this.props.groups.map( group => {
+    this.props.groups.map(group => {
       const groupId = group.get('id')
 
       this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
+
+      return false
     })
+
+    if (this.props.params.group) {
+      this.props.fetchGroup({ brand: brandId, account: accountId, id: this.props.params.group })
+    }
 
     this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
     this.props.fetchClusters({})
@@ -101,8 +108,17 @@ class AccountManagementStorages extends Component {
   }
 
   deleteStorage() {
-    return this.props.deleteStorage({group: this.state.storageGroup, id: this.state.storageToDelete})
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteStorage({
+      brand: this.props.account.get('brand_id'),
+      account: this.props.account.get('id'),
+      group: this.state.storageGroup,
+      id: this.state.storageToDelete
+    }).then(() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
+      this.props.toggleModal(null)
+    }).catch (() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.failed.status"/>)
+    })
   }
 
   filterData(storages, storageName) {
@@ -120,7 +136,7 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, groups, storages, clusters, properties, metrics,
+    const { account, group, groups, storages, clusters, properties, metrics, params,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
     const sorterProps  = {
@@ -131,10 +147,11 @@ class AccountManagementStorages extends Component {
 
     const storagesFullData = storages.map(storage => {
       const storageGroupId = storage.get('parentId')
-      const storageGroup = groups.find(group => (group.get('id') === storageGroupId))
+      // eslint-disable-next-line eqeqeq
+      const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 
-      let origins = []
+      const origins = []
       const storageGatewayHost = storage.getIn(['gateway','hostname'])
       const originsData = properties.filter(property => {
         const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
@@ -145,7 +162,7 @@ class AccountManagementStorages extends Component {
         origins.push(origin.get('published_host_id'))
       })
 
-      let locations = []
+      const locations = []
       storage.get('clusters').forEach(clusterId => {
         const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
         if (clusterData) {
@@ -154,16 +171,15 @@ class AccountManagementStorages extends Component {
         }
       })
       const locationsString = locations.join(', ')
-
       const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
       const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
-      const fileCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
+      const filesCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
                     .setIn(['locations'], locationsString)
-                    .setIn(['usage'], usage)
-                    .setIn(['file_count'], fileCount)
+                    .setIn(['usage'], usage || 0)
+                    .setIn(['files_count'], filesCount || 0)
     })
 
     const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
@@ -174,7 +190,7 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
-    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
+    const permissions = {modify: PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
 
     return (
       <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
@@ -190,7 +206,7 @@ class AccountManagementStorages extends Component {
                     value={this.state.search}
                     onChange={this.changeSearch}  />
                 </FormGroup>
-                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!group}>
+                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!params.group}>
                   <IconAdd />
                 </Button>
               </SectionHeader>
@@ -204,7 +220,7 @@ class AccountManagementStorages extends Component {
                     <TableSorter {...sorterProps} column="group_name">
                       <FormattedMessage id="portal.account.storage.table.group.text"/>
                     </TableSorter>
-                    <TableSorter {...sorterProps} column="originTo">
+                    <TableSorter {...sorterProps} column="origins">
                       <FormattedMessage id="portal.account.storage.table.originTo.text"/>
                     </TableSorter>
                     <TableSorter {...sorterProps} column="locations">
@@ -230,13 +246,14 @@ class AccountManagementStorages extends Component {
                         <td>{originsString}</td>
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
-                        <td>{storage.get('file_count') || 0}</td>
+                        <td>{storage.get('files_count')}</td>
                         <td className="nowrap-column">
+
+                        {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                            onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                        */}
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={
-                            /*TODO: remove false condition once API from CIS-322 is ready*/
-                            false && (() => {this.editStorage(storageId, storage.get('parentId'))})}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>
@@ -286,6 +303,7 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetchGroupsMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -294,7 +312,9 @@ AccountManagementStorages.propTypes = {
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
+  params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
+  showNotification: PropTypes.func,
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
 }
@@ -304,7 +324,7 @@ AccountManagementStorages.defaultProps = {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
 
@@ -312,7 +332,7 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     account: account,
     groups: groups,
-    group: state.group.get('activeGroup'),
+    group: getGroupById(state, ownProps.params.group),
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
@@ -326,12 +346,12 @@ function mapDispatchToProps(dispatch) {
 
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
-    deleteStorage: (params) => dispatch( storageActions.remove(params)),
+    deleteStorage: (params) => dispatch(storageActions.remove(params)),
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params))
-
+    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params))
   };
 }
 

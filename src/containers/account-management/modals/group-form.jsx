@@ -16,6 +16,7 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -33,6 +34,9 @@ import {
 import GroupForm from '../../../components/account-management/group-form'
 import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getServiceOptionsForGroup } from '../../../util/services-helpers'
+
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
 
 import '../../../components/account-management/group-form.scss'
 
@@ -77,7 +81,7 @@ class GroupFormContainer extends React.Component {
 
   onSubmit(values) {
     const { groupId, invalid, onSave } = this.props
-    if(!invalid) {
+    if (!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
       // if (groupId) {
@@ -201,6 +205,7 @@ class GroupFormContainer extends React.Component {
   render() {
     const {
       account,
+      allowModify,
       canEditServices,
       canSeeLocations,
       groupId,
@@ -219,7 +224,6 @@ class GroupFormContainer extends React.Component {
       invalid,
       networks,
       serviceOptions,
-      locationPermissions,
       showServiceItemForm
     } = this.props
 
@@ -279,9 +283,9 @@ class GroupFormContainer extends React.Component {
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             onShowLocation={this.showLocationForm}
-            locationPermissions={locationPermissions}
             serviceOptions={serviceOptions}
             showServiceItemForm={showServiceItemForm}
+            readOnly={!allowModify}
           />
         </SidePanel>
 
@@ -311,7 +315,6 @@ class GroupFormContainer extends React.Component {
           onCancel={this.hideLocationForm}
           show={true}
           locationId={this.state.selectedLocationId}
-          locationPermissions={locationPermissions}
         />
       }
 
@@ -325,6 +328,7 @@ GroupFormContainer.displayName = "GroupFormContainer"
 GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
+  allowModify: PropTypes.bool,
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
@@ -340,7 +344,6 @@ GroupFormContainer.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   networks: PropTypes.instanceOf(List),
@@ -372,6 +375,8 @@ const  mapStateToProps = (state, ownProps) => {
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
+  const roles = getRoles(state)
+
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -392,6 +397,7 @@ const  mapStateToProps = (state, ownProps) => {
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP),
     networks: getNetworksByGroup(state, groupId)
   }
 }
@@ -402,7 +408,7 @@ const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
     fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

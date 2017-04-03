@@ -48,20 +48,21 @@ class PurgeModal extends React.Component {
       type: type,
       invalid: true
     })
-    if (type == 'url' || type == 'directory') {
+    if (type === 'url' || type === 'directory') {
       this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
-    } else if (type == 'hostname') {
+    } else if (type === 'hostname') {
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', Immutable.List()))
-    } else if (type == 'group') {
+    } else if (type === 'group') {
       this.setState({invalid: false})
-      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', (this.props.allHosts).toJS()))
+      const allHostIds = this.props.allHosts.isEmpty() ? this.props.allHosts : this.props.allHosts.map(host => host.get('published_host_id'))
+      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', allHostIds))
     }
   }
   change(path) {
     return (e) => {
-      if(path[1] === 'email') {
+      if (path[1] === 'email') {
         clearTimeout(this.emailValidationTimeout)
-        if(this.state.purgeEmailError !== '') {
+        if (this.state.purgeEmailError !== '') {
           this.setState({
             purgeEmailError: ''
           })
@@ -75,12 +76,12 @@ class PurgeModal extends React.Component {
     const maxObjects = 100
     const value = e.target.value
     const parsedObjs = value.split(',').map(val => val.trim())
-    if(this.state.purgeObjectsError !== '') {
+    if (this.state.purgeObjectsError !== '') {
       this.setState({
         purgeObjectsError: ''
       })
     }
-    if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
+    if (this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
         purgeObjectsWarning: <FormattedMessage id="portal.analytics.purgeModal.maxAmount.error"/>
       })
@@ -89,7 +90,7 @@ class PurgeModal extends React.Component {
         purgeObjectsWarning: ''
       })
     }
-    if(parsedObjs.length <= maxObjects) {
+    if (parsedObjs.length <= maxObjects) {
       this.props.changePurge(
         this.props.activePurge.set('objects', Immutable.List(parsedObjs))
       )
@@ -106,20 +107,20 @@ class PurgeModal extends React.Component {
     const value = e.target.value
     this.setState({invalid: false})
 
-    if(!value) {
+    if (!value) {
       this.setState({
         purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
       })
       return true
     }
 
-    if(this.state.type === 'url' || this.state.type === 'directory' ) {
+    if (this.state.type === 'url' || this.state.type === 'directory') {
       const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
       const errors = values.filter(val => {
         return !isValidRelativePath(val)
       })
 
-      if(errors.length){
+      if (errors.length) {
         const errorList = errors.join(', ')
         this.setState({
           purgeObjectsError: this.state.type === 'url' ?
@@ -131,7 +132,7 @@ class PurgeModal extends React.Component {
     }
   }
   validateEmail() {
-    if(this.props.activePurge.get('feedback') &&
+    if (this.props.activePurge.get('feedback') &&
       (!this.props.activePurge.getIn(['feedback', 'email']) || !isValidEmail(this.props.activePurge.getIn(['feedback', 'email'])))) {
       this.setState({
         purgeEmailError: <FormattedMessage id="portal.analytics.purgeModal.email.error"/>
@@ -143,12 +144,12 @@ class PurgeModal extends React.Component {
     e.preventDefault()
     let hasErrors = false;
     hasErrors = this.validateEmail() ? true : hasErrors
-    if(!hasErrors) {
+    if (!hasErrors) {
       this.props.savePurge()
     }
   }
   toggleNotification() {
-    if(!this.props.activePurge.get('feedback')) {
+    if (!this.props.activePurge.get('feedback')) {
       this.props.changePurge(this.props.activePurge.set('feedback', Immutable.Map({email: ''})))
     } else {
       this.props.changePurge(this.props.activePurge.delete('feedback'))
@@ -186,8 +187,8 @@ class PurgeModal extends React.Component {
     [] :
     allHosts.map(host => {
       return {
-        id: host,
-        label: host
+        id: host.get('published_host_id'),
+        label: host.get('published_host_id')
       }
     }).toJS();
 

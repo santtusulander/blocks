@@ -8,11 +8,11 @@ class AnalysisHorizontalBar extends React.Component {
     return this.props.xAxisFormat ?
       numeral(val).format(this.props.xAxisFormat)
     : this.props.xAxisCustomFormat ?
-      this.props.xAxisCustomFormat(numeral(val).format('0'))
+      this.props.xAxisCustomFormat(numeral(val).format('0'), null, '0,0.0')
     : numeral(val).format('0 a')
   }
   render() {
-    if(!this.props.width || !this.props.data) {
+    if (!this.props.width || !this.props.data) {
       return <LoadingSpinner/>
     }
 
@@ -33,7 +33,7 @@ class AnalysisHorizontalBar extends React.Component {
       ])
 
     let className = 'analysis-horizontal-bar'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 
@@ -55,7 +55,7 @@ class AnalysisHorizontalBar extends React.Component {
             </text>
           </g>)}
           {xScale.ticks(4).map((tick, i) => {
-            if(tick) {
+            if (tick) {
               return (
                 <g key={i}>
                   <text x={xScale(tick)}

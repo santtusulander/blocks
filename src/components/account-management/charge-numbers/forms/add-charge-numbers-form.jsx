@@ -30,7 +30,7 @@ const validate = ({ billing_meta: { charge_number = '', regions, flow_direction 
     ],
     regions: [
       {
-        condition: regions && !(regions.reduce((acc, {charge_number}) => acc && isValidChargeNumber(charge_number), true)),
+        condition: regions && !(regions.reduce((acc, {region_charge_number}) => acc && isValidChargeNumber(region_charge_number), true)),
         errorText: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />
       }
     ]
@@ -65,11 +65,11 @@ class AddChargeNumbersForm extends React.Component {
   }
 
   render() {
-    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid } = this.props
+    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid, isEnabled } = this.props
 
     return (
       <form onSubmit={this.props.handleSubmit(this.onEnable)}>
-        { hasFlowDirection && 
+        { hasFlowDirection &&
           <div>
             <Field
               name="billing_meta.flow_direction"
@@ -112,6 +112,7 @@ class AddChargeNumbersForm extends React.Component {
         }
 
         <FormFooterButtons>
+          {isEnabled &&
           <Button
             id='disable-button'
             className="btn-danger pull-left"
@@ -119,6 +120,7 @@ class AddChargeNumbersForm extends React.Component {
           >
             <FormattedMessage id='portal.common.button.disable' />
           </Button>
+          }
           <Button
             id='cancel-button'
             className="btn-outline"
@@ -147,6 +149,7 @@ AddChargeNumbersForm.propTypes = {
   hasFlowDirection: PropTypes.bool,
   hasGlobalBilling: PropTypes.bool,
   hasRegionalBilling: PropTypes.bool,
+  isEnabled: PropTypes.bool,
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
   onSubmit: PropTypes.func,

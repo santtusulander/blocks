@@ -1,27 +1,36 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
     removeProps: jest.fn(),
+    accountIsServiceProviderType: jest.fn(),
+    userIsServiceProvider: jest.fn(),
     matchesRegexp: jest.fn()
   }
 })
 
-jest.unmock('../../redux/modules/fetching/actions.js')
-jest.unmock('../hosts.jsx')
-jest.unmock('../../util/status-codes')
-import { Hosts } from '../hosts.jsx'
+jest.unmock('../../../util/status-codes')
+jest.unmock('../account.jsx')
 
-function hostActionsMaker() {
+import { Account } from '../account.jsx'
+
+console.log = function() {}
+
+
+function groupActionsMaker() {
   return {
     startFetching: jest.fn(),
-    fetchHosts: jest.fn(),
-    createHost: jest.fn(),
-    deleteHost: jest.fn()
+    fetchGroups: jest.fn(),
+    fetchGroup: jest.fn(),
+    changeActiveGroup: jest.fn(),
+    updateGroup: jest.fn(),
+    createGroup: jest.fn(() => Promise.resolve()),
+    deleteGroup: jest.fn(() => Promise.resolve())
   }
 }
 function uiActionsMaker() {
@@ -29,11 +38,30 @@ function uiActionsMaker() {
     toggleChartView: jest.fn()
   }
 }
+function accountActionsMaker() {
+  return {
+    fetchAccount: jest.fn()
+  }
+}
+function metricsActionsMaker() {
+  return {
+    fetchGroupMetrics: jest.fn(),
+    startGroupFetching: jest.fn()
+  }
+}
 
-const urlParams = {brand: 'udn', account: '1', group: '1'}
+const fakeActiveAccount = Immutable.fromJS({
+  id: '1'
+})
+
+const fakeGroups = Immutable.fromJS([
+  {id: '1', name: 'aaa'},
+  {id: '2', name: 'bbb'}
+])
 
 const fakeMetrics = Immutable.fromJS([
   {
+    group: '1',
     avg_cache_hit_rate: 1,
     historical_traffic: [],
     historical_variance: [],
@@ -45,6 +73,7 @@ const fakeMetrics = Immutable.fromJS([
     }
   },
   {
+    group: '2',
     avg_cache_hit_rate: 2,
     historical_traffic: [],
     historical_variance: [],
@@ -57,44 +86,44 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
-describe('Hosts', () => {
+const urlParams = {brand: 'udn', account: '1'}
+
+
+describe('Groups', () => {
   let props = {}
   let subject = null
-  const fetchGroupData = () => Promise.resolve()
+  const fetchUsers = () => Promise.resolve()
+  const fetchData = () => Promise.resolve()
   const fetchMetricsData = jest.fn()
-  const hostActions = hostActionsMaker()
+  const groupActions = groupActionsMaker()
   beforeEach(() => {
     subject = viewingChart => {
       props = {
-        hostActions,
+        groupActions,
+        activeAccount: fakeActiveAccount,
         uiActions: uiActionsMaker(),
-        fetchGroupData,
+        fetchUsers,
+        fetchData,
         fetchMetricsData,
         fetching: true,
         fetchingMetrics: true,
         params: urlParams,
-        hosts: Immutable.List(['1','2']),
+        groups: Immutable.List(['1','2']),
         metrics: fakeMetrics,
-        viewingChart: viewingChart || false
+        viewingChart: viewingChart || false,
       }
-      return shallow(<Hosts {...props}/>)
+      return shallow(<Account {...props}/>)
     }
   })
+
   it('should exist', () => {
     expect(subject().length).toBe(1)
-  });
-
-  it('should request data on mount', () => {
-    // This will change if/when redux-thunk gets implemented
-    // subject()
-    // expect(fetchMetricsData.mock.calls.length).toBe(1)
-  });
+  })
 
   it('should pass down loading flags', () => {
     const childProps = subject().find('ContentItems').props()
     expect(childProps.fetching).toBe(true)
     expect(childProps.fetchingMetrics).toBe(true)
-
   });
 
   it('should show existing hosts as charts', () => {
@@ -105,13 +134,4 @@ describe('Hosts', () => {
     expect(subject().find('ContentItems').props().viewingChart).toBe(false)
   });
 
-  it('should add a new host when called', () => {
-    subject().instance().createNewHost('bbb','production')
-    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb','production'])
-  })
-
-  it('should delete a host when clicked', () => {
-    subject().instance().deleteHost('aaa')
-    expect(hostActions.deleteHost.mock.calls[0]).toEqual(['udn','1','1','aaa'])
-  })
 })

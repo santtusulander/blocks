@@ -7,26 +7,17 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 import {
-  getScriptLua,
-  matchIsContentTargeting,
-  actionIsTokenAuth,
-  parsePolicy,
-  parseCountriesByResponseCodes,
-  ALLOW_RESPONSE_CODES,
-  DENY_RESPONSE_CODES,
-  REDIRECT_RESPONSE_CODES
+  parsePolicy
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
-
-import IsAdmin from '../is-admin'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      default_policy: null,
+      defaults: null,
       request_policy: null,
       final_request_policy: null,
       response_policy: null,
@@ -38,18 +29,21 @@ class ConfigurationPolicyRules extends React.Component {
     this.showConfirmation = this.showConfirmation.bind(this)
     this.closeConfirmation = this.closeConfirmation.bind(this)
   }
+
   componentWillMount() {
     const { editOrDelete, policyId, policyType } = this.props.params
     if (editOrDelete === 'delete') {
       this.showConfirmation(policyType, Number(policyId))()
     }
   }
+
   activateRule(rulePath) {
     return e => {
       e.preventDefault()
       this.props.activateRule(rulePath)
     }
   }
+
   deleteRule(policyType, index) {
     return e => {
       e.preventDefault()
@@ -60,6 +54,7 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
   showConfirmation(policyType, index) {
     return () => {
       this.setState({
@@ -67,6 +62,7 @@ class ConfigurationPolicyRules extends React.Component {
       })
     }
   }
+
   closeConfirmation(policyType) {
     return () => {
       this.setState({
@@ -75,44 +71,14 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
   render() {
-    const policyMapper = type => (policy, i) => {
-      if(!policy.has('match')) {
-        return null
-      }
+    const policyMapper = type => (rule, i) => {
+      const { matches, sets, default_sets } = parsePolicy(rule, [])
+      const matchLabel = matches.map(match => match.field).join(', ')
+      const actionsLabel = sets.map(set => set.setkey).join(', ')
+      const defaultActionsLabel = default_sets.map(set => set.setkey).join(', ')
 
-      const {matches, sets} = parsePolicy(policy, [])
-
-      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
-      let matchLabel = ''
-      let actionsLabel = ''
-      if ( matchIsContentTargeting(policy.get('match') )) {
-        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
-        actionsLabel = ''
-
-        const scriptLua = getScriptLua( policy )
-
-        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
-        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
-        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
-
-        let ctActionLabels = []
-        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
-
-        actionsLabel = ctActionLabels.join(' | ')
-
-      } else {
-        matchLabel = matches.map(match => match.field).join(', ')
-        actionsLabel = sets.map(set => set.setkey).join(', ')
-      }
-
-      {/*
-        TODO: remove UDN admin checks as part of UDNP-1713
-        Allow CT / TA modification only for UDN Admin
-      */}
-      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -121,20 +87,14 @@ class ConfigurationPolicyRules extends React.Component {
       )
 
       return (
-        <tr key={policy + i}>
-          <td>{policy.get('rule_name')}</td>
+        <tr key={rule + i}>
+          <td>{rule.get('rule_name')}</td>
           <td className="text-right">{type}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
+          <td>{defaultActionsLabel}</td>
           <td className="nowrap-column">
-            {/* Allow CT / TA modification only for UDN Admin */}
-            {ruleNeedsAdmin ?
-              <IsAdmin>
-                {actionButtons}
-              </IsAdmin>
-              :
-              actionButtons
-            }
+            {actionButtons}
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"
@@ -161,7 +121,6 @@ class ConfigurationPolicyRules extends React.Component {
     }
 
     const rows = [
-      ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
       ...this.props.finalRequestPolicies.map(policyMapper('final_request')),
       ...this.props.responsePolicies.map(policyMapper('response')),
@@ -177,6 +136,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th className="text-right"><FormattedMessage id="portal.policy.edit.rules.type.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.defaultActions.text"/></th>
               <th width="1%" />
             </tr>
           </thead>
@@ -199,7 +159,6 @@ ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
   cancelDeletePolicyRoute: React.PropTypes.func,
-  defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
   finalRequestPolicies: React.PropTypes.instanceOf(Immutable.List),
   finalResponsePolicies: React.PropTypes.instanceOf(Immutable.List),

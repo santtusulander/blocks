@@ -23,13 +23,13 @@ class AccountDetails extends React.Component {
     this.fetchData(this.props.params.brand, this.props.params.account)
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (this.props.params.account !== nextProps.params.account) {
       this.fetchData(nextProps.params.brand, nextProps.params.account)
     }
   }
 
-  fetchData(brand, account){
+  fetchData(brand, account) {
     this.props.accountStartFetching();
     this.props.fetchAccountDetails(brand, account)
   }
@@ -50,22 +50,25 @@ class AccountDetails extends React.Component {
                 <span className='value'>{account.get('name')}</span>
 
                 <label><FormattedMessage id="portal.account.manage.accountType.text"/></label>
-                <span className='value'>{ getProviderTypeName( providerTypes, account.get('provider_type') ) }</span>
+                <span className='value'>{ getProviderTypeName(providerTypes, account.get('provider_type')) }</span>
 
                 <label><FormattedMessage id="portal.account.manage.services.text"/></label>
 
                 { /* List of Services (and options) */}
                 <ul className='services-list'>
+                  { servicesIds.isEmpty() &&
+                    <li><FormattedMessage id="portal.account.manage.noServices.text"/></li>
+                  }
                   {
-                    servicesIds.size && servicesIds.map( (service,i) => {
+                    !!servicesIds.size && servicesIds.map((service,i) => {
                       const options = service.get('options')
                       let optionList;
 
                       if (options.size > 0) {
                         optionList = (
                           <ul>
-                            {options.map( (optionId, i) => {
-                              return <li key={i}>{getOptionName(servicesInfo, service.get('id'), optionId)}</li>
+                            {options.map((optionId, optionIndex) => {
+                              return <li key={optionIndex}>{getOptionName(servicesInfo, service.get('id'), optionId)}</li>
                             })}
                           </ul>
                         );
@@ -117,9 +120,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    accountStartFetching: () => dispatch( accountStartFetching() ),
-    fetchAccountDetails: (brand, id) => dispatch( fetchAccount(brand, id) ),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    accountStartFetching: () => dispatch(accountStartFetching()),
+    fetchAccountDetails: (brand, id) => dispatch(fetchAccount(brand, id)),
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

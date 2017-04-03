@@ -80,7 +80,7 @@ class AnalysisVisitors extends React.Component {
     const startVis = data.get('detail').first().get('uniq_vis') || 0
     const endVis = data.get('detail').last().get('uniq_vis') || 0
     let trending = endVis ? startVis / endVis : 0
-    if(trending > 1) {
+    if (trending > 1) {
       trending = numeral((trending - 1) * -1).format('0%')
     }
     else {
@@ -90,14 +90,14 @@ class AnalysisVisitors extends React.Component {
   }
   sortedData(data, sortBy, sortDir, sortType) {
     let sortFunc = ''
-    if((sortType === 'country' && this.state.sortCountryFunc === 'trending') ||
+    if ((sortType === 'country' && this.state.sortCountryFunc === 'trending') ||
       (sortType === 'browser' && this.state.sortBrowserFunc === 'trending') ||
       (sortType === 'os' && this.state.sortOSFunc === 'trending')) {
       sortFunc = data.sort((a, b) => {
-        if(this.getTrending(a) < this.getTrending(b)) {
+        if (this.getTrending(a) < this.getTrending(b)) {
           return -1 * sortDir
         }
-        else if(this.getTrending(a) > this.getTrending(b)) {
+        else if (this.getTrending(a) > this.getTrending(b)) {
           return 1 * sortDir
         }
         return 0
@@ -106,10 +106,10 @@ class AnalysisVisitors extends React.Component {
       sortFunc = data.sort((a, b) => {
         const _a = typeof a.get(sortBy) === 'string' ? a.get(sortBy).toLowerCase() : a.get(sortBy)
         const _b = typeof b.get(sortBy) === 'string' ? b.get(sortBy).toLowerCase() : b.get(sortBy)
-        if(_a < _b) {
+        if (_a < _b) {
           return -1 * sortDir
         }
-        else if(_a > _b) {
+        else if (_a > _b) {
           return 1 * sortDir
         }
         return 0
@@ -137,7 +137,7 @@ class AnalysisVisitors extends React.Component {
     }
     const sortedOS = !this.props.fetching ? this.sortedData(this.props.byOS, this.state.sortOSBy, this.state.sortOSDir, 'os') : ''
     const datasets = []
-    if(this.props.byTime.size) {
+    if (this.props.byTime.size) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -222,7 +222,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(countryData.size) {
+                    if (countryData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,
@@ -299,7 +299,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(browserData.size) {
+                    if (browserData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,
@@ -376,7 +376,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(osData.size) {
+                    if (osData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,
