@@ -1,3 +1,4 @@
 {
-  "portal.services.xxx": "value xxx"
+  "portal.services.xxx": "value xxx",
+  "portal.services.header.text": "SERVICES"
 }
