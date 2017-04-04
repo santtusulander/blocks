@@ -89,11 +89,11 @@ $entity-list-item-connector-line-offset: rem(32px);
 
     &.multi-column {
       display: flex;
-    }
 
-    .loading-spinner {
-      width: 100%;
-      margin-top: $multi-col-loading-spinner-top-margin;
+      .loading-spinner {
+        width: 100%;
+        margin-top: $multi-col-loading-spinner-top-margin;
+      }
     }
 
     .list-col {
