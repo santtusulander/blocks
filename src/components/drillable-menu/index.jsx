@@ -11,33 +11,19 @@ import DrillableMenuHeader from './menu-header'
 
 class DrillableMenu extends Component {
 
-  static get displayName() {
-    return 'DrillableMenu'
-  }
+  constructor(props) {
+    super(props)
 
-  static get contextTypes() {
-    return {
-      currentUser: PropTypes.instanceOf(Map),
-      roles: PropTypes.instanceOf(Map)
+    this.onSearchChange = this.onSearchChange.bind(this)
+    this.handleCaretClick = this.handleCaretClick.bind(this)
+    this.changeActiveNode = this.changeActiveNode.bind(this)
+    this.toggleMenu = this.toggleMenu.bind(this)
+    this.findActiveNode = this.findActiveNode.bind(this)
+    this.renderDropdown = this.renderDropdown.bind(this)
+    this.state = {
+      activeNode: props.activeNode,
+      search: ''
     }
-  }
-
-  static get propTypes() {
-    return {
-      activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-      dispatch: PropTypes.func,
-      fetchData: PropTypes.func,
-      open: PropTypes.bool,
-      toggle: PropTypes.func,
-      tree: PropTypes.array,
-      onItemClick: PropTypes.func,
-      children: PropTypes.node
-    }
-  }
-
-  state = {
-    activeNode: this.props.activeNode,
-    search: ''
   }
 
   componentWillMount() {
@@ -54,25 +40,25 @@ class DrillableMenu extends Component {
     }
   }
 
-  onSearchChange = e => {
+  onSearchChange(e) {
     this.setState({ search: e.target.value })
   }
 
-  handleCaretClick = (fetchChildren, nodeId) => {
+  handleCaretClick(fetchChildren, nodeId) {
     fetchChildren(this.props.dispatch)
       .then(() => this.changeActiveNode(nodeId))
   }
 
-  changeActiveNode = nodeId => {
+  changeActiveNode(nodeId) {
     this.setState({ activeNode: nodeId, search: '' })
   }
 
-  toggleMenu = () => {
+  toggleMenu() {
     this.props.toggle()
     this.setState({ search: '' })
   }
 
-  findActiveNode = (tree = [], parentNodeId) => {
+  findActiveNode(tree = [], parentNodeId) {
 
     let found, foundFromChild = undefined
 
@@ -99,7 +85,7 @@ class DrillableMenu extends Component {
     }
   }
 
-  renderDropdown = () => {
+  renderDropdown() {
 
     const nodeToView = this.findActiveNode(this.props.tree)
 
@@ -124,7 +110,9 @@ class DrillableMenu extends Component {
               searchValue={this.state.search} />
           </Dropdown.Menu>
       )
-    } else return <Dropdown.Menu />
+    } else {
+      return <Dropdown.Menu />
+    }
   }
 
   render() {
@@ -138,6 +126,22 @@ class DrillableMenu extends Component {
       </Dropdown>
     )
   }
+}
+
+DrillableMenu.displayName = 'DrillableMenu'
+DrillableMenu.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(Map)
+}
+DrillableMenu.propTypes = {
+  activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+  children: PropTypes.node,
+  dispatch: PropTypes.func,
+  fetchData: PropTypes.func,
+  onItemClick: PropTypes.func,
+  open: PropTypes.bool,
+  toggle: PropTypes.func,
+  tree: PropTypes.array
 }
 
 export default autoClose(DrillableMenu)

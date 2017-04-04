@@ -40,7 +40,8 @@ describe('User', () => {
       props = {
         intl: intlMaker(),
         uiActions: uiActionsMaker(),
-        userActions: userActionsMaker()
+        userActions: userActionsMaker(),
+        fetchRoleNames: jest.fn()
       }
       return shallow(<User {...props}/>)
     }

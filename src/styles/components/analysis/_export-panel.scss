@@ -2,7 +2,7 @@
 // =====================
 
 .modal-dialog.export-sidebar {
-  @extend .configuration-sidebar;
+  @extend .configuration-sidebar; // sass-lint:disable-line placeholder-in-extend
 
   .modal-header {
     p {
@@ -28,6 +28,7 @@
 
   .export-panel-tabs {
     .nav-tabs {
+      // sass-lint:disable-all
       margin: 0 ($bar-height *-1) ($bar-height / 2) ($bar-height *-1);
 
       @include md {
@@ -37,6 +38,7 @@
       @include sm {
         margin: 0 (($md-bar-height / 2) *-1) (($md-bar-height / 2) / 2) (($md-bar-height / 2) *-1);
       }
+      // sass-lint:enable-all
 
       > li {
         width: 50%;

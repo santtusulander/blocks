@@ -130,8 +130,7 @@ class AccountSelector extends Component {
     }
     if (nextTier === 'property') {
       fetchParams = [brand, account, group]
-    }
-    else if (nextTier === 'group') {
+    } else if (nextTier === 'group') {
       fetchParams = [brand, account]
     }
     this.props.accountSelectorActions.fetchItems(...fetchParams).then(() => {
@@ -190,8 +189,7 @@ class AccountSelector extends Component {
     if (this.tier === 'group') {
       this.group = value
       fetchArgs = ['property', 'udn', this.account, this.group]
-    }
-    else {
+    } else {
       this.account = value
       this.providerType = providerType
       fetchArgs = ['group', 'udn', this.account]
@@ -209,8 +207,12 @@ class AccountSelector extends Component {
       const aLower = a.get(1).toLowerCase()
       const bLower = b.get(1).toLowerCase()
 
-      if (aLower < bLower) return -1
-      if (aLower > bLower) return 1
+      if (aLower < bLower) {
+        return -1
+      }
+      if (aLower > bLower) {
+        return 1
+      }
       return 0
     })
   }

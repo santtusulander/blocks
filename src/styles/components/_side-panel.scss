@@ -138,8 +138,8 @@ $side-panel-overlap-offset: rem(15px);
   &.narrow {
     width: $side-panel-narrow-width;
 
-      @include sm {
-        max-width: $side-panel-narrow-width;
-      }
+    @include sm {
+      max-width: $side-panel-narrow-width;
+    }
   }
 }

@@ -53,7 +53,7 @@ class TrafficRuleFormContainer extends Component {
           </Modal.Header>
           <Modal.Body>
             <RuleForm
-              edit={this.props.initialValues.name}
+              edit={!!this.props.initialValues.name}
               hasMatches={hasMatches}
               activeCondition={activeCondition}
               disabled={disabled}

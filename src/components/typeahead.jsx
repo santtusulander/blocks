@@ -11,7 +11,20 @@ class Typeahead extends React.Component {
   }
 
   handleBlur(e) {
-    if (this.props.onBlur) this.props.onBlur()
+    if (this.props.onBlur) {
+      this.props.onBlur()
+    }
+    const label = e.target.value
+    if (label) {
+      const id = `label-${new Date().valueOf()}`
+
+      // This is slightly dangerous approach as we are calling a private
+      // function of React-Bootstrap-Typeahead component, but since they don't
+      // offer public functions for adding new selections this is the only way.
+      // Be cautious when updating this package as they might change the way
+      // it's constructed and this might break as a result
+      this.typeahead.getInstance()._handleAddOption({ id, label })
+    }
     e.target.removeEventListener('keydown', this.handleKeyDown)
   }
 

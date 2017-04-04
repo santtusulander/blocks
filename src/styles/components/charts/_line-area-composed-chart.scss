@@ -22,7 +22,8 @@
     }
   }
 
-  .comparison_storage {
+
+  .comparison_storage { // sass-lint:disable-line class-name-format
     path {
       &:first-child {
         stroke: $pale-blue;

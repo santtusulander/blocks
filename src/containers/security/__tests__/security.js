@@ -65,7 +65,10 @@ describe('Security', () => {
   let subject, props = null
   beforeEach(() => {
     props = {
-      fetchAccountData: jest.genMockFunction(),
+      fetchAccount: jest.fn(),
+      fetchAccounts: jest.fn(),
+      fetchGroup: jest.fn(),
+      fetchGroups: jest.fn(),
       activeAccount: Immutable.Map({name: 'foo'}),
       groups: Immutable.List([Immutable.Map({id: 1})]),
       params: { subPage: 'a' },
