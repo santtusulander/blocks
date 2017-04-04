@@ -25,8 +25,6 @@ import { getServicesIds, getServicesFromIds } from '../../util/services-helpers'
 
 import ServiceOptionSelector from './service-option-selector'
 
-import './account-form.scss'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 const validate = ({ accountName, accountBrand, accountType, accountServices, services }) => {

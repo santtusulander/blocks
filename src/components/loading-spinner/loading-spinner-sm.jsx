@@ -1,8 +1,6 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
-import './loading-spinner.scss'
-
 function LoadingSpinnerSmall() {
   return (
     <Icon className="loading-spinner-sm" width={36} height={36} viewbox="0 0 36 36">

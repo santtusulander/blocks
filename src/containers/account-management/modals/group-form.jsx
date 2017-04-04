@@ -38,8 +38,6 @@ import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
-import '../../../components/account-management/group-form.scss'
-
 class GroupFormContainer extends React.Component {
   constructor(props) {
     super(props)
