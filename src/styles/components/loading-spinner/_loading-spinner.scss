@@ -17,11 +17,11 @@ $spinner-small-width: 36px;
   transform: translate(-50%, -50%);
 
   .dark-theme & {
-    background: url('../assets/img/loading-spinner-dark.gif') no-repeat center;
+    background: url('../assets/img/loading-spinner-dark.gif');
   }
 
   .light-theme & {
-    background: url('../assets/img/loading-spinner-light.gif') no-repeat;
+    background: url('../assets/img/loading-spinner-light.gif');
   }
 }
 
