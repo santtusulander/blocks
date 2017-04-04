@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { formatUnixTimestamp, formatBytes} from '../../util/helpers'
-import './line-chart-tooltip.scss';
 
 const LineChartTooltip = ({ payload = [], valueFormatter = formatBytes }) => {
 

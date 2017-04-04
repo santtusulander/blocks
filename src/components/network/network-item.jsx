@@ -4,7 +4,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
 import TruncatedTitle from '../truncated-title'
 import IsAllowed from '../is-allowed'
-import IconConfiguration from '../icons/icon-configuration'
+import IconConfiguration from '../shared/icons/icon-configuration'
 
 const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, viewPermission }) => {
 

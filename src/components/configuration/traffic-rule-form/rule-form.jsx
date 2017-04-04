@@ -14,7 +14,7 @@ import Input from '../../form/field-form-group'
 import FormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
-import IconAdd from '../../icons/icon-add'
+import IconAdd from '../../shared/icons/icon-add'
 
 const conditionOptions = [
   ['or', <FormattedMessage id="portal.configuration.condition.or" />],

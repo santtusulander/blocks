@@ -1,6 +1,5 @@
 import React from 'react'
 import classNames from 'classnames'
-import './legend.scss'
 
 function Legend({dataSets, values}) {
   return (

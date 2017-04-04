@@ -6,7 +6,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import { getRoute } from '../../util/routes'
 import { userIsServiceProvider } from '../../util/helpers.js'
 import IsAllowed from '../is-allowed'
-import IconEricsson from '../icons/icon-ericsson.jsx'
+import IconEricsson from '../shared/icons/icon-ericsson.jsx'
 
 const LogoItem = (props) => {
   const {user} = props

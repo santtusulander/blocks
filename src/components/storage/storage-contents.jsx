@@ -10,7 +10,7 @@ import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Button from '../button'
-import IconAdd from '../icons/icon-add'
+import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../toggle'
 
