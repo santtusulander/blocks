@@ -85,6 +85,7 @@ class User extends React.Component {
         </PageHeader>
         <PageContainer>
           <UserEditForm
+            initialTfa={currentUser.get('tfa')}
             initialValues={initialValues}
             onSave={this.saveUser}
             onSavePassword={this.savePassword}

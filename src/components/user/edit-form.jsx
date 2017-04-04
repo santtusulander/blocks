@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
+import axios from 'axios'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupToggle from '../form/field-form-group-toggle'
@@ -12,6 +13,9 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldTelephoneInput from '../form/field-telephone-input'
 import FieldPasswordFields from '../form/field-passwordfields'
 import SaveBar from '../save-bar'
+import ModalWindow from '../modal'
+
+import { BASE_URL_AAA } from '../../redux/util'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
@@ -21,6 +25,7 @@ import { AUTHY_APP_DOWNLOAD_LINK,
 import '../../styles/components/user/_edit-form.scss'
 
 import { isValidPhoneNumber } from '../../util/validators'
+
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
@@ -70,15 +75,27 @@ const validate = (values) => {
   return errors;
 }
 
+const fetchRecoveryKey = (userId) => {
+  return axios.get(`${BASE_URL_AAA}/users/${userId}/tfa_recovery_code`)
+    .then((res) => {
+      return res ? res.data : ''
+    })
+}
+
 class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      recoveryKey: '',
+      showRecoveryKeyModal: false
+    }
+
     this.onSubmit = this.onSubmit.bind(this);
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
-
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
-
+    this.toggleRecoveryKeyModal = this.toggleRecoveryKeyModal.bind(this)
+    this.copyToClipboard = this.copyToClipboard.bind(this)
   }
 
   componentWillUpdate(nextProps) {
@@ -208,6 +225,27 @@ class UserEditForm extends React.Component {
     }
   }
 
+  toggleRecoveryKeyModal() {
+    if (this.state.recoveryKey) {
+      this.setState({ showRecoveryKeyModal: !this.state.showRecoveryKeyModal })
+    } else {
+      fetchRecoveryKey(this.props.initialValues.email)
+        .then(res => {
+          this.setState({
+            showRecoveryKeyModal: !this.state.showRecoveryKeyModal,
+            recoveryKey: res
+          })
+        })
+    }
+  }
+
+  copyToClipboard() {
+    const recoveryKey = document.querySelector('.recovery-key-modal input')
+    recoveryKey.select()
+    document.execCommand('copy');
+    recoveryKey.blur();
+  }
+
   render() {
     const {
       changingPassword,
@@ -220,7 +258,8 @@ class UserEditForm extends React.Component {
       resetForm,
       submitting,
       tfa,
-      tfa_toggle
+      tfa_toggle,
+      initialTfa
     } = this.props
     const showSaveBar = this.props.dirty
 
@@ -379,13 +418,28 @@ class UserEditForm extends React.Component {
                 </div>
               </Col>
             </Row>
-            { tfa_toggle &&
-              <Row>
-              <Button bsStyle="primary" onClick={this.togglePasswordEditing}>
-                <FormattedMessage id="portal.button.CHANGE"/>
-              </Button>
-              <div>You can use one-time recovery key to access your account if you lose your phone or otherwise have problems with accessing your account.</div>
-            </Row>
+            { initialTfa && tfa &&
+              <Row className="recovery-key">
+                <Button bsStyle="primary" onClick={this.toggleRecoveryKeyModal}>
+                  <FormattedMessage id="portal.user.edit.recoveryKey.button.showRecoveryKey"/>
+                </Button>
+                <div><FormattedMessage id="portal.user.edit.recoveryKey.helpText"/></div>
+              </Row>
+            }
+
+            { this.state.showRecoveryKeyModal &&
+              <ModalWindow
+                okButton={true}
+                className="recovery-key-modal"
+                title={<FormattedMessage id="portal.user.edit.recoveryKey.modal.title"/>}
+                cancel={() => this.toggleRecoveryKeyModal()}>
+
+                 <FormattedMessage id="portal.user.edit.recoveryKey.modal.helpText"/>
+                 <input type="text" value={this.state.recoveryKey} readOnly="true"/>
+                 <a href="#" onClick={() => this.copyToClipboard()}>
+                   <FormattedMessage id="portal.common.copyToClipboard"/>
+                 </a>
+              </ModalWindow>
             }
           </Col>
         </Row>
