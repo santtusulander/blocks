@@ -24,8 +24,11 @@ export const fetch = ({ brand, account, group, id }) => {
     })
 }
 
-export const fetchAll = ({ brand, account, group }) => {
-  return axios.get(baseURL(brand, account, group), PAGINATION_MOCK)
+//
+///brands/<id>/accounts/<id>/groups/<id>/published_hosts/<id>/services/<id>/custom_policy_configs
+
+export const fetchAll = ({ brand, account, group, property, serviceType }) => {
+  return axios.get(`${baseURL(brand, account, group)}/${property}/services/${serviceType}/custom_policy_configs`, PAGINATION_MOCK)
     .then(({data}) => {
       return normalize({ id: group, properties: data.data }, groupPropertiesSchema)
     })
