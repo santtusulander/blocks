@@ -110,4 +110,8 @@ $hint-input-left-padding: 40px;
     pointer-events: none;
     visibility: hidden;
   }
+
+  .bootstrap-typeahead-menu > li > a > span {
+    pointer-events: none;
+  }
 }

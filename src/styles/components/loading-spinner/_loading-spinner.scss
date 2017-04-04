@@ -1,4 +1,4 @@
-@import '../../styles/base/colors';
+@import '../../base/colors';
 
 $spinner-width: 100px;
 $spinner-small-width: 36px;
@@ -10,11 +10,11 @@ $spinner-small-width: 36px;
   margin: 100px auto;
 
   .dark-theme & {
-    background: url('../../assets/img/loading-spinner-dark.gif');
+    background: url('../assets/img/loading-spinner-dark.gif');
   }
 
   .light-theme & {
-    background: url('../../assets/img/loading-spinner-light.gif');
+    background: url('../assets/img/loading-spinner-light.gif');
   }
 }
 
