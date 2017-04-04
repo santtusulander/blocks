@@ -73,8 +73,7 @@ export const fetchItems = createAction(ACCOUNT_SELECTOR_ITEMS_FETCHED, (brand, a
   let url = `${BASE_URL_AAA}/brands/${brand}/accounts`
   if (group) {
     url = `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`
-  }
-  else if (account) {
+  } else if (account) {
     url = `${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`
   }
   return axios.get(url, PAGINATION_MOCK).then(parseResponseData)

@@ -6,7 +6,9 @@ import Immutable from 'immutable'
 import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 const FilterContentProvider = (props) => {
-  const arrayMapping = (option) => { return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) }
+  const arrayMapping = (option) => {
+    return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) 
+  }
   const contentProviderOptions = Immutable.fromJS(props.contentProviderOptions.map(arrayMapping))
   const contentProviderGroupOptions = Immutable.fromJS(props.contentProviderGroupOptions.map(arrayMapping))
 

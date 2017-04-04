@@ -1,4 +1,4 @@
-
+// sass-lint:disable placeholder-in-extend
 .account-management-account-details {
 
   .account-details {
@@ -6,24 +6,24 @@
   }
 
   label {
-    clear: left;
     @extend .col-xs-3;
 
     margin-bottom: 20px;
+    clear: left;
     text-transform: uppercase;
   }
 
-  span.value {
+  span.value { // sass-lint:disable-line no-qualifying-elements
     @extend .col-xs-3;
   }
 
-  ul.services-list {
-      @extend .col-xs-3;
+  ul.services-list { // sass-lint:disable-line no-qualifying-elements
+    @extend .col-xs-3;
 
+    list-style: none;
+
+    & ul {
       list-style: none;
-
-      & ul {
-        list-style: none;
-      }
+    }
   }
 }

@@ -60,7 +60,9 @@ export const getProviderTypeOptions = (state) => {
  * @return []
  */
 export const getServiceOptions = (state, providerType) => {
-  if (!providerType || providerType === "") return
+  if (!providerType || providerType === "") {
+    return
+  }
 
   const providerServices = state.serviceInfo.providerTypes.getIn([String(providerType), 'services'])
 
@@ -102,11 +104,15 @@ export const getRegionsInfo = (state) => {
 
 /* HELPERS */
 export const getProviderTypeName = (providerTypes, id) => {
-  if (!id) return;
+  if (!id) {
+    return;
+  }
 
   const providerType = providerTypes.find(item => item.get('id') === id)
 
-  if (providerType) return providerType.get('name')
+  if (providerType) {
+    return providerType.get('name')
+  }
 
   return 'N/A'
 }
@@ -114,7 +120,9 @@ export const getProviderTypeName = (providerTypes, id) => {
 export const getServiceName = (services, id) => {
   const service = services.get(String(id))
 
-  if (service) return service.get('name')
+  if (service) {
+    return service.get('name')
+  }
 
   return "N/A"
 }
@@ -125,7 +133,9 @@ export const getOptionName = (services, serviceId, optionId) => {
 
   if (service) {
     const option = service.get('options').find(item => item.get('id') === optionId)
-    if (option) optionName = option.get('name')
+    if (option) {
+      optionName = option.get('name')
+    }
   }
 
   return optionName

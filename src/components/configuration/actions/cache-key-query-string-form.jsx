@@ -53,8 +53,7 @@ class CacheKeyQueryStringForm extends React.Component {
     if (currentNames) {
       if (currentNames.find(name => name.get('field') === 'request_query')) {
         activeFilter = 'include_all_query_parameters'
-      }
-      else {
+      } else {
         const currentQueryArgs = currentNames
           .filter(name => name.get('field') === 'request_query_arg')
           .map(name => name.get('field_detail'))
@@ -85,8 +84,7 @@ class CacheKeyQueryStringForm extends React.Component {
 
     if (this.state.activeFilter === 'include_all_query_parameters') {
       newName = newName.push(Map({field: 'request_query'}))
-    }
-    else if (this.state.activeFilter === 'include_some_parameters') {
+    } else if (this.state.activeFilter === 'include_some_parameters') {
       if (!this.state.queryArgs.size) {
         newName = newName.push(Map({
           field: 'request_query_arg',
@@ -125,9 +123,11 @@ class CacheKeyQueryStringForm extends React.Component {
           id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>)
     const qNameInputs = this.state.queryArgs.map((queryArg, i) =>
       <FormGroup key={`query-arg-${i}`}>
-        <ControlLabel>
-          {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
-        </ControlLabel>
+        { !horizontal &&
+          <ControlLabel>
+            {formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
+          </ControlLabel>
+        }
         <FormControl
           disabled={disabled}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}

@@ -254,7 +254,9 @@ class AccountManagementStorages extends Component {
                         */}
                         <ActionButtons
                           permissions={permissions}
-                          onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
+                          onDelete={() => {
+                            this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))
+                          }} />
                         </td>
                       </tr>
                     )

@@ -27,7 +27,9 @@ const validate = (values) => {
 
   const { brandName } = values
 
-  if (!brandName || brandName.length === 0) errors.brandName = 'brandName is required'
+  if (!brandName || brandName.length === 0) {
+    errors.brandName = 'brandName is required'
+  }
 
   return errors;
 }
