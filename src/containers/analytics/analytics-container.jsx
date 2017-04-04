@@ -15,7 +15,6 @@ import AnalyticsTabControl  from '../../components/analytics/analytics-tab-contr
 import AnalyticsFilters from '../../components/analytics/analytics-filters'
 import DateRanges from '../../constants/date-ranges'
 
-//layout
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 
@@ -23,8 +22,6 @@ import { getTabName, userIsServiceProvider, accountIsServiceProviderType } from 
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
-
-import './analytics-container.scss'
 
 const BODY_MIN_HEIGHT = 850
 
