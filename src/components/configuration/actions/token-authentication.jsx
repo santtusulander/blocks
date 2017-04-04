@@ -170,6 +170,8 @@ export class TokenAuth extends React.Component {
   copySampleCodeToClipboard() {
     document.querySelector('.token-auth-sample-code-textarea').select()
 
+    // UDNP-3154 I've used try/catch here because the 'copy' command can throw an error in certain scenarios.
+    // https://w3c.github.io/editing/execCommand.html#the-copy-command
     try {
       const result = document.execCommand('copy')
       result
