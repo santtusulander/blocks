@@ -37,9 +37,17 @@
       width: 96%;
       margin-right: 0;
 
+      .configuration-rule-edit {
+        opacity: 0.5;
+      }
+
       .modal-content {
         display: flex;
         max-width: 100%;
+      }
+
+      .condition {
+        cursor: not-allowed;
       }
     }
   }
