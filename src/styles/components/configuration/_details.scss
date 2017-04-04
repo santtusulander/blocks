@@ -1,5 +1,5 @@
 $input-height: 36px;
-$tooltip-width: 80px;
+$tooltip-icon-width: 80px;
 
 .configuration-details {
   .input-group-addon {
@@ -23,7 +23,7 @@ $tooltip-width: 80px;
       content:'';
       display: table-cell;
       height: $input-height;
-      width: $tooltip-width;
+      width: $tooltip-icon-width;
     }
   }
 }
