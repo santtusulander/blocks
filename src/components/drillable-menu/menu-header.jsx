@@ -42,7 +42,7 @@ DrillableMenuHeader.propTypes = {
   onSearchChange: PropTypes.func,
   parentId: PropTypes.string,
   searchValue: PropTypes.string,
-  subtitle: PropTypes.string
+  subtitle: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ])
 }
 
 export default DrillableMenuHeader

@@ -78,7 +78,7 @@ export const getProperties = (state, parents) => {
 /**
  * get storages from state
  * @param  {[type]} state   [description]
- * @param  {[type]} groupId [description]
+ * @param  {[type]} parents [description]
  * @return {[type]}         [description]
  */
 export const getStorages = (state, parents) => {
@@ -129,7 +129,6 @@ export const getAccounts = (state, parents, canView) => {
 /**
  * Get brands and set accounts as child nodes
  * @param  {[type]} state   [description]
- * @param  {[type]} brand   [description]
  * @param  {[type]} canView [description]
  * @return {[type]}         [description]
  */
@@ -148,8 +147,8 @@ export const getBrands = (state, canView) => {
 }
 
 /**
- * If active account is of service provider type, it should not have a group level.
- * Otherwise get storages and properties from store
+ * If active account is NOT of service provider type, insert properties and storages
+ * into the nodes-array as child nodes for parent group if permitted.
  * @param  {[type]} state   [description]
  * @param  {[type]} canView [description]
  * @param  {[type]} parents [description]
@@ -164,14 +163,16 @@ const getStoragesAndProperties = (state, parents, canView) => {
 
     const properties = canView(VIEW_CONTENT_PROPERTIES) && getProperties(state, parents)
     const storages = canView(LIST_STORAGE) && getStorages(state, parents)
-
     const propertyCount = properties.length
     const storageCount = storages.length
 
-    nodes = [
-      ...storages,
-      ...properties
-    ]
+    // If the dropdown can show either entity type, make the nodes-array. Otherwise leave it undefined.
+    if (properties || storages) {
+      nodes = [
+        ...storages,
+        ...properties
+      ]
+    }
 
     headerSubtitle = (
       <span>
@@ -181,6 +182,5 @@ const getStoragesAndProperties = (state, parents, canView) => {
     )
 
   }
-
   return { nodes, headerSubtitle }
 }
