@@ -59,11 +59,6 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
   }
 
-  .loading-spinner {
-    position: relative;
-    margin-top: $single-col-loading-spinner-top-margin;
-  }
-
   .connector-divider {
     position: absolute;
     top: 0;
@@ -90,10 +85,6 @@ $entity-list-item-connector-line-offset: rem(32px);
 
     &.multi-column {
       display: flex;
-
-      .loading-spinner {
-        margin-top: $multi-col-loading-spinner-top-margin;
-      }
     }
 
     .list-col {
