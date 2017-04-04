@@ -12,8 +12,6 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupToggle from '../../form/field-form-group-toggle'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import './role-edit-form.scss'
-
 const validate = ({ roleName }) => {
   const conditions = {}
 

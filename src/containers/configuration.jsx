@@ -413,6 +413,7 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
+            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,

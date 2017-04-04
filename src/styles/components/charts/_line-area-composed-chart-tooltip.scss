@@ -1,5 +1,5 @@
-@import '../../styles/base/chart-legend';
-@import '../../styles/base/colors';
+@import '../../base/chart-legend';
+@import '../../base/colors';
 
 .line-area-composed-chart-tooltip {
   @extend %chart-legend;

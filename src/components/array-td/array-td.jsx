@@ -2,8 +2,6 @@ import React from 'react';
 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
-import './array-td.scss';
-
 const ArrayTd = (props) => {
   let classNames = 'array-td'
   if (props.className) {
