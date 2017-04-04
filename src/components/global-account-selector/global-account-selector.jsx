@@ -1,7 +1,3 @@
-/**
- * TODO: Use the new account selectors in ./containers.js in the app and deprecate this one.
- */
-
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'multireducer';

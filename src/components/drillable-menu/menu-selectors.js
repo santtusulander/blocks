@@ -158,7 +158,7 @@ export const getBrands = (state, canView) => {
 const getStoragesAndProperties = (state, parents, canView) => {
 
   let nodes, headerSubtitle = undefined
-  let activeAccount = getAccountById(state, parents.account) || Map()
+  const activeAccount = getAccountById(state, parents.account) || Map()
 
   if (!accountIsServiceProviderType(activeAccount)) {
 

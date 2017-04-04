@@ -4,12 +4,25 @@ import MiniLoadingSpinner from '../loading-spinner/loading-spinner-sm'
 
 const DrillableMenuItems = ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
 
+  const sortedNodes = menuNodes.sort((a, b) => {
+    const aLower = a[ a.labelKey || 'name' ].toLowerCase()
+    const bLower = b[ b.labelKey || 'name' ].toLowerCase()
+
+    if (aLower < bLower) {
+      return -1
+    }
+    if (aLower > bLower) {
+      return 1
+    }
+    return 0
+  })
+
   return (
     <li className="menu-container">
 
       {/* Dropdown with nodes */}
       <ul className="scrollable-menu">
-        {menuNodes.reduce((menuItems, node, i) => {
+        {sortedNodes.reduce((menuItems, node, i) => {
 
           const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren, isFetchingChildren, nodes } } = node
 
