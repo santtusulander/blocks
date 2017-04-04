@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import UDNButton from '../button'
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import IsAllowed from '../is-allowed'
 
 import { ALLOW_ALWAYS } from '../../constants/permissions'

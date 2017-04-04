@@ -12,7 +12,7 @@ import {
 } from '../../util/routes.js'
 import IsAllowed from '../is-allowed'
 import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../icons/icon-caret-down'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
 function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
