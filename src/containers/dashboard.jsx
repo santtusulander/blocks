@@ -96,7 +96,7 @@ export class Dashboard extends React.Component {
     }
 
     if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
+      this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
     if (this.measureContainersTimeout) {
@@ -114,7 +114,7 @@ export class Dashboard extends React.Component {
     clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(urlParams, filters, activeAccount) {
+  fetchData(urlParams, filters) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
@@ -123,9 +123,7 @@ export class Dashboard extends React.Component {
 
         const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
         dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-        const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
-          ? ACCOUNT_TYPE_CONTENT_PROVIDER
-          : ACCOUNT_TYPE_SERVICE_PROVIDER
+        const accountType = this.props.activeAccount.get('provider_type')
         const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
         const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
