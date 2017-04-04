@@ -3,7 +3,7 @@ import { Button, Panel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 import StatusItem from './file-upload-status-item'
-import IconHeaderCaret from '../icons/icon-header-caret'
+import IconHeaderCaret from '../shared/icons/icon-header-caret'
 
 class FileUploadStatus extends React.Component {
   constructor(props) {

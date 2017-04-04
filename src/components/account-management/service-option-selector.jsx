@@ -4,9 +4,9 @@ import { Panel, Table, FormGroup, ControlLabel } from 'react-bootstrap'
 import classNames from 'classnames'
 import { fromJS, List } from 'immutable'
 
-import IconCheck from '../icons/icon-check'
-import IconChevronRight from '../icons/icon-chevron-right'
-import IconChevronRightBold from '../icons/icon-chevron-right-bold'
+import IconCheck from '../shared/icons/icon-check'
+import IconChevronRight from '../shared/icons/icon-chevron-right'
+import IconChevronRightBold from '../shared/icons/icon-chevron-right-bold'
 
 class ServiceOptionSelector extends React.Component {
   constructor(props) {

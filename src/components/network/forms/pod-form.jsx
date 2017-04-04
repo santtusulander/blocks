@@ -43,9 +43,9 @@ import {
 } from '../../../constants/network'
 
 import UDNButton from '../../button'
-import IconAdd from '../../icons/icon-add'
-import IconEdit from '../../icons/icon-edit'
-import IconClose from '../../icons/icon-close'
+import IconAdd from '../../shared/icons/icon-add'
+import IconEdit from '../../shared/icons/icon-edit'
+import IconClose from '../../shared/icons/icon-close'
 import IsAllowed from '../../is-allowed'
 
 const validate = (values) => {

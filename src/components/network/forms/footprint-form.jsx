@@ -7,7 +7,7 @@ import Papa from 'papaparse'
 import _ from 'lodash'
 
 import UDNButton from '../../button'
-import IconAdd from '../../icons/icon-add'
+import IconAdd from '../../shared/icons/icon-add'
 import FieldRadio from '../../form/field-radio'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
