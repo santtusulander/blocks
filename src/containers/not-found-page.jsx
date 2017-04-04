@@ -1,11 +1,8 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import Content from '../components/layout/content'
-
-import './not-found-page.scss'
-
-import { FormattedMessage } from 'react-intl'
 
 const NotFoundPage = ({ history }) => {
 

@@ -8,8 +8,6 @@ import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import Radio from '../../components/radio'
 
-import './brand-edit-form.scss'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 const colorThemeOptions = [
@@ -27,7 +25,9 @@ const validate = (values) => {
 
   const { brandName } = values
 
-  if (!brandName || brandName.length === 0) errors.brandName = 'brandName is required'
+  if (!brandName || brandName.length === 0) {
+    errors.brandName = 'brandName is required'
+  }
 
   return errors;
 }

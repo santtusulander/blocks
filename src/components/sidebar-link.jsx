@@ -5,7 +5,10 @@ export function SidebarLink({ active, activate, label }) {
     <li>
       <a
         className={active ? 'active version-link' : 'version-link'}
-        onClick={e => { e.stopPropagation(); activate() }}>
+        onClick={e => {
+          e.stopPropagation()
+          activate() 
+        }}>
         <div className="version-title">
           {label}
         </div>

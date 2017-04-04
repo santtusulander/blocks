@@ -117,6 +117,11 @@ const roles =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const roleNames =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'roleNames' }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
 
 export default combineReducers({
   accounts,
@@ -134,5 +139,6 @@ export default combineReducers({
   footprints,
   storageMetrics,
   roles,
+  roleNames,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
 })

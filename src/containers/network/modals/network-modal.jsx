@@ -21,7 +21,6 @@ import { buildReduxId } from '../../../redux/util'
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
-import '../../../components/account-management/group-form.scss'
 
 import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
@@ -90,7 +89,9 @@ class NetworkFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.name;
+    if (edit) {
+      params.id = values.name;
+    }
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)

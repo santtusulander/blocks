@@ -1,10 +1,10 @@
 
 .accounts-sidebar-header {
   min-height: 0;
-  padding: ($bar-height / 4) ($bar-height / 2) ($bar-height / 4);
+  padding: ($bar-height / 4) ($bar-height / 2) ($bar-height / 4); // sass-lint:disable-line shorthand-values
 
   @include md {
-    padding: ($md-bar-height / 4) ($md-bar-height / 2) ($md-bar-height / 4);
+    padding: ($md-bar-height / 4) ($md-bar-height / 2) ($md-bar-height / 4); // sass-lint:disable-line shorthand-values
   }
 
   @include sm {

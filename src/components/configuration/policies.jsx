@@ -110,7 +110,10 @@ class ConfigurationPolicies extends React.Component {
       const ruleIndex = this.props.activeRule.get(2)
 
       this.deleteRule(ruleType, ruleIndex)
+    } else {
+      this.handleChange([])(this.props.originalConfig)
     }
+
     this.handleHide()
   }
 
@@ -166,7 +169,9 @@ class ConfigurationPolicies extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.policies.policyRules.text"/>}>
           <IsAllowed to={MODIFY_PROPERTY}>
             <Button bsStyle="success" className="btn-icon"
-              onClick={() => { this.addRule(POLICY_TYPES.REQUEST) }}>
+              onClick={() => {
+                this.addRule(POLICY_TYPES.REQUEST) 
+              }}>
               <IconAdd />
             </Button>
           </IsAllowed>
@@ -225,6 +230,7 @@ ConfigurationPolicies.propTypes = {
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  originalConfig: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }

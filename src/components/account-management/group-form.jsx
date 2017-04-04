@@ -25,8 +25,6 @@ import {
 } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
 
-import './group-form.scss'
-
 const validate = ({ name }) => {
   const conditions = {
     name: {

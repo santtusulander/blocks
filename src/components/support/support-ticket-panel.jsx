@@ -12,8 +12,6 @@ import {
   getTicketTypeIcon
 } from '../../util/support-helper'
 
-import './support-ticket-panel.scss'
-
 class SupportTicketPanel extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +26,9 @@ class SupportTicketPanel extends React.Component {
     const statusClassNames = classNames({ 'support-ticket-panel': true, 'closed': isClosed });
 
     return (
-      <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
+      <div className={statusClassNames} onClick={() => {
+        this.props.openTicket()
+      }}>
         <div className={priorityClassNames} />
         <Grid componentClass="header" fluid={true}>
           <Row>
