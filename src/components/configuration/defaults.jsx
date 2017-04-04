@@ -114,6 +114,7 @@ class ConfigurationDefaults extends React.Component {
               name="allow_cookies"
               component={FieldFormGroupToggle}
               onChange={this.handleChange(['edge_configuration','allow_cookies'])}
+              readonly={readOnly}
             />
           </Col>
         </Row>
@@ -127,6 +128,7 @@ class ConfigurationDefaults extends React.Component {
               name="response_remove_vary"
               component={FieldFormGroupToggle}
               onChange={this.handleChange(['defaults','response_remove_vary'])}
+              readonly={readOnly}
             />
           </Col>
         </Row>
@@ -140,6 +142,7 @@ class ConfigurationDefaults extends React.Component {
               name="cache_name_ignore_case"
               component={FieldFormGroupToggle}
               onChange={this.handleChange(['defaults','cache_name_ignore_case'])}
+              readonly={readOnly}
             />
           </Col>
         </Row>
@@ -154,6 +157,7 @@ class ConfigurationDefaults extends React.Component {
               component={FieldFormGroupSelect}
               options={cacheControlEtagOptions}
               onChange={this.handleChange(['defaults','cache_control_check_etag'])}
+              disabled={readOnly}
             />
           </Col>
         </Row>
@@ -167,6 +171,7 @@ class ConfigurationDefaults extends React.Component {
               name="cache_control_honor_origin"
               component={FieldFormGroupToggle}
               onChange={this.handleChange(['defaults','cache_control_honor_origin'])}
+              readonly={readOnly}
             />
           </Col>
         </Row>
@@ -182,6 +187,7 @@ class ConfigurationDefaults extends React.Component {
               component={FieldFormGroupNumber}
               onChange={this.handleTtlValueChange()}
               min={0}
+              disabled={readOnly}
             />
           </Col>
           <Col xs={3}>
@@ -190,6 +196,7 @@ class ConfigurationDefaults extends React.Component {
               component={FieldFormGroupSelect}
               options={ttlUnitOptions}
               onChange={this.handleTtlUnitChange()}
+              disabled={readOnly}
             />
           </Col>
         </Row>
