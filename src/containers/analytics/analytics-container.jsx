@@ -234,13 +234,13 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   propertyActions: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsContainer.defaultProps = {
   filters: Immutable.Map(),
-  roles: Immutable.List(),
+  roles: Immutable.Map(),
   user: Immutable.Map()
 }
 
