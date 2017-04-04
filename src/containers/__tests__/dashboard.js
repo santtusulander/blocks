@@ -28,6 +28,7 @@ jest.mock('../../util/helpers', () => {
 
 function filterActionsMaker() {
   return {
+    resetFilters: jest.fn(),
     fetchContentProvidersWithTrafficForSP: jest.fn(),
     fetchServiceProvidersWithTrafficForCP: jest.fn()
   }
