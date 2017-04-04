@@ -20,10 +20,10 @@ $tooltip-icon-width: 80px;
 
   .input-without-tooltip {
     &:after {
-      content:'';
       display: table-cell;
-      height: $input-height;
       width: $tooltip-icon-width;
+      height: $input-height;
+      content: '';      
     }
   }
 }
