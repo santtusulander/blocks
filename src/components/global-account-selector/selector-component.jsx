@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, FormControl } from 'react-bootstrap'
 
 import ToggleElement from './toggle-element'
-import IconArrowRight from '../icons/icon-arrow-right'
+import IconArrowRight from '../shared/icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
 export const SelectorComponent = ({

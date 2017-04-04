@@ -8,9 +8,9 @@ import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
-import IconChart from '../icons/icon-chart'
-import IconConfiguration from '../icons/icon-configuration'
-import IconQuestionMark from '../icons/icon-question-mark'
+import IconChart from '../shared/icons/icon-chart'
+import IconConfiguration from '../shared/icons/icon-configuration'
+import IconQuestionMark from '../shared/icons/icon-question-mark'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import DifferenceTooltip from './difference-tooltip'

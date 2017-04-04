@@ -1,10 +1,10 @@
 import React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
-import IconIncident from '../components/icons/icon-incident'
-import IconProblem from '../components/icons/icon-problem'
-import IconQuestion from '../components/icons/icon-question'
-import IconTask from '../components/icons/icon-task'
+import IconIncident from '../components/shared/icons/icon-incident'
+import IconProblem from '../components/shared/icons/icon-problem'
+import IconQuestion from '../components/shared/icons/icon-question'
+import IconTask from '../components/shared/icons/icon-task'
 
 import {
   PRIORITY_URGENT,
