@@ -142,7 +142,7 @@ export class TokenAuth extends React.Component {
       okButton: true,
       cancelButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog()
-      // UDNP-3154 this part should be uncommented whenever we have the sample codes
+      // UDNP-3305 this part should be uncommented whenever we have the sample codes
       // auxiliaryButton: {
       //   handler: () => this.showSampleCodeDialog(),
       //   text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text" />
@@ -185,7 +185,7 @@ export class TokenAuth extends React.Component {
   }
 
   showNotification(message) {
-    // UDNP-3154 toast notification element won't be visible because it's under the Token Authentication modal!
+    // UDNP-3305 toast notification element won't be visible because it's under the Token Authentication modal!
     // So if we want to show a message about copy operation status we should find another way
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeSidePanelNotification(message)
