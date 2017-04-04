@@ -118,6 +118,12 @@ class ConfigurationGTMTrafficRules extends React.Component {
             name={rule}
             component={this.renderRule}/>
         ))}
+        {!fields.length &&
+        <tr>
+          <td colSpan={4}>
+            <FormattedMessage id="portal.configuration.gtm.table.empty.text"/>
+          </td>
+        </tr>}
       </tbody>
     )
   }

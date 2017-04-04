@@ -1,4 +1,5 @@
 $input-height: 36px;
+$tooltip-icon-width: 80px;
 
 .configuration-details {
   .input-group-addon {
@@ -14,6 +15,15 @@ $input-height: 36px;
       &:focus {
         text-decoration: none;
       }
+    }
+  }
+
+  .input-without-tooltip {
+    &:after {
+      display: table-cell;
+      width: $tooltip-icon-width;
+      height: $input-height;
+      content: '';      
     }
   }
 }

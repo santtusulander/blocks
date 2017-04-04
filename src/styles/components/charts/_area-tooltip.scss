@@ -1,5 +1,5 @@
-@import '../../styles/base/colors';
-@import '../../styles/base/chart-legend';
+@import '../../base/colors';
+@import '../../base/chart-legend';
 
 .area-chart-tooltip {
   background-color: transparent;
@@ -147,6 +147,7 @@
   }
 }
 
+// sass-lint:disable-all
 .comparison {
   .tooltip-item,
   .bar-chart-legend-item {
@@ -189,3 +190,4 @@
     }
   }
 }
+// sass-lint:enable-all

@@ -172,7 +172,7 @@ class ConfigurationDetails extends React.Component {
                 </ControlLabel>
               </Col>
               <Col xs={9}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <Select
                     className="input-select"
                     disabled={readOnly}
@@ -286,7 +286,7 @@ class ConfigurationDetails extends React.Component {
           <Panel collapsible={true} expanded={isOtherHostHeader}>
             <FormGroup>
               <Col xs={9} xsOffset={3}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <FormControl
                     type="text"
                     placeholder={this.props.intl.formatMessage({ id: 'portal.configuration.details.enterHostnameValue.text' })}
@@ -337,7 +337,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={readOnly}
@@ -387,7 +387,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={true}

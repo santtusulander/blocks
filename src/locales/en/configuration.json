@@ -55,6 +55,7 @@
   "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
   "portal.policy.edit.policies.contentTargeting.from.text": "Users from",
   "portal.policy.edit.policies.contentTargeting.notFrom.text": "Users NOT from",
+  "portal.policy.edit.policies.contentTargeting.countries.items": "Countries",
   "portal.policy.edit.policies.cancel.text": "Cancel",
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
   "portal.policy.edit.matcher.value.text": "Value",

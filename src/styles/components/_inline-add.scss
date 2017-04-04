@@ -72,11 +72,11 @@
   }
 
   .icon.two-tone .base {
-    @extend .btn-primary
+    @extend .btn-primary // sass-lint:disable-line placeholder-in-extend
   }
 
   .input-addon-link {
-    @extend .btn-primary
+    @extend .btn-primary // sass-lint:disable-line placeholder-in-extend
   }
 
   .btn-primary {
