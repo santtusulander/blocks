@@ -60,7 +60,6 @@ $entity-list-item-connector-line-offset: rem(32px);
   }
 
   .loading-spinner {
-    position: relative;
     margin-top: $single-col-loading-spinner-top-margin;
   }
 
@@ -93,7 +92,7 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
 
     .loading-spinner {
-      position: relative;
+      width: 100%;
       margin-top: $multi-col-loading-spinner-top-margin;
     }
 
