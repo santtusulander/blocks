@@ -29,7 +29,7 @@ class FilterDateRange extends React.Component {
             availableRanges={dateRanges}
             limitRange={includeComparison}
             changeDateRange={(newStartDate, newEndDate, activeDateRange) => {
-              onFilterChange('dateRange', { newStartDate, newEndDate })
+              onFilterChange('dateRange', { startDate: newStartDate, endDate: newEndDate})
               onFilterChange('dateRangeLabel', activeDateRange)
             }}/>
           {showComparison &&
