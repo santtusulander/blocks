@@ -7,10 +7,10 @@ import ModalMtr from '../tools/modals/mtr.jsx'
 import ModalServerValidation from '../tools/modals/server-validation.jsx'
 import { injectIntl } from 'react-intl'
 
-import IconDig from '../../../components/icons/icon-dig'
-import IconBrowse from '../../../components/icons/icon-browse'
-import IconMtr from '../../../components/icons/icon-mtr'
-import IconServerValidation from '../../../components/icons/icon-server-validation'
+import IconDig from '../../../components/shared/icons/icon-dig'
+import IconBrowse from '../../../components/shared/icons/icon-browse'
+import IconMtr from '../../../components/shared/icons/icon-mtr'
+import IconServerValidation from '../../../components/shared/icons/icon-server-validation'
 
 import './tools.scss'
 

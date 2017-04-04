@@ -7,7 +7,7 @@ import classnames from 'classnames'
 import DefaultErrorBlock from './form/default-error-block'
 import FieldFormGroup from './form/field-form-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
-import IconClose from './icons/icon-close.jsx'
+import IconClose from './shared/icons/icon-close.jsx'
 
 class ModalWindow extends React.Component {
 

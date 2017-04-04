@@ -6,8 +6,8 @@ import {formatUnixTimestamp} from '../../util/helpers'
 import IsAllowed from '../is-allowed'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 
-import IconEdit from '../icons/icon-edit.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
+import IconEdit from '../shared/icons/icon-edit.jsx'
+import IconTrash from '../shared/icons/icon-trash.jsx'
 
 import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuration'
 
