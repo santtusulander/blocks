@@ -3,11 +3,11 @@ import {Button} from 'react-bootstrap'
 import classNames from 'classnames'
 
 import IsAllowed from './is-allowed'
-import IconEdit from './icons/icon-edit.jsx'
-import IconTrash from './icons/icon-trash.jsx'
-import IconClose from './icons/icon-close.jsx'
-import IconArrowUp from './icons/icon-arrow-up.jsx'
-import IconArrowDown from './icons/icon-arrow-down.jsx'
+import IconEdit from './shared/icons/icon-edit.jsx'
+import IconTrash from './shared/icons/icon-trash.jsx'
+import IconClose from './shared/icons/icon-close.jsx'
+import IconArrowUp from './shared/icons/icon-arrow-up.jsx'
+import IconArrowDown from './shared/icons/icon-arrow-down.jsx'
 
 import { ALLOW_ALWAYS } from '../constants/permissions'
 
