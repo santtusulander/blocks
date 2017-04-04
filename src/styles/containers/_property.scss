@@ -42,8 +42,8 @@
   }
 
   .chart-header {
-    clear: both;
     margin-top: $btn-height;
+    clear: both;
 
     @include md {
       margin-top: $md-btn-height;

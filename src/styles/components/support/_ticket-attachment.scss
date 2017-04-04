@@ -1,17 +1,17 @@
 .support-ticket-attachments {
   .support-ticket-attachment {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
   }
 }
 
 .support-ticket-attachment {
+  position: relative;
   padding: 10px 15px;
   background-color: rgba($pale-blue, 0.2);
-  position: relative;
 
   &__file-name {
-    color: $pale-blue;
     margin: 0;
+    color: $pale-blue;
   }
 
   &__delete-button {
@@ -20,7 +20,7 @@
     right: 25px;
     width: 20px;
     height: 20px;
-    margin: -10px 0 0 0;
+    margin: -10px 0 0;
     cursor: pointer;
 
     > svg {

@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react'
+import classNames from 'classnames'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
-import classNames from 'classnames'
-import './area-tooltip.scss'
 
 /* eslint-disable react/no-multi-comp  */
 const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
