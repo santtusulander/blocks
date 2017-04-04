@@ -43,7 +43,6 @@ class MatchesForm extends Component {
   MatchSelection() {
     return (
       <ul className="condition-selection list-unstyled">
-        <li/>
         {matches.map(({ matchType, label }, i) =>
           <li key={i}>
             <a onClick={() => this.props.chooseMatch({ matchType })}>

@@ -13,7 +13,7 @@ $highlight-color: $gradient-teal;
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.1);
+    background-color: rgba($black, 0.04);
   }
 
   .policy-weight-label {
@@ -188,6 +188,10 @@ $highlight-color: $gradient-teal;
     .primary {
       font-size: 30px;
       color: $white;
+
+      .light-theme & {
+        color: $lt-text-color;
+      }
     }
   }
 }
