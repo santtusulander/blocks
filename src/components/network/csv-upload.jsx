@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl'
 import Dropzone from 'react-dropzone'
 import moment from 'moment'
 
-import IconClose from '../icons/icon-close'
-import IconFile from '../icons/icon-file'
+import IconClose from '../shared/icons/icon-close'
+import IconFile from '../shared/icons/icon-file'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 class CsvUploadArea extends Component {

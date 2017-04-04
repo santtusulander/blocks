@@ -4,8 +4,8 @@ import { FormattedMessage } from 'react-intl'
 import { AW4, ASPERA_TROUBLESHOOT_URL, ASPERA_DOWNLOAD_URL } from '../../util/aspera-helpers'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
-import IconInfo from '../../components/icons/icon-info'
-import IconTask from '../../components/icons/icon-task'
+import IconInfo from '../../components/shared/icons/icon-info'
+import IconTask from '../../components/shared/icons/icon-task'
 import LoadingSpinnerSmall from '../../components/loading-spinner/loading-spinner-sm'
 
 export const ASPERA_STATUS_TRANSFER_ERROR = 'ASPERA_STATUS_TRANSFER_ERROR'

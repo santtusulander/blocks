@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import IsAllowed from '../is-allowed'
 import HelpTooltip from '../help-tooltip'
 import LoadingSpinner from '../loading-spinner/loading-spinner'

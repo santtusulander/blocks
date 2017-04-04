@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 
-import IconCaretRight from '../icons/icon-caret-right'
+import IconCaretRight from '../shared/icons/icon-caret-right'
 import IsAdmin from '../is-admin'
 import HasServicePermission from '../has-service-permission'
 
