@@ -44,8 +44,6 @@ import IconServices from '../icons/icon-services.jsx'
 import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
 
-import './navigation.scss'
-
 import { FormattedMessage } from 'react-intl'
 
 const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
