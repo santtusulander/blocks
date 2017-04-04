@@ -79,7 +79,7 @@ export class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    if(is(defaultFilters, this.props.filters)) {
+    if (is(defaultFilters, this.props.filters)) {
       this.fetchData(this.props.params, this.props.filters)
     } else {
       this.props.filterActions.resetFilters()
