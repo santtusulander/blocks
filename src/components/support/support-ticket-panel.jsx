@@ -12,8 +12,6 @@ import {
   getTicketTypeIcon
 } from '../../util/support-helper'
 
-import './support-ticket-panel.scss'
-
 class SupportTicketPanel extends React.Component {
   constructor(props) {
     super(props);

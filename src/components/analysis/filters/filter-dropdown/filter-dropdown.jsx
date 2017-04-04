@@ -3,8 +3,6 @@ import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
 
-import './filter-dropdown.scss'
-
 export class FilterDropdown extends React.Component {
   constructor(props) {
     super(props)

@@ -1,8 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import './support-tool-panel.scss'
-
 class SupportToolPanel extends React.Component {
   render() {
     const {active, body, className, icon, onClick, title} = this.props
