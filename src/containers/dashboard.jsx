@@ -26,6 +26,7 @@ import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
+import { defaultFilters } from '../redux/modules/filters'
 import * as filterActionCreators from '../redux/modules/filters'
 import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
@@ -50,7 +51,7 @@ import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
-import IconCaretDown from '../components/icons/icon-caret-down'
+import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import IsAllowed from '../components/is-allowed'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import MiniChart from '../components/mini-chart'
@@ -78,7 +79,11 @@ export class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchData(this.props.params, this.props.filters)
+    if (is(defaultFilters, this.props.filters)) {
+      this.fetchData(this.props.params, this.props.filters)
+    } else {
+      this.props.filterActions.resetFilters()
+    }
   }
 
   componentDidMount() {

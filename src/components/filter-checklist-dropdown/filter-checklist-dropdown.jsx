@@ -1,7 +1,7 @@
 import React from 'react'
 import { List } from 'immutable'
 import { Dropdown, Button, FormControl, FormGroup } from 'react-bootstrap'
-import IconSelectCaret from '../icons/icon-select-caret.jsx'
+import IconSelectCaret from '../shared/icons/icon-select-caret.jsx'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 

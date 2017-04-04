@@ -4,6 +4,7 @@
 .input-connector {
   $input-connector-width: 20px;
   $md-input-connector-width: 15px;
+  $input-group-margin-bottom: 10px;
 
   position: absolute;
   top: ($bar-height / 2) + $form-label-margin + ($font-size * 1.4);
@@ -42,14 +43,8 @@
 
   .form-horizontal & {
     top: $bar-height / 2;
-    bottom: ($bar-height / 2) + $form-group-padding;
+    bottom: ($bar-height / 2) + $form-group-padding + $input-group-margin-bottom;
     left: ($grid-gutter-width / 4) - $input-connector-width;
-
-    @include md {
-      top: $md-bar-height / 2;
-      bottom: ($md-bar-height / 2) + $md-form-group-padding;
-      left: ($grid-gutter-width / 4) - $md-input-connector-width;
-    }
   }
 
   &.show {
