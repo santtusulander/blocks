@@ -502,7 +502,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
-    z: bindActionCreators(filtersActionCreators, dispatch),
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
     mapboxActions: bindActionCreators(mapboxActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
