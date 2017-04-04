@@ -7,7 +7,7 @@ import { withRouter } from 'react-router'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
-import IconAdd from '../../icons/icon-add'
+import IconAdd from '../../shared/icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'

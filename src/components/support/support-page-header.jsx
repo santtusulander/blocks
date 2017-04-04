@@ -8,7 +8,7 @@ import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../../components/icons/icon-caret-down'
+import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 

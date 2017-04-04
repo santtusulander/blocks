@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Dropdown, MenuItem } from 'react-bootstrap'
-import IconSelectCaret from '../components/icons/icon-select-caret'
+import IconSelectCaret from '../components/shared/icons/icon-select-caret'
 
 class Select extends Component {
   constructor(props) {
