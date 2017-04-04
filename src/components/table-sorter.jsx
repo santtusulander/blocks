@@ -1,7 +1,7 @@
 import React from 'react';
 
-import IconArrowUp from './icons/icon-arrow-up'
-import IconArrowDown from './icons/icon-arrow-down'
+import IconArrowUp from './shared/icons/icon-arrow-up'
+import IconArrowDown from './shared/icons/icon-arrow-down'
 
 class TableSorter extends React.Component {
   constructor(props) {

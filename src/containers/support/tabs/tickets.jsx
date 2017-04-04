@@ -12,7 +12,7 @@ import { FormattedMessage } from 'react-intl'
 //
 // import SectionHeader from '../../../components/layout/section-header'
 // import SectionContainer from '../../../components/layout/section-container'
-// import IconAdd from '../../../components/icons/icon-add'
+// import IconAdd from '../../../components/shared/icons/icon-add'
 // import UDNButton from '../../../components/button'
 // import SupportTicketPanel from '../../../components/support/support-ticket-panel'
 // import SupportTicketModal from '../../../components/support/support-ticket-modal'
@@ -28,7 +28,7 @@ import { FormattedMessage } from 'react-intl'
 // import SectionHeader from '../../../components/layout/section-header'
 // import SelectWrapper from '../../../components/select-wrapper'
 // import UDNButton from '../../../components/button'
-// import IconAdd from '../../../components/icons/icon-add.jsx'
+// import IconAdd from '../../../components/shared/icons/icon-add.jsx'
 
 // import './tickets.scss'
 
