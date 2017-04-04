@@ -172,7 +172,7 @@ class ConfigurationDetails extends React.Component {
                 </ControlLabel>
               </Col>
               <Col xs={9}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <Select
                     className="input-select"
                     disabled={readOnly}
