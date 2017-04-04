@@ -18,6 +18,8 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -364,11 +366,11 @@ GroupFormContainer.defaultProps = {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, host, group, account } = state
-  const { groupId } = ownProps
+  const { user, group, host } = state
+  const { groupId, params: { account } } = ownProps
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
-  const activeAccount = account.get('activeAccount')
+  const activeAccount = getAccountById(state, account)
   const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
