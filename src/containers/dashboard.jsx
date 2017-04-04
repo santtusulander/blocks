@@ -8,6 +8,7 @@ import { Col, Row, Table } from 'react-bootstrap'
 
 import {
   accountIsContentProviderType,
+  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
@@ -16,10 +17,6 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import {
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CONTENT_PROVIDER
-} from '../constants/account-management-options'
 import { getDashboardUrl } from '../util/routes'
 
 import checkPermissions from '../util/permissions'
@@ -118,7 +115,7 @@ export class Dashboard extends React.Component {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id}).then(() => {      
+      this.props.fetchAccount({brand, id}).then(() => {
         const params = { brand: urlParams.brand, account: urlParams.account }
 
         const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
@@ -126,9 +123,11 @@ export class Dashboard extends React.Component {
         const accountType = this.props.activeAccount.get('provider_type')
         const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-        const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
-          ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-          : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
+        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
 
         /**
          * If user has permission to list storages and view storage analytics and if the active account is a content provider:
@@ -138,7 +137,7 @@ export class Dashboard extends React.Component {
         const fetchStorageData =
           checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
           checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-          accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+          accountIsContentProviderType(this.props.activeAccount) &&
 
           this.props.fetchGroups(params).then((response) => {
             let groupIds = []
@@ -161,7 +160,7 @@ export class Dashboard extends React.Component {
           fetchProviders,
           fetchStorageData
         ])
-              .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
+        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
       })
     }
   }
