@@ -15,6 +15,10 @@
         cursor: pointer;
       }
 
+      .modal-body {
+        overflow-x: hidden;
+      }
+
       .modal-footer {
         right: 0;
         width: 600px;
@@ -24,6 +28,15 @@
 
     .primary-side-modal {
       width: 700px;
+
+      .header-btn-row {
+        margin: 0 0 10px;
+
+        div {
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
 
       .dark-theme & {
         background-color: $dt-modal-bg-color;

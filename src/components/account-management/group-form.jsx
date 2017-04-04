@@ -6,8 +6,8 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
 import { Button, Table } from 'react-bootstrap'
 
-import IconAdd from '../icons/icon-add'
-import IconEdit from '../icons/icon-edit'
+import IconAdd from '../shared/icons/icon-add'
+import IconEdit from '../shared/icons/icon-edit'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
@@ -24,8 +24,6 @@ import {
   checkForErrors
 } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
-
-import './group-form.scss'
 
 const validate = ({ name }) => {
   const conditions = {

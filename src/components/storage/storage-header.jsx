@@ -8,9 +8,9 @@ import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import TruncatedTitle from '../truncated-title'
 
-import IconChart from '../icons/icon-chart.jsx'
-import IconCaretDown from '../icons/icon-caret-down'
-import IconConfiguration from '../icons/icon-configuration.jsx'
+import IconChart from '../shared/icons/icon-chart.jsx'
+import IconCaretDown from '../shared/icons/icon-caret-down'
+import IconConfiguration from '../shared/icons/icon-configuration.jsx'
 import IsAllowed from '../is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'

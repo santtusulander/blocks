@@ -3,7 +3,7 @@ import {Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, ButtonToo
 import Immutable from 'immutable'
 
 import ActionButtons from '../action-buttons'
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'

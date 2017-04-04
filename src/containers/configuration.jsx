@@ -34,7 +34,7 @@ import Sidebar from '../components/layout/sidebar'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
-import IconTrash from '../components/icons/icon-trash.jsx'
+import IconTrash from '../components/shared/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
@@ -44,7 +44,7 @@ import IsAdmin from '../components/is-admin'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
-import IconCaretDown from '../components/icons/icon-caret-down'
+import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
@@ -413,6 +413,7 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
+            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
@@ -515,7 +516,7 @@ Configuration.propTypes = {
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),

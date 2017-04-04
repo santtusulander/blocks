@@ -1,5 +1,5 @@
-@import '../../../../styles/base/variables';
-@import '../../../../styles/base/colors';
+@import '../../../base/variables';
+@import '../../../base/colors';
 
 .dropdown-filter {
   .filter-container {
@@ -22,7 +22,7 @@
       width: 100%;
       height: 40px;
       padding: 10px 15px 10px 35px;
-      background: #000 url('../../../../assets/icons/dt-icon-search.svg') 10px center no-repeat;
+      background: #000 url('../assets/icons/dt-icon-search.svg') 10px center no-repeat;
       background-size: 20px 20px;
       border: 0;
       border-radius: 20px;
@@ -50,7 +50,7 @@
 
       input[type='text'] {
         color: $lt-text-color;
-        background: url('../../../../assets/icons/lt-icon-search.svg') 10px center no-repeat;
+        background: url('../assets/icons/lt-icon-search.svg') 10px center no-repeat;
         background-color: $white;
         background-size: 20px 20px;
 
