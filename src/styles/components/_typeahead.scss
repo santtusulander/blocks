@@ -105,4 +105,8 @@ $token-horizontal-padding: em(12px, $form-font-size);
     pointer-events: none;
     visibility: hidden;
   }
+
+  .bootstrap-typeahead-menu > li > a > span {
+    pointer-events: none;
+  }
 }

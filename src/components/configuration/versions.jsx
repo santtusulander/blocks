@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button } from 'react-bootstrap'
 
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import { SidebarLinks } from '../sidebar-links'
 
 import {FormattedMessage, injectIntl} from 'react-intl'

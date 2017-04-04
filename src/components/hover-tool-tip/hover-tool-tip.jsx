@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './hover-tool-tip.scss'
-
 const HoverToolTip = (props) => {
   return (
     <span className='hover-tool-tip'>
