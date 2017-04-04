@@ -59,6 +59,7 @@ import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
+import RecoveryKey from './components/login/login-form-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
 
@@ -224,6 +225,7 @@ export const getRoutes = store => {
         Should be used by 2FA components to allow user changing 2FA methods on demand.
         <Route path="/having-trouble" component={UserIsNotLoggedIn(HavingTrouble)}/>
       */}
+      <Route path="/recovery-key" component={UserIsNotLoggedIn(RecoveryKey)}/>
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>

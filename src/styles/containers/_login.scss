@@ -101,9 +101,29 @@ $login-modal-token-having-trouble-support-text-margin-bottom: rem(20px);
   }
 }
 
+.login-recovery-modal {
+  .form-group {
+    margin-left: 80px;
+
+    .token-input-xs input {
+      width: 75px;
+      font-size: 19px;
+    }
+  }
+}
+
 .token-inputs-group.modal-body {
   padding: 0 $login-modal-token-inputs-group-padding $login-modal-body-bottom-padding;
   margin-bottom: $login-modal-token-inputs-group-margin-bottom;
+
+  .having-trouble-link {
+    margin: 50px 0 10px;
+
+    a {
+      padding: 0 5px;
+      vertical-align: baseline;
+    }
+  }
 }
 
 .login-header {

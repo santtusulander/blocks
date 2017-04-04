@@ -357,6 +357,28 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
   });
 })
 
+export const twoFALogInWithRecoveryKey = createAction(USER_LOGGED_IN, (username, key) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "recovery_code": key
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        code: res.code,
+        token: res.data
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
 export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = getUserToken()
 
