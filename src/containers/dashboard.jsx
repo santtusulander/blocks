@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -26,6 +26,7 @@ import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
+import { defaultFilters } from '../redux/modules/filters'
 import * as filterActionCreators from '../redux/modules/filters'
 import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
@@ -75,8 +76,11 @@ export class Dashboard extends React.Component {
   }
 
   componentWillMount() {
-    this.props.filterActions.resetDefaults()
-    this.fetchData(this.props.params, this.props.filters)
+    if(is(defaultFilters, this.props.filters)) {
+      this.fetchData(this.props.params, this.props.filters)
+    } else {
+      this.props.filterActions.resetFilters()
+    }
   }
 
   componentDidMount() {
@@ -498,7 +502,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
-    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
+    z: bindActionCreators(filtersActionCreators, dispatch),
     mapboxActions: bindActionCreators(mapboxActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
