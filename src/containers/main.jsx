@@ -26,7 +26,7 @@ import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
-import Footer from '../components/footer'
+import Footer from '../components/shared/layout/footer'
 
 import ModalWindow from '../components/modal'
 import Notification from '../components/shared/notification-wrappers/notification'
