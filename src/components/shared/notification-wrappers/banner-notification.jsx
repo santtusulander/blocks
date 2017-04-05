@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import IconProblem from '../../components/shared/icons/icon-problem'
+import IconProblem from '../icons/icon-problem'
 
 export const BANNER_NOTIFICATION_NO_LOCAL_STORAGE = 'BANNER_NOTIFICATION_NO_LOCAL_STORAGE'
 
