@@ -4,8 +4,8 @@ import { List } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import UDNButton from '../button'
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 
 export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
   const groupsOptions = groups.map(group => [

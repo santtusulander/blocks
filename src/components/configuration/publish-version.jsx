@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import Radio from '../radio'
+import Radio from '../shared/form-elements/radio'
 
 class ConfigurationPublishVersion extends React.Component {
   constructor(props) {

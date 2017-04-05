@@ -3,7 +3,7 @@ import { injectIntl, FormattedMessage  } from 'react-intl'
 import { connect } from 'react-redux'
 import { Map, fromJS, List } from 'immutable'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import ChargeNumbersForm from '../../../components/account-management/charge-numbers/forms/add-charge-numbers-form'
 import { getRegionsInfo } from '../../../redux/modules/service-info/selectors'
 
