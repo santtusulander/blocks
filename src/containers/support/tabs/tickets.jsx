@@ -10,8 +10,8 @@ import { FormattedMessage } from 'react-intl'
 // import * as supportActionCreators from '../../../redux/modules/support'
 // import * as uiActionCreators from '../../../redux/modules/ui'
 //
-// import SectionHeader from '../../../components/layout/section-header'
-// import SectionContainer from '../../../components/layout/section-container'
+// import SectionHeader from '../../../components/shared/layout/section-header'
+// import SectionContainer from '../../../components/shared/layout/section-container'
 // import IconAdd from '../../../components/shared/icons/icon-add'
 // import UDNButton from '../../../components/button'
 // import SupportTicketPanel from '../../../components/support/support-ticket-panel'
@@ -24,9 +24,9 @@ import { FormattedMessage } from 'react-intl'
 // } from '../../../util/support-helper'
 
 
-// import SectionContainer from '../../../components/layout/section-container'
-// import SectionHeader from '../../../components/layout/section-header'
-// import SelectWrapper from '../../../components/select-wrapper'
+// import SectionContainer from '../../../components/shared/layout/section-container'
+// import SectionHeader from '../../../components/shared/layout/section-header'
+// import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 // import UDNButton from '../../../components/button'
 // import IconAdd from '../../../components/shared/icons/icon-add.jsx'
 

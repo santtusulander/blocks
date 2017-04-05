@@ -3,7 +3,7 @@ import { formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import RoutingDaemonForm from '../../../components/network/forms/routing-daemon-form'
 
 class RoutingDaemonFormContainer extends React.Component {

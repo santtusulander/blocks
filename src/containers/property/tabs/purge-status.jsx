@@ -10,7 +10,7 @@ import * as hostActionCreators from '../../../redux/modules/host'
 import * as purgeActionCreators from '../../../redux/modules/purge'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 import PurgeHistoryReport from '../../../components/content/property/purge-status'
 
 import withPagination from '../../../decorators/pagination-hoc'
