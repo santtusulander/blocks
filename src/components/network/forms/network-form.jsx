@@ -7,7 +7,7 @@ import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'

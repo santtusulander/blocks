@@ -10,7 +10,7 @@ import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-t
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
 import { isValidLatitude, isValidLongitude, isValidTextField } from '../../../util/validators.js'

@@ -31,7 +31,7 @@ import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {

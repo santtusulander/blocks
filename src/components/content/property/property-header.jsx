@@ -5,7 +5,7 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../../constants/permissions'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import {
   getAnalyticsUrl,

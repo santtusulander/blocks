@@ -17,7 +17,7 @@ import ServiceOptionSelector from './service-option-selector'
 import SectionContainer from '../shared/layout/section-container'
 import SectionHeader from '../shared/layout/section-header'
 import HelpTooltip from '../../components/help-tooltip'
-import IsAllowed from '../../components/is-allowed'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_LOCATION, VIEW_LOCATION, DELETE_GROUP, MODIFY_GROUP } from '../../constants/permissions'
 
 import {

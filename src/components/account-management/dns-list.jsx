@@ -8,7 +8,7 @@ import SectionContainer from '../shared/layout/section-container'
 import { DNSRecordTable } from './dns-record-table'
 import UDNButton from '../button'
 import ActionButtons from '../shared/action-buttons'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import recordTypes, { recordFields } from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'

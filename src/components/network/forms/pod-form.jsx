@@ -46,7 +46,7 @@ import UDNButton from '../../button'
 import IconAdd from '../../shared/icons/icon-add'
 import IconEdit from '../../shared/icons/icon-edit'
 import IconClose from '../../shared/icons/icon-close'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList, UISaltRole } = values

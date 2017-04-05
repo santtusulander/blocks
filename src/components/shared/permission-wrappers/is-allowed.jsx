@@ -1,8 +1,8 @@
 import { PropTypes, Children, Component } from 'react'
 import { Map } from 'immutable'
 
-import * as PERMISSIONS from '../constants/permissions.js'
-import checkPermissions from '../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions.js'
+import checkPermissions from '../../../util/permissions'
 
 class IsAllowed extends Component {
   render() {

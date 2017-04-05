@@ -42,7 +42,7 @@ import IconItemList from '../shared/icons/icon-item-list.jsx'
 import IconItemChart from '../shared/icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TruncatedTitle from '../../components/truncated-title'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
