@@ -5,7 +5,7 @@ jest.unmock('../record-form')
 jest.unmock('../../../constants/dns-record-types')
 jest.unmock('../../../decorators/key-stroke-decorator')
 jest.unmock('../../../util/dns-records-helpers')
-jest.unmock('../../select-wrapper.jsx')
+jest.unmock('../../shared/form-elements/select-wrapper.jsx')
 
 import RecordForm from '../record-form.jsx'
 import { isShown } from '../../../util/dns-records-helpers'

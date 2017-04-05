@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
-import TruncatedTitle from '../truncated-title'
-import IsAllowed from '../is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import IconConfiguration from '../shared/icons/icon-configuration'
 
 const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, viewPermission }) => {

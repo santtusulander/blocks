@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { ProgressBar, Button } from 'react-bootstrap'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconFolder from '../shared/icons/icon-folder'
 import IconClose from '../shared/icons/icon-close'
 import IconFile from '../shared/icons/icon-file'

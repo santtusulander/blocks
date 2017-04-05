@@ -14,13 +14,13 @@ import {getByAccount as getGroupsByAccount} from '../../../redux/modules/entitie
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import ActionButtons from '../../../components/action-buttons'
+import ActionButtons from '../../../components/shared/action-buttons'
 import IconAdd from '../../../components/shared/icons/icon-add'
-import TableSorter from '../../../components/table-sorter'
+import TableSorter from '../../../components/shared/table-sorter'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import ArrayTd from '../../../components/array-td/array-td'
-import IsAllowed from '../../../components/is-allowed'
-import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import ArrayTd from '../../../components/shared/page-elements/array-td'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
+import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 
 import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'

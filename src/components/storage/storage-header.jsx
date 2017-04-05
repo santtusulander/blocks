@@ -6,12 +6,12 @@ import { Map } from 'immutable'
 
 import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import IconChart from '../shared/icons/icon-chart.jsx'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 import IconConfiguration from '../shared/icons/icon-configuration.jsx'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 

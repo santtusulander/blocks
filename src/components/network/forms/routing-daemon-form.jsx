@@ -3,9 +3,9 @@ import { reduxForm, Field, change, propTypes as reduxFormPropTypes  } from 'redu
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FormFooterButtons from '../../form/form-footer-buttons'
-import IsAllowed from '../../is-allowed'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors, formatASN } from '../../../util/helpers'
@@ -13,7 +13,7 @@ import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isValidIP, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
 import { MODIFY_POD } from '../../../constants/permissions'
-import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 
 const validate = ({ bgp_as_name, bgp_router_ip }) => {
   const conditions = {

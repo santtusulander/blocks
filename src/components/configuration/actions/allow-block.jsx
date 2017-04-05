@@ -2,8 +2,8 @@ import React from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 import { getPickedResponseCodes } from '../../../util/status-codes'
 
