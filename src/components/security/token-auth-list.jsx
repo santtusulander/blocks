@@ -1,23 +1,41 @@
 import React, { PropTypes } from 'react'
 import {Link} from 'react-router'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
 
 import IsAllowed from '../is-allowed'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 
-import IconEdit from '../icons/icon-edit.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
+import IconEdit from '../shared/icons/icon-edit.jsx'
+import IconTrash from '../shared/icons/icon-trash.jsx'
 
-const TokenAuthList = ({ rules, editUrlBuilder }) => {
+import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuration'
+
+const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
+  const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
+  const getSchemaLabel = (schema) => {
+    return schema.reduce((acc, singleSchema) => {
+      return acc.concat([schemaOptions.find(option => option.value === singleSchema).label])
+    }, []).join(' + ')
+  }
+
+  const getEncryptionLabel = ({encryption, streaming_encryption}) => {
+    if (streaming_encryption) {
+      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label}
+              ${intl.formatMessage({id: 'portal.security.tokenAuth.chunk.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
+    } else {
+      return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label
+    }
+  }
+
   return (
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.property.text"/></th>
+            <th width="20%"><FormattedMessage id="portal.security.tokenAuth.type.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.encryption.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.schema.text"/></th>
-            <th width="20%"><FormattedMessage id="portal.security.tokenAuth.sharedSecretValue.text"/></th>
             <th width="19%"><FormattedMessage id="portal.security.tokenAuth.created.text"/></th>
             <IsAllowed to={MODIFY_PROPERTY}>
               <th width="1%" />
@@ -26,16 +44,16 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
 
         </thead>
         <tbody>
-          { rules.map( (rule, index) => {
+          { rules.map((rule, index) => {
 
             const routeTo = editUrlBuilder(rule.propertyName, { policyId: rule.ruleId, policyType: 'request_policy' })
 
             return (
               <tr key={index}>
                 <td>{rule.propertyName}</td>
-                <td>{rule.encryption}</td>
-                <td>{rule.schema}</td>
-                <td>**********</td>
+                <td>{intl.formatMessage({id: rule.type})}</td>
+                <td>{getEncryptionLabel(rule)}</td>
+                <td>{getSchemaLabel(rule.schema)}</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <IsAllowed to={MODIFY_PROPERTY}>
                   <td className="nowrap-column action-buttons primary">
@@ -63,10 +81,11 @@ TokenAuthList.displayName = 'TokenAuthList'
 
 TokenAuthList.propTypes = {
   editUrlBuilder: PropTypes.func,
+  intl: intlShape.isRequired,
   rules: PropTypes.array
 }
 TokenAuthList.defaultProps = {
   rules: []
 }
 
-export default TokenAuthList
+export default injectIntl(TokenAuthList)

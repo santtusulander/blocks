@@ -8,7 +8,9 @@ class Toggle extends React.Component {
 
   handleChange(e) {
     e.stopPropagation()
-    if (this.props.readonly) return
+    if (this.props.readonly) {
+      return
+    }
     this.props.changeValue(!this.props.value)
   }
 
@@ -45,7 +47,9 @@ Toggle.propTypes = {
 Toggle.defaultProps = {
   offText: 'NO',
   onText: 'YES',
-  changeValue: () => {}
+  changeValue: () => {
+    // no-op
+  }
 }
 
 export default Toggle

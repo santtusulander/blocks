@@ -10,7 +10,7 @@ import RolesList from '../role-edit/roles-list.jsx'
 import * as accountActionCreators from '../../../redux/modules/account'
 
 class AccountManagementSystemRoles extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -28,14 +28,14 @@ class AccountManagementSystemRoles extends React.Component {
     const { accountActions } = this.props
 
     accountActions.startFetching()
-    accountActions.fetchAccounts( this.props.params.brand )
+    accountActions.fetchAccounts(this.props.params.brand)
   }
 
-  showAddNewRoleDialog(){
+  showAddNewRoleDialog() {
     this.setState({showAddNewDialog: true})
   }
 
-  hideAddNewRoleDialog(){
+  hideAddNewRoleDialog() {
     this.setState({showAddNewDialog: false})
   }
 
@@ -46,7 +46,7 @@ class AccountManagementSystemRoles extends React.Component {
     })
   }
 
-  saveRole(){
+  saveRole() {
     this.hideAddNewRoleDialog();
   }
 

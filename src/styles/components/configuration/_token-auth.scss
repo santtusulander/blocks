@@ -1,0 +1,96 @@
+$input-width: 324px;
+$input-height: 36px;
+
+.token-auth-no-side-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.token-auth-sample-dialog {
+  .modal-footer {
+    background: none !important;
+  }
+}
+
+.token-auth-sample-code-textarea {
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  resize: none;
+}
+
+.sample-token-output-table-row {
+  .truncated-title {
+    white-space: nowrap;
+  }
+}
+
+.options-item {
+  min-height: $bar-height;
+  padding-left: 15px;
+  margin-bottom: 10px;
+
+  @include md {
+    min-height: $md-bar-height;
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    background-color: rgba($white, 0.1);
+  }
+
+  //TODO: UDNP-3028 - Side panel uses old styles
+  .btn-icon {
+    .icon {
+      .light-theme & {
+        fill: $dt-text-color;
+
+        &:hover,
+        &:focus,
+        &:hover:active {
+          fill: $white;
+        }
+      }
+    }
+  }
+
+  &--name {
+    font-weight: bold;
+  }
+}
+
+.token-streaming-form {
+  .tooltip-help {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .toggle-box {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .toggle-item {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .tooltip-help .btn-icon {
+      margin: 0 0 0 20px;
+    }
+  }
+}

@@ -39,16 +39,15 @@ class AnalysisCacheHitRate extends React.Component {
   }
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
-      if(a.get(sortBy) < b.get(sortBy)) {
+      if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
-      }
-      else if(a.get(sortBy) > b.get(sortBy)) {
+      } else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0
     })
   }
-  changeChartType( value ) {
+  changeChartType(value) {
     this.setState({chartType: value})
   }
   render() {
@@ -71,7 +70,7 @@ class AnalysisCacheHitRate extends React.Component {
       moment(datapoint.get('timestamp')).format('MMM')
     )
 
-    if(this.state.chartType === 'column') {
+    if (this.state.chartType === 'column') {
       chart = (
         <BarChart
           valueFormatter={(value) => value + ' %'}

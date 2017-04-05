@@ -2,7 +2,9 @@
 // =====
 $icon-base-color: $white;
 $icon-two-tone-base: $silver-20;
+$icon-two-tone-base-light: $white;
 $icon-two-tone-primary: $dark-blue;
+$icon-two-tone-primary-light: $pale-blue;
 
 .icon {
   position: relative;
@@ -68,12 +70,12 @@ $icon-two-tone-primary: $dark-blue;
 
     .light-theme & {
       .base {
-        fill: $icon-two-tone-primary;
+        fill: $icon-two-tone-primary-light;
       }
 
       .primary {
-        color: $icon-two-tone-base;
-        fill: $icon-two-tone-base;
+        color: $icon-two-tone-base-light;
+        fill: $icon-two-tone-base-light;
       }
     }
   }

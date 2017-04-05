@@ -1,7 +1,7 @@
 import React from 'react'
 import { List } from 'immutable'
 import { Dropdown, Button, FormControl, FormGroup } from 'react-bootstrap'
-import IconSelectCaret from '../icons/icon-select-caret.jsx'
+import IconSelectCaret from '../shared/icons/icon-select-caret.jsx'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 
@@ -25,20 +25,19 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(optionVal) {
-    let initialVals = this.props.value
+    const initialVals = this.props.value
     let newVals = List()
 
-    if(optionVal !== 'all') {
+    if (optionVal !== 'all') {
       const valIndex = initialVals.indexOf(optionVal)
 
       newVals = valIndex === -1 ?
         initialVals.push(optionVal) :
         initialVals.delete(valIndex)
-    }
-    else {
+    } else {
       newVals = this.props.value.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
     }
-    if(this.props.handleCheck) {
+    if (this.props.handleCheck) {
       this.props.handleCheck(newVals)
     } else {
       this.props.onChange(newVals)
@@ -53,13 +52,12 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   getFilteredResults() {
-    let inputVal = this.state.filterValue.toLowerCase()
-    if(this.state.filterValue.length) {
+    const inputVal = this.state.filterValue.toLowerCase()
+    if (this.state.filterValue.length) {
       return this.props.options.filter(
         option => option.get('label').toString().toLowerCase().indexOf(inputVal) !== -1
       )
-    }
-    else {
+    } else {
       return this.props.options
     }
   }
@@ -79,16 +77,13 @@ export class FilterChecklistDropdown extends React.Component {
     const labels = this.props.options
       .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
-    if(!numVals || !labels.size) {
+    if (!numVals || !labels.size) {
       return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
-    }
-    else if(numVals === 1) {
+    } else if (numVals === 1) {
       return labels.first()
-    }
-    else if(numVals === this.props.options.size){
+    } else if (numVals === this.props.options.size) {
       return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
-    }
-    else{
+    } else {
       return <FormattedMessage id="portal.analytics.dropdownMenu.labelsSelected" values={{firstLabel: labels.first(), rest: numVals - 1}}/>
     }
   }
@@ -99,12 +94,12 @@ export class FilterChecklistDropdown extends React.Component {
     let itemList = List();
     let className = 'dropdown-select dropdown-filter dropdown-checklist btn-block'
 
-    if(this.props.className) {
+    if (this.props.className) {
       className += ` ${this.props.className}`
     }
 
-    if(filteredResults.size) {
-      if(!this.state.filterValue.length) {
+    if (filteredResults.size) {
+      if (!this.state.filterValue.length) {
         itemList = itemList.concat([
           this.props.children && this.props.children.map(child => child)
         ])
@@ -155,7 +150,10 @@ export class FilterChecklistDropdown extends React.Component {
             {open &&
               <li role="presentation" className="action-container">
                 <FormControl
-                  inputRef={ref => { this.filterInput = ref }}
+                  inputRef={(ref) => {
+                    this.filterInput = ref
+                    return this.filterInput
+                  }}
                   className="header-search-input"
                   type="text"
                   onChange={this.handleFilter}

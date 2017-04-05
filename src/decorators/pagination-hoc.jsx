@@ -10,31 +10,20 @@ import { SET_ACTIVE_PAGE, SET_TOTAL, SET_SORTING, SET_FILTERING, INVALIDATE } fr
 /**
  * Decorate component with pagination functionality.
  * @param {React.Component} WrappedComponent - component to decorate
- * @return {WrappedComponent}
+ * @param {object} config - pagination parameters to override defaults
+ * @return {WithPagination}
  */
 export const withPagination = (WrappedComponent, config = {}) => {
   /** @typedef {string} actionType - type of action */
 
   /**
-   * @typedef {Immutable.Map} paginationObserver
-   * @property register {function} - register subscriber
-   * @property notify {function} - notify registered subscribers
-   * @property reset {function} - reset subscribers
+   * @typedef {function} paginationSubscription
+   * Used to compose payload data from parameters
    */
 
-  /**
-   * @function payloadValidator
-   * @param {any} payload - payload to dispatch
-   * @return {bool} - valid status
-   */
 
   /**
-   * @function payloadFormatter
-   * @param {any} payload - payload to dispatch
-   * @return {any} - formatted payload
-   */
-
-  /**
+   * Config object with default pagination params.
    * Merged {@link WithPagination} default parameters with {@link WrappedComponent} config.
    * @type {Object}
    * @private
@@ -92,21 +81,39 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
+     * @function payloadFormatter
+     * Used to format (normalize) payload before being dispatched
+     * @param {any} payload - payload to dispatch
+     * @return {any} - formatted payload
+     */
+
+    /**
      * @readonly Payload formatters Map.
      * @type {Immutable.Map.<string, payloadFormatter>}
      */
     static get formatters() {
       return Map([
         [
+          /* format sort_order from -1, 1 to 'asc', 'desc' supported by API and vice versa */
           'sort_order',
-          (v) => v === 'asc' ? -1 : v === 'desc' ? 1 : v === -1 ? 'asc' : v === 1 ? 'desc' : v
+          (v) => {
+            return v === 'asc' ? 1 : v === 'desc' ? -1 : v === 1 ? 'asc' : v === -1 ? 'desc' : v
+          }
         ],
         [
+          /* format 'fields' array to string supported by API */
           'fields',
           (v) => v.join()
         ]
       ])
     }
+
+    /**
+     * @function payloadValidator
+     * Used to validate payload before being dispatched
+     * @param {any} payload - payload to dispatch
+     * @return {bool} - valid status (true - valid, false - invalid)
+     */
 
     /**
      * @readonly Payload validators Map.
@@ -118,10 +125,12 @@ export const withPagination = (WrappedComponent, config = {}) => {
 
       return Map([
         [
+          /* total payload should be >= 0 */
           SET_TOTAL,
           (payload) => isDefined(payload) && payload >= 0
         ],
         [
+          /* activePage payload should be an object with 'activePage'(not 0), 'offset' fields */
           SET_ACTIVE_PAGE,
           (payload) => {
             const keys = ['activePage', 'offset'];
@@ -131,6 +140,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
           }
         ],
         [
+          /* sorting payload should be an object with 'sort_by', 'sort_order'(asc|desc) fields */
           SET_SORTING,
           (payload) => {
             const keys = ['sort_by', 'sort_order'];
@@ -141,6 +151,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
           }
         ],
         [
+          /* filtering payload should be an object with 'filter_by', 'filter_value' fields */
           SET_FILTERING,
           (payload) => {
             const keys = ['filter_by', 'filter_value'];
@@ -149,6 +160,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
           }
         ],
         [
+          /* invalidating always returns true */
           INVALIDATE,
           () => true
         ]
@@ -156,12 +168,24 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
-     * Initialize decorator function to provide action payload validation and payload proxy to actionCreators.
+     * @typedef {function} subscriptionMaker
+     * @param {paginationSubscription}
+     * @param {string} - actionType
+     * @return {function}
+     */
+
+    /**
+     * Initialize decorator (high-order) function.
+     * Returned decorator is used to associate {@link paginationSubscription} with appropriate actionType, actionCreator
+     * and {@link payloadValidator}.
+     * After decoration {@link paginationSubscription} is able to dispatch action if payload is valid.
+     *
      * @param {Object} actions - actionCreators
      * @param {Immutable.Map.<actionType, payloadValidator>} validators
      * @return {function(*, *=): function(...[*])}
      */
-    static initSubscriptionFactory(actions, validators) {
+    static initSubscriptionDecorator(actions, validators) {
+      /** {@link subscriptionMaker} */
       return (subscription, actionType) => (...args) => {
         const payload = subscription(...args);
 
@@ -170,6 +194,15 @@ export const withPagination = (WrappedComponent, config = {}) => {
           actions[actionType](payload);
       }
     }
+
+    /**
+     * @typedef {Immutable.Map} paginationObserver
+     * Optionally can be used by decorated component to be notified of changes to paginationParams
+     * Subscription is realizing by providing callback with argument for pagination params
+     * @property register {function} - register subscriber
+     * @property notify {function} - notify registered subscribers
+     * @property reset {function} - reset subscribers
+     */
 
     /**
      * Initialize paginationSubscribers
@@ -181,19 +214,25 @@ export const withPagination = (WrappedComponent, config = {}) => {
       const subscribers = [];
       return Map({
         register: (subscriber) => {
-          if (typeof subscriber === 'function') subscribers.push(subscriber);
+          if (typeof subscriber === 'function') {
+            subscribers.push(subscriber);
+          }
         },
         notify: (payload) => {
-          if (subscribers.length) subscribers.forEach((s) => s(payload))
+          if (subscribers.length) {
+            subscribers.forEach((s) => s(payload))
+          }
         },
-        reset: () => { subscribers.length = 0 }
+        reset: () => {
+          subscribers.length = 0 
+        }
       });
     }
 
     constructor(props) {
       super(props);
-      const { initSubscriptionFactory, initPaginationSubscribersService, validators } = this.constructor;
-      const makeSubscription = initSubscriptionFactory(props.paginationActions, validators);
+      const { initSubscriptionDecorator, initPaginationSubscribersService, validators } = this.constructor;
+      const makeSubscription = initSubscriptionDecorator(props.paginationActions, validators);
 
       this.paginationSubscribers = initPaginationSubscribersService();
 
@@ -211,12 +250,16 @@ export const withPagination = (WrappedComponent, config = {}) => {
      * @param nextProps {object}
      */
     componentWillReceiveProps(nextProps) {
-      if (nextProps.isPristine) return;
+      if (nextProps.isPristine) {
+        return;
+      }
 
       const queryParams = this.getQueryParams(nextProps);
       const diff = !fromJS(queryParams).equals(fromJS(this.getQueryParams(this.props)));
 
-      if (diff) this.paginationSubscribers.get('notify')(queryParams);
+      if (diff) {
+        this.paginationSubscribers.get('notify')(queryParams);
+      }
     }
 
     /**
@@ -230,9 +273,8 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
-     * @public
+     * {@link paginationSubscription}
      * Returns {sort_by, sort_order} payload to be dispatched or null.
-     *
      * @param {string} sort_by - value by which data should be sorted
      * @param {string} order - value to order sorted data.
      * @return {Object|null}
@@ -249,6 +291,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
+     * {@link paginationSubscription}
      * Compare filtering payload data and returns if differ.
      * @param filter_value {string} - value to filter data
      * @param filter_by {string} - value by which data should be filtered
@@ -264,9 +307,8 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
-     * @public
+     * {@link paginationSubscription}
      * Returns {offset, activePage} payload to be dispatched or null.
-     *
      * @param {number} page - active page used for offset calculation
      * @return {Object|null}
      */
@@ -278,6 +320,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
     }
 
     /**
+     * {@link paginationSubscription}
      * Returns total payload to be dispatched or null.
      * @param {number} total - total amount of data items, used to build pagination component
      * @return {?number}
@@ -292,12 +335,14 @@ export const withPagination = (WrappedComponent, config = {}) => {
      * @returns {{offset, page_size, sort_by, sort_order, filter_by, filter_value}}
      */
     getQueryParams(params = this.props) {
-      let { offset, page_size, sort_by, sort_order, filter_by, filter_value, fields } = params;
+      let { offset, sort_by, sort_order, filter_by, filter_value, fields } = params;
+      const { page_size } = params
 
       if (!filter_by || !filter_value) {
         filter_by = null;
         filter_value = null;
       } else {
+        /* reset offset for filtering through all data */
         offset = 0;
       }
 
@@ -322,6 +367,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
         ...passThroughProps
       } = this.props;
 
+      /* compose paging props */
       const paging = {
         activePage, offset, page_size,
         items: WithPagination.getPaginationItemsCount(total, page_size),
@@ -329,17 +375,20 @@ export const withPagination = (WrappedComponent, config = {}) => {
         onTotalChange: this.totalSubscription
       };
 
+      /* compose filtering props */
       const filtering = {
         filter_by, filter_value,
         onFilterChange: this.filterSubscription
       };
 
+      /* compose sorting props */
       const sorting = {
         sort_by,
         sort_order: WithPagination.formatters.get('sort_order')(sort_order),
         onSortingChange: this.sortingSubscription
       };
 
+      /* compose pagination props object to be passed to decorated component */
       const pagination = {
         filtering, paging, sorting,
         getQueryParams: this.getQueryParams,

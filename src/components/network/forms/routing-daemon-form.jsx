@@ -5,21 +5,20 @@ import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
-
+import IsAllowed from '../../is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, formatASN } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isValidIPv4Address, isInt } from '../../../util/validators'
-import { ROUTING_DEAMON_PASSWORD_MIN_LEN, ROUTING_DEAMON_PASSWORD_MAX_LEN,
-         ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN
-       } from '../../../constants/network'
+import { isValidTextField, isValidIP, isInt } from '../../../util/validators'
+import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
+import { MODIFY_POD } from '../../../constants/permissions'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
-const validate = ({ bgp_as_name, bgp_router_ip, bgp_password }) => {
+const validate = ({ bgp_as_name, bgp_router_ip }) => {
   const conditions = {
     bgp_router_ip: {
-      condition: !isValidIPv4Address(bgp_router_ip),
+      condition: !isValidIP(bgp_router_ip),
       errorText: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text"/>
     },
     bgp_as_name: {
@@ -27,24 +26,16 @@ const validate = ({ bgp_as_name, bgp_router_ip, bgp_password }) => {
       errorText: <MultilineTextFieldError id="portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label"
                                           minValue={ROUTING_DEAMON_BGP_NAME_MIN_LEN}
                                           maxValue={ROUTING_DEAMON_BGP_NAME_MAX_LEN} />
-    },
-    bgp_password: {
-      condition: !isValidTextField(bgp_password, ROUTING_DEAMON_PASSWORD_MIN_LEN, ROUTING_DEAMON_PASSWORD_MAX_LEN),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.spConfig.routingDaemon.editForm.bgp_password.label"
-                                          minValue={ROUTING_DEAMON_PASSWORD_MIN_LEN}
-                                          maxValue={ROUTING_DEAMON_PASSWORD_MAX_LEN} />
     }
   }
 
-  return checkForErrors({ bgp_as_name, bgp_router_ip, bgp_password },
+  return checkForErrors({ bgp_as_name, bgp_router_ip },
     conditions,
     {
       bgp_as_name: <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label" /> }}
                                      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
       bgp_router_ip: <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label" /> }}
-                                       id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
-      bgp_password: <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_password.label" /> }}
-                                      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+                                       id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
     }
   )
 }
@@ -82,7 +73,7 @@ class RoutingDaemonForm extends React.Component {
   fetchBGPName(value) {
     const BGPNumber = value
 
-    if (!BGPNumber || BGPNumber.length == 0) {
+    if (!BGPNumber || BGPNumber.length === 0) {
       this.setState({ BGPNumberIsEmpty: true })
       return
     }
@@ -110,16 +101,16 @@ class RoutingDaemonForm extends React.Component {
     })
 
     fetchASOverview(BGPNumber)
-      .then(({ data: { holder } }) => {
-        holder = holder ? holder : ''
+      .then((resp) => {
+        const organization = resp[0].organization ? formatASN(resp[0]) : ''
         this.setState({
           BGPNumber,
-          BGPName: holder.length ? holder : null,
-          BGPNameNotFound: !holder.length,
+          BGPName: organization.length ? organization : null,
+          BGPNameNotFound: !organization.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false,
           BGPNumberInvalid: false
-        }, () => this.setBGPName(holder, BGPNumber))
+        }, () => this.setBGPName(organization, BGPNumber))
       })
       .catch(() => {
         this.setState({
@@ -142,7 +133,8 @@ class RoutingDaemonForm extends React.Component {
       invalid,
       onCancel,
       onSubmit,
-      submitting
+      submitting,
+      readOnly
     } = this.props
 
     const { BGPNameNotFound, BGPNumberInvalid, isFetchingBGPName, BGPNumberIsEmpty } = this.state
@@ -176,6 +168,7 @@ class RoutingDaemonForm extends React.Component {
           component={FieldFormGroup}
           onBlur={(e) => this.fetchBGPName(e.target.value)}
           props={BGB_AS_NUMBER_PROPS}
+          disabled={readOnly}
         />
 
         <Field
@@ -196,14 +189,17 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <Field
+          required={false}
           type="password"
           name="bgp_password"
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <FormFooterButtons>
@@ -214,12 +210,14 @@ class RoutingDaemonForm extends React.Component {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={(invalid || submitting || isFetchingBGPName || (!dirty) || (!!errorMsgASNum))}>
-            <FormattedMessage id="portal.button.save"/>
-          </Button>
+          <IsAllowed to={MODIFY_POD}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={(invalid || submitting || isFetchingBGPName || (!dirty) || (!!errorMsgASNum))}>
+              <FormattedMessage id="portal.button.save"/>
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
       </form>
     )
@@ -230,6 +228,7 @@ RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
 
   ...reduxFormPropTypes
 }

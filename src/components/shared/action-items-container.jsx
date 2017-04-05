@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Field, FieldArray } from 'redux-form'
 import { Button } from 'react-bootstrap'
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import ActionItems from './action-items'
 
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'

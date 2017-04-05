@@ -11,6 +11,12 @@ const intlMaker = () => {
   }
 }
 
+const fakeParams = {
+  brand: 'udn',
+  account: 111,
+  group: 122
+}
+
 describe('ConfigurationDetails', () => {
   it('should exist', () => {
     let details = shallow(
@@ -25,6 +31,7 @@ describe('ConfigurationDetails', () => {
       <ConfigurationDetails
         intl={intlMaker()}
         changeValue={changeValue}
+        params={fakeParams}
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",
@@ -47,6 +54,7 @@ describe('ConfigurationDetails', () => {
       <ConfigurationDetails
         intl={intlMaker()}
         saveChanges={saveChanges}
+        params={fakeParams}
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",

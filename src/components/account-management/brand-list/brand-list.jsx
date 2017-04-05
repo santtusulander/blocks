@@ -12,7 +12,7 @@ export const AVAILABILITY_PRIVATE = 'Private'
 
 export const BrandList = (props) => {
 
-  const tableRows = props.brands.map( (brand, i) => {
+  const tableRows = props.brands.map((brand, i) => {
     return (
       <BrandListRow key={i} {... brand} onEdit={() => props.toggleModal(EDIT_BRAND)} onDelete={props.onDelete}  />
     );
@@ -45,7 +45,9 @@ export const BrandList = (props) => {
           id="brand-edit-form"
           show={props.accountManagementModal === EDIT_BRAND}
           edit={true}
-          onSave={() => {}}
+          onSave={() => {
+            // no-op
+          }}
           onCancel={() => props.toggleModal(null)}
           {...props.brandsFormInitialValues}
         />

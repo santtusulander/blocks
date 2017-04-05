@@ -11,13 +11,13 @@ import FieldFormGroupNumber from '../form/field-form-group-number'
 import recordTypes from '../../constants/dns-record-types'
 import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_PRIO, DNS_MAX_PRIO } from '../../constants/account-management-options'
 
-const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
+const RecordForm = ({ type, submitting, domain, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Field
         name="type"
         disabled={edit}
-        options={recordTypes.map(type => [type, type])}
+        options={recordTypes.map(recType => [recType, recType])}
         component={FormGroupSelect}
         label={<FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>}/>
       {shouldShowField('name') &&
@@ -29,6 +29,7 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
           className="input-narrow host-name-input"
           addonAfter={`.${domain}`}
           component={Input}
+          required={type !== 'NS'}
           label={<FormattedMessage id="portal.account.recordForm.hostName.label" />}/>
       }
       {shouldShowField('value') &&
@@ -100,7 +101,8 @@ RecordForm.propTypes = {
   invalid: PropTypes.bool,
   onSubmit: PropTypes.func,
   shouldShowField: PropTypes.func,
-  submitting: PropTypes.bool
+  submitting: PropTypes.bool,
+  type: PropTypes.string
 }
 
 export default injectIntl(RecordForm)

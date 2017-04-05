@@ -5,26 +5,26 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 
 import UDNButton from './button'
-import IconClose from './icons/icon-close'
+import IconClose from './shared/icons/icon-close'
 
 import { FormattedMessage } from 'react-intl'
 
 const getClassNames = (touched, error, className) =>
   classnames(className, { 'has-error': error && touched })
 
-const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMetaData }) =>
+const InlineAdd = ({ inputs, invalid, unmount, formValues, save, handleSubmit, errors, getMetaData }) =>
   <tr className="inline-add-row">
 
       {inputs.map((cell, index) =>
         <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
 
           {cell.map(
-            ({input, positionClass}, index) => {
+            ({input, positionClass}, cellIndex) => {
 
               const fieldName = input.props.name
               const className = getClassNames(getMetaData(fieldName).touched, errors[fieldName], input.props.className);
               return (
-                <div className={positionClass} key={index}>
+                <div className={positionClass} key={cellIndex}>
                   {cloneElement(input, { className })}
                 </div>
               )
@@ -33,7 +33,7 @@ const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMeta
 
           {index === inputs.length - 1 &&
           <ButtonToolbar className="pull-right">
-            <UDNButton disabled={invalid} onClick={() => save(formValues)}>
+            <UDNButton disabled={invalid} onClick={handleSubmit(() => save(formValues))}>
               <FormattedMessage id="portal.button.SAVE"/>
             </UDNButton>
             <UDNButton bsStyle="primary" onClick={unmount} icon={true}>

@@ -13,12 +13,14 @@ const SelectWrapper = ({ numericValues, className, onChange, disabled, options, 
       value={value} />
   )
 
-  if (label && label != '') return (
+  if (label && label !== '') {
+    return (
     <div className='form-group'>
       <label className='control-label dropdown-label'>{label}</label>
         {select}
     </div>
-  )
+    )
+  }
 
   return select
 }

@@ -18,7 +18,9 @@ class MiniChart extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps() {
@@ -46,7 +48,7 @@ class MiniChart extends React.Component {
       stackedAgainst: false,
       xAxisFormatter: false
     }]
-    if(!data.length) {
+    if (!data.length) {
       return (
         <div className={classNames({ 'mini-chart': true, className })}>
           {label && <div className="mini-chart-label">{label}</div>}

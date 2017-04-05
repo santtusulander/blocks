@@ -5,8 +5,8 @@ import { MultiMonthView } from 'react-date-picker'
 import { Dropdown } from 'react-bootstrap'
 import DateRanges from '../constants/date-ranges'
 
-import IconCalendar from './icons/icon-calendar'
-import IconSelectCaret from './icons/icon-select-caret'
+import IconCalendar from './shared/icons/icon-calendar'
+import IconSelectCaret from './shared/icons/icon-select-caret'
 
 const startOfThisMonth = () => moment().utc().startOf('month')
 const endOfThisDay = () => moment().utc().endOf('day')
@@ -214,7 +214,7 @@ class DateRangeSelect extends React.Component {
     // UDNP-2106 - In date picker, move current month to the right
     // We should make the current month appear on the right side of the date picker,
     // so the user has more immediate access to the previous month.
-    let localEndDate = this.makeLocal(endDate)
+    const localEndDate = this.makeLocal(endDate)
 
     return localEndDate.subtract(1, 'month')
   }

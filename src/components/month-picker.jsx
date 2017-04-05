@@ -2,8 +2,8 @@ import React from 'react'
 import moment from 'moment'
 import classnames from 'classnames'
 
-import IconArrowRight     from './icons/icon-arrow-right'
-import IconArrowLeft     from './icons/icon-arrow-left'
+import IconArrowRight     from './shared/icons/icon-arrow-right'
+import IconArrowLeft     from './shared/icons/icon-arrow-left'
 
 export class MonthPicker extends React.Component {
   constructor(props) {
@@ -50,7 +50,7 @@ export class MonthPicker extends React.Component {
     const { selectedMonth, selectedYear, shownYear } = this.state
     const months = []
     let monthIndex = 0
-    while(monthIndex < 12) {
+    while (monthIndex < 12) {
       months.push(moment().month(monthIndex++).format('MMM'))
     }
 
@@ -72,7 +72,7 @@ export class MonthPicker extends React.Component {
             return (
               <li key={i}>
                 <a className={classnames(
-                    {'selected' : (selectedMonth === monthName && shownYear === selectedYear)},
+                    {'selected': (selectedMonth === monthName && shownYear === selectedYear)},
                     {'current-month': (shownYear === moment().year() && i === moment().month())}
                   )}
                   onClick={() => this.selectMonth(monthName)}>

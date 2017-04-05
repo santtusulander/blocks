@@ -35,7 +35,7 @@ export class LoginFormTwoFactorApp extends Component {
   }
 
   startPulling() {
-    var pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
+    const pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
     this.setState({ pollingIntervalId });
   }
 
@@ -86,7 +86,7 @@ LoginFormTwoFactorApp.displayName = "LoginFormTwoFactorApp"
 LoginFormTwoFactorApp.propTypes = {
   // loginError prop is used in componentWillReceiveProps
   // eslint-disable-next-line react/no-unused-prop-types
-  loginError: React.PropTypes.string,
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   router: React.PropTypes.object,
   startAppPulling: React.PropTypes.func,
   userName: React.PropTypes.string

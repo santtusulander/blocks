@@ -3,7 +3,6 @@ import { fromJS } from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
 
 import { mapReducers } from '../../util'
-import { flatten } from '../../../util/helpers'
 
 export const DNS_RECORDS_CREATED = 'DNS_RECORDS_CREATED'
 export const DNS_RECORDS_RECEIVE_RESOURCES = 'DNS_RECORDS_RECEIVE_RESOURCES'
@@ -57,27 +56,42 @@ export const fetchResourceDetails = createAction(DNS_RECORDS_RECEIVE_RESOURCE, (
 })
 
 export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) => {
-  data.name = data.name.concat('.' + zone)
-  resource = resource.concat('.' + zone)
-  return dnsRecordsApi.create(zone, resource, data).then(resource => {
-    resource.data.name = domainlessRecordName(zone, resource.data.name)
-    return resource
+
+  //If resource for NS record is empty - use zone as resource and record name
+  if (data.type === 'NS' && !resource) {
+    data.name = zone
+    resource = zone
+  } else {
+    data.name = data.name.concat('.' + zone)
+    resource = resource.concat('.' + zone)
+  }
+
+  return dnsRecordsApi.create(zone, resource, data).then(dnsResource => {
+    dnsResource.data.name = domainlessRecordName(zone, dnsResource.data.name)
+    return dnsResource
   })
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
+  const isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone)
+  const recordName = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
+  resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
+
   const recordToDelete = {
-    name: data.name.concat('.' + zone),
+    name: recordName,
     type: data.type,
     value: data.value
   }
-  return dnsRecordsApi.remove(zone, resource.concat('.' + zone), recordToDelete)
+  return dnsRecordsApi.remove(zone, resource, recordToDelete)
 })
 
 export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
-  data.name = data.name.concat('.' + zone)
+  const isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone || data.type === 'NS' && data.name === '')
+  data.name = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
+  resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
+
   const { id, ...apiData } = data
-  return dnsRecordsApi.update(zone, resource.concat('.' + zone), apiData)
+  return dnsRecordsApi.update(zone, resource, apiData)
     .then(({ data }) => {
       data.name = domainlessRecordName(zone, data.name)
       return { data, id }
@@ -86,16 +100,20 @@ export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource,
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
   return dnsRecordsApi.fetchAll(zone)
-    .then(({ data }) => {
-      let recArray = []
+    .then((response) => {
+      const responseData = response.data.data
 
-      Object.keys(data).map(key => {
-        recArray.push( data[key] )
+      // UDNP-2883:
+      // Since records data model that comes from back-end was changed - convert it to previous
+      // structure to avoid lot of refactoring/fixes (it can be done in the future)
+      responseData.forEach((item) => {
+        Object.assign(item, item.entries[0])
+        delete item.entries
       })
 
-      return flatten(recArray).map( record => {
+      return responseData.map(record => {
         record.id = uniqid()
-        record.name = domainlessRecordName(zone, record.name)
+        record.name = domainlessRecordName(zone, record.dns_record_id)
         return record
       })
     })
@@ -123,6 +141,6 @@ export default handleActions({
 }, InitialState)
 
 //SELECTOR
-export const getById = ( resources, id ) => {
-  return resources.find( item => item.get('id') === id)
+export const getById = (resources, id) => {
+  return resources.find(item => item.get('id') === id)
 }

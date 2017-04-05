@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Map, List }from 'immutable'
+import { Map, List } from 'immutable'
 
 import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
@@ -24,8 +24,6 @@ import { isValidTextField } from '../../util/validators'
 import { getServicesIds, getServicesFromIds } from '../../util/services-helpers'
 
 import ServiceOptionSelector from './service-option-selector'
-
-import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -59,14 +57,14 @@ class AccountForm extends React.Component {
     // previosly configured account type, we need to clear them manually.
 
     if (nextProps.accountType && (!nextProps.account)) {
-      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+      if (JSON.stringify(this.props.serviceOptions) !== JSON.stringify(nextProps.serviceOptions)) {
         this.props.change('accountServices', [])
       }
     }
   }
 
-  onSubmit(values, dispatch, { account, accountType, onSave }){
-    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER 
+  onSubmit(values, dispatch, { account, accountType, onSave }) {
+    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER
                      ? values.accountServices.toJS()
                      : getServicesFromIds(values.accountServicesIds)
 
@@ -92,12 +90,13 @@ class AccountForm extends React.Component {
     let providerTypeLabel = ''
     const { accountType, providerTypes, serviceOptions, invalid, submitting,
             initialValues: { accountBrand }, show, onCancel } = this.props
-    const title = this.props.account
+    const isEditing = this.props.account.get('name')
+    const title = isEditing
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
-    const subTitle = this.props.account ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
+    const subTitle = isEditing ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
 
-    const submitButtonLabel = this.props.account
+    const submitButtonLabel = isEditing
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
@@ -176,6 +175,7 @@ class AccountForm extends React.Component {
                 name="accountServices"
                 component={ServiceOptionSelector}
                 showServiceItemForm={this.props.showServiceItemForm}
+                onChangeServiceItem={this.props.onChangeServiceItem}
                 options={serviceOptions}
                 label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
                 required={false}
@@ -215,6 +215,7 @@ AccountForm.propTypes = {
   fetchServiceInfo: PropTypes.func,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
+  onChangeServiceItem: PropTypes.func,
   onSave: PropTypes.func,
   providerTypes: PropTypes.array,
   ...reduxFormPropTypes,
@@ -249,7 +250,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

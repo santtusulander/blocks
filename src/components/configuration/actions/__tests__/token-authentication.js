@@ -4,53 +4,66 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../token-authentication.jsx')
 
-const TokenAuthentication = require('../token-authentication.jsx').TokenAuthentication
+import TokenAuthentication from '../token-authentication.jsx'
 
 describe('TokenAuthentication', () => {
   const intlMaker = () => { return { formatMessage: jest.fn() } }
-  let changeValue, onChange, close, change
-  let component, buttons
+  let handleSubmit, close, change, component
+
+  const VOD_STREAMING_TOKEN_AUTH = 'VOD_STREAMING_TOKEN_AUTH'
 
   beforeEach(() => {
-    changeValue = jest.fn()
-    onChange = jest.fn()
+    handleSubmit = jest.fn()
     close = jest.fn()
     change = jest.fn()
 
     let props = {
       change,
-      changeValue,
+      handleSubmit,
       close,
       invalid: false,
       set: Map(),
-      fields: { sharedKey: { onChange } },
-      intl: intlMaker()
+      intl: intlMaker(),
+      tokenValues: {}
     }
 
     component = shallow(<TokenAuthentication {...props} />)
-    buttons = component.find('Button')
   })
 
   it('should exist', () => {
     expect(component).toBeTruthy()
   })
 
-  it('should update internal state as changes happen', () => {
-    let inputs = component.find('FormControl')
-    inputs.at(0).simulate('change', {target: {value: 'c2hhcmVkLXNlY3JldA=='}})
-    expect(change).toHaveBeenCalled()
-    expect(changeValue).not.toHaveBeenCalled()
+  it('should render 2 advanced options', () => {
+    expect(component.find('.options-item').length).toBe(2)
   })
 
-  it('should discard changes on cancel', () => {
-    buttons.at(0).simulate('click')
-    expect(changeValue).not.toHaveBeenCalled()
-    expect(close).toHaveBeenCalled()
+  it('should show schema sidepanel', () => {
+    component.find('.arrow-right a').at(0).simulate('click', {
+      stopPropagation: () => false
+    })
+
+    expect(component.state('detailForm')).toBe('schema')
   })
 
-  it('should save changes and then close', () => {
-    buttons.at(1).simulate('click')
-    expect(changeValue).toHaveBeenCalled()
-    expect(close).toHaveBeenCalled()
+  it('should show streaming sidepanel', () => {
+    component.find('.arrow-right a').at(1).simulate('click', {
+      stopPropagation: () => false
+    })
+
+    expect(component.state('detailForm')).toBe('streaming')
   })
+
+  it('should handle cancel click', () => {
+    component.find('Button').at(0).simulate('click')
+
+    expect(close.mock.calls.length).toBe(1)
+  })
+
+  it('should handle submit click', () => {
+    component.find('Button').at(1).simulate('click')
+
+    expect(handleSubmit.mock.calls.length).toBe(1)
+  })
+
 })

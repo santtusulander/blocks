@@ -4,17 +4,22 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import PageHeader from '../layout/page-header'
 import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../icons/icon-caret-down'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc, params }) => {
-  const { account, group } = params
+  const { account } = params
   const restriction = account ? "group" : null
   let headerText = intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})
 
-  if (group) {
+  if (activeGroup) {
     headerText = activeGroup
-  } else if (account) {
+  } else if (activeAccount) {
     headerText = activeAccount
+  }
+
+  const topBarTexts = {
+    account: intl.formatMessage({ id: 'portal.content.property.topBar.account.label' }),
+    brand: intl.formatMessage({ id: 'portal.content.property.topBar.brand.label' })
   }
 
   return (
@@ -22,7 +27,7 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
         <AccountSelector
           as="security"
           params={params}
-          topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+          topBarTexts={topBarTexts}
           topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
           onSelect={itemSelectorFunc}
           restrictedTo={restriction}

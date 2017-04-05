@@ -12,14 +12,15 @@ import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
-import IconCaretDown from '../icons/icon-caret-down'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const AnalyticsViewControl = (props) => {
 
   const {
     account,
     group,
-    property
+    property,
+    storage
   } = props.params
 
   const tabs = [
@@ -76,6 +77,17 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
+      key: 'storage-overview',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.storageTitle'}),
+      hideForProperty: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE,
+      titles: {
+        storage: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.storageTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.accountTitle'})
+      }
+    },
+    {
       key: 'file-error',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.label'}),
       propertyOnly: true,
@@ -111,19 +123,18 @@ const AnalyticsViewControl = (props) => {
 
   let title = "Analytics"
   let active
-  if(props.activeTab) {
+  if (props.activeTab) {
     active = tabs.find(tab => tab.key === props.activeTab)
-    if(active) {
-      if(active.hideHierarchy) {
+    if (active) {
+      if (active.hideHierarchy) {
         title = active.label
-      }
-      else if(property) {
+      } else if (storage) {
+        title = active.titles.storage
+      } else if (property) {
         title = active.titles.property
-      }
-      else if(group) {
+      } else if (group) {
         title = active.titles.group
-      }
-      else {
+      } else {
         title = active.titles.account
       }
     }
@@ -132,11 +143,9 @@ const AnalyticsViewControl = (props) => {
   let activeItem;
   if (property) {
     activeItem = property
-  }
-  else if(group && props.activeGroup) {
+  } else if (group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
-  }
-  else if(account && props.activeAccount) {
+  } else if (account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
   const topBarTexts = {
@@ -147,7 +156,7 @@ const AnalyticsViewControl = (props) => {
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account, brand } = IDs
-    switch(tier) {
+    switch (tier) {
       case 'property':
         fetchItems('group', brand, account)
         break
@@ -163,27 +172,32 @@ const AnalyticsViewControl = (props) => {
 
   return (
     <PageHeader pageSubTitle={title}>
-      <AccountSelector
-        as="analytics"
-        params={props.params}
-        topBarTexts={topBarTexts}
-        topBarAction={topBarFunc}
-        onSelect={(...params) => {
-          let url = getAnalyticsUrl(...params)
-          if (active) {
-            let tab = active.key
-            if(active.propertyOnly && params[0] !== 'property') {
-              tab = ''
+    {/* Hide the dropdown until we get the storage included in it */}
+      {!props.params.storage ?
+        <AccountSelector
+          as="analytics"
+          params={props.params}
+          topBarTexts={topBarTexts}
+          topBarAction={topBarFunc}
+          onSelect={(...params) => {
+            let url = getAnalyticsUrl(...params)
+            if (active) {
+              let tab = active.key
+              if ((active.propertyOnly && params[0] !== 'property') ||
+              (active.hideForProperty && params[0] === 'property')) {
+                tab = ''
+              }
+              url = `${url}/${tab}`
             }
-            url = `${url}/${tab}`
-          }
-          props.router.push(url)
-        }}>
+            props.router.push(url)
+          }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <IconCaretDown />
         </div>
-      </AccountSelector>
+      </AccountSelector> :
+      <h1><TruncatedTitle content={props.params.storage} /></h1>
+    }
       {props.params.account &&
         <ButtonToolbar>
           <AnalyticsExport

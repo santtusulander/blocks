@@ -16,15 +16,14 @@ class FilterServiceType extends React.Component {
   toggleServiceType(type) {
     return () => {
       // TODO: Maybe some general error messaging box?
-      if(this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
+      if (this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
           content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         });
-      }
-      else {
+      } else {
         this.props.toggleServiceType(type)
       }
     }

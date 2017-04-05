@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import BSTypeahead from 'react-bootstrap-typeahead'
+import {Typeahead as BSTypeahead, AsyncTypeahead as AsyncBSTypeahead} from 'react-bootstrap-typeahead'
 
 class Typeahead extends React.Component {
   constructor(props) {
@@ -11,6 +11,20 @@ class Typeahead extends React.Component {
   }
 
   handleBlur(e) {
+    if (this.props.onBlur) {
+      this.props.onBlur()
+    }
+    const label = e.target.value
+    if (label) {
+      const id = `label-${new Date().valueOf()}`
+
+      // This is slightly dangerous approach as we are calling a private
+      // function of React-Bootstrap-Typeahead component, but since they don't
+      // offer public functions for adding new selections this is the only way.
+      // Be cautious when updating this package as they might change the way
+      // it's constructed and this might break as a result
+      this.typeahead.getInstance()._handleAddOption({ id, label })
+    }
     e.target.removeEventListener('keydown', this.handleKeyDown)
   }
 
@@ -41,21 +55,25 @@ class Typeahead extends React.Component {
     {
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
-      ref: ref => this.typeahead = ref
+      ref: (ref) => {
+        this.typeahead = ref
+        return this.typeahead
+      }
     } : {}
 
-    return (
-      <BSTypeahead
-        {...this.props}
-        {...customProps} />
-    )
+    const typeahead = this.props.asyncMode ? <AsyncBSTypeahead {...this.props} {...customProps} /> :
+      <BSTypeahead {...this.props} {...customProps} />
+
+    return typeahead
   }
 }
 
 Typeahead.displayName = 'Typeahead'
 Typeahead.propTypes = {
   allowNew: PropTypes.bool,
-  minLength: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
+  asyncMode: PropTypes.bool,
+  minLength: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+  onBlur: PropTypes.func
 }
 
 export default Typeahead

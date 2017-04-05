@@ -9,7 +9,19 @@ import { Dropdown } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import classnames from 'classnames'
 
-import IconSelectCaret from '../components/icons/icon-select-caret'
+import IconSelectCaret from '../components/shared/icons/icon-select-caret'
+
+/**
+ * Get DOM node top position
+ * @param ref
+ * @returns {Number}
+ */
+function getDOMNodeTop(ref) {
+  if (!ref) {
+    return 0
+  }
+  return findDOMNode(ref).getBoundingClientRect().top
+}
 
 class Tabs extends React.Component {
   constructor(props) {
@@ -19,8 +31,10 @@ class Tabs extends React.Component {
       hiddenTabs: []
     }
 
+    this.tabElements = []
+    this.hiddenTabsElement = null
+
     this.timeout = null
-    this.getDOMNodeTop = this.getDOMNodeTop.bind(this)
     this.measureTabs = this.measureTabs.bind(this)
   }
   componentDidMount() {
@@ -36,26 +50,27 @@ class Tabs extends React.Component {
     clearTimeout(this.timeout)
   }
   measureTabs() {
-    if (!this.props.children || !this.props.children.length) return
+    if (!this.props.children || !this.props.children.length) {
+      return
+    }
 
-    let hiddenTabs = []
+    const hiddenTabs = []
     this.setState({ hiddenTabs: hiddenTabs })
-    let reverseTabs = this.props.children.slice().reverse()
+    const reverseTabs = this.props.children.slice().reverse()
 
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (findDOMNode(this.refs['tab0']) != null &&
-        findDOMNode(this.refs['hiddenTabs']) != null) {
+      if (this.tabElements.length && this.hiddenTabsElement) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
         // fit on same line and we need to hide some of them. Looping through
         // tabs in reverse since we start hiding them from the end
         reverseTabs.forEach((tab, i) => {
-          if (this.getDOMNodeTop('hiddenTabs') > this.getDOMNodeTop('tab0')) {
+          if (getDOMNodeTop(this.hiddenTabsElement) > getDOMNodeTop(this.tabElements[0])) {
             // Don't hide active tab
-            if(tab.props['data-eventKey'] !== this.props.activeKey) {
+            if (tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
               this.setState({ hiddenTabs: hiddenTabs })
             }
@@ -64,28 +79,31 @@ class Tabs extends React.Component {
       }
     })
   }
-  getDOMNodeTop(ref) {
-    return findDOMNode(this.refs[ref]).getBoundingClientRect().top
-  }
+
   render() {
     const { className, onSelect } = this.props
+    const { hiddenTabs } = this.state
     const children = this.props.children.filter(item => item)
 
     return (
       <ul role="tablist" className={classnames('nav nav-tabs', className)}>
         {children && children.length > 1 ?
-          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
+          children.filter((tab, i) => !hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
               tab, {
-                ref: `tab${i}`,
+                ref: (tabEl) => {
+                  this.tabElements[i] = tabEl
+                },
                 key: i
               }
             )
           })
           : children
         }
-        <li ref="hiddenTabs">
-          {this.state.hiddenTabs.length !== 0 ?
+        <li ref={(node) => {
+          this.hiddenTabsElement = node
+        }}>
+          {hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
               <Dropdown.Toggle className="tabs-dropdown-toggle" noCaret={true}>
                 <FormattedMessage id="portal.common.MORE.text"/>
@@ -93,7 +111,7 @@ class Tabs extends React.Component {
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-wide-menu">
                 {children.concat().map((tab, i) => {
-                  if (this.state.hiddenTabs.includes(i)) {
+                  if (hiddenTabs.includes(i)) {
                     return React.cloneElement(
                       tab, {
                         key: i,
@@ -101,6 +119,8 @@ class Tabs extends React.Component {
                       }
                     )
                   }
+
+                  return false
                 })}
               </Dropdown.Menu>
             </Dropdown>

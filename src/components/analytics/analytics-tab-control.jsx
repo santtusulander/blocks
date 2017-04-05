@@ -40,6 +40,12 @@ const AnalyticsTabControl = (props) => {
       permission: PERMISSIONS.ALLOW_ALWAYS
     },
     {
+      key: 'storage-overview',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.label'}),
+      hideForProperty: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
+    },
+    {
       key: 'file-error',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.label'}),
       propertyOnly: true,
@@ -68,7 +74,8 @@ const AnalyticsTabControl = (props) => {
     <div>
       <Tabs activeKey={props.activeTab} className="analytics-tabs">
         {tabs.reduce((lis, tab) => {
-          if(!tab.propertyOnly || params.property) {
+          if ((!tab.propertyOnly || params.property) &&
+          !(tab.hideForProperty && params.property)) {
             const tabContent = tab.permission ?
               (<IsAllowed key={tab.key} to={tab.permission} data-eventKey={tab.key}>
                 <li role="tab">
@@ -82,7 +89,7 @@ const AnalyticsTabControl = (props) => {
                 activeClassName='active'>{tab.label}</Link>
               </li>)
 
-            lis.push( tabContent )
+            lis.push(tabContent)
           }
           return lis
         }, [])}

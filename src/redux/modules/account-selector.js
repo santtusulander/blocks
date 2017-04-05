@@ -8,7 +8,7 @@ const ACCOUNT_SELECTOR_ITEMS_FETCHED = 'ACCOUNT_SELECTOR_ITEMS_FETCHED'
 const ACCOUNT_SELECTOR_OPEN_SET = 'ACCOUNT_SELECTOR_OPEN_SET'
 const ACCOUNT_SELECTOR_SEARCH_SET = 'ACCOUNT_SELECTOR_SEARCH_SET'
 
-import { BASE_URL_AAA, BASE_URL_NORTH, parseResponseData, mapReducers } from '../util'
+import { BASE_URL_AAA, BASE_URL_NORTH, PAGINATION_MOCK, parseResponseData, mapReducers } from '../util'
 
 const emptySelector = Immutable.Map({
   fetching: false,
@@ -20,9 +20,13 @@ const emptySelector = Immutable.Map({
 export function fetchItemsSuccess(state, action) {
   const data = action.payload.data || action.payload
   const items = data.map(
-    item => item.id ?
+    (item) => {
+      return item.id ?
+      //check if account
       (item.provider_type ? [item.id, item.name, item.provider_type] : [item.id, item.name]) :
-      [item, item]
+      //check if item is property => use published_host_id as name & value
+      item.published_host_id ? [item.published_host_id, item.published_host_id] : [item, item]
+    }
   )
   return state.merge({
     items: Immutable.fromJS(items)
@@ -67,13 +71,12 @@ export default handleActions({
 
 export const fetchItems = createAction(ACCOUNT_SELECTOR_ITEMS_FETCHED, (brand, account, group) => {
   let url = `${BASE_URL_AAA}/brands/${brand}/accounts`
-  if(group) {
+  if (group) {
     url = `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`
-  }
-  else if(account) {
+  } else if (account) {
     url = `${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`
   }
-  return axios.get(url).then(parseResponseData)
+  return axios.get(url, PAGINATION_MOCK).then(parseResponseData)
 })
 
 export const startFetching = createAction(ACCOUNT_SELECTOR_START_FETCH)

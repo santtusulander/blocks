@@ -7,11 +7,13 @@ import { BASE_URL_AAA }  from '../../util.js'
 
 const service = new schema.Entity('services')
 const providerType = new schema.Entity('provider_types')
+const regions = new schema.Entity('regions', {}, { idAttribute: 'region_code' })
 
 const Schemas = {
   serviceInfo: {
     services: new schema.Array(service),
-    provider_types: new schema.Array(providerType)
+    provider_types: new schema.Array(providerType),
+    regions: new schema.Array(regions)
   }
 }
 
@@ -22,7 +24,7 @@ const Schemas = {
 
 export const fetchAll = () => {
   return axios.get(`${BASE_URL_AAA}/service_info`)
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize(data, Schemas.serviceInfo)
     })
 }

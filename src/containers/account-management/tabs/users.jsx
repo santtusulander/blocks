@@ -4,7 +4,7 @@ import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } fro
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { change, focus, Field } from 'redux-form'
+import { change, Field, SubmissionError } from 'redux-form'
 import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
@@ -20,8 +20,8 @@ import ActionButtons from '../../../components/action-buttons'
 import FieldFormGroup from '../../../components/form/field-form-group'
 import FieldFormGroupSelect from '../../../components/form/field-form-group-select'
 import InlineAdd from '../../../components/inline-add'
-import IconAdd from '../../../components/icons/icon-add'
-import IconInfo from '../../../components/icons/icon-info'
+import IconAdd from '../../../components/shared/icons/icon-add'
+import IconInfo from '../../../components/shared/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
@@ -29,7 +29,7 @@ import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
@@ -46,9 +46,7 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
-      usersGroups: List(),
-      existingMail: null,
-      existingMailMsg: null
+      usersGroups: List()
     }
 
     this.notificationTimeout = null
@@ -57,8 +55,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.sortedData = this.sortedData.bind(this)
-    this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
@@ -79,7 +75,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account) {
+    if (this.props.params.account !== nextProps.params.account) {
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
     }
@@ -89,11 +85,6 @@ export class AccountManagementAccountUsers extends React.Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
-  showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
 
   changeSort(column, direction) {
     this.setState({
@@ -103,7 +94,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   newUser({ email, roles }) {
-    const { userActions: { createUser }, params: { brand, account }, formFieldFocus } = this.props
+    const { userActions: { createUser }, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -111,13 +102,11 @@ export class AccountManagementAccountUsers extends React.Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    createUser(requestBody).then(res => {
-      if(res.error){
-        this.setState({
-          existingMail: requestBody.email,
-          existingMailMsg: res.payload.message
-        }, () => formFieldFocus('inlineAdd', 'email'))
+    return createUser(requestBody).then(res => {
+      if (res.error) {
+        throw new SubmissionError({email: res.payload.message})
       } else {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
     })
@@ -127,34 +116,12 @@ export class AccountManagementAccountUsers extends React.Component {
     const conditions = {
       email: [
         {
-          condition: email === this.state.existingMail,
-          errorText: this.state.existingMailMsg
-        },
-        {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
           errorText: 'Invalid Email.'
         }
       ]
     }
     return checkForErrors({ email, roles }, conditions)
-  }
-
-  sortedData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if(aVal < bVal) {
-        return -1 * sortDir
-      }
-      else if(aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
   }
 
   getRoleOptions(roleMapping, props) {
@@ -269,15 +236,14 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   deleteUser(user) {
-    if(user === this.props.currentUser) {
+    if (user === this.props.currentUser) {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
-    }
-    else {
+    } else {
       this.props.deleteUser(user)
     }
   }
@@ -297,13 +263,10 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   saveUser(user) {
-    // Get the username from the user we have in state for editing purposes.
-    //user.username = this.state.userToEdit.get('username')
-
     return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
+          this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
@@ -329,7 +292,7 @@ export class AccountManagementAccountUsers extends React.Component {
       activeDirection: this.state.sortDir
     }
     const filteredUsersByRole = users.filter((user) => {
-      if(this.state.filteredRoles === 'all') {
+      if (this.state.filteredRoles === 'all') {
         return true
       } else {
         return user.get('roles').find(role => {
@@ -338,7 +301,7 @@ export class AccountManagementAccountUsers extends React.Component {
       }
     })
     const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if(this.state.filteredGroups === 'all') {
+      if (this.state.filteredGroups === 'all') {
         return true
       } else {
         return user.get('group_id').find(group => {
@@ -349,13 +312,9 @@ export class AccountManagementAccountUsers extends React.Component {
     const searchedUsers = filteredUsersByGroup.filter((user) => {
       return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
     })
-    const sortedUsers = this.sortedData(
-      searchedUsers,
-      this.state.sortBy,
-      this.state.sortDir
-    )
+    const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
 
     const groupOptions = this.props.groups.map(group => [
@@ -432,7 +391,9 @@ export class AccountManagementAccountUsers extends React.Component {
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_USER}>
                       <ActionButtons
-                        onEdit={() => {this.editUser(user)}}
+                        onEdit={() => {
+                          this.editUser(user)
+                        }}
                         onDelete={() => this.deleteUser(user.get('email'))} />
                     </IsAllowed>
                   </td>
@@ -474,27 +435,28 @@ export class AccountManagementAccountUsers extends React.Component {
             closeModal={true}
             closeButton={true}
             cancel={this.togglePermissionModal}>
-              {this.props.roles.map((role, i) => (
-                role.getIn(['permissions', 'ui']) ?
-                <PanelGroup accordion={true} key={i} defaultActiveKey="">
-                  <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
-                    <Table striped={true} key={i}>
+              {this.props.roles.map((role, roleIndex) => {
+                return role.getIn(['permissions', 'ui']) ?
+                (<PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
+                  <Panel header={role.get('name')} className="permission-panel" eventKey={roleIndex}>
+                    <Table striped={true} key={roleIndex}>
                       <tbody>
-                      {this.props.permissions.get('ui').map((uiPermission, i) => {
+                      {this.props.permissions.get('ui').map((uiPermission, uiPermissionIndex) => {
                         const permissionTitle = uiPermission.get('title')
                         const permissionName = uiPermission.get('name')
-                        return(
-                          <tr key={i}>
+                        return (
+                          <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
                             <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
                           </tr>
-                        )}
+                        )
+                      }
                       )}
                       </tbody>
                     </Table>
                   </Panel>
-                </PanelGroup> : null
-              ))}
+                </PanelGroup>) : null
+              })}
           </ModalWindow>
         }
       </PageContainer>
@@ -507,7 +469,6 @@ AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
-  formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
@@ -517,6 +478,7 @@ AccountManagementAccountUsers.propTypes = {
   rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showNotification: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
@@ -539,8 +501,7 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    formFieldFocus: (form, field) => dispatch(focus(form, field))
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 

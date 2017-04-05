@@ -19,7 +19,9 @@ class StackedByTimeSummary extends React.Component {
 
   componentDidMount() {
     this.measureContainers()
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
 
@@ -53,7 +55,7 @@ class StackedByTimeSummary extends React.Component {
       totalDatasetValue
     } = this.props
 
-    let datasets = []
+    const datasets = []
     datasets.push({
       area: true,
       color: paleblue,

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { BASE_URL_NORTH }  from '../../../util.js'
+import { BASE_URL_NORTH, PAGINATION_MOCK }  from '../../../util.js'
 import { normalize, schema } from 'normalizr'
 
 const baseURL = (brand, account, group) => `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`
@@ -20,21 +20,15 @@ const groupPropertiesSchema = new schema.Entity('grpProperties', { properties: [
 export const fetch = ({ brand, account, group, id }) => {
   return axios.get(`${baseURL(brand, account, group)}/${id}`)
     .then(({ data }) => {
-      return normalize({ id: group, properties: [ data ] }, groupPropertiesSchema)
+      return normalize({ id: group, properties: [ data.data ] }, groupPropertiesSchema)
     })
 }
 
 export const fetchAll = ({ brand, account, group }) => {
-  return axios.get(baseURL(brand, account, group))
-    .then(({ data }) =>
-      data.reduce((object, id) => {
-
-        object.entities.properties[id] = { parentId: group, published_host_id: id }
-
-        return object
-
-      }, { entities: { properties: {} } })
-    )
+  return axios.get(baseURL(brand, account, group), PAGINATION_MOCK)
+    .then(({data}) => {
+      return normalize({ id: group, properties: data.data }, groupPropertiesSchema)
+    })
 }
 
 export const fetchIds = ({ brand, account, group }) => {

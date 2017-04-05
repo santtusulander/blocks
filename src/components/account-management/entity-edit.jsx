@@ -98,17 +98,18 @@ class EntityEdit extends React.Component {
     this.onServiceChange && this.onServiceChange(entity.get('services'))
   }
 
-  showServiceItemForm(serviceId, optionId, onChange) {
+  showServiceItemForm(serviceId, optionId, onChange, isEnabled) {
     this.setState({
       activeServiceItem: this.getActiveServiceItem(serviceId, optionId),
-      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId)
+      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId),
+      isEnabled
     })
     // callback to update ServiceOptionSelector field from AccountForm
     this.onServiceChange = onChange
   }
 
   render() {
-    const { currentUser, params, type, onSave, onCancel } = this.props
+    const { currentUser, params, type, onSave, onCancel, onDelete } = this.props
 
     return (
       <div>
@@ -118,6 +119,7 @@ class EntityEdit extends React.Component {
           account={this.state.entityToUpdate}
           currentUser={currentUser}
           onCancel={onCancel}
+          onChangeServiceItem={this.onChangeServiceItem}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
@@ -129,6 +131,8 @@ class EntityEdit extends React.Component {
           params={params}
           groupId={this.state.entityToUpdate.get('id')}
           onCancel={onCancel}
+          onChangeServiceItem={this.onChangeServiceItem}
+          onDelete={onDelete}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
@@ -137,6 +141,7 @@ class EntityEdit extends React.Component {
 
         <AddChargeNumbersModal
           activeServiceItem={this.state.activeServiceItem}
+          isEnabled={this.state.isEnabled}
           onCancel={() => this.setState({ activeServiceItem: Map(), activeServiceItemPath: null })}
           onDisable={this.onDisableServiceItem}
           onSubmit={this.onChangeServiceItem}
@@ -156,6 +161,7 @@ EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   entityToUpdate: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
   type: PropTypes.string

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import './account-form.scss'
+
 const AccountManagementFormContainer = (props) => {
 
   return (

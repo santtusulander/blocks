@@ -1,8 +1,5 @@
 import React from 'react'
 import { FormGroup, ControlLabel, FormControl, InputGroup } from 'react-bootstrap'
-
-import './udn-file-input.scss'
-
 import { FormattedMessage } from 'react-intl'
 
 const UDNFileInput = (props) => {
@@ -18,7 +15,9 @@ const UDNFileInput = (props) => {
             type='file'
             {...otherProps}
             value=''
-            onChange={() => {}}
+            onChange={() => {
+              // no-op
+            }}
           />
           <InputGroup.Addon>{addonAfter}</InputGroup.Addon>
         </InputGroup>

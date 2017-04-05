@@ -12,15 +12,19 @@ import PageHeader from '../layout/page-header'
 import TruncatedTitle from '../truncated-title'
 import IsAllowed from '../is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
-import IconAdd from '../icons/icon-add'
-import IconEdit from '../icons/icon-edit'
-import IconTrash from '../icons/icon-trash'
-import IconCaretDown from '../icons/icon-caret-down'
+import IconAdd from '../shared/icons/icon-add'
+import IconEdit from '../shared/icons/icon-edit'
+import IconTrash from '../shared/icons/icon-trash'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, onDeleteDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
   const sortedDomains = domains.sort((a,b) => {
-    if (a.id.toLowerCase() < b.id.toLowerCase()) return -1
-    if (a.id.toLowerCase() > b.id.toLowerCase()) return 1
+    if (a.id.toLowerCase() < b.id.toLowerCase()) {
+      return -1
+    }
+    if (a.id.toLowerCase() > b.id.toLowerCase()) {
+      return 1
+    }
     return 0
   })
   return (

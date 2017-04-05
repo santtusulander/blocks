@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import IconClose from '../icons/icon-close.jsx'
+import IconClose from '../shared/icons/icon-close.jsx'
 
 class ConfigurationSidebar extends React.Component {
   constructor(props) {
@@ -8,7 +8,7 @@ class ConfigurationSidebar extends React.Component {
   }
   render() {
     let className = 'configuration-sidebar'
-    if(this.props.rightColVisible) {
+    if (this.props.rightColVisible) {
       className = className + ' ' + 'right-col-visible'
     }
     return (

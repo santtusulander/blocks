@@ -16,8 +16,7 @@ import { getRegionsInfoOptions } from '../../../../util/services-helpers'
 
 import { FLOW_DIRECTION_TYPES } from '../../../../constants/account-management-options'
 
-
-const validate = ({ billing_meta: { charge_number = '', regions } }) => {
+const validate = ({ billing_meta: { charge_number = '', regions, flow_direction } }) => {
   const conditions = {
     charge_number: [
       {
@@ -31,17 +30,22 @@ const validate = ({ billing_meta: { charge_number = '', regions } }) => {
     ],
     regions: [
       {
-        condition: regions && !(regions.reduce((acc, {charge_number}) => acc && isValidChargeNumber(charge_number), true)),
-        errorText: {_error: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />}
+        condition: regions && !(regions.reduce((acc, {charge_number: region_charge_number}) => acc && isValidChargeNumber(region_charge_number), true)),
+        errorText: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />
       }
     ]
   }
 
-  const errors = checkForErrors({charge_number, regions}, conditions)
+  const errors = checkForErrors({charge_number, regions, flow_direction}, conditions)
 
   //model can contains only one of [charge_number, regions] property
   regions && delete errors.charge_number
   charge_number && delete errors.regions
+  !flow_direction && delete errors.flow_direction
+
+  if (errors.regions) {
+    errors.regions = { _error: errors.regions }
+  }
 
   return Object.keys(errors).length ? { billing_meta: {...errors} } : {}
 }
@@ -61,17 +65,17 @@ class AddChargeNumbersForm extends React.Component {
   }
 
   render() {
-    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid, dirty } = this.props
+    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid, isEnabled } = this.props
 
     return (
       <form onSubmit={this.props.handleSubmit(this.onEnable)}>
-        { hasFlowDirection && 
+        { hasFlowDirection &&
           <div>
             <Field
               name="billing_meta.flow_direction"
               component={FieldFormGroupCheckboxes}
               iterable={FLOW_DIRECTION_TYPES}
-              required={false}
+              required={true}
               label={<FormattedMessage id="portal.account.chargeNumbersForm.flow_direction.title" />}
             />
             <hr/>
@@ -86,27 +90,29 @@ class AddChargeNumbersForm extends React.Component {
           />
         }
 
-        { !hasRegionalBilling && 
+        { !hasRegionalBilling && hasGlobalBilling &&
           <Field
             type="text"
             name="billing_meta.charge_number"
             component={FieldFormGroup}
             required={true}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.global_charge_number.title" />}
+            normalize={value => value.toUpperCase()}
           />
         }
 
-        { !hasGlobalBilling && 
+        { !hasGlobalBilling && hasRegionalBilling &&
           <FieldArray
             name="billing_meta.regions"
             component={RegionsField}
             iterable={getRegionsInfoOptions(regionsInfo)}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>}
-            required={false}
+            required={true}
           />
         }
 
         <FormFooterButtons>
+          {isEnabled &&
           <Button
             id='disable-button'
             className="btn-danger pull-left"
@@ -114,6 +120,7 @@ class AddChargeNumbersForm extends React.Component {
           >
             <FormattedMessage id='portal.common.button.disable' />
           </Button>
+          }
           <Button
             id='cancel-button'
             className="btn-outline"
@@ -123,7 +130,7 @@ class AddChargeNumbersForm extends React.Component {
           </Button>
           <Button
             id='submit-button'
-            disabled={invalid && dirty}
+            disabled={invalid}
             type='submit'
             bsStyle="primary"
           >
@@ -142,6 +149,7 @@ AddChargeNumbersForm.propTypes = {
   hasFlowDirection: PropTypes.bool,
   hasGlobalBilling: PropTypes.bool,
   hasRegionalBilling: PropTypes.bool,
+  isEnabled: PropTypes.bool,
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
   onSubmit: PropTypes.func,

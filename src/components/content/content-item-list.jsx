@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import AnalysisByTime from '../analysis/by-time'
-import IconChart from '../icons/icon-chart.jsx'
-import IconConfiguration from '../icons/icon-configuration.jsx'
+import IconChart from '../shared/icons/icon-chart.jsx'
+import IconConfiguration from '../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import ContentItemTag from './content-item-tag'
 import TruncatedTitle from '../truncated-title'
@@ -41,7 +41,7 @@ class ContentItemList extends React.Component {
   }
   render() {
     const datasets = []
-    if(this.props.primaryData.size) {
+    if (this.props.primaryData.size) {
       datasets.push({
         area: true,
         color: paleblue,

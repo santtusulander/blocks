@@ -15,13 +15,16 @@ import { FormattedMessage } from 'react-intl';
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { logOut, destroyStore } from './redux/modules/user'
-import {SENTRY_DSN} from './constants/sentry'
-import './styles/style.scss'
+import { SENTRY_HOSTNAMES, SENTRY_DSN } from './constants/sentry'
 
+import { tokenDidExpire } from './util/user-helpers'
+
+import './styles/style.scss'
 
 import Root from './root'
 
-const useRaven = process.env.NODE_ENV === 'production'
+const useRaven = SENTRY_HOSTNAMES.includes(window.location.hostname)
+
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
   useRaven
@@ -62,6 +65,7 @@ if (module.hot) {
   });
 }
 
+
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -76,23 +80,17 @@ axios.interceptors.response.use(function (response) {
   if (error) {
     const status = error.status;
     if (status === 401) {
-      if(!location.href.includes('/login')
+      if (!location.href.includes('/login')
         && !location.href.includes('/set-password')
         && !location.href.includes('/reset-password')
         && !location.href.includes('/forgot-password')
         && !error.config.url.includes('/password')) {
 
-        const loggedIn = store.getState().user.get('loggedIn') === true
-        const method = error.config.method.toLowerCase()
-        const tokenDidExpire = loggedIn && method === 'get'
-
-        //If UI state == loggedIn, but getting 401s from API => token expired
-        //(NOTE: this might not be 100% true, might be eg. forbidden resource
-        //Should check expiration from  expires_at -key)
-        if (tokenDidExpire) {
+        //Check expiration from  expires_at -key)
+        if (tokenDidExpire()) {
           const returnPath = location.pathname
-          return store.dispatch( logOut(false) )
-            .then( () => {
+          return store.dispatch(logOut())
+            .then(() => {
               // Token expired, redirect to login
               browserHistory.push({
                 pathname: '/login',
@@ -102,21 +100,26 @@ axios.interceptors.response.use(function (response) {
                 }
               })
 
-              store.dispatch( destroyStore() )
+              store.dispatch(destroyStore())
+              return Promise.reject(error)
+            })
+        } else {
+          //Token is invalid and not expired => logout
+          return store.dispatch(logOut())
+            .then(() => {
+              store.dispatch(destroyStore())
               return Promise.reject(error)
             })
         }
       }
-    }
-    else if (status === 403) {
+    } else if (status === 403) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
         okButton: true,
         cancel: () => store.dispatch(hideInfoDialog())
       }));
-    }
-    else if (status === 500 || status === 404) {
+    } else if (status === 500 || status === 404) {
       if (Raven.isSetup()) {
         captureAndShowRavenError(store, error.data.message, null, true)
       } else {
@@ -152,10 +155,12 @@ let startApp = runApp
 
 if (useRaven) {
   /* eslint-disable no-undef */
-  if (!Raven.isSetup()) Raven.config(SENTRY_DSN, {release: VERSION}).install()
+  if (!Raven.isSetup()) {
+    Raven.config(SENTRY_DSN, {release: VERSION}).install()
+  }
   /* eslint-enable no-undef */
 
-  startApp = Raven.wrap( runApp )
+  startApp = Raven.wrap(runApp)
 
   let errorDisplayed = false
 

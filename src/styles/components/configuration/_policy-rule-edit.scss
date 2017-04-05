@@ -1,7 +1,7 @@
 // Policy Rule Edit
 // ================
 
-.configuration-policy-rule-edit {
+.configuration-rule-edit {
   width: 100%;
 
   .conditions {
@@ -30,6 +30,16 @@
     padding: 10px 0 0 15px;
     margin-bottom: 10px;
     cursor: pointer;
+
+    .condition-info-column {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h4 {
+        line-height: 2;
+      }
+    }
 
     @include md {
       min-height: $md-bar-height;

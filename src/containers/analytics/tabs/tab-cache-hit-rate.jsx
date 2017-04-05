@@ -29,7 +29,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters ||
+    if (this.props.filters !== nextProps.filters ||
         changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
@@ -44,12 +44,12 @@ class AnalyticsTabCacheHitRate extends React.Component {
   fetchData(params, filters, location, hostConfiguredName) {
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
 
-    let trafficParams = {
+    const trafficParams = {
       account: params.account,
       startDate: fetchOpts.startDate,
       endDate: fetchOpts.endDate,
       service_type: fetchOpts.service_type,
-      field_filter: 'chit_ratio',
+      field_filters: 'timestamp,chit_ratio',
       granularity: 'day'
     }
 
@@ -130,4 +130,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default withRouter( connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate) );
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate));

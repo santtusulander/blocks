@@ -1,7 +1,7 @@
 import React from 'react';
 
-import IconArrowUp from './icons/icon-arrow-up'
-import IconArrowDown from './icons/icon-arrow-down'
+import IconArrowUp from './shared/icons/icon-arrow-up'
+import IconArrowDown from './shared/icons/icon-arrow-down'
 
 class TableSorter extends React.Component {
   constructor(props) {
@@ -12,20 +12,19 @@ class TableSorter extends React.Component {
   activateSort(e) {
     e.preventDefault()
     let direction = this.props.reversed ? -1 : 1
-    if(this.props.column === this.props.activeColumn) {
+    if (this.props.column === this.props.activeColumn) {
       direction = -1 * this.props.activeDirection
     }
     this.props.activateSort(this.props.column, direction, this.props.sortFunc)
   }
   render() {
     const width = this.props.width
-    let className = 'table-sorter' + (this.props.textAlign === 'left' ? ' text-left' : '')
+    const className = 'table-sorter' + (this.props.textAlign === 'left' ? ' text-left' : '')
     let caret = ''
-    if(this.props.column === this.props.activeColumn) {
-      if(this.props.activeDirection < 0) {
+    if (this.props.column === this.props.activeColumn) {
+      if (this.props.activeDirection < 0) {
         caret = <IconArrowDown />
-      }
-      else {
+      } else {
         caret = <IconArrowUp />
       }
     }

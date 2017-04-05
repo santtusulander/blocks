@@ -1,17 +1,20 @@
 import React from 'react'
 import Immutable from 'immutable'
-
 import Select from '../select.jsx'
-import './udn-admin-toolbar.scss'
+
 import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
 const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManagementModal, history}) => {
 
-  const accountOptions = accounts.map( account => {
+  const accountOptions = accounts.map(account => {
     return [account.get('id'), account.get('name')]
-  }).sort( (a,b) => {
-    if ( a[1].toLowerCase() < b[1].toLowerCase() ) return -1
-    if ( a[1].toLowerCase() > b[1].toLowerCase() ) return 1
+  }).sort((a,b) => {
+    if (a[1].toLowerCase() < b[1].toLowerCase()) {
+      return -1
+    }
+    if (a[1].toLowerCase() > b[1].toLowerCase()) {
+      return 1
+    }
     return 0
   })
 
@@ -21,16 +24,15 @@ const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManageme
       <Select
         options={accountOptions}
         onSelect={account => {
-          if(account === 'add') {
+          if (account === 'add') {
             toggleAccountManagementModal(ADD_ACCOUNT)
-          }
-          else {
+          } else {
             //FIXME: this is NOT 100% accurate
             const currentRoute = routes[routes.length - 1].path
             //replace :account with selected valye
-            const newRoute = currentRoute.replace(/:account/, account )
+            const newRoute = currentRoute.replace(/:account/, account)
 
-            history.push( newRoute )
+            history.push(newRoute)
             //fetchAccountData(account)
           }
         }}

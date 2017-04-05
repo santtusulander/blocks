@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { Button, FormControl, InputGroup } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import IconArrowDown from './icons/icon-arrow-down'
-import IconArrowUp from './icons/icon-arrow-up'
+import IconArrowDown from './shared/icons/icon-arrow-down'
+import IconArrowUp from './shared/icons/icon-arrow-up'
 
 const KEY_UP = 38
 const KEY_DOWN = 40
@@ -36,7 +36,7 @@ const NumberInput = (props) => {
       newValue = Math.trunc ? Math.trunc(newValue) : Math.round(newValue)
     }
 
-    if(newValue !== null && newValue < min) {
+    if (newValue !== null && newValue < min) {
       newValue = min
     } else if (newValue && newValue > max) {
       newValue = max

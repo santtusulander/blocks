@@ -168,24 +168,14 @@ const fakeHost = Immutable.fromJS({
             "last_edited": "10 Jan 2016 - 10:52",
             "deployment_status": 2
           },
-          "default_policy": {"policy_rules": [
-            {
-              "set": {
-                "cache_control": {
-                  "honor_origin": true,
-                  "check_etag": "weak",
-                  "max_age": 0
-                }
-              }
-            },
-            {
-              "set": {
-                "cache_name": {
-                  "ignore_case": false
-                }
-              }
-            }
-          ]},
+          "defaults": {
+            "cache_control_max_age": null,
+            "cache_key_query": null,
+            "cache_control_check_etag": "false",
+            "response_remove_vary": true,
+            "cache_control_honor_origin": false,
+            "cache_name_ignore_case": true
+          },
           "response_policy": {"policy_rules": [
             {
               "match": {
@@ -260,6 +250,7 @@ describe('Configuration', () => {
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         securityActions={securityActionsMaker()}
+        fetchStorage={() => Promise.resolve()}
         activeHost={fakeHost}
         params={urlParams}
         fetching={true}

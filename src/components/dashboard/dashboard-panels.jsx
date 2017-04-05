@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 
-import './dashboard-panels.scss'
-
 const DashboardPanels = (props) => {
   const { children, className } = props
   return (

@@ -3,12 +3,18 @@ import React from 'react'
 class PageContainer extends React.Component {
   render() {
     let className = 'page-container';
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 
     return (
-      <div ref={ref => this.pageContainerRef = ref} className={className}>
+      <div
+        ref={(ref) => {
+          this.pageContainerRef = ref
+          return this.pageContainerRef
+        }}
+        className={className}
+      >
         {this.props.children}
       </div>
     )

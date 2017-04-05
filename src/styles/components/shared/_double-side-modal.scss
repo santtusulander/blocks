@@ -1,0 +1,62 @@
+.in .side-panel.double-side-modal-container {
+  width: auto;
+
+  & > .modal-content {
+    display: flex;
+    background: none;
+
+    .secondary-side-modal {
+      width: 600px;
+
+      .secondary-side-modal-close {
+        position: fixed;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+      }
+
+      .modal-body {
+        overflow-x: hidden;
+      }
+
+      .modal-footer {
+        right: 0;
+        width: 600px;
+        max-width: none;
+      }
+    }
+
+    .primary-side-modal {
+      width: 700px;
+
+      .header-btn-row {
+        margin: 0 0 10px;
+
+        div {
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
+
+      .dark-theme & {
+        background-color: $dt-modal-bg-color;
+      }
+
+      .light-theme & {
+        background-color: $lt-modal-bg-color;
+      }
+
+      &.disabled {
+        opacity: 0.5;
+      }
+
+      .modal-footer {
+        left: 0;
+        width: 700px;
+        max-width: none;
+      }
+    }
+
+  }
+
+}

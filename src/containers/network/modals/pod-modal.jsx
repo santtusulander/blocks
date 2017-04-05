@@ -10,6 +10,7 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -17,6 +18,8 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
+import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -26,11 +29,15 @@ import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'
 
+import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
+
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
-
-    this.checkforNodes = this.checkforNodes.bind(this)
+    this.notificationTimeout = null
 
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
@@ -54,7 +61,7 @@ class PodFormContainer extends React.Component {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
       footprintId: null,
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
@@ -77,8 +84,9 @@ class PodFormContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { brand, accountId } = nextProps
 
-    if (this.props.accountId !== nextProps.accountId)
+    if (this.props.accountId !== nextProps.accountId) {
       this.props.fetchFootprints({ brand, account: accountId })
+    }
   }
 
   initFootprints() {
@@ -89,7 +97,7 @@ class PodFormContainer extends React.Component {
       .then(() => {
         const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
           const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: unknown.toLower(), name: unknown }
+          return fp ? fp : { id: `unknown-${id}`, name: unknown }
         })
 
         reinitForm({
@@ -99,7 +107,7 @@ class PodFormContainer extends React.Component {
       });
   }
 
-  refreshFootprints(){
+  refreshFootprints() {
     const { UIFootprints, footprints, setFormVal } = this.props
 
     const footprintIDs = UIFootprints.map(fp => fp.id)
@@ -124,9 +132,15 @@ class PodFormContainer extends React.Component {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
     const { bgp_router_ip, bgp_as_number, bgp_password } = values
-    if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
-    if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
-    if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
+    if (bgp_router_ip) {
+      setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
+    }
+    if (bgp_as_number) {
+      setFormVal('UIsp_bgp_router_as', bgp_as_number)
+    }
+    if (bgp_password) {
+      setFormVal('UIsp_bgp_router_password', bgp_password)
+    }
   }
 
   clearBGP() {
@@ -158,6 +172,11 @@ class PodFormContainer extends React.Component {
     this.setState({ showDeleteModal })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
+  }
   /**
    * hander for save
    */
@@ -165,23 +184,23 @@ class PodFormContainer extends React.Component {
 
     const data = {
       pod_name: values.UIName,
-      pod_type: values.pod_type
+      pod_type: values.pod_type,
+      status: values.status
     }
 
     const service = {
-      cloud_lookup_id: values.UICloudLookUpId,
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseFloat(values.UIProviderWeight)
-      //TODO:find out if Ip List is needed
-      //ip_list: values.UIIpList.map( ip => ip.label )
+      provider_weight: parseFloat(values.UIProviderWeight),
+      ip_list: values.UIIpList.map(ip => ip.label),
+      salt_roles: [values.UISaltRole]
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
       service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
       service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as) || 0
-      service.sp_bgp_router_password = values.UIp_bgp_router_password
+      service.sp_bgp_router_password = values.UIsp_bgp_router_password
 
       data.footprints = []
     } else {
@@ -190,7 +209,8 @@ class PodFormContainer extends React.Component {
       service.sp_bgp_router_password = undefined
 
       //Get footprint IDs
-      data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
+      const UIFootprints = values.UIFootprints || []
+      data.footprints = UIFootprints.filter(fp => !fp.removed || fp.removed === false).map(fp => fp.id)
     }
 
     data.services = [service]
@@ -204,19 +224,27 @@ class PodFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.pod_name
+    if (edit) {
+      params.id = values.pod_name
+    }
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then((resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({ '_error': resp.error.data.message })
-        }
+      .then(() => {
+
+        const message = edit ? <FormattedMessage id="portal.network.podForm.updatePod.status"/> :
+         <FormattedMessage id="portal.network.podForm.createPod.status"/>
+        this.showNotification(message)
 
         //Close modal
         this.props.onCancel();
+
+      }).catch((resp) => {
+
+        // Throw error => will be shown inside form
+        throw new SubmissionError({ '_error': resp.data.message })
+
       })
   }
 
@@ -234,21 +262,21 @@ class PodFormContainer extends React.Component {
     }
 
     return this.props.onDelete(params)
-      .then((resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({ '_error': resp.error.data.message })
+      .then(() => {
+        // Unselect POD item
+        if (this.props.selectedEntityId === podId) {
+          this.props.handleSelectedEntity(podId)
         }
+
+        this.showNotification(<FormattedMessage id="portal.network.podForm.deletePod.status"/>)
 
         //Close modal
         this.props.onCancel();
-      })
-  }
-
-  checkforNodes() {
-    //TODO: this should check weather the current POD has Nodes or not
-    // and return a boolean
-    return false
+      },
+    )
+    .catch(resp => {
+      throw new SubmissionError({ '_error': resp.data.message })
+    })
   }
 
   render() {
@@ -259,11 +287,14 @@ class PodFormContainer extends React.Component {
       UIDiscoveryMethod,
       pop,
       podId,
+      allowModify,
 
       group,
       //account,
+      hasNodes,
       network,
-      footprints
+      footprints,
+      footprintPermissions
     } = this.props
 
     const {showDeleteModal} = this.state
@@ -274,6 +305,11 @@ class PodFormContainer extends React.Component {
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
 
     const subTitle = `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} ${edit ? ' / ' + initialValues.pod_name : ''}`
+
+    let footprintIATACode = pop.get('iata')
+    if (footprintIATACode) {
+      footprintIATACode = footprintIATACode.toLowerCase()
+    }
 
     return (
       <div>
@@ -287,8 +323,9 @@ class PodFormContainer extends React.Component {
 
           <PodForm
             footprints={footprints}
-            hasNodes={this.checkforNodes()}
+            hasNodes={hasNodes}
             initialValues={initialValues}
+            readOnly={!allowModify}
 
             onSave={(values) => this.onSave(edit, values)}
             onDelete={() => this.onToggleDeleteModal(true)}
@@ -304,6 +341,7 @@ class PodFormContainer extends React.Component {
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
+            footprintPermissions={footprintPermissions}
           />
 
         </SidePanel>
@@ -312,10 +350,11 @@ class PodFormContainer extends React.Component {
         <FootprintFormContainer
           accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
-          location={pop.get('iata').toLowerCase()}
+          location={footprintIATACode}
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
+          footprintPermissions={footprintPermissions}
         />
         }
 
@@ -324,17 +363,19 @@ class PodFormContainer extends React.Component {
           onCancel={this.hideRoutingDaemonModal}
           onSave={this.saveBGP}
           show={true}
+          readOnly={!allowModify}
         />
         }
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
             verifyDelete={true}
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={()=>{
+            onSubmit={() => {
               this.onToggleDeleteModal(false)
               this.onDelete(podId)
               onCancel()
@@ -356,15 +397,19 @@ PodFormContainer.propTypes = {
   UIFootprints: PropTypes.array,
 
   accountId: PropTypes.string,
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchFootprints: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPop: PropTypes.func,
+  footprintPermissions: PropTypes.object,
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
+  hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
@@ -378,7 +423,10 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
-  setFormVal: PropTypes.func
+  selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  setFormVal: PropTypes.func,
+  showNotification: PropTypes.func
+
 }
 
 PodFormContainer.defaultProps = {
@@ -395,10 +443,21 @@ const mapStateToProps = (state, ownProps) => {
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
 
+  const roles = getRoles(state)
+  const currentUser = state.user.get('currentUser')
+
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
-  const initialValues = edit && pod ? pod.toJS() : {}
+  const defaultValues = {
+    UIRequestFwdType: 'on_net',
+    UILbMethod: 'gslb',
+    pod_type: 'sp_edge',
+    UIProviderWeight: 0.5,
+    UISaltRole: 'cache'
+  }
+
+  const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
     && initialValues
@@ -411,13 +470,19 @@ const mapStateToProps = (state, ownProps) => {
     })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+  initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map(ip => {
+    return {id: ip, label: ip} 
+  }).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD),
     pop,
     pod,
 
@@ -443,6 +508,7 @@ const mapDispatchToProps = (dispatch) => {
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
     setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
+    showNotification: (message) => dispatch(changeNotification(message)),
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }

@@ -58,6 +58,42 @@ const fakeLinks = [{
   url: 'bbb'
 }]
 
+const fakeStorageItems = Immutable.fromJS([{
+  id: 1,
+  name: 'Media Storage',
+  location: 'Frankfurt',
+  currentUsage: '450 GB',
+  usageQuota: '900 GB',
+  maxTransfer: '75.00 TB',
+  minTransfer: '11.00 TB',
+  avgTransfer: '34.00 TB'
+},{
+  id: 2,
+  name: 'Bangkok Storage',
+  location: 'San Jose',
+  currentUsage: '1.2 TB',
+  usageQuota: '2 TB',
+  maxTransfer: '15.00 TB',
+  minTransfer: '2.00 TB',
+  avgTransfer: '7.00 TB'
+},{
+  id: 3,
+  name: 'Asia Storage',
+  location: 'Hong Kong',
+  currentUsage: '900 GB',
+  usageQuota: '3 TB',
+  maxTransfer: '10.00 TB',
+  minTransfer: '3.00 TB',
+  avgTransfer: '6.00 TB'
+}])
+
+const fakeParams = {
+  brand: 'brand',
+  account: 'account',
+  group: 'group'
+}
+
+
 describe('ContentItems', () => {
   it('should exist', () => {
     let contentItems = shallow(
@@ -81,6 +117,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.is('Content')).toBeTruthy();
@@ -107,6 +144,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('AnalyticsLink').length).toBe(1);
@@ -132,6 +170,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('AnalyticsLink').length).toBe(0);
@@ -156,6 +195,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('NoContentItems').length).toBe(1);
@@ -180,9 +220,40 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('ContentItem').first().prop('isChart')).toBe(true);
   });
+})
 
+describe('ContentItems with Storages', () => {
+  it('should exist', () => {
+    let contentItems = shallow(
+      <ContentItems
+        account={'account'}
+        activeAccount={Immutable.Map()}
+        activeGroup={Immutable.Map()}
+        analyticsURLBuilder={jest.fn()}
+        brand={'brand'}
+        breadcrumbs={fakeLinks}
+        className="hosts-container"
+        configURLBuilder={jest.fn()}
+        contentItems={fakeItems}
+        storageContentItems={fakeStorageItems}
+        fetching={true}
+        fetchingMetrics={true}
+        headerText={fakeHeader}
+        metrics={fakeMetrics}
+        nextPageURLBuilder={jest.fn()}
+        showAnalyticsLink={true}
+        sortDirection={1}
+        sortItems={jest.fn()}
+        toggleChartView={jest.fn()}
+        type='property'
+        params={fakeParams}
+        viewingChart={true}/>
+    );
+    expect(contentItems.is('Content')).toBeTruthy();
+  })
 })

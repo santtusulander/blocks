@@ -38,7 +38,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters ||
+    if (this.props.filters !== nextProps.filters ||
         changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
@@ -61,7 +61,6 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
-    this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.trafficActions.startFetching()
@@ -86,7 +85,7 @@ class AnalyticsTabTraffic extends React.Component {
       if (activeHostConfiguredName) {
         totalsOpts.property = activeHostConfiguredName
       }
-    } else if(params.group) {
+    } else if (params.group) {
       this.setState({ metricKey: 'groupMetrics' })
       totalsOpts = {
         account: params.account,
@@ -95,7 +94,7 @@ class AnalyticsTabTraffic extends React.Component {
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
       }
-    } else if(params.account) {
+    } else if (params.account) {
       this.setState({ metricKey: 'accountMetrics' })
       totalsOpts = {
         account: params.account,
@@ -114,7 +113,7 @@ class AnalyticsTabTraffic extends React.Component {
       const dateSpan = fetchOpts.endDate - fetchOpts.startDate + 1
       let startDate = fetchOpts.startDate - dateSpan
       let endDate = fetchOpts.endDate - dateSpan
-      if(dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
+      if (dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
         startDate = Number(moment(fetchOpts.startDate * 1000).subtract(1, 'months').format('X'))
         endDate = startDate + dateSpan
       }
@@ -128,9 +127,9 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   formatTotals(value) {
-    if(this.props.filters.get('recordType') === 'transfer_rates') {
+    if (this.props.filters.get('recordType') === 'transfer_rates') {
       return formatBitsPerSecond(value, 2)
-    } else if(this.props.filters.get('recordType') === 'requests') {
+    } else if (this.props.filters.get('recordType') === 'requests') {
       return numeral(value).format('0,0')
     }
   }
@@ -170,7 +169,6 @@ class AnalyticsTabTraffic extends React.Component {
         peakTraffic={this.formatTotals(peakTraffic)}
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
-        totalEgress={this.props.totalEgress}
         getCityData={this.getCityData}
         theme={this.props.theme}
         mapBounds={this.props.mapBounds}
@@ -190,7 +188,6 @@ AnalyticsTabTraffic.propTypes = {
   mapboxActions: React.PropTypes.object,
   params: React.PropTypes.object,
   theme: React.PropTypes.string,
-  totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
   trafficByCity: React.PropTypes.instanceOf(Immutable.List),
@@ -218,7 +215,6 @@ function mapStateToProps(state) {
     trafficByTimeComparison: state.traffic.getIn(['byTimeComparison', 'details']),
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress'),
     theme: state.ui.get('theme'),
     mapBounds: state.mapbox.get('mapBounds'),
     mapZoom: state.mapbox.get('mapZoom')

@@ -18,7 +18,7 @@ export function mapboxMapBounds(state, action) {
   })
 }
 
-export function mapboxMapZoom(state, action){
+export function mapboxMapZoom(state, action) {
   return state.merge({
     mapZoom: action.payload
   })

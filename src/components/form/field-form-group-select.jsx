@@ -4,10 +4,23 @@ import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 import Select from '../select.jsx'
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupSelect  = ({ addonAfter, addonBefore, input, options, numericValues, className, disabled, meta, meta: { touched, error }, label, required = true }) => {
+const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
+                                 input, options, numericValues, className,
+                                 disabled, meta, meta: { touched, error },
+                                 label, emptyLabel, required = true, unselectedValue }) => {
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
-      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+      {label &&
+        <ControlLabel>
+          {label}{required && ' *'}
+          {addonAfterLabel &&
+            <InputGroup.Addon className="addon-after-label">
+              {addonAfterLabel}
+            </InputGroup.Addon>
+          }
+        </ControlLabel>
+      }
+
       <InputGroup>
         { addonBefore &&
           <InputGroup.Addon bsClass="input-group-addon addon-before">
@@ -20,9 +33,13 @@ const FieldFormGroupSelect  = ({ addonAfter, addonBefore, input, options, numeri
           numericValues={numericValues}
           disabled={disabled}
           className={className}
-          onSelect={e => {input.onChange(e)}}
+          onSelect={e => {
+            input.onChange(e)
+          }}
           onTouch={e => input.onBlur(e)}
           options={options}
+          emptyLabel={emptyLabel}
+          unselectedValue={unselectedValue}
         />
 
         { addonAfter &&
@@ -42,15 +59,18 @@ const FieldFormGroupSelect  = ({ addonAfter, addonBefore, input, options, numeri
 FieldFormGroupSelect.displayName = 'FieldFormGroupSelect'
 FieldFormGroupSelect.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   input: PropTypes.object,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   numericValues: PropTypes.bool,
   options: PropTypes.array,
-  required: PropTypes.bool
+  required: PropTypes.bool,
+  unselectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
 export default FieldFormGroupSelect

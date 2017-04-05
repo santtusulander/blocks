@@ -5,7 +5,7 @@ import { Field } from 'redux-form'
 
 const ActionItems = ({ disableUndo, editAction, fields }) =>
  (<div>
-    {fields.map((member, i, fields) => (
+    {fields.map((member, i, field) => (
       <Field
         key={i}
         label={fields.get(i).actionItemName}
@@ -14,7 +14,7 @@ const ActionItems = ({ disableUndo, editAction, fields }) =>
         required={false}
         component={ActionItem}
         props={{
-          onRemove: disableUndo ? () => fields.remove(i) : null,
+          onRemove: disableUndo ? () => field.remove(i) : null,
           editAction: () => editAction(i)
         }}/>)
       )

@@ -11,8 +11,8 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import SupportToolModal from './support-tool-modal'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
 
-import IconServerValidation from '../../../../components/icons/icon-server-validation'
-import IconServerError from '../../../../components/icons/icon-server-error'
+import IconServerValidation from '../../../../components/shared/icons/icon-server-validation'
+import IconServerError from '../../../../components/shared/icons/icon-server-error'
 
 class ModalServerValidation extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class ModalServerValidation extends React.Component {
   }
   componentWillReceiveProps(newProps) {
     clearTimeout(this.loadingTimeout)
-    if(newProps.showDetails) {
+    if (newProps.showDetails) {
       this.setState({
         showLoading: true
       })

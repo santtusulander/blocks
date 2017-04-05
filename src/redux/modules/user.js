@@ -1,9 +1,21 @@
-import {createAction, handleActions} from 'redux-actions'
+import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
-import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
-import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
+import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
+         PAGINATION_MOCK, mapReducers,
+         parseResponseData } from '../util'
+import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
+
+import {
+  getUserToken,
+  setUserToken,
+  deleteUserToken,
+  setTokenMeta,
+  deleteTokenMeta,
+  setUserName,
+  deleteUserName
+} from '../../util/local-storage'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -22,18 +34,18 @@ const USER_PASSWORD_RESET_TOKEN_INFO = 'USER_PASSWORD_RESET_TOKEN_INFO'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
 const DESTROY_STORE = 'DESTROY_STORE'
+const USER_ACCESS_KEY_RECEIVED = 'USER_ACCESS_KEY_RECEIVED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
-//
-//const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
   fetching: false,
   loggedIn: false,
-  username: null
+  username: null,
+  storageAccessToken: null
 })
 
 // REDUCERS
@@ -62,7 +74,8 @@ export function updateFailure(state) {
 }
 
 export function updatePasswordSuccess(state, action) {
-  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+  setUserToken(action.payload.token)
+
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
@@ -70,10 +83,10 @@ export function updatePasswordSuccess(state, action) {
   })
 }
 
-export function userLoggedInSuccess(state, action){
+export function userLoggedInSuccess(state, action) {
   switch (action.payload.status) {
     case 200:
-      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+      setUserToken(action.payload.token)
       axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
       return state.merge({
@@ -91,7 +104,7 @@ export function userLoggedInSuccess(state, action){
   }
 }
 
-export function userLoggedInFailure(){
+export function userLoggedInFailure() {
   return emptyUser
 }
 
@@ -123,18 +136,20 @@ export function fetchAllFailure(state) {
   })
 }
 
-export function userLoggedOutSuccess(state){
-  localStorage.removeItem('EricssonUDNUserToken')
+export function userLoggedOutSuccess(state) {
+  deleteUserToken()
+  deleteTokenMeta()
+
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.merge({'loggedIn': false, 'fetching': false})
 }
 
-export function userStartFetch(state){
+export function userStartFetch(state) {
   return state.set('fetching', true)
 }
 
-export function userFinishFetch(state){
+export function userFinishFetch(state) {
   return state.set('fetching', false)
 }
 
@@ -163,27 +178,27 @@ export function deleteUserFailure(state) {
   return state
 }
 
-export function userTokenChecked(state, action){
-  if(action.payload && action.payload.token) {
-    localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+export function userTokenChecked(state, action) {
+  if (action.payload && action.payload.token) {
+    setUserToken(action.payload.token)
+    setTokenMeta(action.payload.tokenMeta)
+
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
-  }
-  else {
-    localStorage.removeItem('EricssonUDNUserToken')
+  } else {
+    deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
   }
 }
 
-export function userNameSave(state, action){
-  if(action.payload) {
-    localStorage.setItem('EricssonUDNUserName', action.payload)
-  }
-  else {
-    localStorage.removeItem('EricssonUDNUserName')
+export function userNameSave(state, action) {
+  if (action.payload) {
+    setUserName(action.payload)
+  } else {
+    deleteUserName()
   }
   return state.set('username', action.payload)
 }
@@ -228,8 +243,16 @@ export function resetPasswordTokenInfoFailure(state) {
   })
 }
 
+export function getAccessKeySuccess(state, action) {
+  return state.set('storageAccessToken', action.payload)
+}
+
+export function getAccessKeyFailure(state) {
+  return state.set('storageAccessToken', null)
+}
+
 export default handleActions({
-  USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
+  USER_LOGGED_IN: mapReducers(userLoggedInSuccess, userLoggedInFailure),
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_FINISH_FETCH: userFinishFetch,
@@ -244,7 +267,8 @@ export default handleActions({
   [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
   USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
-  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure)
+  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure),
+  USER_ACCESS_KEY_RECEIVED: mapReducers(getAccessKeySuccess, getAccessKeyFailure)
 }, emptyUser)
 
 /*
@@ -334,12 +358,27 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
 })
 
 export const logOut = createAction(USER_LOGGED_OUT, () => {
-  const token = localStorage.getItem('EricssonUDNUserToken')
+  const token = getUserToken()
 
   if (token) {
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
+  }
+  return Promise.resolve({ message: 'Token not found' })
+})
+
+export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brandId, accountId, groupId, storageId) => {
+  const token = getUserToken()
+  const axiosInstanse = axios.create({
+    headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
+  })
+
+  if (storageId && token && groupId) {
+    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`)
+                        .then(parseResponseData)
+  } else {
+    return Promise.reject({ data: { message: "No token" } })
   }
 })
 
@@ -348,22 +387,28 @@ export const startFetching = createAction(USER_START_FETCH)
 export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  const token = localStorage.getItem('EricssonUDNUserToken')
-  if(token) {
+  const token = getUserToken()
+  if (token) {
     return loginAxios.get(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
-      if(res) {
+      //TODO: UDNP-2357 Should we save services object?
+      if (res) {
         return {
           token: token,
-          username: res.data.username
+          username: res.data.username,
+          tokenMeta: {
+            expires_at: res.data.expires_at,
+            issued_at: res.data.issued_at,
+            validity_duration: res.data.validity_duration
+          }
         }
       }
     })
   }
 
-  return Promise.reject({data:{message:"No token"}})
+  return Promise.reject({data: {message: "No token"}})
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
@@ -381,13 +426,13 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     query = `?brand_id=${brandId}`
   }
 
-  return axios.get(`${BASE_URL_AAA}/users${query}`)
-    .then(parseResponseData)
+  return axios.get(`${BASE_URL_AAA}/users${query}`, PAGINATION_MOCK)
+    .then(resp => resp.data.data)
 })
 
 export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
-  return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`)
-    .then(parseResponseData)
+  return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`, PAGINATION_MOCK)
+    .then(resp => resp.data.data)
   ))
   .then(allUsers => fromJS(allUsers).flatten(true))
 })
@@ -458,7 +503,7 @@ export const resetPassword = createAction(USER_PASSWORD_RESET, (email, password,
  * @param  {[type]} state [description]
  * @return {[type]}       [description]
  */
-export const getUserRoles = ( state ) => {
+export const getUserRoles = (state) => {
   return state.getIn(['roles'])
 }
 
@@ -467,8 +512,10 @@ export const getUserRoles = ( state ) => {
  * @param  {state}  currentUser state
  * @return {Boolean}
  */
-export const isUdnAdmin = ( state ) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
+export const isUdnAdmin = (state) => {
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {
+    return true
+  }
 
   return false
 }

@@ -19,15 +19,16 @@ import FilterVideo from '../analysis/filters/video.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 import StatusCodes from './analytics-status-codes'
+import FilterStorageType from '../analysis/filters/storage-type'
 
-function getToggledValues( currentValues, toggleVal) {
+function getToggledValues(currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
-    return currentValues.filter( (val ) => {
+    return currentValues.filter((val) => {
       return val.toLowerCase() !== toggleVal.toLowerCase()
     })
   }
 
-  return currentValues.push( toggleVal )
+  return currentValues.push(toggleVal)
 }
 
 const AnalyticsFilters = (props) => {
@@ -125,7 +126,7 @@ const AnalyticsFilters = (props) => {
             toggleFilter={val => {
               props.onFilterChange(
                 'onOffNet',
-                getToggledValues( props.filters.get('onOffNet'), val)
+                getToggledValues(props.filters.get('onOffNet'), val)
               )
             }}
           />
@@ -141,7 +142,7 @@ const AnalyticsFilters = (props) => {
             toggleServiceType={val => {
               props.onFilterChange(
                 'serviceTypes',
-                getToggledValues( props.filters.get('serviceTypes'), val)
+                getToggledValues(props.filters.get('serviceTypes'), val)
               )
             }}
           />
@@ -180,6 +181,19 @@ const AnalyticsFilters = (props) => {
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
             onChange={values => props.onFilterChange('statusCodes', values.toJS())}/>
+        </div>
+      }
+
+      {props.showFilters.includes('storageType') &&
+        <div className='action'>
+          <FilterStorageType
+            storageType={props.filters.get('storageType')}
+            toggleStorageType={val => {
+              props.onFilterChange(
+                'storageType', val
+              )
+            }}
+          />
         </div>
       }
 

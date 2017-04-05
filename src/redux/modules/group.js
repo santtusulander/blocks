@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {BASE_URL_AAA, mapReducers} from '../util'
+import {BASE_URL_AAA, PAGINATION_MOCK, mapReducers} from '../util'
 import { getServicePermissions } from '../../util/services-helpers'
 
 const GROUP_CREATED = 'GROUP_CREATED'
@@ -127,7 +127,7 @@ export const createGroup = createAction(GROUP_CREATED, (brand, account, data) =>
     }
   })
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   })
@@ -143,16 +143,16 @@ export const deleteGroup = createAction(GROUP_DELETED, (brand, account, id) => {
 export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
 })
 
 export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -165,7 +165,7 @@ export const updateGroup = createAction(GROUP_UPDATED, (brand, account, id, grou
     }
   })
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   })

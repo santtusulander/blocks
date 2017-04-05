@@ -33,6 +33,9 @@ import {
 import SectionContainer from '../components/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
 import BarChart from '../components/charts/bar-chart'
+import StackedAreaChart from '../components/charts/stacked-area-chart'
+import LineAreaComposedChart from '../components/charts/line-area-composed-chart'
+import LineChart from '../components/charts/line-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import SelectorComponent from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
@@ -50,57 +53,78 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
-import FileUploadArea from '../components/file-upload.jsx'
+import CsvUploadArea from '../components/network/csv-upload'
+import TimePicker from '../components/time-picker'
 import Typeahead from '../components/typeahead'
+import StorageKPI from '../components/storage/storage-kpi'
+import StorageItemChart from '../components/content/storage/storage-item-chart'
+import SortableMultiSelector from '../components/sortable-multi-selector'
+import FileUploadStatus from '../components/storage/file-upload-status-container.jsx'
+import PolicyWeight from '../components/configuration/policy-weight'
 
-import IconAccount       from '../components/icons/icon-account'
-import IconAdd           from '../components/icons/icon-add'
-import IconAlerts        from '../components/icons/icon-alerts'
-import IconAnalytics     from '../components/icons/icon-analytics'
-import IconArrowDown     from '../components/icons/icon-arrow-down'
-import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
-import IconArrowRight     from '../components/icons/icon-arrow-right'
-import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
-import IconArrowLeft     from '../components/icons/icon-arrow-left'
-import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
-import IconArrowUp       from '../components/icons/icon-arrow-up'
-import IconCaretRight    from '../components/icons/icon-caret-right'
-import IconCaretDown     from '../components/icons/icon-caret-down'
-import IconChart         from '../components/icons/icon-chart'
-import IconCheck         from '../components/icons/icon-check'
-import IconChevronRight  from '../components/icons/icon-chevron-right'
-import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
-import IconClose         from '../components/icons/icon-close'
-import IconComments      from '../components/icons/icon-comments'
-import IconConfiguration from '../components/icons/icon-configuration'
-import IconContent       from '../components/icons/icon-content'
-import IconDelete        from '../components/icons/icon-delete'
-import IconEdit          from '../components/icons/icon-edit'
-import IconEmail         from '../components/icons/icon-email'
-import IconEricsson      from '../components/icons/icon-ericsson'
-import IconExport        from '../components/icons/icon-export'
-import IconEye           from '../components/icons/icon-eye'
-import IconHeaderCaret   from '../components/icons/icon-header-caret'
-import IconIncident      from '../components/icons/icon-incident'
-import IconInfo          from '../components/icons/icon-info'
-import IconIntegration   from '../components/icons/icon-integration'
-import IconItemChart     from '../components/icons/icon-item-chart'
-import IconItemList      from '../components/icons/icon-item-list'
-import IconPassword      from '../components/icons/icon-password'
-import IconProblem       from '../components/icons/icon-problem'
-import IconQuestion      from '../components/icons/icon-question'
-import IconQuestionMark  from '../components/icons/icon-question-mark'
-import IconSecurity      from '../components/icons/icon-security'
-import IconSelectCaret   from '../components/icons/icon-select-caret'
-import IconServices      from '../components/icons/icon-services'
-import IconSupport       from '../components/icons/icon-support'
-import IconTask          from '../components/icons/icon-task'
-import IconTrash         from '../components/icons/icon-trash'
-import IconFile          from '../components/icons/icon-file'
+import IconAccount       from '../components/shared/icons/icon-account'
+import IconAdd           from '../components/shared/icons/icon-add'
+import IconAlerts        from '../components/shared/icons/icon-alerts'
+import IconAnalytics     from '../components/shared/icons/icon-analytics'
+import IconArrowDown     from '../components/shared/icons/icon-arrow-down'
+import IconArrowLgDown   from '../components/shared/icons/icon-arrow-lg-down'
+import IconArrowRight     from '../components/shared/icons/icon-arrow-right'
+import IconArrowLgRight  from '../components/shared/icons/icon-arrow-lg-right'
+import IconArrowLeft     from '../components/shared/icons/icon-arrow-left'
+import IconArrowLgUp     from '../components/shared/icons/icon-arrow-lg-up'
+import IconArrowUp       from '../components/shared/icons/icon-arrow-up'
+import IconBrowse        from '../components/shared/icons/icon-browse'
+import IconCaretRight    from '../components/shared/icons/icon-caret-right'
+import IconCaretDown     from '../components/shared/icons/icon-caret-down'
+import IconChart         from '../components/shared/icons/icon-chart'
+import IconCheck         from '../components/shared/icons/icon-check'
+import IconChevronRight  from '../components/shared/icons/icon-chevron-right'
+import IconChevronRightBold from '../components/shared/icons/icon-chevron-right-bold'
+import IconClose         from '../components/shared/icons/icon-close'
+import IconContent       from '../components/shared/icons/icon-content'
+import IconComments      from '../components/shared/icons/icon-comments'
+import IconConfiguration from '../components/shared/icons/icon-configuration'
+import IconClock         from '../components/shared/icons/icon-clock'
+import IconDelete        from '../components/shared/icons/icon-delete'
+import IconEdit          from '../components/shared/icons/icon-edit'
+import IconEmail         from '../components/shared/icons/icon-email'
+import IconEricsson      from '../components/shared/icons/icon-ericsson'
+import IconExport        from '../components/shared/icons/icon-export'
+import IconEye           from '../components/shared/icons/icon-eye'
+import IconHeaderCaret   from '../components/shared/icons/icon-header-caret'
+import IconIncident      from '../components/shared/icons/icon-incident'
+import IconInfo          from '../components/shared/icons/icon-info'
+import IconIntegration   from '../components/shared/icons/icon-integration'
+import IconItemChart     from '../components/shared/icons/icon-item-chart'
+import IconItemList      from '../components/shared/icons/icon-item-list'
+import IconNetwork       from '../components/shared/icons/icon-network'
+import IconPassword      from '../components/shared/icons/icon-password'
+import IconProblem       from '../components/shared/icons/icon-problem'
+import IconQuestion      from '../components/shared/icons/icon-question'
+import IconQuestionMark  from '../components/shared/icons/icon-question-mark'
+import IconSecurity      from '../components/shared/icons/icon-security'
+import IconSelectCaret   from '../components/shared/icons/icon-select-caret'
+import IconServices      from '../components/shared/icons/icon-services'
+import IconSupport       from '../components/shared/icons/icon-support'
+import IconTask          from '../components/shared/icons/icon-task'
+import IconTrash         from '../components/shared/icons/icon-trash'
+import IconFile          from '../components/shared/icons/icon-file'
+import IconFolder        from '../components/shared/icons/icon-folder'
 import Mapbox            from '../components/map/mapbox'
 
-import { formatBytes, separateUnit } from '../util/helpers'
+import { formatBytes, formatBitsPerSecond, separateUnit } from '../util/helpers'
+import { stackedBarChartData,
+         singleBarChartData,
+         lineChartData,
+         twoStackedComparisonAreaData as AreaChartData,
+         nonStackedAreaDataset,
+         stackedAreaDataset,
+         comparisonAreaDataset,
+         twoStackedAreaDataset,
+         composedChartData
+  } from './__mocks__/chart-data'
 import DateRanges from '../constants/date-ranges'
+import country_list from '../constants/country-list'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1' },
@@ -141,7 +165,9 @@ class Styleguide extends React.Component {
         'link9'
       ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
-      numberInputValue: 100
+      numberInputValue: 100,
+      sortableMultiSelectorItems: Immutable.List([1, 2]),
+      timePickerTime: moment().utc()
     }
   }
 
@@ -204,79 +230,6 @@ class Styleguide extends React.Component {
       }
     }
 
-    const stackedBarChartData = [
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905,
-        "onNetHttps": 27260875504858,
-        "offNetHttp": 16598076780724,
-        "offNetHttps": 6941781887919
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      }
-    ]
-
-    const singleBarChartData = [
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      }
-    ]
-
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_on || 0,
@@ -336,12 +289,12 @@ class Styleguide extends React.Component {
       }
     ])
 
-    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
-    let totalDatasetValue = totalDatasetValueOutput.value
-    let totalDatasetUnit = totalDatasetValueOutput.unit
+    const totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
+    const totalDatasetValue = totalDatasetValueOutput.value
+    const totalDatasetUnit = totalDatasetValueOutput.unit
 
-    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
-    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
+    const datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    const datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
 
     return (
       <div className="styleguide-page">
@@ -400,7 +353,9 @@ class Styleguide extends React.Component {
                 ]}/>}
             </SectionContainer>
             </Row>
+
             <hr />
+
             <Row>
               <label>Normal barchart</label>
               <SectionContainer className="analysis-chart-container">
@@ -411,6 +366,87 @@ class Styleguide extends React.Component {
               </SectionContainer>
             </Row>
 
+            <hr/>
+
+            <Row>
+              <label>Line chart</label>
+              <SectionContainer className="analysis-by-time">
+                <LineChart
+                  data={lineChartData}
+                  dataKey="bits_per_second"
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={nonStackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Stacked area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={stackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={comparisonAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison chart for two stacked area</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={twoStackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Comparison chart composed with line chart </label>
+              <SectionContainer className="analysis-by-time">
+                <LineAreaComposedChart
+                  chartLabel="Oct 2016 Month To Date"
+                  data={composedChartData}
+                  keyLabel="Storage"
+                  valueFormatter={formatBitsPerSecond}
+                  comparisonKeyLabel="Comparison Storage"
+                  isComparison={true}
+                />
+              </SectionContainer>
+            </Row>
           <h1 className="page-header">Tabs</h1>
 
           <Tabs
@@ -484,7 +520,7 @@ class Styleguide extends React.Component {
               <FilterChecklistDropdown
                 options={filterCheckboxOptions}
                 value={this.state.filterCheckboxValue}
-                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})} />
+                onChange={(newVals) => this.setState({filterCheckboxValue: newVals})} />
             </div>
           </div>
 
@@ -785,7 +821,16 @@ class Styleguide extends React.Component {
                 options={[]}/>
             </Col>
           </Row>
-
+          <Row>
+            <Col xs={6}>
+              <label>Contry picker</label>
+              <Typeahead
+                placeholder={"Entry contry name, or 2 letter code ISO code"}
+                multiple={true}
+                onChange={() => null}
+                options={country_list}/>
+            </Col>
+          </Row>
           <h1 className="page-header">Month Picker</h1>
           <Row>
             <Col xs={6}>
@@ -939,6 +984,19 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Time Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <TimePicker
+                time={this.state.timePickerTime}
+                onChange={(time) => this.setState({ timePickerTime: time })} />
+            </Col>
+            <Col xs={8}>
+              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Side Panel</h1>
           <Button bsStyle="primary" onClick={() => this.setState({showSidePanel: true})}>Trigger Side Panel</Button>
           {this.state.showSidePanel &&
@@ -978,10 +1036,19 @@ class Styleguide extends React.Component {
           </DashboardPanels>
 
           <h1 className="page-header">Pagination</h1>
-          <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+          <Pagination
+            items={10}
+            maxButtons={5}
+            activePage={5}
+            prev={true}
+            next={true}
+            first={true}
+            last={true}
+            ellipsis={true}
+          />
 
-          <h1 className="page-header">Dropzone</h1>
-          <FileUploadArea
+          <h1 className="page-header">CsvUpload</h1>
+          <CsvUploadArea
             contentValidation={() => {
               return true
             }}
@@ -1002,7 +1069,6 @@ class Styleguide extends React.Component {
             height={600}
             />
 
-
           <h1 className="page-header">Network</h1>
 
           <NetworkItem
@@ -1012,6 +1078,138 @@ class Styleguide extends React.Component {
             onSelect={() => null}
             onEdit={() => null} />
 
+          <h1 className="page-header">Storage</h1>
+
+          <div style={{height: '600px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 01"
+              locations={["Hong Kong"]}
+              currentUsage={0}
+              estimate={100e12}
+              peak={0}
+              lastMonthUsage={0}
+              lastMonthEstimate={0}
+              lastMonthPeak={0} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 02"
+              locations={["Hong Kong"]}
+              currentUsage={80.2e12}
+              estimate={250e12}
+              peak={160e12}
+              lastMonthUsage={100e12}
+              lastMonthEstimate={210e12}
+              lastMonthPeak={160e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage very very very long name"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage={270e12}
+              estimate={300e12}
+              peak={380e12}
+              lastMonthUsage={240e12}
+              lastMonthEstimate={250e12}
+              lastMonthPeak={260e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 04"
+              locations={["Hong Kong", "Finland", "United States"]}
+              currentUsage={520e12}
+              estimate={500e12}
+              peak={600e12}
+              lastMonthUsage={470e12}
+              lastMonthEstimate={450e12}
+              lastMonthPeak={480e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 05"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage={270e12}
+              estimate={300e12}
+              peak={380e12}
+              lastMonthUsage={240e12}
+              lastMonthEstimate={250e12}
+              lastMonthPeak={260e12}
+              diameter={300} />
+
+          </div>
+
+          <h1 className="page-header">File Upload Status</h1>
+
+          <FileUploadStatus
+            inlineStyle={{position: 'static'}}
+            uploads={[
+              {
+                name: 'too long name for item being uploaded',
+                type: 'directory',
+                progress: 75
+              },
+              {
+                name: 'filename.mov',
+                type: 'file',
+                progress: 33
+              }
+            ]}
+          />
+
+          <h1 className="page-header">Storage KPI</h1>
+
+          <StorageKPI
+            chartData={[
+              {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
+              {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
+              {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
+              {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
+              {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
+              {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
+              {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
+              {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
+            ]}
+            chartDataKey='bytes'
+            currentValue={112}
+            gainPercentage={0.2}
+            locations={['San Jose', 'Frankfurt']}
+            peakValue={120}
+            referenceValue={100}
+            valuesUnit='tb'
+          />
+
+          <h1 className="page-header">Sortable Multi Selector</h1>
+
+          <SortableMultiSelector
+            label={'Items'}
+            options={[
+              {
+                label: 'Item 1',
+                value: 1
+              },
+              {
+                label: 'Item 2',
+                value: 2
+              },
+              {
+                label: 'Item 3',
+                value: 3
+              }
+            ]}
+            onChange={val => this.setState({ sortableMultiSelectorItems: Immutable.List(val) })}
+            value={this.state.sortableMultiSelectorItems}
+          />
+
+          <h1 className="page-header">Slider</h1>
+            <PolicyWeight secondaryProvider="CDN" onChange={() => {
+              // no-op
+            }} />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -1115,9 +1313,9 @@ class Styleguide extends React.Component {
             IconConfiguration
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
-            <IconContent />
+            <IconBrowse />
             <br />
-            IconContent
+            IconBrowse
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconDelete />
@@ -1238,6 +1436,26 @@ class Styleguide extends React.Component {
             <IconFile />
             <br />
             IconFile
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFolder />
+            <br />
+            IconFolder
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconClock />
+            <br />
+            IconClock
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconNetwork />
+            <br />
+            IconNetwork
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconContent />
+            <br />
+            IconContent
           </span>
         </div>
 

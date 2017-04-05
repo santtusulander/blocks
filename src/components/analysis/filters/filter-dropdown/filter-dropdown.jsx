@@ -1,9 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
-import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
-
-import './filter-dropdown.scss'
+import IconSelectCaret from '../../../../components/shared/icons/icon-select-caret.jsx'
 
 export class FilterDropdown extends React.Component {
   constructor(props) {
@@ -34,8 +32,8 @@ export class FilterDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.value
-    let filtered = this.props.options.filter(
+    const inputVal = this.refs.filterInput.value
+    const filtered = this.props.options.filter(
       option => option.get('label').toLowerCase().indexOf(inputVal) !== -1
     )
 
@@ -49,14 +47,14 @@ export class FilterDropdown extends React.Component {
 
     const { dropdownOpen, filteredResults, filterValue, selectedValue } = this.state
 
-    let label     = selectedValue ? selectedValue : 'Please Select'
+    const label     = selectedValue ? selectedValue : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
-    if(this.props.className) {
+    if (this.props.className) {
       className += ` ${this.props.className}`
     }
 
-    if(this.props.parent) {
+    if (this.props.parent) {
       className += ' has-parent'
     }
 

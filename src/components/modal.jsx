@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import classnames from 'classnames'
 
 import DefaultErrorBlock from './form/default-error-block'
 import FieldFormGroup from './form/field-form-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
-import IconClose from './icons/icon-close.jsx'
+import IconClose from './shared/icons/icon-close.jsx'
 
 class ModalWindow extends React.Component {
 
@@ -15,10 +16,37 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { error, cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
+    const {
+      auxiliaryButton,
+      cancel,
+      cancelButton,
+      children,
+      className,
+      closeButton,
+      closeButtonSecondary,
+      closeModal,
+      content,
+      continueButton,
+      deleteButton,
+      error,
+      handleSubmit,
+      intl,
+      invalid,
+      loading,
+      loginButton,
+      okButton,
+      onSubmit,
+      reloadButton,
+      secondaryButton,
+      stayButton,
+      submitButton,
+      submitting,
+      title,
+      verifyDelete
+    } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-window">
+      <Modal show={true} dialogClassName={classnames('modal-window', className)}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Header>
             <h1>{title}</h1>
@@ -35,14 +63,25 @@ class ModalWindow extends React.Component {
                 label={<FormattedMessage id="portal.deleteModal.validation.label" />}
                 name="modalField"
                 required={false}
-                inputRef={ref => this.deleteInput = ref}
+                inputRef={(ref) => {
+                  this.deleteInput = ref
+                  return this.deleteInput
+                }}
                 placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
                 component={FieldFormGroup}/>
             }
           </Modal.Body>
 
           <Modal.Footer>
-            <ButtonToolbar className="pull-right">
+            <ButtonToolbar className="pull-right modal-button-toolbar">
+              {secondaryButton &&
+              <Button
+                className="btn-secondary"
+                onClick={secondaryButton.handler}
+                >
+                {secondaryButton.text}
+              </Button>}
+
               {closeButton &&
               <Button
                 bsStyle="primary"
@@ -117,6 +156,14 @@ class ModalWindow extends React.Component {
                 type="submit">
                 <FormattedMessage id="portal.button.reload"/>
               </Button>}
+
+              {auxiliaryButton &&
+              <Button
+                className="btn-secondary pull-left"
+                onClick={auxiliaryButton.handler}
+                >
+                {auxiliaryButton.text}
+              </Button>}
             </ButtonToolbar>
           </Modal.Footer>
         </form>
@@ -134,9 +181,17 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
+  auxiliaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
+  className: PropTypes.string,
   closeButton: PropTypes.bool,
   closeButtonSecondary: PropTypes.bool,
   closeModal: PropTypes.bool,
@@ -153,6 +208,13 @@ ModalWindow.propTypes = {
   okButton: PropTypes.bool,
   onSubmit: PropTypes.func,
   reloadButton: PropTypes.bool,
+  secondaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   stayButton: PropTypes.bool,
   submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
@@ -163,7 +225,9 @@ ModalWindow.propTypes = {
   ...reduxFormPropTypes
 }
 
-ModalWindow.defaultProps = { onSubmit() {} }
+ModalWindow.defaultProps = {onSubmit() {
+  // no-op
+}}
 
 export default reduxForm({
   form: 'ModalWindow',

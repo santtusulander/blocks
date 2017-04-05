@@ -37,9 +37,17 @@
       width: 96%;
       margin-right: 0;
 
+      .configuration-rule-edit {
+        opacity: 0.5;
+      }
+
       .modal-content {
         display: flex;
         max-width: 100%;
+      }
+
+      .condition {
+        cursor: not-allowed;
       }
     }
   }
@@ -65,6 +73,7 @@
         rgba($ericsson-dark-blue, 0.7));
       background-size: 100%;
     }
+
     .light-theme & {
       color: $lt-text-color;
       background-color: $silver-20;
@@ -90,6 +99,7 @@
     .dark-theme & {
       background: rgba($pale-blue, 0.2);
     }
+
     .light-theme & {
       color: $white;
       background: $pale-blue;
@@ -139,6 +149,10 @@
       .light-theme & {
         border-bottom: 1px solid rgba($pale-blue, 0.2);
       }
+    }
+
+    .light-theme & {
+      color: $dt-text-color; //TODO: UDNP-3028 - Side panel uses old styles
     }
   }
 

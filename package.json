@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.4.0-b2",
+  "version": "1.5.0-b9",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -32,14 +32,14 @@
     "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^4.3.0",
-    "papaparse": "^4.1.2",
+    "papaparse": "^4.1.4",
     "preprocess": "^3.1.0",
     "preprocess-loader": "^0.2.0",
     "react-addons-test-utils": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
     "redux-devtools": "^3.3.1",
     "require-dir": "^0.3.0",
-    "sass-lint": "1.7.0",
+    "sass-lint": "^1.10.2",
     "sass-loader": "^4.1.0",
     "selenium-download": "^2.0.1",
     "source-map-loader": "^0.1.5",
@@ -51,16 +51,19 @@
   },
   "dependencies": {
     "axios": "^0.12.0",
+    "blueimp-md5": "^2.7.0",
     "classlist-polyfill": "^1.0.3",
     "classnames": "^2.2.5",
     "d3": "^3.5.14",
     "dotenv": "^2.0.0",
     "downloadjs": "^1.4.2",
+    "exports-loader": "^0.6.3",
     "filesize": "^3.3.0",
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.4",
     "intl": "^1.2.5",
+    "jssha": "^2.2.0",
     "leaflet": "^0.7.0",
     "moment": "^2.17.1",
     "multireducer": "^3.0.3",
@@ -74,8 +77,9 @@
     "react-addons-transition-group": "^15.4.2",
     "react-async-script": "^0.6.0",
     "react-bootstrap": "^0.30.6",
-    "react-bootstrap-typeahead": "^0.10.4",
+    "react-bootstrap-typeahead": "^1.2.0",
     "react-date-picker": "^5.3.28",
+    "react-datetime": "^2.8.8",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.9.1",
     "react-ga": "^2.1.2",
@@ -83,6 +87,7 @@
     "react-mapbox-gl": "^0.25.0",
     "react-redux": "^5.0.1",
     "react-router": "^2.5.2",
+    "react-sortable-hoc": "^0.5.0",
     "react-telephone-input": "^3.5.0",
     "recharts": "^0.20.2",
     "redux": "^3.3.1",
@@ -90,6 +95,7 @@
     "redux-auth-wrapper": "^0.9.0",
     "redux-form": "^6.5.0",
     "redux-promise": "^0.5.1",
+    "reselect": "^2.5.4",
     "topojson": "^1.6.22",
     "topojson-client": "^2.1.0",
     "uniqid": "^4.1.1",
@@ -113,7 +119,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/__stories__/",
-      "/src/locales/"
+      "/src/locales/",
+      "/src/assets/js/"
     ],
     "testPathDirs": [
       "src",
@@ -126,7 +133,8 @@
       ".*": "<rootDir>/node_modules/babel-jest"
     },
     "moduleNameMapper": {
-      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js",
+      "aspera-helpers": "<rootDir>/AsperaStub.js"
     },
     "setupFiles": [
       "<rootDir>/jest-env-setup.js"

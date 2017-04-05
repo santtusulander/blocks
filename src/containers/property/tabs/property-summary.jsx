@@ -107,14 +107,12 @@ class PropertySummary extends React.Component {
     if (params !== prevParams) {
       this.fetchHost(nextProps.params.property)
       fetch()
-    }
-    else if (newQuery.startDate !== oldQuery.startDate ||
+    } else if (newQuery.startDate !== oldQuery.startDate ||
       newQuery.endDate !== oldQuery.endDate) {
       this.setState({
         activeSlice: null
       }, fetch)
-    }
-    else if (this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+    } else if (this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       fetch()
     }
     this.measureContainers()
@@ -126,8 +124,8 @@ class PropertySummary extends React.Component {
   }
 
   getEmptyHourlyTraffic(startDate, endDate) {
-    let hourlyTraffic = [];
-    for (var t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
+    const hourlyTraffic = [];
+    for (let t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
       hourlyTraffic.push({
         bits_per_second: 0,
         timestamp: moment(t, 'X').toDate()
@@ -176,7 +174,7 @@ class PropertySummary extends React.Component {
       granularity: 'hour'
     }).then(this.props.visitorsActions.finishFetching)
 
-    if(!this.props.properties || !this.props.properties.size) {
+    if (!this.props.properties || !this.props.properties.size) {
       this.props.hostActions.fetchHosts(brand, account, group)
     }
     if (!this.props.activeAccount || !this.props.activeAccount.size) {
@@ -230,8 +228,7 @@ class PropertySummary extends React.Component {
             value={{ reason: action.payload.message }}
           />
         )
-      }
-      else {
+      } else {
         this.setState({ purgeActive: false })
         this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
       }
@@ -259,8 +256,7 @@ class PropertySummary extends React.Component {
         activeSlice: activeSlice,
         activeSliceX: xPos
       })
-    }
-    else {
+    } else {
       this.setState({ activeSlice: null })
     }
   }
