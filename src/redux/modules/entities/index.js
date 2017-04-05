@@ -123,6 +123,12 @@ const roleNames =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const propertyMetadata =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'propertyMetadata' }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
@@ -132,6 +138,7 @@ export default combineReducers({
   CISClusters,
   CISWorkflowProfiles,
   properties,
+  propertyMetadata,
   pops,
   networks,
   pods,
