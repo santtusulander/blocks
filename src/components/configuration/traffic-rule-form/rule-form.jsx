@@ -1,6 +1,6 @@
 /*eslint-disable react/no-multi-comp*/
 import React, { PropTypes } from 'react'
-import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 import { reduxForm } from 'redux-form'
@@ -90,7 +90,7 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
             <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
           </Col>
           <Col sm={5}>
-            <ButtonToolbar className="pull-right extra-margin-top" bsClass="btn-toolbar">
+            <div className="condition-actions-column">
               {hasMatches &&
               <Field
                 disabled={disabled}
@@ -100,11 +100,11 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
               <Button
                 disabled={disabled}
                 bsStyle="success"
-                className="btn-icon btn-add-new pull-right"
+                className="btn-icon btn-add-new"
                 onClick={chooseMatch}>
                 <IconAdd />
               </Button>
-            </ButtonToolbar>
+            </div>
           </Col>
         </Row>
 

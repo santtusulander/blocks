@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import FilterDateRange from '../analysis/filters/date-range'
 import ProviderTypes from '../../constants/provider-types'
 import {

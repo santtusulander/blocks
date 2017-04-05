@@ -97,6 +97,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             }
 
             <Tooltip
+              isAnimationActive={false}
               cursor={{stroke: black}}
               content={
                 <LineAreaComposedChartTooltip

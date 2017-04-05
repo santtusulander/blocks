@@ -23,7 +23,8 @@ describe('TokenAuthentication', () => {
       close,
       invalid: false,
       set: Map(),
-      intl: intlMaker()
+      intl: intlMaker(),
+      tokenValues: {}
     }
 
     component = shallow(<TokenAuthentication {...props} />)
@@ -61,7 +62,7 @@ describe('TokenAuthentication', () => {
 
   it('should handle submit click', () => {
     component.find('Button').at(1).simulate('click')
- 
+
     expect(handleSubmit.mock.calls.length).toBe(1)
   })
 

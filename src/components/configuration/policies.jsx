@@ -3,8 +3,8 @@ import { Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../shared/icons/icon-add.jsx'
@@ -200,6 +200,7 @@ class ConfigurationPolicies extends React.Component {
                 cancelActiveEditForm={this.cancelActiveMatchSetEditForm}
                 changeValue={this.props.changeValue}
                 config={config}
+                disabled={!!activeEditForm}
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}

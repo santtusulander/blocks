@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import * as accountActionCreators from '../redux/modules/account'
 
-import Content from '../components/layout/content'
+import Content from '../components/shared/layout/content'
 import ServicesPageHeader from '../components/services/services-page-header'
 
 export class Services extends React.Component {

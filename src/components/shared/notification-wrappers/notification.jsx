@@ -1,5 +1,5 @@
 import React from 'react'
-import IconClose from '../components/shared/icons/icon-close.jsx'
+import IconClose from '../../shared/icons/icon-close.jsx'
 
 class Notification extends React.Component {
   render() {

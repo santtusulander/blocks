@@ -4,7 +4,7 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 import { Map } from 'immutable'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import TruncatedTitle from '../truncated-title'
 

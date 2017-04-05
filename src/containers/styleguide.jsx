@@ -30,7 +30,7 @@ import {
   Table
 } from 'react-bootstrap';
 
-import SectionContainer from '../components/layout/section-container'
+import SectionContainer from '../components/shared/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
 import BarChart from '../components/charts/bar-chart'
 import StackedAreaChart from '../components/charts/stacked-area-chart'

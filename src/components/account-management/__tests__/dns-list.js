@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../../../constants/dns-record-types')
-jest.unmock('../../../components/layout/section-container')
-jest.unmock('../../../components/layout/section-header')
+jest.unmock('../../../components/shared/layout/section-container')
+jest.unmock('../../../components/shared/layout/section-header')
 jest.unmock('../../../components/action-buttons')
 jest.unmock('../../../components/shared/icon')
 jest.unmock('../../../components/shared/icons/icon-edit')

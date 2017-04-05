@@ -17,6 +17,7 @@ class ModalWindow extends React.Component {
 
   render() {
     const {
+      auxiliaryButton,
       cancel,
       cancelButton,
       children,
@@ -36,6 +37,7 @@ class ModalWindow extends React.Component {
       okButton,
       onSubmit,
       reloadButton,
+      secondaryButton,
       stayButton,
       submitButton,
       submitting,
@@ -71,7 +73,15 @@ class ModalWindow extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <ButtonToolbar className="pull-right">
+            <ButtonToolbar className="pull-right modal-button-toolbar">
+              {secondaryButton &&
+              <Button
+                className="btn-secondary"
+                onClick={secondaryButton.handler}
+                >
+                {secondaryButton.text}
+              </Button>}
+
               {closeButton &&
               <Button
                 bsStyle="primary"
@@ -146,6 +156,14 @@ class ModalWindow extends React.Component {
                 type="submit">
                 <FormattedMessage id="portal.button.reload"/>
               </Button>}
+
+              {auxiliaryButton &&
+              <Button
+                className="btn-secondary pull-left"
+                onClick={auxiliaryButton.handler}
+                >
+                {auxiliaryButton.text}
+              </Button>}
             </ButtonToolbar>
           </Modal.Footer>
         </form>
@@ -163,6 +181,13 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
+  auxiliaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
@@ -183,6 +208,13 @@ ModalWindow.propTypes = {
   okButton: PropTypes.bool,
   onSubmit: PropTypes.func,
   reloadButton: PropTypes.bool,
+  secondaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   stayButton: PropTypes.bool,
   submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
