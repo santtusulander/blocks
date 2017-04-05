@@ -4,9 +4,9 @@ import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../util/routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/routes'
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 

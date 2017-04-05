@@ -3,12 +3,12 @@ import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 import { FormGroup, FormControl } from 'react-bootstrap'
 
-import SectionHeader from '../../layout/section-header'
+import SectionHeader from '../../shared/layout/section-header'
 import RoleEditForm from './role-edit-form.jsx'
-import ActionButtons from '../../action-buttons.jsx'
+import ActionButtons from '../../shared/action-buttons.jsx'
 
 import TableSorter from '../../table-sorter'
-import ArrayTd from '../../array-td/array-td'
+import ArrayTd from '../../shared/page-elements/array-td'
 
 class RolesList extends React.Component {
   constructor(props) {

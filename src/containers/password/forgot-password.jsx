@@ -15,9 +15,9 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as userActionCreators from '../../redux/modules/user'
 
-import IconEmail from '../../components/shared/icons/icon-email.jsx'
-import CopyrightNotice from '../../components/copyright-notice'
-import ReCAPTCHA from '../../components/recaptcha'
+import IconEmail from '../../components/shared/icons/icon-email'
+import CopyrightNotice from '../../components/shared/layout/copyright-notice'
+import ReCAPTCHA from '../../components/shared/form-elements/recaptcha'
 import { isValidEmail } from '../../util/validators.js'
 
 export class ForgotPassword extends React.Component {

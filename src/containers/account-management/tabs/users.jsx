@@ -12,26 +12,26 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import PageContainer from '../../../components/layout/page-container'
-import SectionHeader from '../../../components/layout/section-header'
+import PageContainer from '../../../components/shared/layout/page-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
 import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import ActionButtons from '../../../components/action-buttons'
-import FieldFormGroup from '../../../components/form/field-form-group'
-import FieldFormGroupSelect from '../../../components/form/field-form-group-select'
+import ActionButtons from '../../../components/shared/action-buttons'
+import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
-import ArrayCell from '../../../components/array-td/array-td'
+import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {

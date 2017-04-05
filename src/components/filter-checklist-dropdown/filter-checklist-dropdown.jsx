@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 
 import autoClose from '../../decorators/select-auto-close'
-import Checkbox from '../checkbox'
+import Checkbox from '../shared/form-elements/checkbox'
 
 export class FilterChecklistDropdown extends React.Component {
   constructor(props) {

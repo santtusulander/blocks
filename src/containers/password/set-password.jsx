@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 
 import * as userActionCreators from '../../redux/modules/user'
 
-import PasswordFields from '../../components/password-fields'
+import PasswordFields from '../../components/shared/form-elements/password-fields'
 
 
 export class SetPassword extends React.Component {

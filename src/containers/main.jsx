@@ -29,8 +29,8 @@ import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
 
 import ModalWindow from '../components/modal'
-import Notification from '../components/notification'
-import BannerNotification from '../components/shared/banner-notification'
+import Notification from '../components/shared/notification-wrappers/notification'
+import BannerNotification from '../components/shared/notification-wrappers/banner-notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 

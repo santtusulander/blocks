@@ -24,18 +24,20 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+
 import accountsActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
+
 import ModalWindow from '../../components/modal'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 import IconEdit from '../../components/shared/icons/icon-edit'
-import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../components/shared/form-elements/multiline-text-field-error'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 

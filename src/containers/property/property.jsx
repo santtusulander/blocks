@@ -10,7 +10,7 @@ import * as purgeActionCreators from '../../redux/modules/purge'
 import * as uiActionCreators from '../../redux/modules/ui'
 import propertyActions from '../../redux/modules/entities/properties/actions'
 
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
 import PropertyTabControl from '../../components/content/property/property-tab-control'
 import PurgeModal from '../../components/purge-modal'

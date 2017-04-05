@@ -6,12 +6,12 @@ import {FormattedMessage} from 'react-intl'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import BarChart from '../charts/bar-chart'
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import { paleblue } from '../../constants/colors'
-// import Select from '../select'
+// import Select from '../shared/form-elements/select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
