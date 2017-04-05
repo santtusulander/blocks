@@ -5,7 +5,7 @@ import Immutable from 'immutable'
 jest.unmock('../is-admin')
 import IsAdmin from '../is-admin'
 
-jest.mock('../../redux/modules/user', () => {
+jest.mock('../../../../redux/modules/user', () => {
   return {
     isUdnAdmin: val => val
   }

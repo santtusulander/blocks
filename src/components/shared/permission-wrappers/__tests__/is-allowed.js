@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 jest.unmock('../is-allowed')
 import IsAllowed from '../is-allowed'
-import checkPermissions from '../../util/permissions'
+import checkPermissions from '../../../../util/permissions'
 
 const testUser = Immutable.Map({
   name: 'test'
