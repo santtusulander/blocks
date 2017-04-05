@@ -3,7 +3,7 @@ import { reduxForm, Field, change, propTypes as reduxFormPropTypes } from 'redux
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import HelpTooltip from '../../help-tooltip'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
@@ -150,7 +150,7 @@ class StorageForm extends React.Component {
                 </HelpTooltip>
               }
             />
-          
+
             { abrToggle &&
               <Field
                 name="abrProfile"

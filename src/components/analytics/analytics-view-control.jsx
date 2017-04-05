@@ -10,7 +10,7 @@ import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 

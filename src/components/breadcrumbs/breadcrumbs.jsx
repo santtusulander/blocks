@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'
 
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 export const Breadcrumbs = props => {
   const links = props.links

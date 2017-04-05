@@ -3,7 +3,7 @@ import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-boo
 import Immutable, { Map, List, fromJS } from 'immutable'
 
 import Select from '../../shared/form-elements/select'
-import InputConnector from '../../input-connector'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 

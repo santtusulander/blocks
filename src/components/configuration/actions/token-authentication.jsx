@@ -8,15 +8,15 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 import HasServicePermission from '../../shared/permission-wrappers/has-service-permission'
 
-import SidePanel from '../../side-panel'
+import SidePanel from '../../shared/side-panel'
 import TokenSchema from './token-auth-forms/token-schema'
 import TokenStreaming from './token-auth-forms/token-streaming'
 import IconChevronRight from '../../shared/icons/icon-chevron-right'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
-import TruncatedTitle from '../../truncated-title'
-import ButtonDisableTooltip from '../../button-disable-tooltip'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
 
 import { ENCRYPTION_OPTIONS,
          SAMPLE_CODE_LANGUAGE_OPTIONS,

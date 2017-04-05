@@ -9,7 +9,7 @@ import {
 } from '../../constants/permissions'
 
 import PageHeader from '../shared/layout/page-header'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
 import IconAdd from '../shared/icons/icon-add'

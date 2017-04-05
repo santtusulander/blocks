@@ -3,7 +3,7 @@ import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { connect } from 'react-redux'
 
-import SidePanel from '../side-panel'
+import SidePanel from '../shared/side-panel'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import Radio from '../shared/form-elements/radio'

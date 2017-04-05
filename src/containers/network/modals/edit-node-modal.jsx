@@ -19,9 +19,9 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
-import HelpPopover from '../../../components/help-popover'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
+import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
