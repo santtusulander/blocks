@@ -24,6 +24,9 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import accountsActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import ModalWindow from '../../components/modal'
@@ -95,6 +98,7 @@ export class AccountManagement extends Component {
       Shouldn't they be loaded on 'Users' -tab?
     */
     if (account) {
+      this.props.fetchActiveAccount({brand, id: account})
       this.props.userActions.fetchUsers(brand, account)
     } else if (this.props.accounts.size) {
       this.props.userActions.startFetching()
@@ -548,6 +552,7 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
+  fetchActiveAccount: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
@@ -570,11 +575,11 @@ AccountManagement.defaultProps = {
   users: List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount') || Map({}),
+    activeAccount: getAccountById(state, ownProps.params.account) || Map(),
     // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     permissions: state.permissions,
@@ -623,6 +628,7 @@ function mapDispatchToProps(dispatch) {
     changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
+    fetchActiveAccount: (params) => dispatch(accountsActions.fetchOne(params)),
     groupActions: groupActions,
     hostActions: hostActions,
     permissionsActions: permissionsActions,
