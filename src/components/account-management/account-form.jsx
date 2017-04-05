@@ -5,10 +5,10 @@ import { Map, List } from 'immutable'
 
 import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
-import FormFooterButtons from '../form/form-footer-buttons'
+import FieldFormGroup from '../shared/forms/field-form-group'
+import FieldFormGroupSelect from '../shared/forms/field-form-group-select'
+import FieldFormGroupMultiOptionSelector from '../shared/forms/field-form-group-multi-option-selector'
+import FormFooterButtons from '../shared/forms/form-footer-buttons'
 import SidePanel from '../side-panel'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
