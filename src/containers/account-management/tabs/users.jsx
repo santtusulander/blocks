@@ -127,10 +127,10 @@ export class AccountManagementAccountUsers extends React.Component {
   getRoleOptions(roleMapping, props) {
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+      .map(mapped_role => {
+        const matchedRoles = props.roles.find(role => role.get('id') === mapped_role.id)
+        return matchedRoles ? [ mapped_role.id, matchedRoles.get('name') ] : []
+      })
   }
 
   getInlineAddFields() {

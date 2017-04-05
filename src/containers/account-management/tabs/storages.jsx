@@ -58,25 +58,26 @@ class AccountManagementStorages extends Component {
   }
 
   componentWillMount() {
-    const account = this.props.account
-    const brandId = account.get('brand_id')
-    const accountId = account.get('id')
+    const {params: {account, brand, group}} = this.props
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
 
-    this.props.groups.map(group => {
-      const groupId = group.get('id')
-
-      this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
-      this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
-
-      return false
-    })
-
     if (this.props.params.group) {
-      this.props.fetchGroup({ brand: brandId, account: accountId, id: this.props.params.group })
+      this.props.fetchGroup({ brand, account, id: group })
     }
 
-    this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
+    if (brand && account) {
+      this.props.groups.map(group => {
+        const groupId = group.get('id')
+
+        this.props.fetchStorages({ brand, account, group: groupId })
+        this.props.fetchProperties({ brand, account, group: groupId })
+
+        return false
+      })
+
+      this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account })
+    }
+
     this.props.fetchClusters({})
   }
 
