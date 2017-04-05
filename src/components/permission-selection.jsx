@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import Checkbox from './checkbox'
+import Checkbox from './shared/form-elements/checkbox'
 
 const PermissionSelection = ({ className, disabled, onChange, permissions }) => {
   const handleChange = (value) => {

@@ -5,8 +5,8 @@ import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'
 
 import MonthPicker from './month-picker'
-import IconCalendar from './shared/icons/icon-calendar'
-import IconSelectCaret from './shared/icons/icon-select-caret'
+import IconCalendar from '../icons/icon-calendar'
+import IconSelectCaret from '../icons/icon-select-caret'
 
 const DATE_FORMAT = 'MM/DD/YYYY';
 

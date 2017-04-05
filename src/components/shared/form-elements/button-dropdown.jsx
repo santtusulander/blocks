@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
-import Button from './button'
-import IconAdd from './shared/icons/icon-add'
+import Button from '../../button'
+import IconAdd from '../icons/icon-add'
 import CustomToggle from './customToggle'
 
 const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (

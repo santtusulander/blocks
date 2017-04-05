@@ -3,7 +3,7 @@ import { FormGroup, ControlLabel, HelpBlock } from 'react-bootstrap';
 import { injectIntl, intlShape } from 'react-intl'
 import classNames from 'classnames'
 
-import Typeahead from '../../typeahead'
+import Typeahead from '../form-elements/typeahead'
 import { getReduxFormValidationState } from '../../../util/helpers'
 
 const FieldFormGroupTypeahead = ({

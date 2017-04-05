@@ -3,7 +3,7 @@ import { ControlLabel, FormGroup, InputGroup } from 'react-bootstrap'
 
 import { getReduxFormValidationState } from '../../../util/helpers'
 import DefaultErrorBlock from '../form-elements/default-error-block'
-import NumberInput from '../../number-input'
+import NumberInput from '../form-elements/number-input'
 
 const FieldFormGroupNumber = ({
   addonAfter,

@@ -5,7 +5,7 @@ import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable
 import { List } from 'immutable'
 
 import ActionButtons from './shared/action-buttons'
-import ButtonDropdown from './button-dropdown'
+import ButtonDropdown from './shared/form-elements/button-dropdown'
 
 const DragHandle = SortableHandle(() => {
   return (

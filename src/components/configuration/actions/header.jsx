@@ -3,7 +3,7 @@ import { Button, ButtonToolbar, Col, ControlLabel, FormControl, FormGroup, Modal
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
+import Select from '../../shared/form-elements/select'
 import InputConnector from '../../input-connector'
 
 class Header extends React.Component {

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import SidePanel from '../side-panel'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
-import Radio from '../../components/radio'
+import Radio from '../shared/form-elements/radio'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 

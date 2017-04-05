@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import { getUserUrlFromParams } from '../../util/routes'
-import Select from '../select'
+import Select from '../shared/form-elements/select'
 import IconUser from '../shared/icons/icon-user'
 import IconArrowRight from '../shared/icons/icon-arrow-right'
 import TruncatedTitle from '../truncated-title'
