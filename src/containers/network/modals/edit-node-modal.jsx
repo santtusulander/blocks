@@ -21,7 +21,7 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
-import HelpPopover from '../../../components/help-popover'
+import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 

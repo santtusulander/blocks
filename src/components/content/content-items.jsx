@@ -41,7 +41,7 @@ import IconCaretDown from '../shared/icons/icon-caret-down.jsx'
 import IconItemList from '../shared/icons/icon-item-list.jsx'
 import IconItemChart from '../shared/icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import TruncatedTitle from '../../components/truncated-title'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'

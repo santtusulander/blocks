@@ -9,7 +9,7 @@ import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-numb
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import IsAllowed from '../../shared/permission-wrappers/is-allowed'
-import HelpTooltip from '../../help-tooltip'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt, isValidFQDN } from '../../../util/validators'

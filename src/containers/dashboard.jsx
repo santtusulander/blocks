@@ -58,7 +58,7 @@ import MiniChart from '../components/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
 import PageHeader from '../components/shared/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
-import TruncatedTitle from '../components/truncated-title'
+import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 
 import { buildAnalyticsOptsForContribution, buildFetchOpts } from '../util/helpers.js'
 import { getCitiesWithinBounds } from '../util/mapbox-helpers'

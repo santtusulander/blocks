@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
 
-import SelectWrapper from '../../select-wrapper'
+import SelectWrapper from '../../shared/form-elements/select-wrapper'
 import SectionHeader from '../../shared/layout/section-header'
 import SectionContainer from '../../shared/layout/section-container'
 import TableSorter from '../../table-sorter'

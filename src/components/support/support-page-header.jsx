@@ -6,9 +6,9 @@ import { getRoute } from '../../util/routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
-import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../../components/shared/icons/icon-caret-down'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 
