@@ -3,7 +3,7 @@ import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, Pan
 import Immutable from 'immutable'
 
 import Select from '../../shared/form-elements/select'
-import InputConnector from '../../input-connector'
+import InputConnector from '../../shared/page-elements/input-connector'
 import {
   getMatchFilterType
 } from '../../../util/policy-config'
@@ -15,7 +15,7 @@ class Matcher extends React.Component {
     super(props);
     const fieldDetail = props.match.get('field_detail')
     const value = props.match.get('value')
-    
+
     const containsVal = fieldDetail ? value : ''
 
     this.state = {
@@ -135,8 +135,8 @@ class Matcher extends React.Component {
 
   renderValueField() {
     const hasValueField = this.state.activeFilter === 'equals' ||
-                          this.state.activeFilter === 'does_not_equal' || 
-                          this.state.activeFilter === 'contains' || 
+                          this.state.activeFilter === 'does_not_equal' ||
+                          this.state.activeFilter === 'contains' ||
                           this.state.activeFilter === 'does_not_contain'
 
     return (
@@ -161,7 +161,7 @@ class Matcher extends React.Component {
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
       this.state.activeFilter === 'does_not_contain'
- 
+
     const matchOpts = []
 
     if (this.props.hasExists) {

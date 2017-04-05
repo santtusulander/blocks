@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 
 export class DNSRecordTable extends Component {
   constructor(props) {

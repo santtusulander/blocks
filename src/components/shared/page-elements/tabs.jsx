@@ -9,7 +9,7 @@ import { Dropdown } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import classnames from 'classnames'
 
-import IconSelectCaret from '../components/shared/icons/icon-select-caret'
+import IconSelectCaret from '../icons/icon-select-caret'
 
 /**
  * Get DOM node top position

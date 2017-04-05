@@ -3,8 +3,8 @@ import { injectIntl, intlShape } from 'react-intl'
 import { Panel, Table } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import Checkbox from './shared/form-elements/checkbox'
-import Toggle from './shared/form-elements/toggle'
+import Checkbox from './checkbox'
+import Toggle from './toggle'
 
 class MultiOptionSelector extends React.Component {
   constructor(props) {

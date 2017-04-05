@@ -7,7 +7,7 @@ import { Button, Table } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import SidePanel from '../../side-panel'
+import SidePanel from '../../shared/side-panel'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'

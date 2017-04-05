@@ -4,8 +4,8 @@ import moment from 'moment'
 
 import { Dropdown } from 'react-bootstrap'
 
-import IconSelectCaret from './shared/icons/icon-select-caret'
-import IconClock from './shared/icons/icon-clock'
+import IconSelectCaret from '../icons/icon-select-caret'
+import IconClock from '../icons/icon-clock'
 
 const TimePicker = ({ time, onChange, isUTC }) => {
   const value = `${time.format('hh:mma')} ${isUTC ? 'UTC' : ''}`
