@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import Tooltip from '../../tooltip'
+import Tooltip from '../../shared/tooltips/tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
 
@@ -235,7 +235,7 @@ class AnalysisByTime extends React.Component {
 
                     <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
                     <stop offset="100%" stopColor={dataset.color} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
-                    
+
                   </linearGradient>
                 </defs>
               </g>

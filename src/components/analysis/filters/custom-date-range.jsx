@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
-import CustomDatePicker from '../../../components/custom-date-picker'
+import CustomDatePicker from '../../../components/shared/form-elements/custom-date-picker'
 
 const FilterCustomDateRange = ({ onFilterChange, startDate }) =>
   <div className='action'>

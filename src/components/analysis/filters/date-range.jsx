@@ -3,7 +3,7 @@ import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
 import FilterIncludeComparison from './include-comparison.jsx'
-import DateRangeSelect from '../../../components/date-range-select'
+import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
 
 class FilterDateRange extends React.Component {
   constructor(props) {

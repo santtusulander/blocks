@@ -14,7 +14,7 @@ import {
   getSecurityUrlFromParams
 } from '../../util/routes'
 
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import {
   VIEW_ACCOUNT_SECTION,

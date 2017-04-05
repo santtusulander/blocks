@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
 
 import RecordForm from '../../../components/account-management/record-form'
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidIPv4Address, isValidIPv6Address, isInt } from '../../../util/validators'

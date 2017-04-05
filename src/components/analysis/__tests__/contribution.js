@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 
 jest.autoMockOff()
 jest.unmock('../contribution.jsx')
-jest.unmock('../../table-sorter.jsx')
+jest.unmock('../../shared/table-sorter.jsx')
 
 import AnalysisContribution from '../contribution.jsx'
 
