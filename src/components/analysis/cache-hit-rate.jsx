@@ -9,7 +9,7 @@ import BarChart from '../charts/bar-chart'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
 // import Select from '../shared/form-elements/select'
 

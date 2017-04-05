@@ -22,7 +22,7 @@ import FieldFormGroupSelect from '../../../components/shared/form-fields/field-f
 import InlineAdd from '../../../components/shared/page-elements/inline-add'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
-import TableSorter from '../../../components/table-sorter'
+import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/modal'
