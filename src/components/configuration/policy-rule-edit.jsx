@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import ActionButtons from '../shared/action-buttons'
 import IconAdd from '../shared/icons/icon-add.jsx'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
 import Select from '../shared/form-elements/select'

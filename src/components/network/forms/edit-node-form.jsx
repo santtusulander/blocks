@@ -13,10 +13,10 @@ import DefaultErrorBlock from '../../shared/form-elements/default-error-block'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
-import HelpPopover from '../../help-popover'
-import ButtonDisableTooltip from '../../button-disable-tooltip'
+import HelpPopover from '../../shared/tooltips/help-popover'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
 import IsAllowed from '../../shared/permission-wrappers/is-allowed'
-import HelpTooltip from '../../help-tooltip'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 

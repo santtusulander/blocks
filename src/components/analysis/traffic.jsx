@@ -9,7 +9,7 @@ import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { formatBitsPerSecond } from '../../util/helpers'
 import { paleblue, green } from '../../constants/colors'
 

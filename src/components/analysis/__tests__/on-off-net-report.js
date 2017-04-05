@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 
 jest.autoMockOff()
 jest.unmock('../on-off-net-report.jsx')
-jest.unmock('../../table-sorter.jsx')
+jest.unmock('../../shared/table-sorter.jsx')
 
 jest.mock('../../../util/helpers', () => ({ formatBytes: bytes => bytes }))
 

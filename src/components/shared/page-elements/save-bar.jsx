@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import Dialog from './shared/layout/dialog'
+import Dialog from './../layout/dialog'
 
 import { FormattedMessage } from 'react-intl'
 

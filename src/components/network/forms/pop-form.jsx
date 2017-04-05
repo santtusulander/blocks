@@ -9,7 +9,7 @@ import { isInt } from '../../../util/validators'
 
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
-import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
