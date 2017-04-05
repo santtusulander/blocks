@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter, routerShape } from 'react-router'
 import { Button } from 'react-bootstrap'
-import IconArrowLeft from '../components/icons/icon-arrow-left'
+import IconArrowLeft from '../components/shared/icons/icon-arrow-left'
 
 import { FormattedMessage } from 'react-intl'
 

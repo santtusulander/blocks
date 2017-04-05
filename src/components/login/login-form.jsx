@@ -4,8 +4,8 @@ import { Link } from 'react-router'
 import classnames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
-import IconEmail from '../icons/icon-email.jsx'
-import IconPassword from '../icons/icon-password.jsx'
+import IconEmail from '../shared/icons/icon-email.jsx'
+import IconPassword from '../shared/icons/icon-password.jsx'
 import { IS_LOCAL_STORAGE_SUPPORTED } from '../../redux/modules/ui'
 
 export class LoginForm extends Component {

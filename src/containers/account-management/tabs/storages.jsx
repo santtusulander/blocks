@@ -8,7 +8,7 @@ import moment from 'moment'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
-import IconAdd from '../../../components/icons/icon-add'
+import IconAdd from '../../../components/shared/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
 import ActionButtons from '../../../components/action-buttons'
 import ModalWindow from '../../../components/modal'

@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
-import IconSelectCaret from '../../../../components/icons/icon-select-caret.jsx'
+import IconSelectCaret from '../../../../components/shared/icons/icon-select-caret.jsx'
 
 export class FilterDropdown extends React.Component {
   constructor(props) {
