@@ -9,7 +9,7 @@ import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import IconAdd from '../../shared/icons/icon-add'
 import ActionButtons from '../../../components/shared/action-buttons'
-import ArrayCell from '../../array-td/array-td'
+import ArrayCell from '../../shared/page-elements/array-td'
 import TableSorter from '../../table-sorter'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 
