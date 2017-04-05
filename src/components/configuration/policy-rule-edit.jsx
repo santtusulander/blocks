@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ActionButtons from '../action-buttons'
+import ActionButtons from '../shared/action-buttons'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import ActionButtons from '../action-buttons'
+import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate } from '../../util/helpers'
