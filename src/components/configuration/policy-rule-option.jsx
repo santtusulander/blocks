@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 
 import IconCaretRight from '../shared/icons/icon-caret-right'
-import IsAdmin from '../is-admin'
+import IsAdmin from '../shared/permission-wrappers/is-admin'
 import HasServicePermission from '../has-service-permission'
 
 /**

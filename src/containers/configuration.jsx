@@ -39,7 +39,7 @@ import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
-import IsAdmin from '../components/is-admin'
+import IsAdmin from '../components/shared/permission-wrappers/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
