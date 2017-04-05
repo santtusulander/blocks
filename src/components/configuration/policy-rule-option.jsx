@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import IconCaretRight from '../shared/icons/icon-caret-right'
 import IsAdmin from '../shared/permission-wrappers/is-admin'
-import HasServicePermission from '../has-service-permission'
+import HasServicePermission from '../shared/permission-wrappers/has-service-permission'
 
 /**
  * A component designed for displaying possible match/action options when creating
