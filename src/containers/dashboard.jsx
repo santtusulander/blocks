@@ -57,7 +57,7 @@ import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import MiniChart from '../components/charts/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
 import PageHeader from '../components/shared/layout/page-header'
-import StackedByTimeSummary from '../components/stacked-by-time-summary'
+import StackedByTimeSummary from '../components/charts/stacked-by-time-summary'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 
 import { buildAnalyticsOptsForContribution, buildFetchOpts } from '../util/helpers.js'
