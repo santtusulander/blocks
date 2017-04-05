@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import HelpTooltip from '../help-tooltip'
 import Confirmation from '../confirmation'
-import ActionButtons from '../../components/action-buttons'
+import ActionButtons from '../../components/shared/action-buttons'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 

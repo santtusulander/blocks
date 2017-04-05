@@ -3,7 +3,7 @@ import { fromJS } from 'immutable'
 import {shallow} from 'enzyme'
 
 jest.unmock('../role-edit/roles-list.jsx')
-jest.unmock('../../../components/action-buttons.jsx')
+jest.unmock('../../../components/shared/action-buttons.jsx')
 jest.unmock('../../table-sorter.jsx')
 jest.unmock('../account-management-header.jsx')
 jest.unmock('../../array-td/array-td.jsx')

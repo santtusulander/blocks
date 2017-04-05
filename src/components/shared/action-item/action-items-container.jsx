@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import { Field, FieldArray } from 'redux-form'
 import { Button } from 'react-bootstrap'
-import IconAdd from '../shared/icons/icon-add.jsx'
+import IconAdd from '../icons/icon-add.jsx'
 import ActionItems from './action-items'
 
-import FieldFormGroupTypeahead from '../shared/form-fields/field-form-group-typeahead'
+import FieldFormGroupTypeahead from '../form-fields/field-form-group-typeahead'
 
 const ActionItemsContainer = ({ addedActionItems, addAvailableAction, addNewAction, availableActions, disableMultipleItems, editAction, intl, label }) => {
   return (

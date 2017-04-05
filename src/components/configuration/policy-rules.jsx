@@ -5,7 +5,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../confirmation.jsx'
-import ActionButtons from '../../components/action-buttons.jsx'
+import ActionButtons from '../../components/shared/action-buttons.jsx'
 import {
   parsePolicy
 } from '../../util/policy-config'

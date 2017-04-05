@@ -14,7 +14,7 @@ import {getByAccount as getGroupsByAccount} from '../../../redux/modules/entitie
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import ActionButtons from '../../../components/action-buttons'
+import ActionButtons from '../../../components/shared/action-buttons'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
