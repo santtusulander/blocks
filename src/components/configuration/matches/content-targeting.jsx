@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import classNames from 'classnames'
 
-import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
-import FieldFormGroupTypeahead from '../../shared/forms/field-form-group-typeahead'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
 
 import country_list from '../../../constants/country-list'
 

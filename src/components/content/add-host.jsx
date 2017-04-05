@@ -11,9 +11,9 @@ import {
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 
-import FieldRadio from '../shared/forms/field-radio'
-import FieldFormGroup from '../shared/forms/field-form-group'
-import FormFooterButtons from '../shared/forms/form-footer-buttons'
+import FieldRadio from '../shared/form-fields/field-radio'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 import { isValidHostName } from '../../util/validators'
 import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'

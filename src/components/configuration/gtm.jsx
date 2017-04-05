@@ -13,12 +13,12 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
-import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
 
 import RuleModal from './traffic-rule-form/rule-modal'
 
-import FieldFormGroup from '../shared/forms/field-form-group'
-import FieldFormGroupToggle from '../shared/forms/field-form-group-toggle'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'

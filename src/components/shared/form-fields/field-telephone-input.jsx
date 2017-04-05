@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import ReactTelephoneInput from 'react-telephone-input'
 import { FormGroup, ControlLabel } from 'react-bootstrap';
 
-import DefaultErrorBlock from './default-error-block'
+import DefaultErrorBlock from '../form-elements/default-error-block'
 
 import { stripCountryCode, stripNonNumeric } from '../../../util/user-helpers'
 

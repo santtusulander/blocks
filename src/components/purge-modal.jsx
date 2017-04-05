@@ -14,7 +14,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Typeahead from './typeahead'
 import Select from './select'
 import SidePanel from './side-panel'
-import FormFooterButtons from './shared/forms/form-footer-buttons'
+import FormFooterButtons from './shared/form-elements/form-footer-buttons'
 import { isValidEmail, isValidRelativePath } from '../util/validators'
 
 class PurgeModal extends React.Component {

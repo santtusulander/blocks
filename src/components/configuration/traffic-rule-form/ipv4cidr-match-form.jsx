@@ -5,8 +5,8 @@ import { reduxForm, Field } from 'redux-form'
 
 import { isValidIPv4Address } from '../../../util/validators'
 
-import Typeahead from '../../shared/forms/field-form-group-typeahead'
-import FormFooterButtons from '../../shared/forms/form-footer-buttons'
+import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ ipv4CIDR }) => {
   if (!ipv4CIDR.length) {

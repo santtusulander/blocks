@@ -3,10 +3,10 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import FieldFormGroup from '../../shared/forms/field-form-group'
-import FormFooterButtons from '../../shared/forms/form-footer-buttons'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 import IsAllowed from '../../is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'

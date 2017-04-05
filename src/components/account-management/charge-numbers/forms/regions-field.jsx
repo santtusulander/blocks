@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap'
-import DefaultErrorBlock from '../../../shared/forms/default-error-block'
+import DefaultErrorBlock from '../../../shared/form-elements/default-error-block'
 import Checkbox from '../../../checkbox'
 
 class RegionsField extends React.Component {

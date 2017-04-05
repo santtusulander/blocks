@@ -4,8 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import classnames from 'classnames'
 
-import DefaultErrorBlock from './shared/forms/default-error-block'
-import FieldFormGroup from './shared/forms/field-form-group'
+import DefaultErrorBlock from './shared/form-elements/default-error-block'
+import FieldFormGroup from './shared/form-fields/field-form-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 import IconClose from './shared/icons/icon-close.jsx'
 

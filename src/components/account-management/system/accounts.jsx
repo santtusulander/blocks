@@ -11,7 +11,7 @@ import IconAdd from '../../shared/icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
