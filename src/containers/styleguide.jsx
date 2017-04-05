@@ -41,7 +41,7 @@ import SelectorComponent from '../components/global-account-selector/selector-co
 import Tabs from '../components/tabs'
 import MonthPicker from '../components/shared/form-elements/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
-import MiniChart from '../components/mini-chart'
+import MiniChart from '../components/charts/mini-chart'
 import NumberInput from '../components/shared/form-elements/number-input'
 import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
