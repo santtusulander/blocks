@@ -8,7 +8,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
-import Notification from '../components/notification'
+import Notification from '../components/shared/notification-wrappers/notification'
 
 const modalClassDim = 'side-panel--dim'
 const overlappingClass = 'side-panel--overlapping'
