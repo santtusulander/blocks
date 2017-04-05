@@ -15,7 +15,7 @@ import SectionContainer from '../shared/layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
-import RuleModal from './traffic-rule-shared/forms/rule-modal'
+import RuleModal from './traffic-rule-form/rule-modal'
 
 import FieldFormGroup from '../shared/forms/field-form-group'
 import FieldFormGroupToggle from '../shared/forms/field-form-group-toggle'
