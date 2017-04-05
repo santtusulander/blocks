@@ -4,11 +4,11 @@ import Immutable from 'immutable'
 import moment from 'moment'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
 
 

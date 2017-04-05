@@ -10,9 +10,9 @@ import * as userActionCreators from '../redux/modules/user'
 import roleNameActions from '../redux/modules/entities/role-names/actions'
 import { getById as getRoleNameById } from '../redux/modules/entities/role-names/selectors'
 
-import PageContainer from '../components/layout/page-container'
-import PageHeader from '../components/layout/page-header'
-import Content from '../components/layout/content'
+import PageContainer from '../components/shared/layout/page-container'
+import PageHeader from '../components/shared/layout/page-header'
+import Content from '../components/shared/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
 class User extends React.Component {

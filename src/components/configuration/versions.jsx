@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { Button } from 'react-bootstrap'
 
 import IconAdd from '../shared/icons/icon-add.jsx'
-import { SidebarLinks } from '../sidebar-links'
+import { SidebarLinks } from '../shared/sidebar-link/sidebar-links'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -26,7 +26,7 @@ export class ConfigurationVersions extends React.Component {
       } else {
         built.inprocess.push(config)
       }
-      
+
       return built
     }, {production: [], staging: [], inprocess: []})
     return (

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Col, ControlLabel, FormControl, FormGroup, Modal, Row } from 'react-bootstrap'
 
-import Toggle from '../../toggle'
-import Select from '../../select'
+import Toggle from '../../shared/form-elements/toggle'
+import Select from '../../shared/form-elements/select'
 
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 

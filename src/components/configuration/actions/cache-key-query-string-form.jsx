@@ -2,8 +2,8 @@ import React from 'react'
 import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-bootstrap'
 import Immutable, { Map, List, fromJS } from 'immutable'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 

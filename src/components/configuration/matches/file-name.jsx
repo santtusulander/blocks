@@ -3,7 +3,7 @@ import { ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
+import Select from '../../shared/form-elements/select'
 
 
 class Filename extends React.Component {

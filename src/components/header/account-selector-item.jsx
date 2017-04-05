@@ -10,8 +10,8 @@ import {
   getContentUrl,
   getUrl
 } from '../../util/routes.js'
-import IsAllowed from '../is-allowed'
-import TruncatedTitle from '../truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
