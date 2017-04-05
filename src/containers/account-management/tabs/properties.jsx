@@ -79,7 +79,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account !== this.props.params.account) {
       const { brand, account, pagination: { getQueryParams } } = nextProps.params
       this.refreshData(brand, account, getQueryParams())
     }
@@ -88,7 +88,7 @@ class AccountManagementProperties extends React.Component {
   refreshData(brand, account, pagingParams) {
     const { fetchGroups, fetchPropertiesByIds } = this.props
     fetchGroups({ brand, account }).then(groupData => {
-      for (let groupId in groupData.response.entities.groups) {
+      for (const groupId in groupData.response.entities.groups) {
         if (groupData.response.entities.groups.hasOwnProperty(groupId)) {
           fetchPropertiesByIds({ brand, account, group: groupId, ...pagingParams })
         }
@@ -146,14 +146,13 @@ class AccountManagementProperties extends React.Component {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
-      }
-      else if(aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -214,9 +213,9 @@ class AccountManagementProperties extends React.Component {
     const deploymentMode = property.get('services').first()
       .get('deployment_mode')
 
-    if(deploymentMode === 'trial') {
+    if (deploymentMode === 'trial') {
       return <FormattedMessage id="portal.account.properties.deploymentMode.trial"/>
-    } else if(deploymentMode === 'production') {
+    } else if (deploymentMode === 'production') {
       return <FormattedMessage id="portal.account.properties.deploymentMode.production" />
     }
     return deploymentMode
@@ -230,8 +229,8 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { addProperty, deleteProperty, editProperty, intl, properties, fetching } = this.props
-    const { adding, search, sortBy, sortDir } = this.state
+    const { deleteProperty, editProperty, intl, properties, fetching } = this.props
+    const { search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -301,7 +300,13 @@ class AccountManagementProperties extends React.Component {
                   <td>{formatUnixTimestamp(property.get('created'))}</td>
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_PROPERTY}>
-                      <ActionButtons onEdit={() => {editProperty(property)}} onDelete={() => {deleteProperty(property)}} />
+                      <ActionButtons
+                        onEdit={() => {
+                          editProperty(property)
+                        }}
+                        onDelete={() => {
+                          deleteProperty(property)
+                        }} />
                     </IsAllowed>
                   </td>
                 </tr>
