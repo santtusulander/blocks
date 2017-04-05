@@ -6,6 +6,7 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
 import { getGroups, getBrands, getAccounts } from './menu-selectors'
 
@@ -121,6 +122,7 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
   }
 
   return {
+    fetching: getFetchingByTag(state, 'GAS-REQUEST'),
     activeNode,
     tree
   }

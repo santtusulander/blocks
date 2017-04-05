@@ -10,8 +10,6 @@ import {
 import propertyActions from '../../redux/modules/entities/properties/actions'
 import { getByGroup as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
-import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
-
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
@@ -21,6 +19,8 @@ import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 import { getByBrand, getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 
 import { accountIsServiceProviderType } from '../../util/helpers'
+
+export const requestTag = 'GAS-REQUEST'
 
 /**
  * get groups from state, set child nodes and define a function to fetch child nodes for each one.
@@ -34,13 +34,11 @@ export const getGroups = (state, parents, canView) => {
   return getByAccount(state, parents.account).toJS().map(group => {
 
     const { nodes, headerSubtitle } = getStoragesAndProperties(state, { ...parents, group: String(group.id) }, canView)
-    const requestTag = `GAS-grp-${group.id}-children`
 
     return {
       ...group,
       nodeInfo: {
         headerSubtitle,
-        isFetchingChildren: getFetchingByTag(state, requestTag),
         fetchChildren: (dispatch) => Promise.all([
           dispatch(propertyActions.fetchAll({ ...parents, group: String(group.id), requestTag })),
           dispatch(storageActions.fetchAll({ ...parents, group: String(group.id) }))
@@ -108,7 +106,6 @@ export const getAccounts = (state, parents, canView) => {
 
   return getByBrand(state, parents.brand).toJS().map(account => {
 
-    const requestTag = `GAS-acc-${account.id}-children`
     const nodes = canView(VIEW_CONTENT_GROUPS) && getGroups(state, { ...parents, account: String(account.id) }, canView)
     const headerSubtitle = <FormattedMessage id="portal.common.group.multiple" values={{numGroups: nodes.length || 0}}/>
 
@@ -116,7 +113,6 @@ export const getAccounts = (state, parents, canView) => {
       ...account,
       nodeInfo: {
         headerSubtitle,
-        isFetchingChildren: getFetchingByTag(state, requestTag),
         fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: String(account.id), requestTag })),
         entityType: 'account',
         parents,

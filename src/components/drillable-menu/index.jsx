@@ -33,10 +33,8 @@ class DrillableMenu extends Component {
   componentWillReceiveProps({ activeNode, fetchData }) {
     if (activeNode !== this.props.activeNode) {
 
+      this.changeActiveNode(activeNode)
       fetchData(this.context.currentUser, this.context.roles)
-        .then(() => {
-          this.changeActiveNode(activeNode)
-        })
     }
   }
 
@@ -45,8 +43,8 @@ class DrillableMenu extends Component {
   }
 
   handleCaretClick(fetchChildren, nodeId) {
+    this.changeActiveNode(nodeId)
     fetchChildren(this.props.dispatch)
-      .then(() => this.changeActiveNode(nodeId))
   }
 
   changeActiveNode(nodeId) {
@@ -95,6 +93,7 @@ class DrillableMenu extends Component {
       return (
           <Dropdown.Menu>
             <DrillableMenuHeader
+              fetching={this.props.fetching}
               parentId={parentNodeId}
               subtitle={nodeInfo.headerSubtitle}
               goToParent={this.changeActiveNode}
@@ -103,6 +102,7 @@ class DrillableMenu extends Component {
               activeNodeName={nodeToView[labelKey]} />
 
             <DrillableMenuItems
+              fetching={this.props.fetching}
               onItemClick={this.props.onItemClick}
               handleCaretClick={this.handleCaretClick}
               goToChild={this.changeActiveNode}
@@ -138,6 +138,7 @@ DrillableMenu.propTypes = {
   children: PropTypes.node,
   dispatch: PropTypes.func,
   fetchData: PropTypes.func,
+  fetching: PropTypes.bool,
   onItemClick: PropTypes.func,
   open: PropTypes.bool,
   toggle: PropTypes.func,
