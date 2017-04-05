@@ -2,8 +2,8 @@ import React from 'react'
 import { ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class OriginHostname extends React.Component {
   constructor(props) {

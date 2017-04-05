@@ -8,7 +8,7 @@ import {
   Modal,
   Row
 } from 'react-bootstrap'
-import Radio from '../components/radio'
+import Radio from '../components/shared/form-elements/radio'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'

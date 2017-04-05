@@ -4,7 +4,7 @@ import { Nav } from 'react-bootstrap'
 import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../../constants/permissions'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { getTabLink } from '../../../util/helpers.js'
 

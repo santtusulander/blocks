@@ -11,7 +11,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
 
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'

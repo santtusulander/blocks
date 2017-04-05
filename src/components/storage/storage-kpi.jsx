@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import SectionContainer from '../layout/section-container'
-import MiniChart from '../mini-chart'
+import SectionContainer from '../shared/layout/section-container'
+import MiniChart from '../charts/mini-chart'
 import ComparisonBars from './comparison-bars'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */

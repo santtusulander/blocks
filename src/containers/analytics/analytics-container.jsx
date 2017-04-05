@@ -15,8 +15,8 @@ import AnalyticsTabControl  from '../../components/analytics/analytics-tab-contr
 import AnalyticsFilters from '../../components/analytics/analytics-filters'
 import DateRanges from '../../constants/date-ranges'
 
-import PageContainer from '../../components/layout/page-container'
-import Content from '../../components/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
+import Content from '../../components/shared/layout/content'
 
 import { getTabName, userIsServiceProvider, accountIsServiceProviderType } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'

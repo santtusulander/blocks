@@ -5,12 +5,12 @@ import { Map, List } from 'immutable'
 
 import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
-import FormFooterButtons from '../form/form-footer-buttons'
-import SidePanel from '../side-panel'
-import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FieldFormGroupMultiOptionSelector from '../shared/form-fields/field-form-group-multi-option-selector'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import SidePanel from '../shared/side-panel'
+import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
 
 import { getProviderTypeOptions, getServiceOptions } from '../../redux/modules/service-info/selectors'
 import { fetchAll as serviceInfofetchAll } from '../../redux/modules/service-info/actions'

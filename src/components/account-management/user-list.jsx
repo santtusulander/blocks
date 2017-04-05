@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import ActionButtons from '../../components/action-buttons.jsx'
+import ActionButtons from '../../components/shared/action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
 import { FormattedMessage } from 'react-intl'
