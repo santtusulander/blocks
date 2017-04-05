@@ -36,7 +36,7 @@ import MultilineTextFieldError from '../../components/shared/form-elements/multi
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {

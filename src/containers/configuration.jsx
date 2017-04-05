@@ -38,7 +38,7 @@ import IconTrash from '../components/shared/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import ModalWindow from '../components/modal'
-import Tabs from '../components/tabs'
+import Tabs from '../components/shared/page-elements/tabs'
 import IsAdmin from '../components/shared/permission-wrappers/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'

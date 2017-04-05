@@ -38,7 +38,7 @@ import LineAreaComposedChart from '../components/charts/line-area-composed-chart
 import LineChart from '../components/charts/line-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import SelectorComponent from '../components/global-account-selector/selector-component'
-import Tabs from '../components/tabs'
+import Tabs from '../components/shared/page-elements/tabs'
 import MonthPicker from '../components/shared/form-elements/month-picker'
 import StackedByTimeSummary from '../components/charts/stacked-by-time-summary'
 import MiniChart from '../components/charts/mini-chart'

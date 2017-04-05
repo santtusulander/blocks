@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link, withRouter } from 'react-router'
 import { injectIntl } from 'react-intl'
 
-import Tabs from '../tabs'
+import Tabs from '../shared/page-elements/tabs'
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
