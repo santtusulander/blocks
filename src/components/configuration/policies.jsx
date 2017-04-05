@@ -200,6 +200,7 @@ class ConfigurationPolicies extends React.Component {
                 cancelActiveEditForm={this.cancelActiveMatchSetEditForm}
                 changeValue={this.props.changeValue}
                 config={config}
+                disabled={!!activeEditForm}
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}

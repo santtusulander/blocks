@@ -19,10 +19,11 @@ const getAlignStyle = (textAlign) => {
  * @param {string} align - align direction
  * @return {React.element}
  */
-const FormFooterButtons = ({children, align}) => {
+const FormFooterButtons = ({children, align, className}) => {
   const alignItems = getAlignStyle(align);
+  const cssClasses = className ? `modal-footer ${className}` : 'modal-footer'
   return (
-    <div className='modal-footer' style={alignItems}>
+    <div className={cssClasses} style={alignItems}>
       <ButtonToolbar>
         {children}
       </ButtonToolbar>
@@ -33,7 +34,8 @@ const FormFooterButtons = ({children, align}) => {
 FormFooterButtons.displayName = 'FormFooterButtons'
 FormFooterButtons.propTypes = {
   align: PropTypes.oneOf(alignOptions),
-  children: PropTypes.array
+  children: PropTypes.array,
+  className: PropTypes.string
 }
 
 FormFooterButtons.defaultProps = {

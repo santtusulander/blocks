@@ -61,20 +61,7 @@ export class Main extends React.Component {
           return false
         }
 
-        const {brand,account,group,property} = this.props.params
-
-        /* If account / group / property -params set -> load data ( needed for breadcrumb ) */
-        if (account) {
-          this.props.fetchAccount({brand, id: account})
-        }
-
-        if (group) {
-          this.props.fetchGroup({brand, account, id: group})
-        }
-
-        if (property) {
-          this.props.fetchProperty({brand, account, group, id: property})
-        }
+        this.fetchData(this.props.params)
 
         return this.props.userActions.fetchUser(action.payload.username)
           .then(() => {
@@ -89,6 +76,28 @@ export class Main extends React.Component {
           })
 
       })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.fetchData(nextProps.params)
+  }
+
+  fetchData(params) {
+    const {brand,account,group,property} = params
+
+    /* If account / group / property -params set -> load data ( needed for breadcrumb ) */
+    if (account) {
+      this.props.fetchAccount({brand, id: account})
+    }
+
+    if (group) {
+      this.props.fetchGroup({brand, account, id: group})
+    }
+
+    if (property) {
+      this.props.fetchProperty({brand, account, group, id: property})
+    }
+
   }
 
   logOut() {

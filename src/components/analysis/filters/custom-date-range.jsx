@@ -10,7 +10,7 @@ const FilterCustomDateRange = ({ onFilterChange, startDate }) =>
     <CustomDatePicker
       startDate={startDate}
       changeDateRange={(newStartDate, newEndDate) => {
-        onFilterChange('customDateRange', { newStartDate, newEndDate })
+        onFilterChange('customDateRange', { startDate: newStartDate, endDate: newEndDate })
       }} />
   </div>
 
