@@ -68,7 +68,7 @@ import PageContainer from '../../components/shared/layout/page-container'
 import PageHeader from '../../components/shared/layout/page-header'
 import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import EntityList from '../../components/network/entity-list'
-import ModalWindow from '../../components/modal'
+import ModalWindow from '../../components/shared/modal'
 
 import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import NetworkFormContainer from './modals/network-modal'

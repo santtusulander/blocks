@@ -23,7 +23,7 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/shared/page-elements/truncated-title'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'

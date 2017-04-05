@@ -14,7 +14,7 @@ import Content from '../../components/shared/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
 import PropertyTabControl from '../../components/content/property/property-tab-control'
 import PurgeModal from '../../components/content/property/purge-modal'
-import ModalWindow from '../../components/modal'
+import ModalWindow from '../../components/shared/modal'
 
 import { getContentUrl } from '../../util/routes'
 

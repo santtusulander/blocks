@@ -26,7 +26,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
-import ModalWindow from '../../components/modal'
+import ModalWindow from '../../components/shared/modal'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../../components/shared/page-elements/truncated-title'

@@ -24,7 +24,7 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'

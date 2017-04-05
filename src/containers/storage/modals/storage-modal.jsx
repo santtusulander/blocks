@@ -25,7 +25,7 @@ import { STORAGE_TRANSCODING_OPTION_ID } from '../../../constants/service-permis
 
 
 import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import StorageForm from '../../../components/storage/forms/storage-form'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 

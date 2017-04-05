@@ -20,7 +20,7 @@ import { getById as getPodById } from '../../../redux/modules/entities/pods/sele
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'

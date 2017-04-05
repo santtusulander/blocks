@@ -33,7 +33,7 @@ import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'

@@ -14,7 +14,7 @@ import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selecto
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'

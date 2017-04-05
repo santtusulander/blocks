@@ -25,7 +25,7 @@ import IconInfo from '../../../components/shared/icons/icon-info'
 import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
