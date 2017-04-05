@@ -2,8 +2,8 @@ import React from 'react'
 import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-bootstrap'
 import Immutable, { Map, List, fromJS } from 'immutable'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -123,9 +123,11 @@ class CacheKeyQueryStringForm extends React.Component {
           id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>)
     const qNameInputs = this.state.queryArgs.map((queryArg, i) =>
       <FormGroup key={`query-arg-${i}`}>
-        <ControlLabel>
-          {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
-        </ControlLabel>
+        { !horizontal &&
+          <ControlLabel>
+            {formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
+          </ControlLabel>
+        }
         <FormControl
           disabled={disabled}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}

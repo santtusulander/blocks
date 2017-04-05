@@ -4,10 +4,10 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Col, ControlLabel, FormControl, FormGroup, InputGroup, Panel, Row } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import HelpTooltip from '../../components/help-tooltip'
-import InputConnector from '../../components/input-connector'
-import Select from '../../components/select'
-import Toggle from '../toggle'
+import HelpTooltip from '../../components/shared/tooltips/help-tooltip'
+import InputConnector from '../shared/page-elements/input-connector'
+import Select from '../shared/form-elements/select'
+import Toggle from '../shared/form-elements/toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 import { CIS_ORIGIN_HOST_PORT } from '../../constants/configuration'
@@ -172,7 +172,7 @@ class ConfigurationDetails extends React.Component {
                 </ControlLabel>
               </Col>
               <Col xs={9}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <Select
                     className="input-select"
                     disabled={readOnly}
@@ -286,7 +286,7 @@ class ConfigurationDetails extends React.Component {
           <Panel collapsible={true} expanded={isOtherHostHeader}>
             <FormGroup>
               <Col xs={9} xsOffset={3}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <FormControl
                     type="text"
                     placeholder={this.props.intl.formatMessage({ id: 'portal.configuration.details.enterHostnameValue.text' })}
@@ -337,7 +337,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={readOnly}
@@ -387,7 +387,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={true}

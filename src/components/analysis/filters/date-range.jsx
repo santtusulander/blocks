@@ -3,7 +3,7 @@ import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
 import FilterIncludeComparison from './include-comparison.jsx'
-import DateRangeSelect from '../../../components/date-range-select'
+import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
 
 class FilterDateRange extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class FilterDateRange extends React.Component {
             availableRanges={dateRanges}
             limitRange={includeComparison}
             changeDateRange={(newStartDate, newEndDate, activeDateRange) => {
-              onFilterChange('dateRange', { newStartDate, newEndDate })
+              onFilterChange('dateRange', { startDate: newStartDate, endDate: newEndDate})
               onFilterChange('dateRangeLabel', activeDateRange)
             }}/>
           {showComparison &&

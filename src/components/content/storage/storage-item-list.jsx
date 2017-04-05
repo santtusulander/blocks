@@ -6,10 +6,10 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import LineAreaComposedChart from '../../charts/line-area-composed-chart'
-import IconChart from '../../icons/icon-chart.jsx'
-import IconConfiguration from '../../icons/icon-configuration.jsx'
+import IconChart from '../../shared/icons/icon-chart.jsx'
+import IconConfiguration from '../../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond } from '../../../util/helpers'
-import TruncatedTitle from '../../truncated-title'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 import LinkWrapper from '../link-wrapper'
 
 class StorageItemList extends React.Component {

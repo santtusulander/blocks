@@ -15,7 +15,7 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
-import SelectWrapper from '../../../../components/select-wrapper'
+import SelectWrapper from '../../../../components/shared/form-elements/select-wrapper'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
 
 import '../../../../assets/img/temp-support-tools-modals-mtr-map.png'

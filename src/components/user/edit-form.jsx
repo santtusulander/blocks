@@ -7,13 +7,13 @@ import { Tooltip, Button, ButtonToolbar,
 import { FormattedMessage, injectIntl } from 'react-intl';
 import axios from 'axios'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupToggle from '../form/field-form-group-toggle'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import FieldTelephoneInput from '../form/field-telephone-input'
-import FieldPasswordFields from '../form/field-passwordfields'
-import SaveBar from '../save-bar'
-import ModalWindow from '../modal'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
+import FieldPasswordFields from '../shared/form-fields/field-passwordfields'
+import SaveBar from '../shared/page-elements/save-bar'
+import ModalWindow from '../shared/modal'
 
 import { BASE_URL_AAA } from '../../redux/util'
 

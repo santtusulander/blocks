@@ -4,7 +4,7 @@ import { Field, FieldArray } from 'redux-form'
 import { ControlLabel, FormGroup, Radio } from 'react-bootstrap'
 import { List } from 'immutable'
 
-import FieldFormGroup from '../../../form/field-form-group'
+import FieldFormGroup from '../../../shared/form-fields/field-form-group'
 import RegionsField from './regions-field'
 
 import { 

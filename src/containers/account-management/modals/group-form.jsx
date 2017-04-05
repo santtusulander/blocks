@@ -18,10 +18,12 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
-import TruncatedTitle from '../../../components/truncated-title'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+
+import TruncatedTitle from '../../../components/shared/page-elements/truncated-title'
+import ModalWindow from '../../../components/shared/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'
@@ -37,8 +39,6 @@ import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 
 import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
-
-import '../../../components/account-management/group-form.scss'
 
 class GroupFormContainer extends React.Component {
   constructor(props) {
@@ -366,11 +366,11 @@ GroupFormContainer.defaultProps = {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, host, group, account } = state
-  const { groupId } = ownProps
+  const { user, group, host } = state
+  const { groupId, params: { account } } = ownProps
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
-  const activeAccount = account.get('activeAccount')
+  const activeAccount = getAccountById(state, account)
   const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)

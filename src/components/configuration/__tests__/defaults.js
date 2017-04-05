@@ -2,8 +2,8 @@ import React from 'react'
 import { List, fromJS } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.unmock('../../layout/section-header.jsx')
-jest.unmock('../../layout/section-container.jsx')
+jest.unmock('../../shared/layout/section-header.jsx')
+jest.unmock('../../shared/layout/section-container.jsx')
 jest.unmock('../defaults.jsx')
 jest.unmock('../helpers.js')
 import ConfigurationDefaults from '../defaults.jsx'

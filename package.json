@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.5.0-b7",
+  "version": "1.5.0-b10",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -39,7 +39,7 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "redux-devtools": "^3.3.1",
     "require-dir": "^0.3.0",
-    "sass-lint": "1.7.0",
+    "sass-lint": "^1.10.2",
     "sass-loader": "^4.1.0",
     "selenium-download": "^2.0.1",
     "source-map-loader": "^0.1.5",
@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "axios": "^0.12.0",
+    "blueimp-md5": "^2.7.0",
     "classlist-polyfill": "^1.0.3",
     "classnames": "^2.2.5",
     "d3": "^3.5.14",
@@ -62,6 +63,7 @@
     "immutable": "^3.7.6",
     "immutablediff": "^0.4.4",
     "intl": "^1.2.5",
+    "jssha": "^2.2.0",
     "leaflet": "^0.7.0",
     "moment": "^2.17.1",
     "multireducer": "^3.0.3",

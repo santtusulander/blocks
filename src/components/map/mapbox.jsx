@@ -2,7 +2,7 @@ import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Immutable from 'immutable'
 
-// import Typeahead from '../typeahead'
+// import Typeahead from '../shared/form-elements/typeahead'
 
 import {
   MAPBOX_LIGHT_THEME,
@@ -20,9 +20,9 @@ import {
   checkChangeInBounds,
   getScore
 } from '../../util/mapbox-helpers.js'
-// import IconExpand from '../icons/icon-expand';
-// import IconMinimap from '../icons/icon-minimap';
-import IconGlobe from '../icons/icon-globe';
+// import IconExpand from '../shared/icons/icon-expand';
+// import IconMinimap from '../shared/icons/icon-minimap';
+import IconGlobe from '../shared/icons/icon-globe';
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 class Mapbox extends React.Component {
   constructor(props) {

@@ -3,13 +3,13 @@ import { Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
-import IconAdd from '../icons/icon-add.jsx'
+import IconAdd from '../shared/icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 import { getActiveMatchSetForm } from './helpers'
@@ -110,7 +110,10 @@ class ConfigurationPolicies extends React.Component {
       const ruleIndex = this.props.activeRule.get(2)
 
       this.deleteRule(ruleType, ruleIndex)
+    } else {
+      this.handleChange([])(this.props.originalConfig)
     }
+
     this.handleHide()
   }
 
@@ -197,6 +200,7 @@ class ConfigurationPolicies extends React.Component {
                 cancelActiveEditForm={this.cancelActiveMatchSetEditForm}
                 changeValue={this.props.changeValue}
                 config={config}
+                disabled={!!activeEditForm}
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}
@@ -227,6 +231,7 @@ ConfigurationPolicies.propTypes = {
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  originalConfig: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }

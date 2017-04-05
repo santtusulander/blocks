@@ -23,7 +23,7 @@ import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
 import NoContentItems from './no-content-items'
-import PageContainer from '../layout/page-container'
+import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
@@ -31,25 +31,25 @@ import StorageListContainer from '../../containers/storage-item-containers//stor
 
 import PropertyItemContainer from '../../containers/content/property-item-container'
 
-import Content from '../layout/content'
-import PageHeader from '../layout/page-header'
+import Content from '../shared/layout/content'
+import PageHeader from '../shared/layout/page-header'
 import ContentItem from './content-item'
-import Select from '../select'
-import IconAdd from '../icons/icon-add.jsx'
-import ButtonDropdown from '../button-dropdown'
-import IconCaretDown from '../icons/icon-caret-down.jsx'
-import IconItemList from '../icons/icon-item-list.jsx'
-import IconItemChart from '../icons/icon-item-chart.jsx'
+import Select from '../shared/form-elements/select'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import ButtonDropdown from '../shared/form-elements/button-dropdown'
+import IconCaretDown from '../shared/icons/icon-caret-down.jsx'
+import IconItemList from '../shared/icons/icon-item-list.jsx'
+import IconItemChart from '../shared/icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import TruncatedTitle from '../../components/truncated-title'
-import IsAllowed from '../is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import SidePanel from '../side-panel'
+import SidePanel from '../shared/side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 const rangeMin = 400

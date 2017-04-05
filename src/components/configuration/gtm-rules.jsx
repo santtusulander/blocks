@@ -4,9 +4,9 @@ import { Field, FieldArray } from 'redux-form'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import HelpTooltip from '../help-tooltip'
-import Confirmation from '../confirmation'
-import ActionButtons from '../../components/action-buttons'
+import HelpTooltip from '../shared/tooltips/help-tooltip'
+import Confirmation from '../shared/page-elements/confirmation'
+import ActionButtons from '../shared/action-buttons'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
@@ -118,6 +118,12 @@ class ConfigurationGTMTrafficRules extends React.Component {
             name={rule}
             component={this.renderRule}/>
         ))}
+        {!fields.length &&
+        <tr>
+          <td colSpan={4}>
+            <FormattedMessage id="portal.configuration.gtm.table.empty.text"/>
+          </td>
+        </tr>}
       </tbody>
     )
   }

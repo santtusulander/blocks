@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
-import SectionHeader from '../../../components/layout/section-header'
+import SectionHeader from '../../../components/shared/layout/section-header'
 
 import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 

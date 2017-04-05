@@ -29,22 +29,22 @@ import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
 import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
 
-import PageContainer from '../components/layout/page-container'
-import Sidebar from '../components/layout/sidebar'
-import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
+import PageContainer from '../components/shared/layout/page-container'
+import Sidebar from '../components/shared/layout/section-header'
+import Content from '../components/shared/layout/content'
+import PageHeader from '../components/shared/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
-import IconTrash from '../components/icons/icon-trash.jsx'
-import TruncatedTitle from '../components/truncated-title'
-import IsAllowed from '../components/is-allowed'
-import ModalWindow from '../components/modal'
-import Tabs from '../components/tabs'
-import IsAdmin from '../components/is-admin'
+import IconTrash from '../components/shared/icons/icon-trash.jsx'
+import TruncatedTitle from '../components/shared/page-elements/truncated-title'
+import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
+import ModalWindow from '../components/shared/modal'
+import Tabs from '../components/shared/page-elements/tabs'
+import IsAdmin from '../components/shared/permission-wrappers/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
-import IconCaretDown from '../components/icons/icon-caret-down'
+import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
@@ -413,6 +413,7 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
+            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
@@ -515,7 +516,7 @@ Configuration.propTypes = {
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),

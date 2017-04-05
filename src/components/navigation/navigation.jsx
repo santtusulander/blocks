@@ -14,7 +14,7 @@ import {
   getSecurityUrlFromParams
 } from '../../util/routes'
 
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import {
   VIEW_ACCOUNT_SECTION,
@@ -34,17 +34,15 @@ import {
   userIsContentProvider
 } from '../../util/helpers'
 
-import IconAccount from '../icons/icon-account.jsx'
-import IconAnalytics from '../icons/icon-analytics.jsx'
-import IconBrowse from '../icons/icon-browse.jsx'
-import IconContent from '../icons/icon-content.jsx'
-import IconDashboard from '../icons/icon-dashboard.jsx'
-import IconNetwork from '../icons/icon-network.jsx'
-import IconServices from '../icons/icon-services.jsx'
-import IconSecurity from '../icons/icon-security.jsx'
-import IconSupport from '../icons/icon-support.jsx'
-
-import './navigation.scss'
+import IconAccount from '../shared/icons/icon-account.jsx'
+import IconAnalytics from '../shared/icons/icon-analytics.jsx'
+import IconBrowse from '../shared/icons/icon-browse.jsx'
+import IconContent from '../shared/icons/icon-content.jsx'
+import IconDashboard from '../shared/icons/icon-dashboard.jsx'
+import IconNetwork from '../shared/icons/icon-network.jsx'
+import IconServices from '../shared/icons/icon-services.jsx'
+import IconSecurity from '../shared/icons/icon-security.jsx'
+import IconSupport from '../shared/icons/icon-support.jsx'
 
 import { FormattedMessage } from 'react-intl'
 

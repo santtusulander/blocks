@@ -3,8 +3,8 @@ import { Button, ButtonToolbar, Col, ControlLabel, FormControl, Modal, Row } fro
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Toggle from '../../toggle'
-import Select from '../../select'
+import Toggle from '../../shared/form-elements/toggle'
+import Select from '../../shared/form-elements/select'
 
 import { secondsToUnit, secondsFromUnit } from '../helpers'
 

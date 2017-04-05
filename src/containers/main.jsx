@@ -9,8 +9,13 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 
+import accountsActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById, getByBrand as getAccountsByBrand} from '../redux/modules/entities/accounts/selectors'
+
+import groupsActions from '../redux/modules/entities/groups/actions'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+
+import propertiesActions from '../redux/modules/entities/properties/actions'
 import { getById as getPropertyById } from '../redux/modules/entities/properties/selectors'
 
 import rolesActions from '../redux/modules/entities/roles/actions'
@@ -21,11 +26,11 @@ import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
-import Footer from '../components/footer'
+import Footer from '../components/shared/layout/footer'
 
-import ModalWindow from '../components/modal'
-import Notification from '../components/notification'
-import BannerNotification from '../components/shared/banner-notification'
+import ModalWindow from '../components/shared/modal'
+import Notification from '../components/shared/notification-wrappers/notification'
+import BannerNotification from '../components/shared/notification-wrappers/banner-notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
@@ -56,14 +61,43 @@ export class Main extends React.Component {
           return false
         }
 
+        this.fetchData(this.props.params)
+
         return this.props.userActions.fetchUser(action.payload.username)
           .then(() => {
-            this.props.currentUser.get('roles').map(id => {
-              return this.props.fetchRole(id) 
+
+            /* Fetch permissions for currentUser */
+            const currentUser = this.props.currentUser
+            const currentRoles = currentUser && currentUser.get('roles')
+
+            currentRoles.map(id => {
+              return this.props.fetchRole(id)
             })
           })
 
       })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.fetchData(nextProps.params)
+  }
+
+  fetchData(params) {
+    const {brand,account,group,property} = params
+
+    /* If account / group / property -params set -> load data ( needed for breadcrumb ) */
+    if (account) {
+      this.props.fetchAccount({brand, id: account})
+    }
+
+    if (group) {
+      this.props.fetchGroup({brand, account, id: group})
+    }
+
+    if (property) {
+      this.props.fetchProperty({brand, account, group, id: property})
+    }
+
   }
 
   logOut() {
@@ -223,6 +257,9 @@ Main.propTypes = {
   breadcrumbs: PropTypes.instanceOf(Map),
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
+  fetchAccount: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchProperty: PropTypes.func,
   fetchRole: PropTypes.func,
   fetching: PropTypes.bool,
   infoDialogOptions: PropTypes.instanceOf(Map),
@@ -293,7 +330,11 @@ const mapDispatchToProps = (dispatch) => {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
 
-    fetchRole: (id) => dispatch(rolesActions.fetchOne({id}))
+    fetchRole: (id) => dispatch(rolesActions.fetchOne({id})),
+
+    fetchAccount: (params) => dispatch(accountsActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupsActions.fetchOne(params)),
+    fetchProperty: (params) => dispatch(propertiesActions.fetchOne(params))
   }
 }
 

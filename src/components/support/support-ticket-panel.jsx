@@ -3,7 +3,7 @@ import { Grid, Row, Col } from 'react-bootstrap'
 import { List } from 'immutable'
 import classNames from 'classnames'
 
-import IconComments from '../icons/icon-comments'
+import IconComments from '../shared/icons/icon-comments'
 
 import {
   getTicketPriorities,
@@ -11,8 +11,6 @@ import {
   getClosedTicketStatuses,
   getTicketTypeIcon
 } from '../../util/support-helper'
-
-import './support-ticket-panel.scss'
 
 class SupportTicketPanel extends React.Component {
   constructor(props) {
