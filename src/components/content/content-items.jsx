@@ -49,7 +49,7 @@ import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import SidePanel from '../side-panel'
+import SidePanel from '../shared/side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 const rangeMin = 400

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import AccountManagementUserEditForm from './form'
 
-import SidePanel from '../../side-panel'
+import SidePanel from '../../shared/side-panel'
 
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'

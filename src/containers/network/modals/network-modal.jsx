@@ -18,7 +18,7 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 
 import { buildReduxId } from '../../../redux/util'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 

@@ -8,7 +8,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 import HasServicePermission from '../../shared/permission-wrappers/has-service-permission'
 
-import SidePanel from '../../side-panel'
+import SidePanel from '../../shared/side-panel'
 import TokenSchema from './token-auth-forms/token-schema'
 import TokenStreaming from './token-auth-forms/token-streaming'
 import IconChevronRight from '../../shared/icons/icon-chevron-right'
