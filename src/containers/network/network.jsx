@@ -63,9 +63,9 @@ import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors
 
 import { buildReduxId } from '../../redux/util'
 
-import Content from '../../components/layout/content'
-import PageContainer from '../../components/layout/page-container'
-import PageHeader from '../../components/layout/page-header'
+import Content from '../../components/shared/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
+import PageHeader from '../../components/shared/layout/page-header'
 import TruncatedTitle from '../../components/truncated-title'
 import EntityList from '../../components/network/entity-list'
 import ModalWindow from '../../components/modal'

@@ -2,12 +2,12 @@ import React from 'react'
 import {Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import ActionButtons from '../action-buttons'
+import ActionButtons from '../shared/action-buttons'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
-import Select from '../select'
+import Select from '../shared/form-elements/select'
 import {
   POLICY_TYPES,
   DEFAULT_CONDITION_JS,
@@ -64,7 +64,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newPath = this.props.rulePath.concat(path, [newIndex])
       const newCondition = Immutable.fromJS(DEFAULT_CONDITION_JS)
       const conditions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(newCondition)
- 
+
       this.props.changeValue([],
         this.props.config.setIn(this.props.rulePath.concat(path), conditions)
       )
@@ -79,7 +79,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newIndex = this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
       const actions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(Immutable.Map({_temp: true}))
- 
+
       this.props.changeValue([],
         this.props.config.setIn(this.props.rulePath.concat(path), actions)
       )
@@ -96,7 +96,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const index = path.last()
       const filtered = this.props.config.getIn(parentPath)
         .filterNot((val, i) => i === index)
- 
+
       this.props.changeValue(parentPath, filtered)
       this.props.activateMatch(null)
     }
@@ -111,7 +111,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const index = path.last()
       const filtered = this.props.config.getIn(parentPath)
         .filterNot((val, i) => i === index)
- 
+
       this.props.changeValue(parentPath, filtered)
       this.props.activateSet(null)
     }
@@ -139,7 +139,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       if (this.props.disabled) {
         return false
       }
- 
+
       this.props.cancelActiveEditForm()
       this.props.activateMatch(newPath)
     }
@@ -181,7 +181,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         </div>
       )
     }
-    
+
     return (
       <div className="condition-name">
         {match.field}:&nbsp;
@@ -233,7 +233,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     const disableButton = () => {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
-        !flattenedPolicy.sets.length 
+        !flattenedPolicy.sets.length
     }
 
     const ruleType = this.props.rulePath.get(0, null)

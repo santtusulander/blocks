@@ -34,7 +34,7 @@ import * as groupActionCreators from '../../redux/modules/group'
 
 import PROVIDER_TYPES from '../../constants/provider-types'
 
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 import ModalWindow from '../../components/modal'
 import ContentItems from '../../components/content/content-items'
 

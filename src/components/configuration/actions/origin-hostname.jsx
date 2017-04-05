@@ -2,7 +2,7 @@ import React from 'react'
 import { ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
+import Select from '../../shared/form-elements/select'
 import InputConnector from '../../input-connector'
 
 class OriginHostname extends React.Component {

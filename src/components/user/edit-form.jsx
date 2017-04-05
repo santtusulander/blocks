@@ -6,11 +6,11 @@ import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupToggle from '../form/field-form-group-toggle'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import FieldTelephoneInput from '../form/field-telephone-input'
-import FieldPasswordFields from '../form/field-passwordfields'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
+import FieldPasswordFields from '../shared/form-fields/field-passwordfields'
 import SaveBar from '../save-bar'
 
 import { AUTHY_APP_DOWNLOAD_LINK,

@@ -5,7 +5,7 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../../constants/permissions'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import {
   getAnalyticsUrl,
@@ -14,7 +14,7 @@ import {
 } from '../../../util/routes.js'
 import { userIsCloudProvider } from '../../../util/helpers'
 
-import PageHeader from '../../layout/page-header'
+import PageHeader from '../../shared/layout/page-header'
 import AccountSelector from '../../global-account-selector/global-account-selector'
 import TruncatedTitle from '../../truncated-title'
 

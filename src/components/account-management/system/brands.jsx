@@ -1,6 +1,6 @@
 import React from 'react'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 import { BrandList, AVAILABILITY_PRIVATE }  from '../brand-list/brand-list.jsx'
 
 const fakeBrands = [

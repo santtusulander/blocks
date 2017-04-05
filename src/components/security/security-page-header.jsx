@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import AccountSelector from '../global-account-selector/global-account-selector'
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import TruncatedTitle from '../truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 

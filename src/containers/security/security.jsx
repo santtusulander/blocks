@@ -15,9 +15,9 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import {getById as getAccountById, getByBrand} from '../../redux/modules/entities/accounts/selectors'
 import {getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 
-import PageContainer from '../../components/layout/page-container'
+import PageContainer from '../../components/shared/layout/page-container'
 import SecurityPageHeader from '../../components/security/security-page-header'
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 
 import { getUrl } from '../../util/routes.js'
 

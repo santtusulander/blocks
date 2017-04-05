@@ -3,7 +3,7 @@ import { Button, ButtonToolbar, ControlLabel, FormGroup, Modal } from 'react-boo
 import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import Typeahead from '../../typeahead'
+import Typeahead from '../../shared/form-elements/typeahead'
 
 import {
   FILE_EXTENSION_REGEXP,
@@ -32,7 +32,7 @@ class FileExtension extends React.Component {
 
     if (rawExtensionList) {
       return rawExtensionList.split('|').map(extension => {
-        return { id: extension, label: extension } 
+        return { id: extension, label: extension }
       })
     } else {
       return []

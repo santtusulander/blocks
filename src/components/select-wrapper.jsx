@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import Select from './select.jsx'
+import Select from './shared/form-elements/select'
 
 const SelectWrapper = ({ numericValues, className, onChange, disabled, options, value, label }) => {
   const select = (
