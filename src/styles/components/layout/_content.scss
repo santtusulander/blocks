@@ -12,9 +12,9 @@
   }
 
   > .loading-spinner {
-      .spinner-content {
-        position: fixed;
-        margin-left: $navigation-sidebar-width / 2;
-      }
+    .spinner-content {
+      position: fixed;
+      margin-left: $navigation-sidebar-width / 2;
+    }
   }
 }
