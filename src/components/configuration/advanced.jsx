@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup } from 'react-bootstrap'
-import { Map } from 'immutable'
+import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, ButtonToolbar } from 'react-bootstrap'
@@ -11,6 +11,13 @@ import FieldFormGroupCheckbox from '../form/field-form-group-checkbox'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
+
+import metadataActions from '../../redux/modules/entities/metadata/actions'
+import { getById as getMetadata } from '../../redux/modules/entities/metadata/selectors'
+
+import propertiesActions from '../../redux/modules/entities/properties/actions'
+import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
+
 
 const REQUEST = 'request'
 const RESPONSE = 'response'
@@ -23,6 +30,26 @@ class ConfigurationAdvanced extends React.Component {
 
     this.handleSave = this.handleSave.bind(this)
     this.restoreConfig = this.restoreConfig.bind(this)
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount');
+    const {brand, account, group, property} = this.props.params
+    this.props.fetchProperty({brand, account, group, id: property})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps');
+
+    //If property Changed, fetch metadata
+    if (!is(this.props.property, nextProps.property)) {
+      console.log('fetching metadata');
+      const {brand, account, group, property} = nextProps.params
+      //const activeConfig = getActiveConfig(nextProps.property)
+      const serviceType = 'large'
+
+      this.props.fetchMetadata({brand, account, group, property, serviceType})
+    }
   }
 
   handleSave(e) {
@@ -254,7 +281,7 @@ ConfigurationAdvanced.defaultProps = {
   config: Map()
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('advancedForm')
 
   const requestCheckbox = selector(state, 'request_checkbox')
@@ -267,6 +294,9 @@ const mapStateToProps = (state) => {
     TODO: UDNP-3136 - Integrate Manual Metadata Submission Redux with form
   */
   return {
+    property: getPropertyById(state, ownProps.params.property),
+
+
     isRequestEnabled: requestCheckbox,
     isResponseEnabled: responseCheckbox,
     isFinalRequestEnabled: finalRequestCheckbox,
@@ -280,8 +310,19 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchProperty: (params) => dispatch(propertiesActions.fetchOne(params)) ,
+
+    fetchMetadata: (params) => dispatch(metadataActions.fetchAll(params)),
+    createMetadata: (params) => dispatch(metadataActions.create(params)),
+    updateMetadata: (params) => dispatch(metadataActions.update(params)),
+    removeMetadata: (params) => dispatch(metadataActions.remove(params))
+  }
+}
+
 const form = reduxForm({
   form: 'advancedForm'
 })(injectIntl(ConfigurationAdvanced))
 
-export default connect(mapStateToProps)(form)
+export default connect(mapStateToProps, mapDispatchToProps)(form)
