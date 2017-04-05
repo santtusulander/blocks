@@ -88,7 +88,7 @@ export class LoginFormTwoFactorRecoveryKey extends Component {
   onSubmit(code, codeInputs) {
     const successMessage = (
       <div>
-        <FormattedMessage id="portal.login.2fa.recoveryKey.keyRegeneration.text"/>
+        <div><FormattedMessage id="portal.login.2fa.recoveryKey.keyRegeneration.text"/></div>
         <Link to={`/user/udn`} className="btn-link">
           <FormattedMessage id="portal.common.goToProfileSettings"/>
         </Link>
