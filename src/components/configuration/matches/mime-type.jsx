@@ -2,7 +2,7 @@ import React from 'react'
 import { ControlLabel, FormControl, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import Select from '../../select'
+import Select from '../../shared/form-elements/select'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 

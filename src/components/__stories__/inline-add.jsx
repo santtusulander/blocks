@@ -5,9 +5,9 @@ import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import SelectWrapper from '../select-wrapper.jsx'
-import ActionButtons from '../action-buttons.jsx'
-import InlineAdd from '../inline-add.jsx'
+import SelectWrapper from '../shared/form-elements/select-wrapper.jsx'
+import ActionButtons from '../shared/action-buttons.jsx'
+import InlineAdd from '../shared/page-elements/inline-add.jsx'
 
 const stateReducer = combineReducers({ form })
 const store = createStore(stateReducer)

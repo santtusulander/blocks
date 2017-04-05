@@ -3,7 +3,7 @@ import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 
-import Tooltip from '../tooltip'
+import Tooltip from '../shared/tooltips/tooltip'
 import {FormattedMessage} from 'react-intl'
 
 class AnalysisByKey extends React.Component {

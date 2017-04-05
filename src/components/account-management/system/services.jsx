@@ -1,6 +1,6 @@
 import React from 'react'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 
 class AccountManagementSystemServices extends React.Component {
   render() {

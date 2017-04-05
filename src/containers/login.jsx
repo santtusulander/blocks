@@ -12,16 +12,16 @@ import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
 
-import { BANNER_NOTIFICATION_NO_LOCAL_STORAGE } from '../components/shared/banner-notification'
+import { BANNER_NOTIFICATION_NO_LOCAL_STORAGE } from '../components/shared/notification-wrappers/banner-notification'
 import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
 import { isValidEmail } from '../util/validators'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import BannerNotification from '../components/shared/banner-notification'
+import BannerNotification from '../components/shared/notification-wrappers/banner-notification'
 
 export class Login extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       username: '',

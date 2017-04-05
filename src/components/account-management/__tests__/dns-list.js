@@ -2,14 +2,14 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../../../constants/dns-record-types')
-jest.unmock('../../../components/layout/section-container')
-jest.unmock('../../../components/layout/section-header')
-jest.unmock('../../../components/action-buttons')
+jest.unmock('../../../components/shared/layout/section-container')
+jest.unmock('../../../components/shared/layout/section-header')
+jest.unmock('../../../components/shared/action-buttons')
 jest.unmock('../../../components/shared/icon')
 jest.unmock('../../../components/shared/icons/icon-edit')
 jest.unmock('../../../components/shared/icons/icon-trash')
 jest.unmock('../dns-record-table')
-jest.unmock('../../table-sorter')
+jest.unmock('../../shared/table-sorter')
 jest.unmock('../../button')
 jest.unmock('../dns-list')
 import DNSList from '../dns-list'

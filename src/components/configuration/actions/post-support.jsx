@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 
-import Toggle from '../../toggle'
+import Toggle from '../../shared/form-elements/toggle'
 
 import { FormattedMessage } from 'react-intl'
 

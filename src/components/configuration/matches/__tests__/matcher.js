@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import Select from '../../../select'
+import Select from '../../../shared/form-elements/select'
 
 jest.unmock('../matcher.jsx')
 jest.unmock('../../../../util/policy-config.js')

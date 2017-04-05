@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
 import UDNButton from '../../components/button'
-import Sidebar from '../../components/layout/sidebar'
-import { SidebarLinks } from '../sidebar-links'
+import Sidebar from '../../components/shared/layout/section-header'
+import { SidebarLinks } from '../shared/sidebar-link/sidebar-links'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 

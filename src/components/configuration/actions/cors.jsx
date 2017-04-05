@@ -2,9 +2,9 @@ import React from 'react'
 import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Toggle from '../../toggle'
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import Toggle from '../../shared/form-elements/toggle'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class Cors extends React.Component {
   constructor(props) {
