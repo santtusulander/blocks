@@ -1,8 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
-import Select from '../select.jsx'
+import Select from '../../../select.jsx'
 
-import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
+import { ADD_ACCOUNT } from '../../../../constants/account-management-modals.js'
 
 const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManagementModal, history}) => {
 
