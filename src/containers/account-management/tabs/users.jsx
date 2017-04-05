@@ -128,8 +128,8 @@ export class AccountManagementAccountUsers extends React.Component {
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
       .map(mapped_role => {
-        const matchedRoles = props.roles.find(role => role.get('id') === mapped_role.id)
-        return matchedRoles ? [ mapped_role.id, matchedRoles.get('name') ] : []
+        const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
+        return matchedRole ? [ mapped_role.id, matchedRole.get('name') ] : []
       })
   }
 

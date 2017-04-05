@@ -28,8 +28,8 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import accountsActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 
-import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
+import Content from '../../components/shared/layout/content'
+import PageHeader from '../../components/shared/layout/page-header'
 
 import ModalWindow from '../../components/modal'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
