@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import PasswordFields from '../../password-fields'
+import PasswordFields from '../form-elements/password-fields'
 
 const FieldPasswordFields = ({ input, ...rest }) => {
 

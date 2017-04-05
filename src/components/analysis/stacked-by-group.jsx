@@ -2,7 +2,7 @@ import React from 'react'
 import d3 from 'd3'
 import Immutable from 'immutable'
 
-import Tooltip from '../tooltip'
+import Tooltip from '../shared/tooltips/tooltip'
 import { formatBytes } from '../../util/helpers'
 import {FormattedMessage} from 'react-intl'
 

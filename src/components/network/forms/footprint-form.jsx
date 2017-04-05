@@ -14,8 +14,8 @@ import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-sele
 import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
 import FieldFormGroupAsnLookup from '../../shared/form-fields/field-form-group-asn-lookup'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
-import HelpTooltip from '../../../components/help-tooltip'
-import IsAllowed from '../../is-allowed'
+import HelpTooltip from '../../../components/shared/tooltips/help-tooltip'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 
 import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Address, isValidASN } from '../../../util/validators'

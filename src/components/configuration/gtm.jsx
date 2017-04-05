@@ -7,8 +7,8 @@ import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } 
 import { Button } from 'react-bootstrap'
 
 import IconAdd from '../shared/icons/icon-add.jsx'
-import IsAllowed from '../is-allowed'
-import HelpTooltip from '../help-tooltip'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import HelpTooltip from '../shared/tooltips/help-tooltip'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'

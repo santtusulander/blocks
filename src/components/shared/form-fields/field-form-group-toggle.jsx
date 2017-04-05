@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
-import Toggle from '../../toggle.jsx'
+import Toggle from '../form-elements/toggle.jsx'
 
 const FieldFormGroupToggle = ({ addonAfter, addonAfterLabel, addonBefore, input, onToggle, offText = 'OFF', onText = 'ON', className, readonly, label }) => {
   onToggle = onToggle ? onToggle : e => input.onChange(e)

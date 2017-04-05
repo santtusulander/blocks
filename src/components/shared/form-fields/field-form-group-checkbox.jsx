@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 
-import Checkbox from '../../checkbox.jsx'
+import Checkbox from '../form-elements/checkbox.jsx'
 import { getReduxFormValidationState } from '../../../util/helpers'
 
 const FieldFormGroupCheckbox  = ({

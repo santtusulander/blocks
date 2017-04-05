@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors, formatASN } from '../../../util/helpers'

@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import ActionButtons from '../shared/action-buttons'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate } from '../../util/helpers'
 

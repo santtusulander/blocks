@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import numeral from 'numeral'
 import { FormattedMessage } from 'react-intl'
 import { formatBytes } from '../../util/helpers'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 
 class AnalysisURLList extends React.Component {
   constructor(props) {

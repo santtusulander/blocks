@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 
 import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 import { Link } from 'react-router'
 
 import { getSecurityUrlFromParams } from '../../util/routes'

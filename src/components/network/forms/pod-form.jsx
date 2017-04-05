@@ -22,9 +22,9 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          } from '../../../constants/common'
 
 
-import HelpTooltip from '../../help-tooltip'
-import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
-import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
 
 import {
@@ -46,7 +46,7 @@ import UDNButton from '../../button'
 import IconAdd from '../../shared/icons/icon-add'
 import IconEdit from '../../shared/icons/icon-edit'
 import IconClose from '../../shared/icons/icon-close'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList, UISaltRole } = values

@@ -14,24 +14,24 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import SelectWrapper from '../../../components/select-wrapper'
+import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
-import InlineAdd from '../../../components/inline-add'
+import InlineAdd from '../../../components/shared/page-elements/inline-add'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
-import TableSorter from '../../../components/table-sorter'
+import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
-import ArrayCell from '../../../components/array-td/array-td'
-import ModalWindow from '../../../components/modal'
+import ArrayCell from '../../../components/shared/page-elements/array-td'
+import ModalWindow from '../../../components/shared/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {
