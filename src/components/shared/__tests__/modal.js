@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../modal')
-jest.unmock('../../decorators/key-stroke-decorator')
+jest.unmock('../../../decorators/key-stroke-decorator')
 import ModalWindow from '../modal'
 
 const fieldsMock = {
