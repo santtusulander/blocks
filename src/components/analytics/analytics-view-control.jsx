@@ -6,7 +6,7 @@ import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../constants/permissions'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'

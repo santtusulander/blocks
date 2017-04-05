@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl';
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 
 class AccountManagementSystemUsers extends React.Component {
   render() {

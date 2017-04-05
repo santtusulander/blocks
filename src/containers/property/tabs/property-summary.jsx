@@ -16,7 +16,7 @@ import * as purgeActionCreators from '../../../redux/modules/purge'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 import AnalysisByTime from '../../../components/analysis/by-time'
 import DateRangeSelect from '../../../components/date-range-select'
 import Tooltip from '../../../components/tooltip'

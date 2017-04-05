@@ -23,7 +23,7 @@ import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
 import NoContentItems from './no-content-items'
-import PageContainer from '../layout/page-container'
+import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
@@ -31,8 +31,8 @@ import StorageListContainer from '../../containers/storage-item-containers//stor
 
 import PropertyItemContainer from '../../containers/content/property-item-container'
 
-import Content from '../layout/content'
-import PageHeader from '../layout/page-header'
+import Content from '../shared/layout/content'
+import PageHeader from '../shared/layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../shared/icons/icon-add.jsx'

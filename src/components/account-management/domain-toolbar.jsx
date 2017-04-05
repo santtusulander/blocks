@@ -8,7 +8,7 @@ import {
   DELETE_ZONE
 } from '../../constants/permissions'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import TruncatedTitle from '../truncated-title'
 import IsAllowed from '../is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
