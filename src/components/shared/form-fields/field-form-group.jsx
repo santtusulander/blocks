@@ -1,27 +1,13 @@
 import React, { PropTypes } from 'react'
-import { ControlLabel, FormGroup, InputGroup } from 'react-bootstrap'
+import { ControlLabel, FormGroup, FormControl, InputGroup } from 'react-bootstrap';
 
 import { getReduxFormValidationState } from '../../../util/helpers'
-import DefaultErrorBlock from './default-error-block'
-import NumberInput from '../../number-input'
+import DefaultErrorBlock from '../form-elements/default-error-block'
 
-const FieldFormGroupNumber = ({
-  addonAfter,
-  addonAfterLabel,
-  addonBefore,
-  className,
-  disabled,
-  input,
-  label,
-  inputRef,
-  max,
-  meta,
-  min,
-  placeholder,
-  required,
-  ErrorComponent
-}) => {
+const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, placeholder,
+                          type, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
 
+  const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label &&
@@ -32,7 +18,8 @@ const FieldFormGroupNumber = ({
               {addonAfterLabel}
             </InputGroup.Addon>
           }
-        </ControlLabel>}
+        </ControlLabel>
+      }
 
       <InputGroup>
 
@@ -42,39 +29,37 @@ const FieldFormGroupNumber = ({
           </InputGroup.Addon>
         }
 
-        <NumberInput
+        <FormControl
           {...input}
           {...{ inputRef }}
           className={className}
+          componentClass={componentClass}
+          type={type}
+          placeholder={placeholder}
           disabled={disabled}
-          max={max}
-          min={min}
-          placeholder={placeholder} />
+        />
 
-
-        {addonAfter &&
+        { addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
         }
-
       </InputGroup>
 
       {meta.error && meta.touched &&
         <ErrorComponent {...meta}/>
       }
-
     </FormGroup>
   )
 }
 
-FieldFormGroupNumber.displayName = 'FieldFormGroupNumber'
-FieldFormGroupNumber.defaultProps = {
+FieldFormGroup.displayName = 'FieldFormGroup'
+FieldFormGroup.defaultProps = {
   ErrorComponent: DefaultErrorBlock,
   required: true
 }
 
-FieldFormGroupNumber.propTypes = {
+FieldFormGroup.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
@@ -84,11 +69,10 @@ FieldFormGroupNumber.propTypes = {
   input: PropTypes.object,
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  max: PropTypes.number,
   meta: PropTypes.object,
-  min: PropTypes.number,
   placeholder: PropTypes.string,
-  required: PropTypes.bool
+  required: PropTypes.bool,
+  type: PropTypes.string
 }
 
-export default FieldFormGroupNumber
+export default FieldFormGroup

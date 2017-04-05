@@ -4,8 +4,8 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { connect } from 'react-redux'
 
 import SidePanel from '../side-panel'
-import FieldFormGroup from '../shared/forms/field-form-group'
-import FieldFormGroupSelect from '../shared/forms/field-form-group-select'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import Radio from '../../components/radio'
 
 import { FormattedMessage, injectIntl } from 'react-intl'

@@ -32,7 +32,7 @@ import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 import IconEdit from '../../components/shared/icons/icon-edit'
-import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../components/shared/form-elements/multiline-text-field-error'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 

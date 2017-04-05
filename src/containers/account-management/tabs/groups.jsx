@@ -20,7 +20,7 @@ import TableSorter from '../../../components/table-sorter'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import IsAllowed from '../../../components/is-allowed'
-import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 
 import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'

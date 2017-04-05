@@ -10,9 +10,9 @@ import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import { checkForErrors } from '../../../util/helpers'
 
 import PolicyWeight from '../policy-weight'
-import Input from '../../shared/forms/field-form-group'
-import FormGroupSelect from '../../shared/forms/field-form-group-select'
-import FormFooterButtons from '../../shared/forms/form-footer-buttons'
+import Input from '../../shared/form-fields/field-form-group'
+import FormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../shared/icons/icon-add'
 
