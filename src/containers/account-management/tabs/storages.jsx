@@ -14,7 +14,7 @@ import ActionButtons from '../../../components/shared/action-buttons'
 import ModalWindow from '../../../components/modal'
 import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'

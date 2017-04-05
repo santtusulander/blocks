@@ -2,7 +2,7 @@ import React, { PropTypes, Component, Children } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 
-import {isUdnAdmin} from '../redux/modules/user'
+import { isUdnAdmin } from '../../../redux/modules/user'
 
 class IsAdmin extends Component {
   render() {

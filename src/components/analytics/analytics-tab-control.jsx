@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl'
 
 import Tabs from '../tabs'
 import * as PERMISSIONS from '../../constants/permissions'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import { getTabLink } from '../../util/helpers.js'
 

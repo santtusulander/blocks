@@ -8,7 +8,7 @@ import RoleEditForm from './role-edit-form.jsx'
 import ActionButtons from '../../shared/action-buttons.jsx'
 
 import TableSorter from '../../table-sorter'
-import ArrayTd from '../../array-td/array-td'
+import ArrayTd from '../../shared/page-elements/array-td'
 
 class RolesList extends React.Component {
   constructor(props) {

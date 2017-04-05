@@ -15,7 +15,7 @@ import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-sele
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import HelpPopover from '../../help-popover'
 import ButtonDisableTooltip from '../../button-disable-tooltip'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react'
 import {Button} from 'react-bootstrap'
 import classNames from 'classnames'
 
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import IconEdit from './icons/icon-edit.jsx'
 import IconTrash from './icons/icon-trash.jsx'
 import IconClose from './icons/icon-close.jsx'

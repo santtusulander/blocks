@@ -24,14 +24,14 @@ import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
-import ArrayCell from '../../../components/array-td/array-td'
+import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {

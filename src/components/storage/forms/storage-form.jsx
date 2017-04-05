@@ -10,7 +10,7 @@ import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-togg
 import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import FieldFormGroupMultiOptionSelector from '../../shared/form-fields/field-form-group-multi-option-selector'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'

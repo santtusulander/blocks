@@ -10,7 +10,7 @@ import {
 
 import PageHeader from '../shared/layout/page-header'
 import TruncatedTitle from '../truncated-title'
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
 import IconAdd from '../shared/icons/icon-add'
 import IconEdit from '../shared/icons/icon-edit'

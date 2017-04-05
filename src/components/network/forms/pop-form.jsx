@@ -13,7 +13,7 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { DELETE_POP, MODIFY_POP } from '../../../constants/permissions'
 import { POP_ID_MIN, POP_ID_MAX, STATUS_OPTIONS } from '../../../constants/network.js'
