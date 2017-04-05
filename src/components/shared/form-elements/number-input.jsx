@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { Button, FormControl, InputGroup } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import IconArrowDown from './shared/icons/icon-arrow-down'
-import IconArrowUp from './shared/icons/icon-arrow-up'
+import IconArrowDown from '../icons/icon-arrow-down'
+import IconArrowUp from '../icons/icon-arrow-up'
 
 const KEY_UP = 38
 const KEY_DOWN = 40

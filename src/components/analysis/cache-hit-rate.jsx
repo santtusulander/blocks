@@ -11,7 +11,7 @@ import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import { paleblue } from '../../constants/colors'
-// import Select from '../select'
+// import Select from '../shared/form-elements/select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {

@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import { Button, FormControl } from 'react-bootstrap'
 
-jest.unmock('../number-input.jsx')
+jest.unmock('../number-input')
 import NumberInput from '../number-input'
 
 describe('NumberInput', () => {

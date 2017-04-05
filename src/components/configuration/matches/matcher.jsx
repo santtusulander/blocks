@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import Select from '../../select'
+import Select from '../../shared/form-elements/select'
 import InputConnector from '../../input-connector'
 import {
   getMatchFilterType

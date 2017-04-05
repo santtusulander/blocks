@@ -18,7 +18,7 @@ import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import AnalysisByTime from '../../../components/analysis/by-time'
-import DateRangeSelect from '../../../components/date-range-select'
+import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
 import Tooltip from '../../../components/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 
-import CheckboxArray from '../../checkboxes.jsx'
+import CheckboxArray from '../form-elements/checkboxes.jsx'
 
 const FieldFormGroupCheckboxes = ({
   addonAfter,

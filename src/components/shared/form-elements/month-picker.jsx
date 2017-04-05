@@ -2,8 +2,8 @@ import React from 'react'
 import moment from 'moment'
 import classnames from 'classnames'
 
-import IconArrowRight     from './shared/icons/icon-arrow-right'
-import IconArrowLeft     from './shared/icons/icon-arrow-left'
+import IconArrowRight from '../icons/icon-arrow-right'
+import IconArrowLeft from '../icons/icon-arrow-left'
 
 export class MonthPicker extends React.Component {
   constructor(props) {

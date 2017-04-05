@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {Typeahead as BSTypeahead, AsyncTypeahead as AsyncBSTypeahead} from 'react-bootstrap-typeahead'
+import { Typeahead as BSTypeahead, AsyncTypeahead as AsyncBSTypeahead } from 'react-bootstrap-typeahead'
 
 class Typeahead extends React.Component {
   constructor(props) {

@@ -11,8 +11,8 @@ import {
   Panel } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import Typeahead from './typeahead'
-import Select from './select'
+import Typeahead from './shared/form-elements/typeahead'
+import Select from './shared/form-elements/select'
 import SidePanel from './side-panel'
 import FormFooterButtons from './shared/form-elements/form-footer-buttons'
 import { isValidEmail, isValidRelativePath } from '../util/validators'

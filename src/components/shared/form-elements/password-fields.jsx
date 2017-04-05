@@ -3,8 +3,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormControl, FormGroup, InputGroup, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import IconPassword from '../components/shared/icons/icon-password.jsx'
-import IconEye from '../components/shared/icons/icon-eye.jsx'
+import IconPassword from '../icons/icon-password.jsx'
+import IconEye from '../icons/icon-eye.jsx'
 
 export class PasswordFields extends Component {
   constructor(props) {
