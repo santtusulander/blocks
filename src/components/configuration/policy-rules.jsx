@@ -143,7 +143,7 @@ class ConfigurationPolicyRules extends React.Component {
           <tbody>
             {rows}
             {isEmpty ? <tr>
-              <td colSpan={5}>
+              <td colSpan={6}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
               </td>
             </tr>
