@@ -16,7 +16,7 @@ import { FormattedMessage } from 'react-intl'
 // import UDNButton from '../../../components/button'
 // import SupportTicketPanel from '../../../components/support/support-ticket-panel'
 // import SupportTicketModal from '../../../components/support/support-ticket-modal'
-// import SupportTicketFormModal from '../../../components/support/support-ticket-shared/forms/modal'
+// import SupportTicketFormModal from '../../../components/support/support-ticket-form/modal'
 //
 // import {
 //   getClosedTicketStatuses,
