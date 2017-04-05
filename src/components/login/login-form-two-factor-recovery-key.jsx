@@ -9,29 +9,23 @@ import { FormattedMessage } from 'react-intl'
 import * as userActionCreators from '../../redux/modules/user'
 
 import { getUserName, getUITheme } from '../../util/local-storage'
-import { changeTheme } from '../../redux/modules/ui'
+import { changeTheme, changeNotification } from '../../redux/modules/ui'
 
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
 
 import { RECOVERY_KEY_INPUT_FIELD_NAMES, RECOVERY_KEY_INPUT_FIELD_MAX_LENGTH } from '../../constants/login.js'
 
-export class LoginFormRecoveryKey extends Component {
+export class LoginFormTwoFactorRecoveryKey extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loginError: null
+    }
 
     this.onClick = this.onClick.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onChange = this.onChange.bind(this)
-  }
-
-  shouldComponentUpdate(nextProps) {
-    if (this.props.fetching !== nextProps.fetching) {
-      return true
-    } else if (this.props.loginError !== nextProps.loginError) {
-      return true
-    } else {
-      return false
-    }
   }
 
   onChange(e) {
@@ -54,7 +48,7 @@ export class LoginFormRecoveryKey extends Component {
 
       // If all inputs has a value, parse those value and submit token
       if (code.length === codeInputs.length * RECOVERY_KEY_INPUT_FIELD_MAX_LENGTH) {
-        this.props.onSubmit(code, codeInputs)
+        this.onSubmit(code, codeInputs)
         return
       }
 
@@ -75,7 +69,7 @@ export class LoginFormRecoveryKey extends Component {
       }
     }
 
-    this.props.onCodeChange()
+    this.setState({ loginError: null })
   }
 
   onKeyDown(e) {
@@ -91,35 +85,48 @@ export class LoginFormRecoveryKey extends Component {
     }
   }
 
-  onCodeSubmit(code, codeInputs) {
+  onSubmit(code, codeInputs) {
+    const successMessage = (
+      <div>
+        <FormattedMessage id="portal.login.2fa.recoveryKey.keyRegeneration.text"/>
+        <Link to={`/user/udn`} className="btn-link">
+          <FormattedMessage id="portal.common.goToProfileSettings"/>
+        </Link>
+      </div>
+    )
     this.setState({
       loginError: null
     })
     this.props.userActions.startFetching()
-    this.props.userActions.twoFALogInWithRecoveryKey(
-      this.state.username, code
-    ).then(action => {
-      if (!action.error) {
-        this.saveUserName(this.state.rememberUser, this.state.username)
-        //Need to set correct theme to redux store after it has been destroyed
-        this.props.setUiTheme()
-      } else {
-        // Clear inputs values on error.
-        for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
-          codeInputs[inputIndex].value = ''
-        }
-        // Focus first code input
-        codeInputs[0].focus()
+    this.props.userActions.twoFALogInWithRecoveryKey(this.props.username, code)
+      .then(action => {
+        if (!action.error) {
+          //Need to set correct theme to redux store after it has been destroyed
+          this.props.setUiTheme()
+          this.showNotification(successMessage)
+        } else {
+          // Clear inputs values on error.
+          for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
+            codeInputs[inputIndex].value = ''
+          }
+          // Focus first code input
+          codeInputs[0].focus()
 
-        this.setState({
-          loginError: action.payload.message
-        })
-      }
-    })
+          this.setState({
+            loginError: action.payload.message
+          })
+        }
+      })
   }
 
   onClick(e) {
     e.target.select()
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
   }
 
   render() {
@@ -138,11 +145,7 @@ export class LoginFormRecoveryKey extends Component {
       )
     })
 
-    const codeInputsClass = classnames(
-      {
-        'invalid': this.props.loginError !== null
-      }
-    )
+    const codeInputsClass = classnames({ 'invalid': this.state.loginError !== null })
 
     return (
       <Modal.Dialog className="login-modal login-recovery-modal">
@@ -158,11 +161,11 @@ export class LoginFormRecoveryKey extends Component {
           <form>
             <FormGroup>
               <div className="token-input-info">
-                { (this.props.loginError === null) &&
+                { (this.state.loginError === null) &&
                   <p><FormattedMessage id="portal.login.2fa.recoveryKeyHint.text"/></p>
                 }
-                { this.props.loginError &&
-                  <p>{this.props.loginError} | <FormattedMessage id="portal.login.2fa.recoveryKeyHintReEnter.text"/></p>
+                { this.state.loginError &&
+                  <p>{this.state.loginError} | <FormattedMessage id="portal.login.2fa.recoveryKeyHintReEnter.text"/></p>
                 }
               </div>
               <InputGroup className={codeInputsClass}>
@@ -191,12 +194,10 @@ export class LoginFormRecoveryKey extends Component {
   }
 }
 
-LoginFormRecoveryKey.displayName = "LoginFormRecoveryKey"
-LoginFormRecoveryKey.propTypes = {
+LoginFormTwoFactorRecoveryKey.displayName = "LoginFormTwoFactorRecoveryKey"
+LoginFormTwoFactorRecoveryKey.propTypes = {
+  changeNotification: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
-  onCodeChange: React.PropTypes.func,
-  onSubmit: React.PropTypes.func,
   setUiTheme: React.PropTypes.func,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
@@ -205,16 +206,16 @@ LoginFormRecoveryKey.propTypes = {
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
-    username: state.user.get('username') || getUserName() || null,
-    bannerNotification: state.ui.get('bannerNotification')
+    username: state.user.get('username') || getUserName() || null
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    changeNotification: (message) => dispatch(changeNotification(message)),
     setUiTheme: () => dispatch(changeTheme(getUITheme())),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginFormRecoveryKey)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginFormTwoFactorRecoveryKey)

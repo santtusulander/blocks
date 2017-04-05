@@ -52,5 +52,4 @@
   "portal.user.edit.recoveryKey.helpText": "You can use one-time recovery key to access your account if you lose your phone or otherwise have problems with accessing your account.",
   "portal.user.edit.recoveryKey.modal.title": "Recovery Key",
   "portal.user.edit.recoveryKey.modal.helpText": "This is one-time recovery key. Store it somewhere safe."
-
 }

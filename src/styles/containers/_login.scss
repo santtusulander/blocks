@@ -17,8 +17,6 @@ $login-modal-token-input-margins: rem(12px);
 $login-modal-token-loading-margins: rem(37px);
 $login-modal-token-inputs-group-padding: rem(70px);
 $login-modal-token-inputs-group-margin-bottom: rem(102px);
-$login-modal-token-trouble-btn-margin-top: rem(64px);
-$login-modal-token-trouble-btn-margin-bottom: rem(10px);
 $login-modal-token-having-trouble-radio-padding-top: rem(15px);
 $login-modal-token-having-trouble-radio-first-margint-top: rem(-20px);
 $login-modal-token-having-trouble-radio-span-padding-left: rem(5px);
@@ -79,11 +77,6 @@ $login-modal-token-having-trouble-support-text-margin-bottom: rem(20px);
 
     .support-text {
       margin-bottom: $login-modal-token-having-trouble-support-text-margin-bottom;
-    }
-
-    .token-trouble-btn {
-      margin-top: $login-modal-token-trouble-btn-margin-top;
-      margin-bottom: $login-modal-token-trouble-btn-margin-bottom;
     }
 
     .having-trouble .radio {

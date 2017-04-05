@@ -22,6 +22,7 @@
   "portal.login.2fa.recoveryKeyHintReEnter.text": "Please re-enter the key.",
   "portal.login.2fa.recoveryKey.text": "recovery key",
   "portal.login.2fa.recoveryKey.title": "Enter Recovery Key",
+  "portal.login.2fa.recoveryKey.keyRegeneration.text": "New one-time Recovery Key has been generated.",
   "portal.login.2fa.havingTrouble.text": "Having trouble?",
   "portal.login.2fa.havingTrouble.title": "Trouble With Login?",
   "portal.login.2fa.havingTrouble.tryThese.text": "Try these:",

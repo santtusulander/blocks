@@ -226,6 +226,7 @@ class UserEditForm extends React.Component {
   }
 
   toggleRecoveryKeyModal() {
+    // Fetch Recovery Key only once
     if (this.state.recoveryKey) {
       this.setState({ showRecoveryKeyModal: !this.state.showRecoveryKeyModal })
     } else {
@@ -396,13 +397,11 @@ class UserEditForm extends React.Component {
                   component={FieldFormGroupToggle}
                 />
               </Col>
-
               <Col xs={2}>
                 <p className="form-control-static">
                   <FormattedMessage id="portal.user.edit.2FA.method.text" />
                 </p>
               </Col>
-
               <Col xs={1}>
                 <Field
                   name="tfa"
@@ -411,13 +410,13 @@ class UserEditForm extends React.Component {
                   options={this.tfaMethodOptions()}
                 />
               </Col>
-
               <Col xs={3}>
                 <div className="select-box-tooltip">
                   {this.renderTwoFAMethodsTooltips(tfa)}
                 </div>
               </Col>
             </Row>
+
             { initialTfa && tfa &&
               <Row className="recovery-key">
                 <Button bsStyle="primary" onClick={this.toggleRecoveryKeyModal}>

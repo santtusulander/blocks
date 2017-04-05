@@ -59,7 +59,7 @@ import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
-import RecoveryKey from './components/login/login-form-recovery-key'
+import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
 

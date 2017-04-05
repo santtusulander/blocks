@@ -35,6 +35,10 @@
 .recovery-key-modal .modal-body {
   margin: 20px 0 40px;
 
+  & >span {
+    margin: 15px 0;
+  }
+
   input {
     width: 100%;
     font-size: 40px;
