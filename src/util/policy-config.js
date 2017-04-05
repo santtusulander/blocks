@@ -7,7 +7,7 @@ import {
 } from '../constants/property-config'
 
 import { TOKEN_AUTH_STREAMING } from '../constants/configuration'
-import { availableActions } from '../constants/property-config'
+import { availableActions, availableMatches } from '../constants/property-config'
 
 export const ALLOW_RESPONSE_CODES = [200]
 export const DENY_RESPONSE_CODES = [401, 403, 404, 500]
@@ -112,6 +112,12 @@ const getActionName = (actionName, action) => {
   return actionConfig ? <FormattedMessage id={actionConfig.name}/> : actionName
 }
 
+const getConditionName = (fieldName) => {
+  const conditionConfig = availableMatches.find(item => item.key === fieldName)
+
+  return conditionConfig ? <FormattedMessage id={conditionConfig.name}/> : fieldName
+}
+
 export function policyContainsMatchField(policy, field, count) {
   const matches = fromJS(policy.matches)
   return matches.filter(match => match.get('field') === field).count() === count
@@ -140,7 +146,8 @@ const parseConditions = (items, path) => {
       fieldDetail: item.get('field_detail'),
       filterType: getMatchFilterType(item),
       values: (Array.isArray(value)) ? value : [value],
-      path: path.concat([i])
+      path: path.concat([i]),
+      name: getConditionName(item.get('field'))
     }
   }).toJS() : []
 }
