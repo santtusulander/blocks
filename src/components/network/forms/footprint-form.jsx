@@ -8,12 +8,12 @@ import _ from 'lodash'
 
 import UDNButton from '../../button'
 import IconAdd from '../../shared/icons/icon-add'
-import FieldRadio from '../../form/field-radio'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
-import FieldFormGroupAsnLookup from '../../form/field-form-group-asn-lookup'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldRadio from '../../shared/forms/field-radio'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
+import FieldFormGroupTypeahead from '../../shared/forms/field-form-group-typeahead'
+import FieldFormGroupAsnLookup from '../../shared/forms/field-form-group-asn-lookup'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 import HelpTooltip from '../../../components/help-tooltip'
 import IsAllowed from '../../is-allowed'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
@@ -241,7 +241,7 @@ class FootprintForm extends React.Component {
           uploadModalOnClick={true}
           onDropCompleted={this.onDropComplete}
           onDeleteCompleted={() => {
-            this.setState({ csvValues: {} }) 
+            this.setState({ csvValues: {} })
           }}/>
 
         { templateLink }

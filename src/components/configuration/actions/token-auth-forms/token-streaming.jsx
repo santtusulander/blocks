@@ -6,10 +6,10 @@ import { Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import HelpTooltip from '../../../help-tooltip'
-import FieldFormGroupNumber from '../../../form/field-form-group-number'
-import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
-import FormFooterButtons from '../../../form/form-footer-buttons'
-import FieldFormGroupSelect from '../../../form/field-form-group-select'
+import FieldFormGroupNumber from '../../../shared/forms/field-form-group-number'
+import FieldFormGroupToggle from '../../../shared/forms/field-form-group-toggle'
+import FormFooterButtons from '../../../shared/forms/form-footer-buttons'
+import FieldFormGroupSelect from '../../../shared/forms/field-form-group-select'
 
 import { 
   TOKEN_AUTH_STATIC,

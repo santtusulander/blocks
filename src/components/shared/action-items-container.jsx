@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import ActionItems from './action-items'
 
-import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
+import FieldFormGroupTypeahead from '../shared/forms/field-form-group-typeahead'
 
 const ActionItemsContainer = ({ addedActionItems, addAvailableAction, addNewAction, availableActions, disableMultipleItems, editAction, intl, label }) => {
   return (

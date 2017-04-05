@@ -5,8 +5,8 @@ import { reduxForm } from 'redux-form'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import ASNTypeahead from '../../form/field-form-group-asn-lookup'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import ASNTypeahead from '../../shared/forms/field-form-group-asn-lookup'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 
 const validate = ({ AsnLookup }) => checkForErrors({ AsnLookup })
 

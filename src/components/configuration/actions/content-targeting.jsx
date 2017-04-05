@@ -7,8 +7,8 @@ import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } 
 
 import * as StatusCodes from '../../../util/status-codes'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
 
 import { CT_DEFAULT_STATUS_CODE } from '../../../constants/configuration'
 

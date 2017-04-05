@@ -3,8 +3,8 @@ import { reduxForm, Field, change, propTypes as reduxFormPropTypes  } from 'redu
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 import IsAllowed from '../../is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 

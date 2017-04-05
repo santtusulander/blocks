@@ -3,10 +3,10 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Row, Col } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldTelephoneInput from '../../form/field-telephone-input'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FieldTelephoneInput from '../../shared/forms/field-telephone-input'
+import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 
 
 let errors = {}

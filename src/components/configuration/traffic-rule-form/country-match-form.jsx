@@ -6,8 +6,8 @@ import { reduxForm, Field } from 'redux-form'
 import countriesList from '../../../constants/country-list'
 import { checkForErrors } from '../../../util/helpers'
 
-import Typeahead from '../../form/field-form-group-typeahead'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import Typeahead from '../../shared/forms/field-form-group-typeahead'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 
 const validate = ({ countries }) => checkForErrors({ countries })
 

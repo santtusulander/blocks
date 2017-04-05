@@ -12,10 +12,10 @@ import {
   getTicketPriorityOptions
 } from '../../../util/support-helper'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FieldFormGroupToggle from '../../form/field-form-group-toggle'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
+import FieldFormGroupToggle from '../../shared/forms/field-form-group-toggle'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 
 let errors = {}
 const maxSubjectLength = 150

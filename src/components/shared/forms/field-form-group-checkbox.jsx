@@ -1,31 +1,31 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 
-import CheckboxArray from '../checkboxes.jsx'
+import Checkbox from '../../checkbox.jsx'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
-const FieldFormGroupCheckboxes = ({
+const FieldFormGroupCheckbox  = ({
   addonAfter,
   className,
   input,
+  meta,
   meta: {
-    dirty,
+    touched,
     error
   },
   disabled,
-  iterable,
   label,
   required = true
 }) => {
   return (
-    <FormGroup controlId={input.name}>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
-        <CheckboxArray
+        <Checkbox
           className={className}
           disabled={disabled}
-          field={input}
-          iterable={iterable}
+          {...input}
         />
 
           { addonAfter &&
@@ -34,25 +34,22 @@ const FieldFormGroupCheckboxes = ({
             </InputGroup.Addon>
           }
         </InputGroup>
-      {error && dirty &&
-        <p className='has-error'>
-          <HelpBlock className='error-msg'>{error}</HelpBlock>
-        </p>
+      {error && touched &&
+        <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
   );
 }
 
-FieldFormGroupCheckboxes.displayName = 'FieldFormGroupCheckboxes'
-FieldFormGroupCheckboxes.propTypes = {
+FieldFormGroupCheckbox.displayName = 'FieldFormGroupCheckboxes'
+FieldFormGroupCheckbox.propTypes = {
   addonAfter: PropTypes.node,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  iterable: PropTypes.array,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   required: PropTypes.bool
 }
 
-export default FieldFormGroupCheckboxes
+export default FieldFormGroupCheckbox

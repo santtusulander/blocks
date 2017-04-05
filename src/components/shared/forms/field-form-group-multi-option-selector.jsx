@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, HelpBlock, InputGroup} from 'react-bootstrap';
 import { List } from 'immutable'
-import MultiOptionSelector from '../multi-option-selector'
-import { getReduxFormValidationState } from '../../util/helpers'
+import MultiOptionSelector from '../../multi-option-selector'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 const FieldFormGroupMultiOptionSelector  = ({ addonAfter, addonAfterLabel, addonBefore,
                                               input, options, meta: { touched, error },

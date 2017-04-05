@@ -11,9 +11,9 @@ import {
   isValidNameserver,
   isValidSOARecord
 } from '../../util/validators'
-import FieldFormGroup from '../form/field-form-group'
-import FormFooterButtons from '../form/form-footer-buttons'
-import FieldFormGroupNumber from '../form/field-form-group-number.jsx'
+import FieldFormGroup from '../shared/forms/field-form-group'
+import FormFooterButtons from '../shared/forms/form-footer-buttons'
+import FieldFormGroupNumber from '../shared/forms/field-form-group-number.jsx'
 import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_REFRESH } from '../../constants/account-management-options'
 
 const validate = fields => {

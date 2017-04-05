@@ -17,8 +17,8 @@ import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import RuleModal from './traffic-rule-form/rule-modal'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupToggle from '../form/field-form-group-toggle'
+import FieldFormGroup from '../shared/forms/field-form-group'
+import FieldFormGroupToggle from '../shared/forms/field-form-group-toggle'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'

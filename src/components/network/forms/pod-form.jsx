@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm, formValueSelector, Field, FieldArray, arrayPush, propTypes as reduxFormPropTypes } from 'redux-form'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/forms/field-form-group'
+import FieldFormGroupSelect from '../../shared/forms/field-form-group-select'
+import FormFooterButtons from '../../shared/forms/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {
   Button,
@@ -25,7 +25,7 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
 import HelpTooltip from '../../help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
-import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
+import FieldFormGroupTypeahead from '../../shared/forms/field-form-group-typeahead'
 
 import {
   DELETE_POD, MODIFY_POD,
