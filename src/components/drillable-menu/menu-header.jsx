@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormControl } from 'react-bootstrap'
 
-import IconArrowLeft from '../icons/icon-arrow-left'
+import IconArrowLeft from '../shared/icons/icon-arrow-left'
 
 const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent }) => {
 

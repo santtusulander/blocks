@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import IconArrowRight from '../icons/icon-arrow-right'
+import IconArrowRight from '../shared/icons/icon-arrow-right'
 import MiniLoadingSpinner from '../loading-spinner/loading-spinner-sm'
 
 const DrillableMenuItems = ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
