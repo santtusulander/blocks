@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import Content from '../components/layout/content'
+import Content from '../components/shared/layout/content'
 
 const NotFoundPage = ({ history }) => {
 

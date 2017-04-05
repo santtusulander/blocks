@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import SectionContainer from '../layout/section-container'
+import SectionContainer from '../shared/layout/section-container'
 import MiniChart from '../mini-chart'
 import ComparisonBars from './comparison-bars'
 import TruncatedTitle from '../truncated-title'

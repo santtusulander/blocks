@@ -5,8 +5,8 @@ import { Row, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 
 import FieldFormGroupNumber from '../form/field-form-group-number'
 import FieldFormGroupToggle from '../form/field-form-group-toggle'

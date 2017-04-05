@@ -170,14 +170,15 @@
 @import 'components/configuration/rule-modal';
 
 // Layouts
-@import 'components/layout/content';
-@import 'components/layout/dialog';
-@import 'components/layout/flexbox';
-@import 'components/layout/page-container';
-@import 'components/layout/page-header';
-@import 'components/layout/section-header';
-@import 'components/layout/section-container';
-@import 'components/layout/sidebar';
+@import 'components/shared/layout/content';
+@import 'components/shared/layout/dialog';
+@import 'components/shared/layout/flexbox';
+@import 'components/shared/layout/page-container';
+@import 'components/shared/layout/page-header';
+@import 'components/shared/layout/section-header';
+@import 'components/shared/layout/section-container';
+@import 'components/shared/layout/section-header';
+
 // Content
 @import 'components/content/content-item';
 @import 'components/content/content-item-chart';

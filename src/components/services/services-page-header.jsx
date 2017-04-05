@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl } from 'react-intl'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 
 import { FormattedMessage } from 'react-intl'
 
