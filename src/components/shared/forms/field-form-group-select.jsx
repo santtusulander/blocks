@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 
-import Select from '../select.jsx'
-import { getReduxFormValidationState } from '../../util/helpers'
+import Select from '../../select.jsx'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
                                  input, options, numericValues, className,

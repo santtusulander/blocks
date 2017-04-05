@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { ControlLabel, FormGroup, FormControl, InputGroup } from 'react-bootstrap';
 
-import { getReduxFormValidationState } from '../../util/helpers'
+import { getReduxFormValidationState } from '../../../util/helpers'
 import DefaultErrorBlock from './default-error-block'
 
 const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, placeholder,

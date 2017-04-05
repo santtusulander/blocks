@@ -4,7 +4,7 @@ import { FormGroup, ControlLabel } from 'react-bootstrap';
 
 import DefaultErrorBlock from './default-error-block'
 
-import { stripCountryCode, stripNonNumeric } from '../../util/user-helpers'
+import { stripCountryCode, stripNonNumeric } from '../../../util/user-helpers'
 
 const FieldTelephoneInput = ({ input, meta, label, required, disabled, ErrorComponent }) => {
   return (
