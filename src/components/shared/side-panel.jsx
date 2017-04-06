@@ -4,11 +4,11 @@ import { bindActionCreators } from 'redux'
 import { Modal } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import * as uiActionCreators from '../redux/modules/ui'
+import * as uiActionCreators from '../../redux/modules/ui'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import keyStrokeSupport from '../decorators/key-stroke-decorator'
-import Notification from '../components/shared/notification-wrappers/notification'
+import keyStrokeSupport from '../../decorators/key-stroke-decorator'
+import Notification from './notification-wrappers/notification'
 
 const modalClassDim = 'side-panel--dim'
 const overlappingClass = 'side-panel--overlapping'

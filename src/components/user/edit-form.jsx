@@ -11,7 +11,7 @@ import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
 import FieldPasswordFields from '../shared/form-fields/field-passwordfields'
-import SaveBar from '../save-bar'
+import SaveBar from '../shared/page-elements/save-bar'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,

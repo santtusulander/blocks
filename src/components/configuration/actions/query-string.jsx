@@ -3,7 +3,7 @@ import { Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 're
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../shared/form-elements/select'
-import InputConnector from '../../input-connector'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class QueryString extends React.Component {
   constructor(props) {

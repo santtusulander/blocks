@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { bindActionCreators } from 'redux'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'

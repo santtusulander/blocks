@@ -8,7 +8,7 @@ import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/shared/layout/page-container'
 import Content from '../../components/shared/layout/content'
 import SupportPageHeader from '../../components/support/support-page-header'
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 
 class Support extends React.Component {
 

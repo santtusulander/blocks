@@ -15,7 +15,7 @@ import { buildReduxId } from '../../../redux/util'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import { changeNotification } from '../../../redux/modules/ui'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
 import { NODE_TYPE_DEFAULT,

@@ -20,10 +20,10 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 
-import TruncatedTitle from '../../../components/truncated-title'
-import ModalWindow from '../../../components/modal'
+import TruncatedTitle from '../../../components/shared/page-elements/truncated-title'
+import ModalWindow from '../../../components/shared/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'

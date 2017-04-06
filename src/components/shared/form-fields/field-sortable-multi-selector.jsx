@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, HelpBlock } from 'react-bootstrap';
-import SortableMultiSelector from '../../sortable-multi-selector'
+import SortableMultiSelector from '../form-elements/sortable-multi-selector'
 import { getReduxFormValidationState } from '../../../util/helpers'
 
 const FieldSortableMultiSelector  = ({ input, options, meta: { touched, error },
