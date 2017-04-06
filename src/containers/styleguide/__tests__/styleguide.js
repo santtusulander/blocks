@@ -4,7 +4,7 @@ import {shallow} from 'enzyme'
 jest.unmock('../styleguide.jsx')
 jest.unmock('../../../decorators/select-auto-close')
 
-jest.mock('../../util/helpers', () => { return {
+jest.mock('../../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
   separateUnit: bytes => bytes
 }})
