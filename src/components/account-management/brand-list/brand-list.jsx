@@ -61,6 +61,6 @@ BrandList.propTypes = {
   accountManagementModal: React.PropTypes.string,
   brands: React.PropTypes.array,
   brandsFormInitialValues: React.PropTypes.object,
-  onDelete: PropTypes.func,
+  onDelete: React.PropTypes.func,
   toggleModal: React.PropTypes.func
 }

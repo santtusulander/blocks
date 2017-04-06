@@ -458,7 +458,7 @@ class ContentItems extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
-          {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)}
+          {/* {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)} */}
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
