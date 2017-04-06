@@ -21,7 +21,7 @@ import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'

@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Papa from 'papaparse'
 import _ from 'lodash'
 
-import UDNButton from '../../button'
+import UDNButton from '../../shared/form-elements/button'
 import IconAdd from '../../shared/icons/icon-add'
 import FieldRadio from '../../shared/form-fields/field-radio'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'

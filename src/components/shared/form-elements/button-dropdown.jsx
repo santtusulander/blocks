@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
-import Button from '../../button'
+import Button from '../form-elements/button'
 import IconAdd from '../icons/icon-add'
 import CustomToggle from './customToggle'
 
