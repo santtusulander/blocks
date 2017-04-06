@@ -418,6 +418,7 @@ const mapStateToProps = (state) => (
   }
 )
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => (
   {
     uiActions: bindActionCreators(uiActionCreators, dispatch)

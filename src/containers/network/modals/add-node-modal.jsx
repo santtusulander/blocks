@@ -169,6 +169,7 @@ const mapStateToProps = (state, { params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 
   onSave: node => {

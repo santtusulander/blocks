@@ -185,6 +185,7 @@ const mapStateToProps = (state, { params: { account, group } }) => {
   };
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps =  (dispatch, ownProps) => {
   const {brand, account, group} = ownProps.params
 

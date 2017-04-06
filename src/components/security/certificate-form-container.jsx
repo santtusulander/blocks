@@ -169,6 +169,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
 

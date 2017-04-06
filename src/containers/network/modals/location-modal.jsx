@@ -343,6 +343,14 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
+/* istanbul ignore next */
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
   onCreate: (params) => dispatch(locationActions.create({...params })),

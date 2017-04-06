@@ -325,6 +325,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),

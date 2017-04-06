@@ -218,6 +218,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/

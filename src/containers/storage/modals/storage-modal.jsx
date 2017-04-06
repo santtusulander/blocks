@@ -235,6 +235,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(storageActions.create({...params, data })),

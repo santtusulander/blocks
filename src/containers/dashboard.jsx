@@ -501,6 +501,7 @@ const mapStateToProps = (state, { params: { account } }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),

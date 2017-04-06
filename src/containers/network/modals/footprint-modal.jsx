@@ -193,6 +193,7 @@ FootprintFormContainer.propTypes = {
   uiActions: PropTypes.object
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
