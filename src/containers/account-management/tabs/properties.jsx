@@ -59,6 +59,7 @@ class AccountManagementProperties extends React.Component {
 
     pagination.registerSubscriber((pagingParams) => this.refreshData(brand, account, pagingParams))
   }
+
   componentWillMount() {
     const {
       router,
@@ -85,13 +86,12 @@ class AccountManagementProperties extends React.Component {
   }
 
   refreshData(brand, account, pagingParams) {
-    const { fetchGroups, fetchProperties } = this.props
+    const { fetchGroups, fetchProperties, groups } = this.props
     fetchGroups({ brand, account }).then(response => {
-      if (response) {
-        for (const groupId in response.entities.groups) {
-          if (response.entities.groups.hasOwnProperty(groupId)) {
-            fetchProperties({ brand, account, group: groupId, ...pagingParams })
-          }
+      const groupsData = response ? response.entities.groups : groups.toKeyedSeq().toJS()
+      for (const group in groupsData) {
+        if (groupsData.hasOwnProperty(group)) {
+          fetchProperties({ brand, account, group: groupsData[group].id, ...pagingParams })
         }
       }
     })
@@ -239,7 +239,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { deleteProperty, editProperty, intl, properties, fetching } = this.props
+    const { deleteProperty, editProperty, intl, properties, fetching, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
@@ -316,7 +316,7 @@ class AccountManagementProperties extends React.Component {
                           editProperty(property)
                         }}
                         onDelete={() => {
-                          deleteProperty(property)
+                          deleteProperty(brand, account, property.get('parentId'), property.get('published_host_id'))
                         }} />
                     </IsAllowed>
                   </td>
@@ -390,6 +390,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
     fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
