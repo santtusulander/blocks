@@ -71,7 +71,7 @@ import country_list from '../../constants/country-list'
 
 import { cityData, filterCheckboxOptions, spDashboardData,
          countryData, multiOptionSelectorOptions, typeaheadOptions,
-         miniChartKPIData } from '../__mocks__/styleguide-data.js'
+         miniChartKPIData, storageKPIData } from '../__mocks__/styleguide-data.js'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
@@ -834,16 +834,7 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Storage KPI</h1>
 
           <StorageKPI
-            chartData={[
-              {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
-              {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
-              {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
-              {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
-              {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
-              {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
-              {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
-              {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
-            ]}
+            chartData={storageKPIData}
             chartDataKey='bytes'
             currentValue={112}
             gainPercentage={0.2}

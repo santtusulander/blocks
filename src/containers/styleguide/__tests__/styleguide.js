@@ -2,7 +2,7 @@ import React from 'react'
 import {shallow} from 'enzyme'
 
 jest.unmock('../styleguide.jsx')
-jest.unmock('../../decorators/select-auto-close')
+jest.unmock('../../../decorators/select-auto-close')
 
 jest.mock('../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
