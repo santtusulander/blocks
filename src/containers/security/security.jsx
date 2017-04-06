@@ -128,6 +128,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {brand, account, group} = ownProps.params
 

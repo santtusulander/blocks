@@ -257,6 +257,7 @@ PopFormContainer.propTypes = {
 
 const formSelector = formValueSelector(POP_FORM_NAME)
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const roles = getRoles(state)

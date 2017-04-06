@@ -203,6 +203,7 @@ StorageFormContainer.defaultProps = {
 }
 
 const formSelector = formValueSelector('storageForm')
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')

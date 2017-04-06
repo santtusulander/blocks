@@ -486,6 +486,7 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params: { account } }) => {
   return {
     getGroupIds: () => getIdsByAccount(state, account),

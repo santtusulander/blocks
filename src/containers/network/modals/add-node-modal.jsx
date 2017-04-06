@@ -136,6 +136,7 @@ AddNodeContainer.propTypes = {
   subtitle: PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const serverNumber = formSelector(state, 'serverNumber') || 0

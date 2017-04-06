@@ -169,6 +169,7 @@ Group.defaultProps = {
   user: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params: { account, group } }) => {
   return {
     activeAccount: getAccountById(state, account),

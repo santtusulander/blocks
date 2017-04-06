@@ -309,6 +309,7 @@ NetworkLocationFormContainer.propTypes = {
   show: PropTypes.bool
 };
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')

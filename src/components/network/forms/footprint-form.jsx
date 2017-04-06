@@ -419,6 +419,7 @@ const form = reduxForm({
   validate
 })(FootprintForm)
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('footprintForm')
   const addFootprintMethod = selector(state, 'addFootprintMethod')

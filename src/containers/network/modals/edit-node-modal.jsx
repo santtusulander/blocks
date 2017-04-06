@@ -189,6 +189,7 @@ EditNodeFormContainer.propTypes = {
   subTitle: React.PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { nodeIds, params }) => {
   const nodes = nodeIds.map(id => {
 

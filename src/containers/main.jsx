@@ -293,6 +293,7 @@ Main.childContextTypes = {
   roles: PropTypes.instanceOf(Map)
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params

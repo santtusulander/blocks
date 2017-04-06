@@ -87,6 +87,7 @@ TabTokenAuthentication.defaultProps = {
   properties: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {params: {account, group} } = ownProps
 

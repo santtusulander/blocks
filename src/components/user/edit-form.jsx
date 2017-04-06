@@ -404,6 +404,7 @@ UserEditForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),

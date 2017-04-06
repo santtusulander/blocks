@@ -1469,6 +1469,7 @@ Styleguide.propTypes = {
   theme: React.PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   return {
     theme: state.ui.get('theme')

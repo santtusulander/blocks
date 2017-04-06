@@ -254,6 +254,7 @@ ConfigurationAdvanced.defaultProps = {
   config: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('advancedForm')
 

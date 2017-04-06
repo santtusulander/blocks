@@ -116,6 +116,7 @@ User.defaultProps = {
   roles: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const currentUser = state.user.get('currentUser')
   const currentUserPrimaryRoleId = currentUser && currentUser.get('roles').first()

@@ -109,6 +109,7 @@ AccountDetails.defaultProps = {
   servicesInfo: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),

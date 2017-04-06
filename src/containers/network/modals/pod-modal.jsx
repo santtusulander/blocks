@@ -438,6 +438,7 @@ PodFormContainer.defaultProps = {
   UIFootprints: []
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')

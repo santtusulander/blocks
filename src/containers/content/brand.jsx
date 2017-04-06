@@ -188,6 +188,7 @@ Brand.defaultProps = {
   user: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     activeAccount: getAccountById(state, ownProps.params.account),

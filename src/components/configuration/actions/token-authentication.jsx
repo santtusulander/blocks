@@ -408,6 +408,7 @@ TokenAuth.propTypes = {
 
 const authFormSelector = formValueSelector('token-auth-form')
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => (
   {
     tokenValues: {

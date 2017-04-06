@@ -203,6 +203,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)

@@ -557,6 +557,7 @@ PodForm.propTypes = {
   ]).isRequired
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('pod-form')
   const UIsp_bgp_router_as = selector(state, 'UIsp_bgp_router_as')

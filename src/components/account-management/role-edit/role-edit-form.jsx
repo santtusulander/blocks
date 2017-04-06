@@ -156,6 +156,7 @@ RoleEditForm.propTypes = {
   submitting: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const editPermsUI = Immutable.Map([

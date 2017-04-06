@@ -216,6 +216,7 @@ SupportTicketForm.propTypes = {
   ticket: PropTypes.instanceOf(Map)
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const hasTicket = !!ownProps.ticket
 

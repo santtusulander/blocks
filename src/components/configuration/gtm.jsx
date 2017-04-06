@@ -266,6 +266,7 @@ ConfigurationGlobalTrafficManager.defaultProps = {
   config: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('gtmForm')
   const GTMToggle = selector(state, 'GTMToggle')

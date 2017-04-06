@@ -301,6 +301,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storageId = null

@@ -229,6 +229,7 @@ NetworkFormContainer.defaultProps = {
 }
 
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const networkId = buildReduxId(ownProps.groupId, ownProps.networkId)
   const network = ownProps.networkId && getNetworkById(state, networkId)
