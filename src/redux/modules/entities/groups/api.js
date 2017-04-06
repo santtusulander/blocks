@@ -15,8 +15,8 @@ const accountGroupSchema = new schema.Entity('accountGroups', {
 
 const baseURL = (brand, account) => `${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`
 
-export const fetch = ({brand, account, id}) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
+export const fetch = ({brand, account, id}) =>
+  axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${id}`)
     .then(({data}) => {
 
       const accountGroups = {
@@ -26,7 +26,7 @@ export const fetch = ({brand, account, id}) => {
 
       return normalize(accountGroups, accountGroupSchema)
     })
-}
+
 
 export const fetchAll = ({ brand, account }) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
