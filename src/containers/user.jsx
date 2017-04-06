@@ -116,6 +116,7 @@ User.defaultProps = {
   roles: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const currentUser = state.user.get('currentUser')
   const currentUserPrimaryRoleId = currentUser && currentUser.get('roles').first()
@@ -128,6 +129,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),

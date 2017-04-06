@@ -309,6 +309,7 @@ NetworkLocationFormContainer.propTypes = {
   show: PropTypes.bool
 };
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
@@ -343,6 +344,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
   onCreate: (params) => dispatch(locationActions.create({...params })),

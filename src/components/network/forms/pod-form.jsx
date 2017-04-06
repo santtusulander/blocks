@@ -42,7 +42,7 @@ import {
   SALT_ROLE_OPTIONS
 } from '../../../constants/network'
 
-import UDNButton from '../../button'
+import UDNButton from '../../shared/form-elements/button'
 import IconAdd from '../../shared/icons/icon-add'
 import IconEdit from '../../shared/icons/icon-edit'
 import IconClose from '../../shared/icons/icon-close'
@@ -557,6 +557,7 @@ PodForm.propTypes = {
   ]).isRequired
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('pod-form')
   const UIsp_bgp_router_as = selector(state, 'UIsp_bgp_router_as')

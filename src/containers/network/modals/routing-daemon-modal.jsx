@@ -61,6 +61,7 @@ RoutingDaemonFormContainer.propTypes = {
   show: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('pod-form')
 
@@ -73,6 +74,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

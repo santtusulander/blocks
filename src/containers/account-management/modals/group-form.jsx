@@ -402,6 +402,7 @@ const  mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),

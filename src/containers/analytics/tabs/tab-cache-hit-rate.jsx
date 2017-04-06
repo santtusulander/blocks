@@ -116,6 +116,7 @@ AnalyticsTabCacheHitRate.defaultProps = {
   trafficByTime: Immutable.Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => ({
   activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
   fetching: state.traffic.get('fetching'),

@@ -203,6 +203,7 @@ StorageFormContainer.defaultProps = {
 }
 
 const formSelector = formValueSelector('storageForm')
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')
@@ -235,6 +236,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(storageActions.create({...params, data })),
