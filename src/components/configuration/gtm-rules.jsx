@@ -69,12 +69,14 @@ class ConfigurationGTMTrafficRules extends React.Component {
       <tr key={index}>
         <td><TruncatedTitle content={input.value.name} /></td>
         <td>
-          <HelpTooltip
-            id='gtm-match-tooltip'
-            buttonText={matches}
-            title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
-            {matches}
-          </HelpTooltip>
+          <div className="matches">
+            <HelpTooltip
+              id='gtm-match-tooltip'
+              buttonText={matches}
+              title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
+              {matches}
+            </HelpTooltip>
+          </div>
         </td>
         <td>{trafficSplit}</td>
         {!this.props.readOnly &&
