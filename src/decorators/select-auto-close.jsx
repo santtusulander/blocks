@@ -7,7 +7,6 @@ export default function(WrappedSelect) {
       this.state = {
         open: false
       }
-
       this.close = this.close.bind(this)
       this.handleClick = this.handleClick.bind(this)
       this.onItemClick = this.onItemClick.bind(this)
