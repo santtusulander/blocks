@@ -86,11 +86,13 @@ class AccountManagementProperties extends React.Component {
   }
 
   refreshData(brand, account, pagingParams) {
-    const { fetchGroups, fetchPropertiesByIds } = this.props
-    fetchGroups({ brand, account }).then(groupData => {
-      for (const groupId in groupData.response.entities.groups) {
-        if (groupData.response.entities.groups.hasOwnProperty(groupId)) {
-          fetchPropertiesByIds({ brand, account, group: groupId, ...pagingParams })
+    const { fetchGroups, fetchProperties } = this.props
+    fetchGroups({ brand, account }).then(response => {
+      if (response) {
+        for (const groupId in response.entities.groups) {
+          if (response.entities.groups.hasOwnProperty(groupId)) {
+            fetchProperties({ brand, account, group: groupId, ...pagingParams })
+          }
         }
       }
     })
@@ -342,7 +344,7 @@ AccountManagementProperties.propTypes    = {
   deleteProperty: React.PropTypes.func,
   editProperty: React.PropTypes.func,
   fetchGroups: React.PropTypes.func,
-  fetchPropertiesByIds: React.PropTypes.func,
+  fetchProperties: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
@@ -380,7 +382,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
-    fetchPropertiesByIds: (params) => propertyActions.fetchByIds(dispatch)({ ...params, requestTag: IS_FETCHING }),
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
