@@ -192,13 +192,12 @@ class AccountManagementProperties extends React.Component {
     return true
   }
 
-  getFilteredData(searchTerm) {
-    const { properties } = this.props
+  getFilteredData(data, searchTerm) {
     if (!searchTerm) {
-      return properties
+      return data
     }
     const searchTermLowerCase = searchTerm.toLowerCase()
-    return properties.filter((property) => {
+    return data.filter((property) => {
       return property.get('published_host_id').toLowerCase().includes(searchTermLowerCase) ||
         this.getPropertyOriginHostname(property).includes(searchTermLowerCase)
     })
@@ -240,7 +239,7 @@ class AccountManagementProperties extends React.Component {
       activeDirection: sortDir
     }
 
-    const filteredProperties = this.getFilteredData(search)
+    const filteredProperties = this.getFilteredData(properties, search)
     const sortedProperties = this.getSortedData(filteredProperties, sortBy, sortDir)
     const numHiddenProperties = properties.size - sortedProperties.size;
 
