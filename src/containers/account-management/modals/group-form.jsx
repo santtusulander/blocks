@@ -98,7 +98,6 @@ class GroupFormContainer extends React.Component {
       //   return onSave(values, this.state.usersToAdd)
       // }
       if (groupId) {
-        console.log(values);
         return onSave({
           groupId,
           data: values,
@@ -380,6 +379,8 @@ const  mapStateToProps = (state, ownProps) => {
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
   const roles = getRoles(state)
+  //Since group object in new redux has several property that are not accepted by the server,
+  //we have to filter out those fields. This is temporary until we have better solution
   const filteredGroupData = activeGroup && activeGroup.delete('backend_id').delete('parentId')
 
   return {
