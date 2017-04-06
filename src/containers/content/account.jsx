@@ -309,43 +309,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 /* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
-/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {params} = ownProps
   const {account} = params
