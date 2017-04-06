@@ -204,6 +204,7 @@ LoginFormTwoFactorRecoveryKey.propTypes = {
   username: React.PropTypes.string
 }
 
+ /* istanbul ignore next */ 
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
@@ -211,6 +212,7 @@ function mapStateToProps(state) {
   };
 }
 
+ /* istanbul ignore next */ 
 function mapDispatchToProps(dispatch) {
   return {
     changeNotification: (message) => dispatch(changeNotification(message)),
