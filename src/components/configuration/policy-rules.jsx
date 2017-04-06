@@ -6,6 +6,7 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../shared/page-elements/confirmation.jsx'
 import ActionButtons from '../shared/action-buttons.jsx'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import {
   parsePolicy
 } from '../../util/policy-config'
@@ -104,7 +105,7 @@ class ConfigurationPolicyRules extends React.Component {
 
       return (
         <tr key={rule + i}>
-          <td>{rule.get('rule_name')}</td>
+          <td><TruncatedTitle content={rule.get('rule_name')} /></td>
           <td className="text-right">{this.getRuleTypeName(type)}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
@@ -144,7 +145,7 @@ class ConfigurationPolicyRules extends React.Component {
     ]
     const isEmpty = !rows.filter(Boolean).length
     return (
-      <div className="configuration-cache-rules">
+      <div className="configuration-policies">
         <Table striped={true}>
           <thead>
             <tr>
