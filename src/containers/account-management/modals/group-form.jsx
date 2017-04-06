@@ -391,7 +391,7 @@ const  mapStateToProps = (state, ownProps) => {
     canFetchNetworks,
     hosts: groupId && host.get('allHosts'),
     initialValues: {
-      ...(groupId ? filteredGroupData.toJS() : {}),
+      ...(groupId && filteredGroupData ? filteredGroupData.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: host.get('fetching'),
