@@ -5,7 +5,7 @@ import Immutable from 'immutable'
 import ActionButtons from '../shared/action-buttons'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
-
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
 import Select from '../shared/form-elements/select'
 import {
@@ -22,6 +22,11 @@ const getFormattedCountry = (item) => {
 
   return country ? country.label : ''
 }
+
+const ruleMatchTypeOptions = [
+  {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
+  {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
+]
 
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
@@ -228,7 +233,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
 
   render() {
-    const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
+    const ModalTitle = this.props.isEditingRule
+                       ? 'portal.policy.edit.editRule.editPolicy.text'
+                       : 'portal.policy.edit.editRule.addPolicy.text'
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
     const disableButton = () => {
@@ -238,10 +245,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     const ruleType = this.props.rulePath.get(0, null)
     const ruleMatchType = this.props.rule.get('rule_body').get('match_type', 'or')
-    const ruleMatchTypeOptions = [
-      {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
-      {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
-    ]
     const { disabled } = this.props
 
     return (
@@ -368,7 +371,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             />
           </FormGroup>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button
               bsStyle="primary"
               onClick={this.props.cancelAction}
@@ -383,7 +386,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             >
               {this.props.isEditingRule ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </form>
