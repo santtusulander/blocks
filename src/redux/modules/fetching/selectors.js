@@ -1,10 +1,14 @@
 /**
- * Check globally if fetching flag is set in any request group
+ * Check globally if fetching flag is set in any request group except the one for GAS
  * @param state
  * @returns {boolean}
  */
-export const getGlobalFetching = ({ entities }) => {
-  return !!entities.fetching.size
+export const getGlobalFetching = ({ entities }, includeAccountSelector) => {
+  const pendingRequests = entities.fetching
+
+  return includeAccountSelector
+    ? !!pendingRequests.size
+    : pendingRequests.some(pendingRequest => pendingRequest.get('requestTag') !== 'GAS-REQUEST')
 }
 
 /**

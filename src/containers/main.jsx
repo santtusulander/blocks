@@ -301,7 +301,7 @@ const mapStateToProps = (state, ownProps) => {
   const stateMap = Map(rest)
   const fetching = stateMap.some(
     store => store && (store.get ? store.get('fetching') : store.fetching)
-  ) || getGlobalFetching({entities, ...state})
+  ) || getGlobalFetching({entities})
 
   return {
     accounts: getAccountsByBrand(state, brand),
