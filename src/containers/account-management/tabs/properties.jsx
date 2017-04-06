@@ -23,6 +23,7 @@ import TableSorter from '../../../components/table-sorter'
 import IsAllowed from '../../../components/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import ModalWindow from '../../../components/modal'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
@@ -38,6 +39,8 @@ class AccountManagementProperties extends React.Component {
 
     this.state = {
       adding: false,
+      deleting: false,
+      propertyToDelete: null,
       editing: null,
       newUsers: Immutable.List(),
       search: '',
@@ -238,6 +241,10 @@ class AccountManagementProperties extends React.Component {
       .get('origin_host_name')
   }
 
+  closeDeleteModal() {
+    this.setState({ deleting: false, propertyToDelete: null })
+  }
+
   render() {
     const { deleteProperty, editProperty, intl, properties, fetching, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
@@ -302,9 +309,10 @@ class AccountManagementProperties extends React.Component {
             </thead>
             <tbody>
             {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
+              const propertyId = property.get('published_host_id')
               return (
                 <tr key={i}>
-                  <td>{property.get('published_host_id')}</td>
+                  <td>{propertyId}</td>
                   <td>{property.get('group')}</td>
                   <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                   <td>{property.get('originHostname')}</td>
@@ -316,7 +324,13 @@ class AccountManagementProperties extends React.Component {
                           editProperty(property)
                         }}
                         onDelete={() => {
-                          deleteProperty(brand, account, property.get('parentId'), property.get('published_host_id'))
+                          this.setState({
+                            deleting: true,
+                            propertyToDelete: {
+                              groupId: property.get('parentId'),
+                              propertyId
+                            }
+                          })
                         }} />
                     </IsAllowed>
                   </td>
@@ -342,6 +356,25 @@ class AccountManagementProperties extends React.Component {
             </tbody>
           </Table>
         </div>)}
+
+        {this.state.deleting &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => this.closeDeleteModal()}
+            onSubmit={() => {
+              deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
+                .then(this.closeDeleteModal())
+            }}
+            invalid={true}
+            verifyDelete={true}>
+            <p>
+              <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: "Property" }}/>
+            </p>
+          </ModalWindow>
+        }
+
       </PageContainer>
     )
   }
