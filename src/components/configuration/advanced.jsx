@@ -6,11 +6,11 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupCheckbox from '../form/field-form-group-checkbox'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupCheckbox from '../shared/form-fields/field-form-group-checkbox'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 
 import metadataActions from '../../redux/modules/entities/metadata/actions'
 import { getById as getMetadata } from '../../redux/modules/entities/metadata/selectors'
@@ -39,10 +39,10 @@ class ConfigurationAdvanced extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps');
+    console.log('componentWillReceiveProps', nextProps);
 
     //If property Changed, fetch metadata
-    if (!is(this.props.property, nextProps.property)) {
+    if (!is(this.props.property, nextProps.property) ) {
       console.log('fetching metadata');
       const {brand, account, group, property} = nextProps.params
       //const activeConfig = getActiveConfig(nextProps.property)
@@ -278,10 +278,13 @@ ConfigurationAdvanced.propTypes = {
 }
 
 ConfigurationAdvanced.defaultProps = {
-  config: Map()
+  config: Map(),
+  metadata: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
+
   const selector = formValueSelector('advancedForm')
 
   const requestCheckbox = selector(state, 'request_checkbox')
@@ -293,8 +296,11 @@ const mapStateToProps = (state, ownProps) => {
   /*
     TODO: UDNP-3136 - Integrate Manual Metadata Submission Redux with form
   */
+
+  const property = getPropertyById(state, ownProps.params.property)
+console.log((property && property.toJS()));
   return {
-    property: getPropertyById(state, ownProps.params.property),
+    property,
 
 
     isRequestEnabled: requestCheckbox,

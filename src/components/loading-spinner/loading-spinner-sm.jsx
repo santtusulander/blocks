@@ -1,5 +1,5 @@
 import React from 'react'
-import Icon from '../icon.jsx'
+import Icon from '../shared/icon.jsx'
 
 function LoadingSpinnerSmall() {
   return (

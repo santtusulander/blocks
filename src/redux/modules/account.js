@@ -24,7 +24,7 @@ const emptyAccounts = Immutable.fromJS({
 export function createSuccess(state, action) {
   const newAccount = Immutable.fromJS(action.payload)
   return state.merge({
-    activeAccount: newAccount,
+    activeAccount: null,
     allAccounts: state.get('allAccounts').push(newAccount),
     changedAccount: { id: action.payload.id, name: action.payload.name, action: 'add' }
   })

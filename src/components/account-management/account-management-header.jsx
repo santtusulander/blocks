@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import UDNButton from '../button'
-import IconAdd from '../icons/icon-add.jsx'
-import IsAllowed from '../is-allowed'
+import UDNButton from '../shared/form-elements/button'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import { ALLOW_ALWAYS } from '../../constants/permissions'
 

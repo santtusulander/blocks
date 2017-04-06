@@ -4,7 +4,7 @@ import {FormattedMessage} from 'react-intl'
 
 import { Map, List } from 'immutable'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
@@ -109,6 +109,7 @@ AccountDetails.defaultProps = {
   servicesInfo: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),
@@ -118,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     accountStartFetching: () => dispatch(accountStartFetching()),

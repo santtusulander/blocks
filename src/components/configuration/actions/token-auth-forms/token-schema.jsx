@@ -6,8 +6,8 @@ import Immutable from 'immutable'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import FieldSortableMultiSelector from '../../../form/field-sortable-multi-selector'
-import FormFooterButtons from '../../../form/form-footer-buttons'
+import FieldSortableMultiSelector from '../../../shared/form-fields/field-sortable-multi-selector'
+import FormFooterButtons from '../../../shared/form-elements/form-footer-buttons'
 
 import { SCHEMA_OPTIONS } from '../../../../constants/configuration'
 

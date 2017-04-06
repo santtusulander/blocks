@@ -5,7 +5,7 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../../constants/permissions'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import {
   getAnalyticsUrl,
@@ -14,14 +14,14 @@ import {
 } from '../../../util/routes.js'
 import { userIsCloudProvider } from '../../../util/helpers'
 
-import PageHeader from '../../layout/page-header'
+import PageHeader from '../../shared/layout/page-header'
 import AccountSelector from '../../global-account-selector/global-account-selector'
-import TruncatedTitle from '../../truncated-title'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 
-import IconTrash from '../../icons/icon-trash.jsx'
-import IconChart from '../../icons/icon-chart.jsx'
-import IconConfiguration from '../../icons/icon-configuration.jsx'
-import IconCaretDown from '../../icons/icon-caret-down'
+import IconTrash from '../../shared/icons/icon-trash.jsx'
+import IconChart from '../../shared/icons/icon-chart.jsx'
+import IconConfiguration from '../../shared/icons/icon-configuration.jsx'
+import IconCaretDown from '../../shared/icons/icon-caret-down'
 
 const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, currentTab, togglePurge }) => {
 

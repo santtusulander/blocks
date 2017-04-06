@@ -24,8 +24,8 @@ import { convertToBytes, hasOption } from '../../../util/helpers.js'
 import { STORAGE_TRANSCODING_OPTION_ID } from '../../../constants/service-permissions'
 
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import StorageForm from '../../../components/storage/forms/storage-form'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
@@ -203,6 +203,7 @@ StorageFormContainer.defaultProps = {
 }
 
 const formSelector = formValueSelector('storageForm')
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')
@@ -235,6 +236,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(storageActions.create({...params, data })),

@@ -20,7 +20,7 @@ const groupPropertiesSchema = new schema.Entity('grpProperties', { properties: [
 export const fetch = ({ brand, account, group, id }) => {
   return axios.get(`${baseURL(brand, account, group)}/${id}`)
     .then(({ data }) => {
-      return normalize({ id: group, properties: [ data.data ] }, groupPropertiesSchema)
+      return normalize({ id: group, properties: [ data ] }, groupPropertiesSchema)
     })
 }
 

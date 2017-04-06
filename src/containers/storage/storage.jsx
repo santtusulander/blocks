@@ -27,8 +27,8 @@ import { buildReduxId } from '../../redux/util'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
 
-import Content from '../../components/layout/content'
-import PageContainer from '../../components/layout/page-container'
+import Content from '../../components/shared/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
 
 import StorageHeader from '../../components/storage/storage-header'
 import StorageKPI from '../../components/storage/storage-kpi'
@@ -301,6 +301,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storageId = null
@@ -336,6 +337,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)

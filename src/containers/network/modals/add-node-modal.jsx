@@ -15,7 +15,7 @@ import { buildReduxId } from '../../../redux/util'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import { changeNotification } from '../../../redux/modules/ui'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
 import { NODE_TYPE_DEFAULT,
@@ -136,6 +136,7 @@ AddNodeContainer.propTypes = {
   subtitle: PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const serverNumber = formSelector(state, 'serverNumber') || 0
@@ -169,6 +170,7 @@ const mapStateToProps = (state, { params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 
   onSave: node => {

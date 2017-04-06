@@ -8,8 +8,8 @@ import { FormattedMessage } from 'react-intl'
 
 import LinkWrapper from '../link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
-import IconConfiguration from '../../icons/icon-configuration'
-import IconChart from '../../icons/icon-chart'
+import IconConfiguration from '../../shared/icons/icon-configuration'
+import IconChart from '../../shared/icons/icon-chart'
 import { formatBytes, separateUnit } from '../../../util/helpers'
 
 const FORMAT = '0,0.0'

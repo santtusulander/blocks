@@ -1,4 +1,6 @@
 import Immutable from 'immutable'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import { 
   MEDIA_DELIVERY_CONTENT_TARGETTING,
@@ -168,4 +170,11 @@ export const availableActions = [
     compatibleWith: [POLICY_TYPES.REQUEST],
     notYetImplemented: true
   }
+]
+
+export const policyRuleTypeOptions = [
+  { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
+  { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
+  { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
+  { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
 ]

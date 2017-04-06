@@ -3,8 +3,8 @@ import { Col, Row, FormControl, FormGroup } from 'react-bootstrap'
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import SectionHeader from '../../layout/section-header'
-import SectionContainer from '../../layout/section-container'
+import SectionHeader from '../../shared/layout/section-header'
+import SectionContainer from '../../shared/layout/section-container'
 import AnalysisFileErrorDataBox from './data-box'
 import AnalysisURLList from '../url-list'
 

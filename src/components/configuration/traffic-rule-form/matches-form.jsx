@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import IconClose from '../../icons/icon-close'
+import IconClose from '../../shared/icons/icon-close'
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
-import IconCaretRight from '../../icons/icon-caret-right'
+import IconCaretRight from '../../shared/icons/icon-caret-right'
 
 import ContinentMatchConditionForm from './continent-match-form'
 import CountryMatchConditionForm from './country-match-form'
@@ -43,7 +43,6 @@ class MatchesForm extends Component {
   MatchSelection() {
     return (
       <ul className="condition-selection list-unstyled">
-        <li/>
         {matches.map(({ matchType, label }, i) =>
           <li key={i}>
             <a onClick={() => this.props.chooseMatch({ matchType })}>

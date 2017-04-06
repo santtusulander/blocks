@@ -22,8 +22,7 @@ $tooltip-icon-width: 80px;
     &:after {
       display: table-cell;
       width: $tooltip-icon-width;
-      height: $input-height;
-      content: '';      
+      content: '';
     }
   }
 }

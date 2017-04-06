@@ -5,13 +5,14 @@ import { Button } from 'react-bootstrap'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import HelpTooltip from '../../../help-tooltip'
-import FieldFormGroupNumber from '../../../form/field-form-group-number'
-import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
-import FormFooterButtons from '../../../form/form-footer-buttons'
-import FieldFormGroupSelect from '../../../form/field-form-group-select'
+import HelpTooltip from '../../../shared/tooltips/help-tooltip'
+import FieldFormGroupNumber from '../../../shared/form-fields/field-form-group-number'
+import FieldFormGroupToggle from '../../../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupSelect from '../../../shared/form-fields/field-form-group-select'
 
-import { 
+import FormFooterButtons from '../../../shared/form-elements/form-footer-buttons'
+
+import {
   TOKEN_AUTH_STATIC,
   TOKEN_AUTH_STREAMING,
   TTL_DEFAULT,

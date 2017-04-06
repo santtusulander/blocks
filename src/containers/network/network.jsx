@@ -63,12 +63,12 @@ import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors
 
 import { buildReduxId } from '../../redux/util'
 
-import Content from '../../components/layout/content'
-import PageContainer from '../../components/layout/page-container'
-import PageHeader from '../../components/layout/page-header'
-import TruncatedTitle from '../../components/truncated-title'
+import Content from '../../components/shared/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
+import PageHeader from '../../components/shared/layout/page-header'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import EntityList from '../../components/network/entity-list'
-import ModalWindow from '../../components/modal'
+import ModalWindow from '../../components/shared/modal'
 
 import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import NetworkFormContainer from './modals/network-modal'
@@ -962,6 +962,7 @@ Network.defaultProps = {
   groups: Immutable.List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const { group, network, pop, pod } = ownProps.params
   return {

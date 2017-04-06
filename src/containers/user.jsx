@@ -10,9 +10,9 @@ import * as userActionCreators from '../redux/modules/user'
 import roleNameActions from '../redux/modules/entities/role-names/actions'
 import { getById as getRoleNameById } from '../redux/modules/entities/role-names/selectors'
 
-import PageContainer from '../components/layout/page-container'
-import PageHeader from '../components/layout/page-header'
-import Content from '../components/layout/content'
+import PageContainer from '../components/shared/layout/page-container'
+import PageHeader from '../components/shared/layout/page-header'
+import Content from '../components/shared/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
 class User extends React.Component {
@@ -90,6 +90,7 @@ class User extends React.Component {
         </PageHeader>
         <PageContainer>
           <UserEditForm
+            initialTfa={currentUser.get('tfa')}
             initialValues={initialValues}
             onSave={this.saveUser}
             onSavePassword={this.savePassword}
@@ -116,6 +117,7 @@ User.defaultProps = {
   roles: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const currentUser = state.user.get('currentUser')
   const currentUserPrimaryRoleId = currentUser && currentUser.get('roles').first()
@@ -128,6 +130,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),

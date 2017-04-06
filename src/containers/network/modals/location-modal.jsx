@@ -13,8 +13,8 @@ import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
@@ -309,6 +309,7 @@ NetworkLocationFormContainer.propTypes = {
   show: PropTypes.bool
 };
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
@@ -343,6 +344,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
   onCreate: (params) => dispatch(locationActions.create({...params })),

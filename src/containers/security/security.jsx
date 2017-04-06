@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 
 import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 import { Link } from 'react-router'
 
 import { getSecurityUrlFromParams } from '../../util/routes'
@@ -15,9 +15,9 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import {getById as getAccountById, getByBrand} from '../../redux/modules/entities/accounts/selectors'
 import {getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 
-import PageContainer from '../../components/layout/page-container'
+import PageContainer from '../../components/shared/layout/page-container'
 import SecurityPageHeader from '../../components/security/security-page-header'
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 
 import { getUrl } from '../../util/routes.js'
 
@@ -118,6 +118,7 @@ Security.defaultProps = {
   activeGroup: Map()
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
@@ -127,6 +128,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {brand, account, group} = ownProps.params
 

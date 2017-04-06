@@ -32,8 +32,8 @@ import { buildReduxId } from '../../../redux/util'
 import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
@@ -257,6 +257,7 @@ PopFormContainer.propTypes = {
 
 const formSelector = formValueSelector(POP_FORM_NAME)
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const roles = getRoles(state)
@@ -303,6 +304,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(popActions.create({...params, data })),

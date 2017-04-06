@@ -24,19 +24,23 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
-import ModalWindow from '../../components/modal'
+
+import accountsActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+
+import Content from '../../components/shared/layout/content'
+import PageHeader from '../../components/shared/layout/page-header'
+import ModalWindow from '../../components/shared/modal'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
-import TruncatedTitle from '../../components/truncated-title'
-import IconCaretDown from '../../components/icons/icon-caret-down'
-import IconEdit from '../../components/icons/icon-edit'
-import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import IconCaretDown from '../../components/shared/icons/icon-caret-down'
+import IconEdit from '../../components/shared/icons/icon-edit'
+import MultilineTextFieldError from '../../components/shared/form-elements/multiline-text-field-error'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -95,6 +99,7 @@ export class AccountManagement extends Component {
       Shouldn't they be loaded on 'Users' -tab?
     */
     if (account) {
+      this.props.fetchActiveAccount({brand, id: account})
       this.props.userActions.fetchUsers(brand, account)
     } else if (this.props.accounts.size) {
       this.props.userActions.startFetching()
@@ -548,6 +553,7 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
+  fetchActiveAccount: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
@@ -570,11 +576,11 @@ AccountManagement.defaultProps = {
   users: List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount') || Map({}),
+    activeAccount: getAccountById(state, ownProps.params.account),
     // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     permissions: state.permissions,
@@ -623,6 +629,7 @@ function mapDispatchToProps(dispatch) {
     changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
+    fetchActiveAccount: (params) => dispatch(accountsActions.fetchOne(params)),
     groupActions: groupActions,
     hostActions: hostActions,
     permissionsActions: permissionsActions,
