@@ -12,6 +12,8 @@ import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
+import {getById as getGroupsById} from '../../../redux/modules/entities/groups/selectors'
+
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
@@ -63,6 +65,7 @@ class GroupFormContainer extends React.Component {
   componentWillMount() {
     const { hostActions: { fetchHosts, startFetching }, params: { brand, account },
             groupId, canSeeLocations, canFetchNetworks, fetchServiceInfo } = this.props
+
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
@@ -95,6 +98,7 @@ class GroupFormContainer extends React.Component {
       //   return onSave(values, this.state.usersToAdd)
       // }
       if (groupId) {
+        console.log(values);
         return onSave({
           groupId,
           data: values,
@@ -366,16 +370,17 @@ GroupFormContainer.defaultProps = {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, group, host } = state
+  const { user, host } = state
   const { groupId, params: { account } } = ownProps
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = getAccountById(state, account)
-  const activeGroup = group.get('activeGroup') || Map()
+  const activeGroup = getGroupsById(state, groupId)
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
   const roles = getRoles(state)
+  const filteredGroupData = activeGroup && activeGroup.delete('backend_id').delete('parentId')
 
   return {
     account: activeAccount,
@@ -385,13 +390,13 @@ const  mapStateToProps = (state, ownProps) => {
     canFetchNetworks,
     hosts: groupId && host.get('allHosts'),
     initialValues: {
-      ...(groupId ? activeGroup.toJS() : {}),
+      ...(groupId ? filteredGroupData.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: host.get('fetching'),
     isFetchingEntities: getFetchingByTag(state, 'location') || getFetchingByTag(state, 'network'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
-    name: groupId ? group.getIn(['activeGroup', 'name']) : '',
+    name: groupId ? activeGroup.get('name') : '',
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List()))
                     : [],

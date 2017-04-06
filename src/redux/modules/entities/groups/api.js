@@ -40,8 +40,8 @@ export const fetchAll = ({ brand, account }) => {
     })
 }
 
-export const create = ({ brand, account, payload }) =>
-  axios.post(baseURL(brand, account), payload, { headers: { 'Content-Type': 'application/json' } })
+export const create = ({ brand, account, payload }) => {
+  return axios.post(baseURL(brand, account), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const accountGroups = {
@@ -51,6 +51,7 @@ export const create = ({ brand, account, payload }) =>
 
       return normalize(accountGroups, accountGroupSchema)
     })
+}
 
 export const update = ({ brand, account, id, payload }) =>
   axios.put(`${baseURL(brand, account)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
