@@ -433,19 +433,22 @@ export class AccountManagement extends Component {
           <li data-eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li data-eventKey="properties">
-            <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
-          </li>
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-         {accountIsContentProviderType(activeAccount) &&
+          {accountIsContentProviderType(activeAccount) &&
+            // UDNP-2410 Permission check should be added
+            <li data-eventKey="properties">
+              <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
+            </li>
+          }
+          {accountIsContentProviderType(activeAccount) &&
            <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
              <li>
                <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
              </li>
            </IsAllowed>
-         }
+          }
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">
