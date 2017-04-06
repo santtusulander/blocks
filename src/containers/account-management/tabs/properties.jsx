@@ -243,6 +243,13 @@ class AccountManagementProperties extends React.Component {
       .get('origin_host_name')
   }
 
+  openDeleteModal(groupId, propertyId) {
+    this.setState({
+      deleting: true,
+      propertyToDelete: { groupId, propertyId }
+    })
+  }
+
   closeDeleteModal() {
     this.setState({ deleting: false, propertyToDelete: null })
   }
@@ -333,13 +340,7 @@ class AccountManagementProperties extends React.Component {
                           editProperty(property)
                         }}
                         onDelete={() => {
-                          this.setState({
-                            deleting: true,
-                            propertyToDelete: {
-                              groupId: property.get('parentId'),
-                              propertyId
-                            }
-                          })
+                          this.openDeleteModal(property.get('parentId'), propertyId)
                         }} />
                     </IsAllowed>
                   </td>
@@ -374,9 +375,11 @@ class AccountManagementProperties extends React.Component {
             cancel={() => this.closeDeleteModal()}
             onSubmit={() => {
               deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
-                .then(() => {
+                .then((result) => {
                   this.closeDeleteModal()
-                  this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
+                  if (!result.error) {
+                    this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
+                  }
                 })
             }}
             invalid={true}
