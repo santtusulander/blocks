@@ -10,7 +10,7 @@ import IconChart from '../shared/icons/icon-chart.jsx'
 import IconConfiguration from '../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import ContentItemTag from './content-item-tag'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import { paleblue } from '../../constants/colors'
 import LinkWrapper from './link-wrapper'
 

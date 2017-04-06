@@ -4,8 +4,8 @@ import {FormGroup, ControlLabel } from 'react-bootstrap';
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
 import { List } from 'immutable'
 
-import ActionButtons from './shared/action-buttons'
-import ButtonDropdown from './shared/form-elements/button-dropdown'
+import ActionButtons from '../action-buttons'
+import ButtonDropdown from './button-dropdown'
 
 const DragHandle = SortableHandle(() => {
   return (

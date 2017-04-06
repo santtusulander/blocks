@@ -7,7 +7,7 @@ import SectionHeader from '../../shared/layout/section-header'
 import RoleEditForm from './role-edit-form.jsx'
 import ActionButtons from '../../shared/action-buttons.jsx'
 
-import TableSorter from '../../table-sorter'
+import TableSorter from '../../shared/table-sorter'
 import ArrayTd from '../../shared/page-elements/array-td'
 
 class RolesList extends React.Component {

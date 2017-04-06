@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../stacked-by-time-summary.jsx')
 
-jest.mock('../../util/helpers', () => { return {
+jest.mock('../../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
   separateUnit: bytes => bytes
 }})

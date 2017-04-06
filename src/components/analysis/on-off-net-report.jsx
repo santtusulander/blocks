@@ -9,7 +9,7 @@ import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
@@ -69,10 +69,10 @@ class AnalysisOnOffNetReport extends React.Component {
 
         // the following conditionals handle cases where a & b contain null data
         if (!lhs && rhs) {
-          return -1 * sortDir 
+          return -1 * sortDir
         }
         if (lhs && !rhs) {
-          return 1 * sortDir 
+          return 1 * sortDir
         }
         if (lhs && rhs) {
           if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {

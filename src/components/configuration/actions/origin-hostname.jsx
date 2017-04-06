@@ -3,7 +3,7 @@ import { ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootst
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../shared/form-elements/select'
-import InputConnector from '../../input-connector'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class OriginHostname extends React.Component {
   constructor(props) {

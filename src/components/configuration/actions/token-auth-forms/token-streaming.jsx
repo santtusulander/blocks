@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import HelpTooltip from '../../../help-tooltip'
+import HelpTooltip from '../../../shared/tooltips/help-tooltip'
 import FieldFormGroupNumber from '../../../shared/form-fields/field-form-group-number'
 import FieldFormGroupToggle from '../../../shared/form-fields/field-form-group-toggle'
 import FieldFormGroupSelect from '../../../shared/form-fields/field-form-group-select'

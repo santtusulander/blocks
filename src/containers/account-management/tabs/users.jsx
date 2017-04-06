@@ -9,23 +9,25 @@ import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
+
+import roleNameActions from '../../../redux/modules/entities/role-names/actions'
+import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import SelectWrapper from '../../../components/select-wrapper'
+import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
-import InlineAdd from '../../../components/inline-add'
+import InlineAdd from '../../../components/shared/page-elements/inline-add'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
-import TableSorter from '../../../components/table-sorter'
+import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -70,8 +72,8 @@ export class AccountManagementAccountUsers extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
-    this.props.rolesActions.fetchRoles()
     router.setRouteLeaveHook(route, this.shouldLeave)
+    this.props.fetchRoleNames()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -129,7 +131,7 @@ export class AccountManagementAccountUsers extends React.Component {
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
       .map(mapped_role => {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
-        return matchedRole ? [ mapped_role.id, matchedRole.get('name') ] : []
+        return matchedRole ? [ matchedRole.get('id'), matchedRole.get('name') ] : []
       })
   }
 
@@ -469,13 +471,13 @@ AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
+  fetchRoleNames: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
-  rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   showNotification: React.PropTypes.func,
@@ -487,7 +489,7 @@ AccountManagementAccountUsers.propTypes = {
 function mapStateToProps(state) {
   return {
     form: state.form,
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
@@ -499,9 +501,9 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    fetchRoleNames: () => dispatch(roleNameActions.fetchAll({}))
   };
 }
 

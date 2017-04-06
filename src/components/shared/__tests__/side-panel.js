@@ -4,8 +4,8 @@ import SidePanel from '../side-panel.jsx'
 
 jest.unmock('../side-panel.jsx')
 jest.unmock('react-addons-css-transition-group')
-jest.unmock('../../decorators/key-stroke-decorator')
-jest.unmock('../../components/shared/notification-wrappers/notification')
+jest.unmock('../../../decorators/key-stroke-decorator')
+jest.unmock('../notification-wrappers/notification')
 
 describe('SidePanel', () => {
   let sidePanel = null
