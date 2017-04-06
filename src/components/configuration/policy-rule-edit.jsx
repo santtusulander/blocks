@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
+import { Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ActionButtons from '../shared/action-buttons'
@@ -280,7 +280,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col sm={4} className="text-right">
               <Button
-                bsStyle="primary"
+                bsStyle="success"
                 className="btn-icon btn-add-new"
                 onClick={this.addCondition()}
                 disabled={disabled}
@@ -330,7 +330,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col xs={4} className="text-right">
               <Button
-                bsStyle="primary"
+                bsStyle="success"
                 className="btn-icon btn-add-new"
                 onClick={this.addAction(['rule_body', 'actions'])}
                 disabled={disabled}
@@ -347,7 +347,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
             <Col xs={4} className="text-right">
               <Button
-                bsStyle="primary"
+                bsStyle="success"
                 className="btn-icon btn-add-new"
                 onClick={this.addAction(['rule_body', 'else_actions'])}
                 disabled={disabled}
