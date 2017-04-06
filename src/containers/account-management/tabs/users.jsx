@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage, intlShape } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -17,7 +17,7 @@ import { getAll as getRoles } from '../../../redux/modules/entities/role-names/s
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
@@ -133,7 +133,7 @@ export class AccountManagementAccountUsers extends React.Component {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
         return matchedRole
               ? [ matchedRole.get('id'), matchedRole.get('name') ]
-              : [mapped_role.id, this.props.intl.formatMessage({id: 'portal.accountManagement.accountsType.unknown.text'})]
+              : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
       })
   }
 
@@ -476,7 +476,6 @@ AccountManagementAccountUsers.propTypes = {
   fetchRoleNames: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
-  intl: intlShape,
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
   resetRoles: React.PropTypes.func,
