@@ -48,15 +48,17 @@ class AccountManagementProperties extends React.Component {
       sortDir: 1
     }
 
-    this.addProperty        = this.addProperty.bind(this)
-    this.changeSort      = this.changeSort.bind(this)
-    this.editProperty       = this.editProperty.bind(this)
-    this.cancelAdding    = this.cancelAdding.bind(this)
-    this.changeSearch    = this.changeSearch.bind(this)
-    this.changeNewUsers  = this.changeNewUsers.bind(this)
-    this.shouldLeave     = this.shouldLeave.bind(this)
+    this.addProperty = this.addProperty.bind(this)
+    this.changeSort = this.changeSort.bind(this)
+    this.editProperty = this.editProperty.bind(this)
+    this.cancelAdding = this.cancelAdding.bind(this)
+    this.changeSearch = this.changeSearch.bind(this)
+    this.changeNewUsers = this.changeNewUsers.bind(this)
+    this.shouldLeave = this.shouldLeave.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
-    this.isLeaving       = false;
+
+    this.isLeaving = false
+    this.notificationTimeout = null
 
     const { params: { account, brand }, pagination } = this.props
 
@@ -245,6 +247,13 @@ class AccountManagementProperties extends React.Component {
     this.setState({ deleting: false, propertyToDelete: null })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(
+      this.props.uiActions.changeNotification, 10000)
+  }
+
   render() {
     const { deleteProperty, editProperty, intl, properties, fetching, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
@@ -365,7 +374,10 @@ class AccountManagementProperties extends React.Component {
             cancel={() => this.closeDeleteModal()}
             onSubmit={() => {
               deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
-                .then(this.closeDeleteModal())
+                .then(() => {
+                  this.closeDeleteModal()
+                  this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
+                })
             }}
             invalid={true}
             verifyDelete={true}>
