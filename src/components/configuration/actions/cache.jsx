@@ -1,8 +1,9 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, ControlLabel, FormControl, Modal, Row } from 'react-bootstrap'
+import { Button, Col, ControlLabel, FormControl, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import Toggle from '../../shared/form-elements/toggle'
 import Select from '../../shared/form-elements/select'
 
@@ -168,14 +169,14 @@ class Cache extends React.Component {
             </Col>
           </Row>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
               Save Action
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
