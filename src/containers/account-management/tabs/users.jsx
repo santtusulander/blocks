@@ -486,6 +486,10 @@ AccountManagementAccountUsers.propTypes = {
   users: React.PropTypes.instanceOf(List)
 }
 
+AccountManagementAccountUsers.defaultProps = {
+  roles: List()
+}
+
 function mapStateToProps(state) {
   return {
     form: state.form,

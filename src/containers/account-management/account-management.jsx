@@ -580,7 +580,7 @@ function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: getAccountById(state, ownProps.params.account) || Map(),
+    activeAccount: getAccountById(state, ownProps.params.account),
     // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     permissions: state.permissions,
