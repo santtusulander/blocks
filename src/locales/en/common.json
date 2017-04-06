@@ -248,7 +248,7 @@
 
   "portal.notFound.pageNotFound.text": "We couldn\"t find the page you were looking for",
 
-    "portal.accountSelecter.search.text": "Search",
+  "portal.accountSelecter.search.text": "Search",
 
   "portal.header.group.text": "GROUP",
   "portal.header.analytics.text": "Analytics",
@@ -261,6 +261,9 @@
   "portal.header.menu.editProfile.text": "Edit Profile",
 
   "portal.groups.accountSummary.text": "Account Summary",
-  "portal.groups.accountContentSummary.text": "Account Content Summary"
+  "portal.groups.accountContentSummary.text": "Account Content Summary",
 
+  "portal.common.copyToClipboard": "Copy to Clipboard",
+  "portal.common.goToProfileSettings": "Go to profile settings ",
+  "portal.common.toSaveForFutureUse": "to save for future use"
 }
