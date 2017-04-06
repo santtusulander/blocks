@@ -57,14 +57,19 @@ class AccountManagementStorages extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.deleteStorage = this.deleteStorage.bind(this)
     this.formatOrigins = this.formatOrigins.bind(this)
+    this.fetchStorageData = this.fetchStorageData.bind(this)
   }
 
   componentWillMount() {
-    const {params: {account, brand, group}, fetchGroups, fetchGroup} = this.props
+    const {params: {account, brand, group}, groups, fetchGroups, fetchGroup} = this.props
 
     if (brand && account) {
-      //Fetch allGroups in ActiveAccount
-      fetchGroups({ brand, account})
+
+      if (groups.size) {
+        this.fetchStorageData(groups)
+      } else {
+        fetchGroups({ brand, account})
+      }
 
       if (group) {
         //Fetch activeGroup
@@ -76,20 +81,23 @@ class AccountManagementStorages extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {params: { brand, account }, fetchStorages, fetchProperties } = nextProps
-    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
-
-
     //Start fetching storage data when we receive new groups from redux
     if (!is(this.props.groups, nextProps.groups)) {
-      //Fetch storage data for storages in each group of new Groups 
-      nextProps.groups.forEach(group => {
+      //Fetch storage data for storages in each group of new Groups
+      this.fetchStorageData(nextProps.groups)
+    }
+  }
+
+  fetchStorageData(groups) {
+    const {params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
+    if (brand && account) {
+      groups.forEach(group => {
         const groupId = group.get('id')
         fetchStorages({ brand, account, group: groupId })
         fetchProperties({ brand, account, group: groupId })
       })
-
-      this.props.fetchGroupsMetrics(nextProps.groups, { start: metricsStartDate, account })
+      this.props.fetchGroupsMetrics(groups, { start: metricsStartDate, account })
     }
   }
 
