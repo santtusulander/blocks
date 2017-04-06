@@ -37,7 +37,7 @@ class TabTokenAuthentication extends Component {
         .then(() => {
           this.props.groups.map((group) => {
             this.props.fetchProperties({brand, account, group: group.get('id')})
-            
+
             return false
           })
         })
