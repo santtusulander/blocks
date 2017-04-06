@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 import { FormGroup, Checkbox } from 'react-bootstrap'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterChecklistDropdown from '../shared/form-elements/filter-checklist-dropdown.jsx'
 
 function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   const

@@ -75,8 +75,11 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
 
-  getListOfConditionActionNames(items) {
-    return items.map((item, j) => <span key={j}>{item.name}</span>).reduce((prev, curr) => [prev, ', ', curr])
+  getListOfConditionActionNames(items = []) {
+    return items.map((item, j) => <span key={j}>{item.name}</span>)
+                .reduce((prev, curr) => {
+                  return prev === null ? [curr] : [prev, ', ', curr]
+                }, null)
   }
 
   getRuleTypeName(type) {

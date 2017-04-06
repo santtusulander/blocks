@@ -118,6 +118,7 @@ Security.defaultProps = {
   activeGroup: Map()
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
@@ -127,6 +128,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {brand, account, group} = ownProps.params
 

@@ -127,6 +127,7 @@ AnalyticsTabStorage.defaultProps = {
   groupHasStorageService: false
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params: { account, group, storage } }) => {
   const storageType = state.filters.getIn(['filters', 'storageType'])
   const activeAccount = state.account.get('activeAccount')

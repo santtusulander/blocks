@@ -230,6 +230,7 @@ AccountForm.defaultProps = {
 
 const formSelector = formValueSelector('accountForm')
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const accountType = formSelector(state, 'accountType')
 
@@ -248,6 +249,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchServiceInfo: () => dispatch(serviceInfofetchAll())

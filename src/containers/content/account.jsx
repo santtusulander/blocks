@@ -287,6 +287,7 @@ Account.defaultProps = {
   user: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {account} = ownProps.params
 
@@ -308,6 +309,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
   const {params} = ownProps
   const {account} = params

@@ -138,8 +138,8 @@ PropertyItemContainer.defaultProps = {
  */
 const makeMapStateToProps = () => {
 
+  /* istanbul ignore next */
   const mapStateToProps = (state, { propertyId }) => {
-
     return {
       entity: getPropertyById(state, propertyId),
       entityMetrics: getPropertyMetricsById(state, propertyId),

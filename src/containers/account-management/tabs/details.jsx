@@ -109,6 +109,7 @@ AccountDetails.defaultProps = {
   servicesInfo: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),
@@ -118,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     accountStartFetching: () => dispatch(accountStartFetching()),

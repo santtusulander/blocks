@@ -87,6 +87,7 @@ TabTokenAuthentication.defaultProps = {
   properties: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {params: {account, group} } = ownProps
 
@@ -98,6 +99,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, requestTag: REQUEST_TAG})),
