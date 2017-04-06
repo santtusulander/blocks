@@ -9,9 +9,9 @@ import TruncatedTitle from '../shared/page-elements/truncated-title'
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
 import Select from '../shared/form-elements/select'
 import {
-  POLICY_TYPES,
   DEFAULT_CONDITION_JS,
-  DEFAULT_RULE
+  DEFAULT_RULE,
+  policyRuleTypeOptions
 } from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -184,7 +184,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     return (
       <div className="condition-name">
-        {match.field}:&nbsp;
+        {match.name}:&nbsp;
         <TruncatedTitle
           content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
         />
@@ -238,12 +238,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     const ruleType = this.props.rulePath.get(0, null)
     const ruleMatchType = this.props.rule.get('rule_body').get('match_type', 'or')
-    const ruleTypeOptions = [
-      { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
-      { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
-      { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
-      { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
-    ]
     const ruleMatchTypeOptions = [
       {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
       {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
@@ -272,7 +266,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               className="input-select"
               value={ruleType}
               onSelect={this.props.changeActiveRuleType}
-              options={ruleTypeOptions}
+              options={policyRuleTypeOptions}
               disabled={disabled}
             />
           </FormGroup>
