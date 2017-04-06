@@ -38,8 +38,7 @@ class Header extends React.Component {
       roles,
       router,
       user,
-      params,
-      params: { account, brand }
+      params
     } = this.props
 
     let className = 'header'
@@ -54,13 +53,7 @@ class Header extends React.Component {
         <div className="header__content">
           <ul className="header__left nav navbar-nav">
             <LogoItem user={this.props.user} />
-            <AccountSelectorItem
-              account={account}
-              activeAccount={activeAccount}
-              brand={brand}
-              router={router}
-              user={user}
-            />
+            <AccountSelectorItem params={params} activeAccount={activeAccount} router={router}/>
             <BreadcrumbsItem
               activeGroup={activeGroup}
               params={params}

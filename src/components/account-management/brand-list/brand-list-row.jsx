@@ -39,6 +39,7 @@ BrandListRow.propTypes = {
   lastEdited: React.PropTypes.string,
   // logo: React.PropTypes.string,
   onDelete: React.PropTypes.func,
+  onEdit: React.PropTypes.func,
   usedBy: React.PropTypes.string
 }
 
