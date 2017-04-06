@@ -8,6 +8,7 @@ import { Col, Row, Table } from 'react-bootstrap'
 
 import {
   accountIsContentProviderType,
+  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
@@ -16,10 +17,6 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import {
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CONTENT_PROVIDER
-} from '../constants/account-management-options'
 import { getDashboardUrl } from '../util/routes'
 
 import checkPermissions from '../util/permissions'
@@ -101,7 +98,7 @@ export class Dashboard extends React.Component {
     }
 
     if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
+      this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
     if (this.measureContainersTimeout) {
@@ -119,57 +116,57 @@ export class Dashboard extends React.Component {
     clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(urlParams, filters, activeAccount) {
+  fetchData(urlParams, filters) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id})
+      this.props.fetchAccount({brand, id}).then(() => {
+        const params = { brand: urlParams.brand, account: urlParams.account }
 
-      const params = { brand: urlParams.brand, account: urlParams.account }
+        const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+        dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+        const accountType = this.props.activeAccount.get('provider_type')
+        const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-      const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
-        ? ACCOUNT_TYPE_CONTENT_PROVIDER
-        : ACCOUNT_TYPE_SERVICE_PROVIDER
-      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
+        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
 
-      const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
-        ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-        : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        /**
+         * If user has permission to list storages and view storage analytics and if the active account is a content provider:
+         * fetch all groups and storage metrics of this account, all storages of each group.
+         * @type {[Promise]}
+         */
+        const fetchStorageData =
+          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+          accountIsContentProviderType(this.props.activeAccount) &&
 
-      /**
-       * If user has permission to list storages and view storage analytics and if the active account is a content provider:
-       * fetch all groups and storage metrics of this account, all storages of each group.
-       * @type {[Promise]}
-       */
-      const fetchStorageData =
-        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+          this.props.fetchGroups(params).then((response) => {
+            let groupIds = []
+            if (response) {
+              groupIds = Object.keys(response.entities.groups)
+            } else {
+              // We don't always have to fetch groups because of caching, in those cases use selector
+              // to get group IDs for this account from the store.
+              groupIds = this.props.getGroupIds()
+            }
+            return Promise.all([
+              ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
+              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
+            ])
+          })
 
-        this.props.fetchGroups(params).then((response) => {
-          let groupIds = []
-          if (response) {
-            groupIds = Object.keys(response.entities.groups)
-          } else {
-            // We don't always have to fetch groups because of caching, in those cases use selector
-            // to get group IDs for this account from the store.
-            groupIds = this.props.getGroupIds()
-          }
-          return Promise.all([
-            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
-            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
-          ])
-        })
-
-      return Promise.all([
-        this.props.dashboardActions.startFetching(),
-        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-        fetchProviders,
-        fetchStorageData
-      ])
-      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
+        return Promise.all([
+          this.props.dashboardActions.startFetching(),
+          this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+          fetchProviders,
+          fetchStorageData
+        ])
+        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
+      })
     }
   }
 
@@ -402,7 +399,6 @@ export class Dashboard extends React.Component {
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
-
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
