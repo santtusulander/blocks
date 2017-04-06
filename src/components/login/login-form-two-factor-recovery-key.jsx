@@ -92,6 +92,7 @@ export class LoginFormTwoFactorRecoveryKey extends Component {
         <Link to={`/user/udn`} className="btn-link">
           <FormattedMessage id="portal.common.goToProfileSettings"/>
         </Link>
+        <FormattedMessage id="portal.common.toSaveForFutureUse"/>
       </div>
     )
     this.setState({

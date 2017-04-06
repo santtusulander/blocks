@@ -264,5 +264,6 @@
   "portal.groups.accountContentSummary.text": "Account Content Summary",
 
   "portal.common.copyToClipboard": "Copy to Clipboard",
-  "portal.common.goToProfileSettings": "Go to profile settings"
+  "portal.common.goToProfileSettings": "Go to profile settings ",
+  "portal.common.toSaveForFutureUse": "to save for future use"
 }
