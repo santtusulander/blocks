@@ -48,7 +48,6 @@ class AccountManagementProperties extends React.Component {
     this.addProperty        = this.addProperty.bind(this)
     this.changeSort      = this.changeSort.bind(this)
     this.editProperty       = this.editProperty.bind(this)
-    this.getSortedData      = this.getSortedData.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
@@ -203,6 +202,7 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
+  // UDNP-2410 this function may need a better name
   getModifiedData(data) {
     return data.map(property => (
       property
