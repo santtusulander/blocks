@@ -3,7 +3,7 @@ import { ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../shared/form-elements/select'
-import InputConnector from '../../input-connector'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 
 class Path extends React.Component {

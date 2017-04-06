@@ -16,6 +16,34 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 .selector-component,
 .navbar-nav .selector-component.open {
 
+  a {
+    .dark-theme & {
+      .icon {
+        fill: $dt-text-color;
+      }
+    }
+
+    .light-theme & {
+      .icon {
+        fill: $lt-text-color;
+      }
+    }
+
+    &:hover {
+      .dark-theme & {
+        .icon {
+          fill: $white;
+        }
+      }
+
+      .light-theme & {
+        .icon {
+          fill: $black;
+        }
+      }
+    }
+  }
+
   &__toggle {
     display: flex;
   }
@@ -149,36 +177,8 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
           border-left: 1px solid rgba($pale-blue, 0.3);
         }
 
-        .dark-theme & {
-          .icon {
-            fill: $dt-text-color;
-          }
-        }
-
-        .light-theme & {
-          .icon {
-            fill: $lt-text-color;
-          }
-        }
-
-        &:hover {
-          .dark-theme & {
-            .icon {
-              fill: $white;
-            }
-          }
-
-          .light-theme & {
-            .icon {
-              fill: $black;
-            }
-          }
-        }
-
         &:focus {
-          .icon {
-            fill: $pale-blue;
-          }
+          box-shadow: none;
         }
       }
     }

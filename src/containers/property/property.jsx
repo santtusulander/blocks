@@ -13,8 +13,8 @@ import propertyActions from '../../redux/modules/entities/properties/actions'
 import Content from '../../components/shared/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
 import PropertyTabControl from '../../components/content/property/property-tab-control'
-import PurgeModal from '../../components/purge-modal'
-import ModalWindow from '../../components/modal'
+import PurgeModal from '../../components/content/property/purge-modal'
+import ModalWindow from '../../components/shared/modal'
 
 import { getContentUrl } from '../../util/routes'
 
@@ -61,7 +61,7 @@ export class Property extends React.Component {
     .then(({ payload }) => {
       const getMessage = () => {
         return payload instanceof Error
-        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/> 
+        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/>
         : <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
       }
 

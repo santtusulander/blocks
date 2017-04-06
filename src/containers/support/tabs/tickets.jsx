@@ -26,7 +26,7 @@ import { FormattedMessage } from 'react-intl'
 
 // import SectionContainer from '../../../components/shared/layout/section-container'
 // import SectionHeader from '../../../components/shared/layout/section-header'
-// import SelectWrapper from '../../../components/select-wrapper'
+// import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 // import UDNButton from '../../../components/button'
 // import IconAdd from '../../../components/shared/icons/icon-add.jsx'
 

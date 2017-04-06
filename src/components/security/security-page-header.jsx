@@ -3,7 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 import AccountSelector from '../global-account-selector/global-account-selector'
 import PageHeader from '../shared/layout/page-header'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc, params }) => {

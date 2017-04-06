@@ -9,7 +9,7 @@ import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import CertificateForm from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
 
