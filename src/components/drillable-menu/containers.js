@@ -18,7 +18,7 @@ import {
 
 import checkPermissions from '../../util/permissions'
 
-import DrillableMenu from './'
+import DrillableMenu from './menu'
 
 /**
  * Runs check for a permission to determine whether the entity tree

@@ -9,7 +9,7 @@ import autoClose from '../../decorators/select-auto-close'
 import DrillableMenuItems from './menu-items'
 import DrillableMenuHeader from './menu-header'
 
-class DrillableMenu extends Component {
+export class DrillableMenu extends Component {
 
   constructor(props) {
     super(props)

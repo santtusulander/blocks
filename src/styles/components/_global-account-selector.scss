@@ -144,6 +144,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
           display: block;
           overflow: hidden;
           text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }

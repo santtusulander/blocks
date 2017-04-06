@@ -37,7 +37,7 @@ const DrillableMenuItems = ({ menuNodes = [], searchValue, handleCaretClick, onI
             menuItems.push(
               <li key={i}>
 
-                <a className="name-container" onClick={() => onItemClick(node)}>{nodeName}</a>
+                <a className="name-container" onClick={() => onItemClick(node)}><span>{nodeName}</span></a>
                 {nodes &&
                   <a
                     className="caret-container"
