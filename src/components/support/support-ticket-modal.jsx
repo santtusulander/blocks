@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap'
 
 import IconEdit from '../shared/icons/icon-configuration'
 import IconClose from '../shared/icons/icon-close'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import Toggle from '../shared/form-elements/toggle'
 import SupportTicketAttachments from './support-ticket-attachments'
 import SupportTicketComments from './support-ticket-comments'

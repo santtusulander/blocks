@@ -4,7 +4,7 @@ import { storiesOf, action } from '@kadira/storybook';
 
 const ThemeWrap = require('../theme-wrap.jsx');
 
-import FilterChecklistDropdown from '../../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterChecklistDropdown from '../../shared/form-elements/filter-checklist-dropdown.jsx'
 
 const options = Immutable.fromJS([
   { value: 'link1', label: 'Property 1', checked: true },

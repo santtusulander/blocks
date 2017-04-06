@@ -189,6 +189,7 @@ EditNodeFormContainer.propTypes = {
   subTitle: React.PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { nodeIds, params }) => {
   const nodes = nodeIds.map(id => {
 
@@ -218,6 +219,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/

@@ -469,6 +469,7 @@ UserEditForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),
@@ -478,6 +479,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     resetForm: () => dispatch(initialize('user-edit-form', ownProps.initialValues)),

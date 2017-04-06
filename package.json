@@ -115,12 +115,15 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.js?(x)"
+      "src/**/**/*.js?(x)"
     ],
     "coveragePathIgnorePatterns": [
       "/__stories__/",
       "/src/locales/",
-      "/src/assets/js/"
+      "/src/assets/js/",
+      "/src/app.jsx",
+      "/src/root.js",
+      "/src/routes.jsx"
     ],
     "testPathDirs": [
       "src",

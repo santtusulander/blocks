@@ -9,7 +9,7 @@ import AsperaUpload from './aspera-upload'
 import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
-import Button from '../button'
+import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../shared/form-elements/toggle'

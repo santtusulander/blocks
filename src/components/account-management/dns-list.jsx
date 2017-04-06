@@ -6,7 +6,7 @@ import PageContainer from '../shared/layout/page-container'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import { DNSRecordTable } from './dns-record-table'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 

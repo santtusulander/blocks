@@ -80,7 +80,8 @@ export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource,
   const recordToDelete = {
     name: recordName,
     type: data.type,
-    value: data.value
+    value: data.value,
+    id: data.id
   }
   return dnsRecordsApi.remove(zone, resource, recordToDelete)
 })
