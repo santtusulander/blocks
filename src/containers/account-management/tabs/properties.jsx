@@ -203,6 +203,15 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
+  getModifiedData(data) {
+    return data.map(property => (
+      property
+        .set('group', this.getGroupName(property.get('parentId')))
+        .set('deploymentMode', this.getPropertyDeploymentMode(property))
+        .set('originHostname', this.getPropertyOriginHostname(property))
+    ))
+  }
+
   getGroupName(groupId) {
     const { groups } = this.props
     const groupIdNumber = Number(groupId)
@@ -211,15 +220,15 @@ class AccountManagementProperties extends React.Component {
   }
 
   getPropertyDeploymentMode(property) {
-    const deploymentMode = property.get('services').first()
-      .get('deployment_mode')
+    return property.get('services').first().get('deployment_mode')
+  }
 
+  getFormattedPropertyDeploymentMode(deploymentMode) {
     if (deploymentMode === 'trial') {
       return <FormattedMessage id="portal.account.properties.deploymentMode.trial"/>
     } else if (deploymentMode === 'production') {
       return <FormattedMessage id="portal.account.properties.deploymentMode.production" />
     }
-    return deploymentMode
   }
 
   getPropertyOriginHostname(property) {
@@ -240,7 +249,8 @@ class AccountManagementProperties extends React.Component {
     }
 
     const filteredProperties = this.getFilteredData(properties, search)
-    const sortedProperties = this.getSortedData(filteredProperties, sortBy, sortDir)
+    const modifiedProperties = this.getModifiedData(filteredProperties)
+    const sortedProperties = this.getSortedData(modifiedProperties, sortBy, sortDir)
     const numHiddenProperties = properties.size - sortedProperties.size;
 
     const propertyText = intl.formatMessage({id: 'portal.account.properties.counter.text' }, { numProperties: sortedProperties.size })
@@ -295,9 +305,9 @@ class AccountManagementProperties extends React.Component {
               return (
                 <tr key={i}>
                   <td>{property.get('published_host_id')}</td>
-                  <td>{this.getGroupName(property.get('parentId'))}</td>
-                  <td>{this.getPropertyDeploymentMode(property)}</td>
-                  <td>{this.getPropertyOriginHostname(property)}</td>
+                  <td>{property.get('group')}</td>
+                  <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
+                  <td>{property.get('originHostname')}</td>
                   <td>{formatUnixTimestamp(property.get('created'))}</td>
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_PROPERTY}>
