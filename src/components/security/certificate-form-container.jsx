@@ -149,6 +149,7 @@ CertificateFormContainer.defaultProps = {
   groups: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const certificateToEdit = state.security.get('certificateToEdit')
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
@@ -169,6 +170,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
 

@@ -3,7 +3,7 @@ import { ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 

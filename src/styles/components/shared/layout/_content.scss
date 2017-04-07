@@ -10,4 +10,11 @@
     height: $footer-height;
     content: '';
   }
+
+  > .loading-spinner {
+    .spinner-content {
+      position: fixed;
+      margin-left: $navigation-sidebar-width / 2;
+    }
+  }
 }

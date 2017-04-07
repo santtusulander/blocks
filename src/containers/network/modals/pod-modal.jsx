@@ -438,6 +438,7 @@ PodFormContainer.defaultProps = {
   UIFootprints: []
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
@@ -493,6 +494,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(podActions.create({ ...params, data })),

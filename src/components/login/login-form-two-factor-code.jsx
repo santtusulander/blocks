@@ -151,9 +151,16 @@ export class LoginFormTwoFactorCode extends Component {
                 <div className='token-input-info loading'><LoadingSpinnerSmall /></div>
               }
               { !this.props.fetching &&
-                <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
-                  <FormattedMessage id="portal.login.2fa.goBack.text"/>
-                </Link>
+                <div className="having-trouble-link">
+                  <FormattedMessage id="portal.login.2fa.havingTrouble.text"/>
+                  <Link to={`/`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.tryAgain.text"/>
+                  </Link>
+                  <FormattedMessage id="portal.login.2fa.orUseYour.text"/>
+                  <Link to={`/recovery-key`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.recoveryKey.text"/>
+                  </Link>
+                </div>
               }
             </div>
           </form>

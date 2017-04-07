@@ -138,6 +138,7 @@
   "portal.accountManagement.invalidAccountName.text": "Account name is invalid.",
   "portal.accountManagement.account.text": "ACCOUNT",
   "portal.accountManagement.accounts.text": "ACCOUNTS",
+  "portal.accountManagement.accountsType.unknown.text": "Unknown",
   "portal.accountManagement.groups.text": "GROUPS",
   "portal.accountManagement.users.text": "USERS",
   "portal.accountManagement.dns.text": "DNS",

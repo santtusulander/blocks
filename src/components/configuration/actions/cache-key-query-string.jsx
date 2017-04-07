@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import CacheKeyQueryStringForm from './cache-key-query-string-form'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
@@ -36,14 +37,14 @@ class CacheKeyQueryString extends React.Component {
             set={this.state.updatedSet}
             updateSet={this.updateSet}/>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" id="save-button" onClick={this.saveChanges}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>

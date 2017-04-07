@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import { removeProps } from '../util/helpers'
+import { removeProps } from '../../../util/helpers'
 
 function ButtonWrapper(props) {
   return <Button {...removeProps(props, ['hidden', 'addNew', 'outLine'])} className={createButtonClassName(props)}/>

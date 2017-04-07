@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import UDNButton from '../../components/button'
+import UDNButton from '../../components/shared/form-elements/button'
 import Sidebar from '../../components/shared/layout/section-header'
 import { SidebarLinks } from '../shared/sidebar-link/sidebar-links'
 
