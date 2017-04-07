@@ -10,7 +10,7 @@ import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import ModalWindow from '../../../components/shared/modal'
-import CertificateForm from '../../../components/security/certificate-form-container'
+import CertificateFormContainer from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -74,7 +74,6 @@ class TabSslCertificate extends Component {
 
   render() {
     const {
-      activeAccount,
       activeModal,
       activeCertificates,
       fetchAccount,
@@ -90,26 +89,6 @@ class TabSslCertificate extends Component {
     const modalTitle = activeModal === EDIT_CERTIFICATE
       ? <FormattedMessage id="portal.security.editCertificate.text"/>
       : <FormattedMessage id="portal.security.uploadCertificate.text"/>
-
-    const certificateFormProps = {
-      title: modalTitle,
-      showNotification: this.showNotification,
-      activeAccount,
-      fetchAccount,
-      toggleModal
-    }
-
-    const sslListProps = {
-      groups,
-      activeModal,
-      activeCertificates,
-      certificates: sslCertificates,
-      isFetching: isFetching,
-      onCheck: commonName => toggleActiveCertificates(commonName),
-      uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
-      deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
-    }
 
     if (!this.props.params.group) {
       return (
@@ -127,10 +106,28 @@ class TabSslCertificate extends Component {
     return (
       <div className='ssl-certificate-tab'>
 
-        <SSLList {...sslListProps}/>
+        <SSLList
+          groups={groups}
+          activeModal={activeModal}
+          activeCertificates={activeCertificates}
+          certificates={sslCertificates}
+          isFetching={isFetching}
+          onCheck={commonName => toggleActiveCertificates(commonName)}
+          uploadCertificate={() => toggleModal(UPLOAD_CERTIFICATE)}
+          editCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE))}
+          deleteCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))}
+        />
 
-        {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
-        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
+        {(activeModal === EDIT_CERTIFICATE || activeModal === UPLOAD_CERTIFICATE) &&
+          <CertificateFormContainer
+            title={modalTitle}
+            showNotification={this.showNotification}
+            activeAccount={this.props.params.account}
+            fetchAccount={fetchAccount}
+            toggleModal={toggleModal}
+          />
+        }
+
         {activeModal === DELETE_CERTIFICATE &&
           <ModalWindow
             title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
@@ -153,7 +150,6 @@ class TabSslCertificate extends Component {
 TabSslCertificate.displayName = 'TabSslCertificate'
 
 TabSslCertificate.propTypes = {
-  activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   changeNotification: PropTypes.func,
@@ -174,7 +170,6 @@ function mapStateToProps(state, ownProps) {
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
     groups: state.group.get('allGroups'),
     isFetching: state.security.get('fetching'),
     sslCertificates: state.security.get('sslCertificates').filter(cert =>
