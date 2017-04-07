@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../util/routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../shared/layout/page-header'
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
@@ -24,10 +24,9 @@ const SupportPageHeader = (props) => {
     <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
-          as="support"
           params={params}
           levels={[ 'brand', 'account' ]}
-          onSelect={(entity) => {
+          onItemClick={(entity) => {
 
             const { nodeInfo, idKey = 'id' } = entity
             router.push(`${getUrl(getRoute('support'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)

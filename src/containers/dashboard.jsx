@@ -42,7 +42,7 @@ import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/s
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
-import { AccountSelector } from '../components/drillable-menu/containers'
+import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/shared/layout/content'

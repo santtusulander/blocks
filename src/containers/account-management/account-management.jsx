@@ -31,7 +31,7 @@ import { getById as getAccountById} from '../../redux/modules/entities/accounts/
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
 import ModalWindow from '../../components/shared/modal'
-import { AccountSelector } from '../../components/drillable-menu/containers'
+import AccountSelector from '../../components/global-account-selector/account-selector-container'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'

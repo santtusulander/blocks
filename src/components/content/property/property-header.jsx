@@ -13,7 +13,7 @@ import {
 } from '../../../util/routes.js'
 
 import PageHeader from '../../shared/layout/page-header'
-import { AccountSelector } from '../../drillable-menu/containers'
+import AccountSelector from '../../global-account-selector/account-selector-container'
 import TruncatedTitle from '../../shared/page-elements/truncated-title'
 
 import IconTrash from '../../shared/icons/icon-trash.jsx'

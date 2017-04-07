@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import PageHeader from '../shared/layout/page-header'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'

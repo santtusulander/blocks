@@ -24,7 +24,7 @@ import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../shared/layout/page-container'
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
 import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'

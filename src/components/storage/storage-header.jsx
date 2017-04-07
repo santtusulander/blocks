@@ -4,7 +4,7 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 
 import PageHeader from '../shared/layout/page-header'
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import IconChart from '../shared/icons/icon-chart.jsx'

@@ -7,7 +7,7 @@ import { injectIntl } from 'react-intl'
 import * as PERMISSIONS from '../../constants/permissions'
 
 import PageHeader from '../shared/layout/page-header'
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
