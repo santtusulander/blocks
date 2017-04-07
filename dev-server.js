@@ -21,12 +21,8 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
-    '/v2/service_info': {
-      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
-      secure: false
-    },
     '/v2': {
-      target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
+      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
       secure: false
     },
     '/VCDN': {
@@ -34,27 +30,28 @@ var server = new WebpackDevServer(compiler, {
       secure: false
     },
     '/cis_north': {
-      target: 'http://cis-us-dal-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
+      target: 'http://cis-eu-fra1-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
       secure: false,
       pathRewrite: {
         '/cis_north' : ''
       }
     },
     '/cis_south': {
-      target: 'http://cis-us-dal-srvc0-south0.cdx-dev.unifieddeliverynetwork.net:8080',
+      target: 'http://cis-eu-fra1-srvc0-south0.cdx-dev.unifieddeliverynetwork.net:8080',
       secure: false,
       pathRewrite: {
         '/cis_south' : ''
       }
     },
     '/analytics-legacy': {
-      target: 'http://portal2.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://mapi.sjc.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics-legacy([^?]*)\\??(.*)$' : '/legacy$1/?$2'
       }
     },
+
     '/analytics': {
-      target: 'http://portal2.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://mapi.sjc.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics([^-][^?]*)\\??(.*)$' : '/analytics/$1/?$2'
       }

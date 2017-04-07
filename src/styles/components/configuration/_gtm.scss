@@ -1,0 +1,69 @@
+$input-height: 36px;
+
+.configuration-gtm {
+  .help-icon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+
+    span {
+      margin-right: 20px;
+    }
+  }
+
+  .gtm-toggle-status {
+    .dark-theme & {
+      color: $white;
+     }
+
+    .light-theme & {
+      color: $lt-text-color;
+    }
+  }
+
+  .traffic-config {
+    .row {
+      margin-bottom: 15px;
+    }
+  }
+
+  button[aria-describedby='gtm-match-tooltip'] {
+    .dark-theme & {
+      color: $dt-text-color;
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+    }
+
+    :hover & {
+      text-decoration: none;
+    }
+
+    font-weight: 400;
+  }
+
+  .configuration-gtm-rules {
+    width: 100%;
+    transition: width 0.3s ease-out;
+
+    tr {
+      td {
+        max-width: 200px;
+      }
+
+      .matches {
+        overflow: hidden;
+      }
+    }
+  }
+}

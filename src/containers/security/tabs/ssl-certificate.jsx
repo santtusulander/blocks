@@ -9,7 +9,7 @@ import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 import CertificateForm from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
 
@@ -37,7 +37,7 @@ class TabSslCertificate extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+    if (JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchData(nextProps)
     }
   }
@@ -72,7 +72,7 @@ class TabSslCertificate extends Component {
       })
   }
 
-  render(){
+  render() {
     const {
       activeAccount,
       activeModal,
@@ -111,14 +111,17 @@ class TabSslCertificate extends Component {
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
 
-    if ( !this.props.params.group) return (
+    if (!this.props.params.group) {
+      return (
       <p className='text-center'>
         <FormattedMessage id="portal.security.ssl.selectGroup.text" />
       </p>
-    )
+      )
+    }
 
-    if ( isFetching )
+    if (isFetching) {
       return <LoadingSpinner />
+    }
 
 
     return (
@@ -138,7 +141,7 @@ class TabSslCertificate extends Component {
             invalid={true}
             verifyDelete={true}>
             <p>
-              <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>
+              <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete: "Certificate"}}/>
             </p>
           </ModalWindow>
         }

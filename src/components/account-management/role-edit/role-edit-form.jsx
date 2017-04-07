@@ -7,12 +7,10 @@ import { Button, Table } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import SidePanel from '../../side-panel'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupToggle from '../../form/field-form-group-toggle'
-import FormFooterButtons from '../../form/form-footer-buttons'
-
-import './role-edit-form.scss'
+import SidePanel from '../../shared/side-panel'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ roleName }) => {
   const conditions = {}
@@ -158,6 +156,7 @@ RoleEditForm.propTypes = {
   submitting: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const editPermsUI = Immutable.Map([
@@ -176,6 +175,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

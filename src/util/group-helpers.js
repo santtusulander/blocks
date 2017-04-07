@@ -5,7 +5,7 @@
  * @returns {Array}
  */
 export function getCheckboxArrayOptions(groups) {
-  let options = []
+  const options = []
 
   groups.forEach(group => {
     options.push({

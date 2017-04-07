@@ -8,7 +8,7 @@ $storage-kpi-comparison-bars-width: rem(120px);
   display: inline-block;
   vertical-align: top;
 
-  &:not(last-child) {
+  &:not(:last-child) {
     margin-right: $storage-kpi-item-margin;
   }
 }
@@ -57,20 +57,34 @@ $storage-kpi-comparison-bars-width: rem(120px);
   height: 0.4 * $storage-kpi-item-height;
   margin: 0 0 rem(5px) $storage-kpi-content-margin;
   align-self: flex-end;
+
+  .comparison-bar.reference {
+    background-color: $black;
+
+    .light-theme & {
+      background-color: $silver-80;
+    }
+  }
 }
 
 .storage-kpi-number {
+  display: flex;
   font-weight: bold;
+  align-items: baseline;
 
   .value {
     font-size: rem(36px);
+
+    &.truncated-title {
+      max-width: rem(100px);
+    }
 
     .dark-theme & {
       color: $white;
     }
 
     .light-theme & {
-      color: $black;
+      color: $grey-80;
     }
   }
 

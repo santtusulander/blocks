@@ -9,3 +9,10 @@ export const TWO_FA_CODE_INPUT_FIELD_NAMES = [
   "code6",
   "code7"
 ];
+export const RECOVERY_KEY_INPUT_FIELD_MAX_LENGTH = 3;
+export const RECOVERY_KEY_INPUT_FIELD_NAMES = [
+  "code1",
+  "code2",
+  "code3",
+  "code4"
+];

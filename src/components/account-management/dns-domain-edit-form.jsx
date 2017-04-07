@@ -11,9 +11,9 @@ import {
   isValidNameserver,
   isValidSOARecord
 } from '../../util/validators'
-import FieldFormGroup from '../form/field-form-group'
-import FormFooterButtons from '../form/form-footer-buttons'
-import FieldFormGroupNumber from '../form/field-form-group-number.jsx'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import FieldFormGroupNumber from '../shared/form-fields/field-form-group-number.jsx'
 import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_REFRESH } from '../../constants/account-management-options'
 
 const validate = fields => {
@@ -50,17 +50,17 @@ const validate = fields => {
     refresh: [
       {
         condition: !isInt(refresh),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
       },
       {
         condition: !(parseInt(refresh) >= 0),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.minRefresh.text" values={{minRefresh}}/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.minRefresh.text" values={{minRefresh}}/>
       }
     ],
     ttl: [
       {
         condition: !isInt(ttl),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
       },
       {
         condition: parseInt(ttl) > maxTtl,
@@ -74,7 +74,7 @@ const validate = fields => {
     negative_ttl: [
       {
         condition: isNaN(negative_ttl),
-        errorText:<FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
+        errorText: <FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
       },
       {
         condition: parseInt(negative_ttl) > maxTtl,

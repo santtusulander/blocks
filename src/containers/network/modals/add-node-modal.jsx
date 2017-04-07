@@ -15,7 +15,7 @@ import { buildReduxId } from '../../../redux/util'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import { changeNotification } from '../../../redux/modules/ui'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
 import { NODE_TYPE_DEFAULT,
@@ -38,6 +38,7 @@ const getSubtitle = (state, params) => {
   const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
   // const group = getGroupById(state, params.group)
+  // eslint-disable-next-line eqeqeq
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
 
   const network = getNetworkById(state, buildReduxId(params.group, params.network))
@@ -135,6 +136,7 @@ AddNodeContainer.propTypes = {
   subtitle: PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const serverNumber = formSelector(state, 'serverNumber') || 0
@@ -168,13 +170,14 @@ const mapStateToProps = (state, { params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 
   onSave: node => {
 
     return dispatch(nodeActions.create({ ...params, payload: node }))
       .then(() => {
-        const showNotification = (message) => dispatch( changeNotification(message) )
+        const showNotification = (message) => dispatch(changeNotification(message))
         showNotification(<FormattedMessage id="portal.network.addNodeForm.createNode.status"/>)
         setTimeout(showNotification, 10000)
         onCancel()

@@ -2,13 +2,13 @@ import React, { PropTypes, Component } from 'react'
 import { FormGroup, FormControl } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import PageContainer from '../layout/page-container'
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import PageContainer from '../shared/layout/page-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import { DNSRecordTable } from './dns-record-table'
-import UDNButton from '../button'
-import ActionButtons from '../action-buttons'
-import IsAllowed from '../is-allowed'
+import UDNButton from '../shared/form-elements/button'
+import ActionButtons from '../shared/action-buttons'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import recordTypes, { recordFields } from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
@@ -31,8 +31,8 @@ class DNSList extends Component {
       intl,
       hiddenRecordCount,
       visibleRecordCount } = this.props
-    let tables = []
-    let recordsByType = {}
+    const tables = []
+    const recordsByType = {}
 
     /**
      * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain
@@ -40,7 +40,7 @@ class DNSList extends Component {
      * to array under the current record type key in recordsByType.
      */
     records.forEach(record => {
-      if(!recordsByType[record.type]) {
+      if (!recordsByType[record.type]) {
         recordsByType[record.type] = []
       }
       recordsByType[record.type].push(record)

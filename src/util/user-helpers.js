@@ -7,7 +7,7 @@ import { getTokenMeta } from './local-storage'
  * @return {String} phone number without countryCode
  */
 export const stripCountryCode = (phoneNumber, countryCode) => {
-  return phoneNumber.replace( new RegExp ( `^\\+${countryCode}` ), '')
+  return phoneNumber.replace(new RegExp (`^\\+${countryCode}`), '')
 }
 
 /**
@@ -29,7 +29,9 @@ export const tokenDidExpire = () => {
   const expiresAt = tokenMeta.expires_at
   const currentUnixTime = Math.floor(Date.now() / 1000)
 
-  if (currentUnixTime < expiresAt) return false
+  if (currentUnixTime < expiresAt) {
+    return false
+  }
 
   return true
 }

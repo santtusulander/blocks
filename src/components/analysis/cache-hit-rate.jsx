@@ -6,12 +6,12 @@ import {FormattedMessage} from 'react-intl'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import BarChart from '../charts/bar-chart'
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
-// import Select from '../select'
+// import Select from '../shared/form-elements/select'
 
 class AnalysisCacheHitRate extends React.Component {
   constructor(props) {
@@ -39,16 +39,15 @@ class AnalysisCacheHitRate extends React.Component {
   }
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
-      if(a.get(sortBy) < b.get(sortBy)) {
+      if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
-      }
-      else if(a.get(sortBy) > b.get(sortBy)) {
+      } else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0
     })
   }
-  changeChartType( value ) {
+  changeChartType(value) {
     this.setState({chartType: value})
   }
   render() {
@@ -71,7 +70,7 @@ class AnalysisCacheHitRate extends React.Component {
       moment(datapoint.get('timestamp')).format('MMM')
     )
 
-    if(this.state.chartType === 'column') {
+    if (this.state.chartType === 'column') {
       chart = (
         <BarChart
           valueFormatter={(value) => value + ' %'}

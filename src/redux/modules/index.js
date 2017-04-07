@@ -42,6 +42,9 @@ export const serviceInfo = require('./service-info/index.js').default;
 //pagination
 export const pagination = require('./pagination').default;
 
+//HTTP file upload
+export const storageUploads = require('./http-file-upload').default;
+
 // Account Selectors
 export const accountSelectors = multireducer({
   header: accountSelector,
@@ -49,6 +52,7 @@ export const accountSelectors = multireducer({
   accountManagement: accountSelector,
   configuration: accountSelector,
   propertySummary: accountSelector,
+  storageSummary: accountSelector,
   content: accountSelector,
   security: accountSelector,
   analytics: accountSelector,

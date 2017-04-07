@@ -3,18 +3,22 @@ import { reduxForm, Field, change, propTypes as reduxFormPropTypes } from 'redux
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import HelpTooltip from '../../help-tooltip'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FieldFormGroupToggle from '../../form/field-form-group-toggle'
-import FormFooterButtons from '../../form/form-footer-buttons'
-import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi-option-selector'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import FieldFormGroupMultiOptionSelector from '../../shared/form-fields/field-form-group-multi-option-selector'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
 import { STORAGE_ESTIMATE_UNITS,  STORAGE_ESTIMATE_UNITS_DEFAULT,
          STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
          STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
+import { DELETE_STORAGE } from '../../../constants/permissions.js'
+
 
 const validate = ({ name, locations, estimate, estimate_unit, abr, abrProfile }) => {
   const conditions = {
@@ -60,14 +64,13 @@ class StorageForm extends React.Component {
 
   render() {
     const { error, submitting, handleSubmit, intl, initialValues, abrProfileOptions, dirty,
-            invalid, onCancel, onSave, onDelete, abrToggle, locationOptions } = this.props
+            invalid, onCancel, onSave, onDelete, abrToggle, locationOptions, hasTranscodingSupport } = this.props
 
     const edit = !!initialValues.name
 
     const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                               edit ? <FormattedMessage id="portal.button.save"/> :
                               <FormattedMessage id="portal.button.add"/>
-
 
     return (
       <form className="storage-form" onSubmit={handleSubmit(onSave)}>
@@ -111,7 +114,7 @@ class StorageForm extends React.Component {
             className="estimate-field"
             name="estimate"
             min={STORAGE_ESTIMATE_MIN}
-            component={FieldFormGroup}
+            component={FieldFormGroupNumber}
             label={<FormattedMessage id="portal.storage.storageForm.estimate.label" />}
             addonAfterLabel={
               <HelpTooltip
@@ -130,43 +133,49 @@ class StorageForm extends React.Component {
           />
         </div>
 
-        <Field
-          name="abr"
-          className="abr-field"
-          component={FieldFormGroupToggle}
-          label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
-          readonly={edit ? true : false}
-          required={edit ? false : true}
-          addonAfterLabel={
-            <HelpTooltip
-              id="tooltip-help"
-              title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
-              <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
-            </HelpTooltip>
-          }
-        />
+        { hasTranscodingSupport &&
+          <div>
+            <Field
+              name="abr"
+              className="abr-field"
+              component={FieldFormGroupToggle}
+              label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
+              readonly={edit ? true : false}
+              required={edit ? false : true}
+              addonAfterLabel={
+                <HelpTooltip
+                  id="tooltip-help"
+                  title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
+                  <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
+                </HelpTooltip>
+              }
+            />
 
-        {abrToggle &&
-          <Field
-            name="abrProfile"
-            className="abr-profile-field"
-            component={FieldFormGroupSelect}
-            emptyLabel={<FormattedMessage id="portal.storage.storageForm.abrProfile.placeholder" />}
-            options={abrProfileOptions}
-            disabled={edit ? true : false}
-            required={edit ? false : true}
-          />
+            { abrToggle &&
+              <Field
+                name="abrProfile"
+                className="abr-profile-field"
+                component={FieldFormGroupSelect}
+                emptyLabel={<FormattedMessage id="portal.storage.storageForm.abrProfile.placeholder" />}
+                options={abrProfileOptions}
+                disabled={edit ? true : false}
+                required={edit ? false : true}
+              />
+            }
+          </div>
         }
 
         <FormFooterButtons>
           { edit &&
-            <Button
-              id="delete-btn"
-              className="btn-danger pull-left"
-              onClick={handleSubmit(() => onDelete(initialValues.name))}
-            >
-              <FormattedMessage id="portal.button.delete"/>
-            </Button>
+            <IsAllowed to={DELETE_STORAGE}>
+              <Button
+                id="delete-btn"
+                className="btn-danger pull-left"
+                onClick={handleSubmit(() => onDelete(initialValues.name))}
+              >
+                <FormattedMessage id="portal.button.delete"/>
+              </Button>
+            </IsAllowed>
           }
           <Button
             className="btn-secondary"
@@ -192,6 +201,7 @@ StorageForm.propTypes = {
   abrProfileOptions: PropTypes.array,
   abrToggle: PropTypes.bool,
   fetching: PropTypes.bool,
+  hasTranscodingSupport: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   locationOptions: PropTypes.array,

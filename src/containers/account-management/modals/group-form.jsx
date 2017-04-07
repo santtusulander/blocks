@@ -16,11 +16,14 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
-import TruncatedTitle from '../../../components/truncated-title'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+
+import TruncatedTitle from '../../../components/shared/page-elements/truncated-title'
+import ModalWindow from '../../../components/shared/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'
@@ -34,7 +37,8 @@ import GroupForm from '../../../components/account-management/group-form'
 import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 
-import '../../../components/account-management/group-form.scss'
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
 
 class GroupFormContainer extends React.Component {
   constructor(props) {
@@ -77,7 +81,7 @@ class GroupFormContainer extends React.Component {
 
   onSubmit(values) {
     const { groupId, invalid, onSave } = this.props
-    if(!invalid) {
+    if (!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
       // if (groupId) {
@@ -201,6 +205,7 @@ class GroupFormContainer extends React.Component {
   render() {
     const {
       account,
+      allowModify,
       canEditServices,
       canSeeLocations,
       groupId,
@@ -219,7 +224,6 @@ class GroupFormContainer extends React.Component {
       invalid,
       networks,
       serviceOptions,
-      locationPermissions,
       showServiceItemForm
     } = this.props
 
@@ -279,9 +283,9 @@ class GroupFormContainer extends React.Component {
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             onShowLocation={this.showLocationForm}
-            locationPermissions={locationPermissions}
             serviceOptions={serviceOptions}
             showServiceItemForm={showServiceItemForm}
+            readOnly={!allowModify}
           />
         </SidePanel>
 
@@ -311,7 +315,6 @@ class GroupFormContainer extends React.Component {
           onCancel={this.hideLocationForm}
           show={true}
           locationId={this.state.selectedLocationId}
-          locationPermissions={locationPermissions}
         />
       }
 
@@ -325,6 +328,7 @@ GroupFormContainer.displayName = "GroupFormContainer"
 GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
+  allowModify: PropTypes.bool,
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
@@ -340,7 +344,6 @@ GroupFormContainer.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   networks: PropTypes.instanceOf(List),
@@ -363,15 +366,17 @@ GroupFormContainer.defaultProps = {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, host, group, account } = state
-  const { groupId } = ownProps
+  const { user, group, host } = state
+  const { groupId, params: { account } } = ownProps
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
-  const activeAccount = account.get('activeAccount')
+  const activeAccount = getAccountById(state, account)
   const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
+  const roles = getRoles(state)
+
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -392,17 +397,19 @@ const  mapStateToProps = (state, ownProps) => {
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP),
     networks: getNetworksByGroup(state, groupId)
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
     fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

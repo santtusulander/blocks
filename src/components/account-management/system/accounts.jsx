@@ -5,13 +5,13 @@ import { Map, List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
-import PageContainer from '../../../components/layout/page-container'
-import SectionHeader from '../../../components/layout/section-header'
-import IconAdd from '../../icons/icon-add'
-import ActionButtons from '../../../components/action-buttons'
-import ArrayCell from '../../array-td/array-td'
-import TableSorter from '../../table-sorter'
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import PageContainer from '../../../components/shared/layout/page-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
+import IconAdd from '../../shared/icons/icon-add'
+import ActionButtons from '../../../components/shared/action-buttons'
+import ArrayCell from '../../shared/page-elements/array-td'
+import TableSorter from '../../shared/table-sorter'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -45,7 +45,7 @@ class AccountList extends Component {
     router.setRouteLeaveHook(route, this.shouldLeave)
 
     //TODO: get brand from redux
-    accountActions.fetchAccounts( this.props.params.brand )
+    accountActions.fetchAccounts(this.props.params.brand)
 
     //fetch serviceInfo from API
     fetchServiceInfo()
@@ -78,14 +78,13 @@ class AccountList extends Component {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
-      }
-      else if(aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -134,8 +133,8 @@ class AccountList extends Component {
       this.state.sortDir
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
-    const services = values => values.map( service => {
-      const serviceDetails = this.props.servicesInfo.find( obj => obj.get('id') === service.get('id') )
+    const services = values => values.map(service => {
+      const serviceDetails = this.props.servicesInfo.find(obj => obj.get('id') === service.get('id'))
       return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
@@ -154,7 +153,9 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {
+            this.props.editAccount()
+          }}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -183,7 +184,9 @@ class AccountList extends Component {
                 <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
                 <td className="nowrap-column">
                   <ActionButtons
-                    onEdit={() => {this.props.editAccount(account)}}
+                    onEdit={() => {
+                      this.props.editAccount(account)
+                    }}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>
               </tr>
@@ -234,7 +237,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }

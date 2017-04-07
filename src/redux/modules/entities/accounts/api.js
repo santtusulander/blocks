@@ -23,7 +23,7 @@ const baseURL = brand => `${BASE_URL_AAA}/brands/${brand}/accounts`
  */
 export const fetch = ({brand, id }) => {
   return axios.get(`${baseURL(brand)}/${id}`)
-    .then( ({ data }) => {
+    .then(({ data }) => {
 
       const accountData = {
         id: brand,
@@ -42,7 +42,7 @@ export const fetch = ({brand, id }) => {
  */
 export const fetchAll = ({ brand }) => {
   return axios.get(baseURL(brand), PAGINATION_MOCK)
-    .then( ({data}) => {
+    .then(({data}) => {
 
       const brandAccounts = {
         id: brand,
@@ -59,7 +59,7 @@ export const fetchAll = ({ brand }) => {
  * @param  {[type]} payload [data to create account with]
  */
 export const create = ({ brand, payload }) =>
-  axios.post(baseURL(brand), payload)
+  axios.post(baseURL(brand), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const brandAccounts = {
@@ -77,7 +77,7 @@ export const create = ({ brand, payload }) =>
  * @param  {[type]} payload [data to update account with]
  */
 export const update = ({ brand, id, payload }) =>
-  axios.put(`${baseURL(brand)}/${id}`, payload)
+  axios.put(`${baseURL(brand)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const brandAccounts = {

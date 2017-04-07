@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
+import { Button, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import Typeahead from '../../typeahead'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Typeahead from '../../shared/form-elements/typeahead'
 
 import {
   FILE_EXTENSION_REGEXP,
@@ -27,11 +28,13 @@ class FileExtension extends React.Component {
   }
 
   extensionsFromMatchCase(match) {
-    const matchCase = match.getIn(['cases', 0, 0])
-    const rawExtensionList = matchCase.match(FILE_EXTENSION_REGEXP)[1];
+    const value = match.get('value')
+    const rawExtensionList = value.match(FILE_EXTENSION_REGEXP)[1];
 
     if (rawExtensionList) {
-      return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
+      return rawExtensionList.split('|').map(extension => {
+        return { id: extension, label: extension }
+      })
     } else {
       return []
     }
@@ -73,10 +76,11 @@ class FileExtension extends React.Component {
   saveChanges() {
     const matchCase = this.matchCaseFromExtensions(this.state.extensions)
     let newMatch = this.props.match
-    newMatch = newMatch.setIn(['cases', 0, 0], matchCase)
+    newMatch = newMatch.set('type', 'regexp')
+    newMatch = newMatch.set('value', matchCase)
 
     this.props.changeValue(this.props.path, newMatch)
-    this.props.close()
+    this.props.activateMatch(null)
   }
 
   render() {
@@ -106,14 +110,14 @@ class FileExtension extends React.Component {
             />
           </FormGroup>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
@@ -123,6 +127,7 @@ class FileExtension extends React.Component {
 
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
+  activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),

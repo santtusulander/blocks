@@ -28,7 +28,7 @@ export const getAll = (state) => {
  * @return []
  */
 export const getLocationOptions = (state) => {
-  let locationOptions = []
+  const locationOptions = []
 
   state.entities.CISClusters.forEach((cluster) => {
     locationOptions.push({
@@ -50,7 +50,7 @@ export const getLocationOptions = (state) => {
  * @return []
  */
 export const getSelectedLocationOptions = (state, clusters) => {
-  let locationOptions = []
+  const locationOptions = []
 
   clusters.forEach((cluster) => {
     const clusterInfo = getById(state, cluster)
@@ -74,7 +74,7 @@ export const getSelectedLocationOptions = (state, clusters) => {
  * @return []
  */
 export const getClustersByLocations = (state, locations) => {
-  let selectedClusters = []
+  const selectedClusters = []
 
   locations.forEach((location) => {
     state.entities.CISClusters.forEach((cluster) => {

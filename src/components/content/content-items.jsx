@@ -3,7 +3,6 @@ import d3 from 'd3'
 import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage } from 'react-intl';
 
 import {
@@ -11,39 +10,47 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
+import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl
+  getContentUrl,
+  getAnalyticsUrl
 } from '../../util/routes'
-import { userIsCloudProvider } from '../../util/helpers'
+
+import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
-import PageContainer from '../layout/page-container'
+import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import StorageChartContainer from '../../containers/storage/storage-chart-container'
-import Content from '../layout/content'
-import PageHeader from '../layout/page-header'
+
+import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
+import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
+
+import PropertyItemContainer from '../../containers/content/property-item-container'
+
+import Content from '../shared/layout/content'
+import PageHeader from '../shared/layout/page-header'
 import ContentItem from './content-item'
-import Select from '../select'
-import IconAdd from '../icons/icon-add.jsx'
-import ButtonDropdown from '../button-dropdown'
-import IconCaretDown from '../icons/icon-caret-down.jsx'
-import IconItemList from '../icons/icon-item-list.jsx'
-import IconItemChart from '../icons/icon-item-chart.jsx'
+import Select from '../shared/form-elements/select'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import ButtonDropdown from '../shared/form-elements/button-dropdown'
+import IconCaretDown from '../shared/icons/icon-caret-down.jsx'
+import IconItemList from '../shared/icons/icon-item-list.jsx'
+import IconItemChart from '../shared/icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import TruncatedTitle from '../../components/truncated-title'
-import IsAllowed from '../is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import SidePanel from '../side-panel'
+import SidePanel from '../shared/side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
-
 
 const rangeMin = 400
 const rangeMax = 500
@@ -62,10 +69,9 @@ const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
   const val2 = item2.getIn(path) && item2.getIn(path).toLowerCase && item2.getIn(path).toLowerCase() || item2.getIn(path)
 
-  if(val1 > val2 || val2 === undefined) {
+  if (val1 > val2 || val2 === undefined) {
     return direction
-  }
-  else if(val1 < val2 || val1 === undefined) {
+  } else if (val1 < val2 || val1 === undefined) {
     return -1 * direction
   }
   return 0
@@ -91,6 +97,8 @@ class ContentItems extends React.Component {
     this.hideModal = this.hideModal.bind(this)
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+    this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -110,10 +118,25 @@ class ContentItems extends React.Component {
   }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
-    if(sortOption) {
+    if (sortOption) {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+
+  getCustomSortPath(tag) {
+    const [sortBy] = this.props.sortValuePath
+    if (sortBy === 'item') {
+      if (tag === 'storages') {
+        return Immutable.fromJS(['ingest_point_id'])
+      }
+      if (tag === 'properties') {
+        return Immutable.fromJS(['published_host_id'])
+      }
+    }
+
+    return Immutable.fromJS(['totalTraffic'])
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.changeNotification(message)
@@ -123,7 +146,7 @@ class ContentItems extends React.Component {
     this.setState({ saving: true })
 
     return this.props.createNewItem(...arguments)
-      .then(({ item, name, error, payload }) => {
+      .then(({ item, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -131,9 +154,9 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if (item) {
           this.hideModal()
-          this.showNotification(`${item} ${name} created.`)
+          this.showNotification(<FormattedMessage id="portal.content.createEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -142,7 +165,7 @@ class ContentItems extends React.Component {
   }
   onItemSave() {
     return this.props.editItem(...arguments)
-      .then(({ item, name, error, payload }) => {
+      .then(({ item, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -150,9 +173,9 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if (item) {
           this.hideModal()
-          this.showNotification('Group detail updates saved.')
+          this.showNotification(<FormattedMessage id="portal.content.updateEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -161,17 +184,17 @@ class ContentItems extends React.Component {
 
   onItemDelete() {
     return this.props.deleteItem(...arguments)
-      .then(({ item, name, error, payload }) => {
-        if(error) {
+      .then(({ item, error, payload }) => {
+        if (error) {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if (item) {
           this.hideModal()
-          this.showNotification(`${item} ${name} deleted.`)
+          this.showNotification(<FormattedMessage id="portal.content.deleteEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -192,7 +215,7 @@ class ContentItems extends React.Component {
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
-    switch(tier) {
+    switch (tier) {
       case 'property':
         fetchItems('group', 'udn', account)
         break
@@ -205,6 +228,8 @@ class ContentItems extends React.Component {
         break
     }
   }
+
+  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
       .then((response) => {
@@ -226,34 +251,48 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
-  showStorageModal() {
+  showStorageModal(id) {
     this.setState({
-      showStorageModal : true
+      itemToEdit: id,
+      showStorageModal: true
     });
   }
   hideStorageModal() {
     this.setState({
-      showStorageModal : false
+      itemToEdit: undefined,
+      showStorageModal: false
     });
   }
   getTagText(isCloudProvider, providerType, trialMode) {
     let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
     if (isCloudProvider && !trialMode) {
-      switch(providerType) {
+      switch (providerType) {
         case ACCOUNT_TYPE_CONTENT_PROVIDER:
           tagText = 'portal.content.contentProvider'
           break
         case ACCOUNT_TYPE_SERVICE_PROVIDER:
           tagText = 'portal.content.serviceProvider'
-        default: break
+          break
+        default:
+          break
       }
     }
     return { tagText: tagText }
   }
 
-  renderAddButton () {
-    if(this.getTier() === 'group'){
-      return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+  renderAddButton (propertyCreationIsAllowed, storageCreationIsAllowed) {
+    if (this.getTier() === 'group') {
+      if (propertyCreationIsAllowed && storageCreationIsAllowed) {
+        return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+      }
+
+      if (storageCreationIsAllowed) {
+        return <UDNButton bsStyle="success" icon={true} onClick={() => this.showStorageModal()}><IconAdd/></UDNButton>
+      }
+
+      if (!propertyCreationIsAllowed && !storageCreationIsAllowed) {
+        return <UDNButton bsStyle="success" disabled={true} icon={true}><IconAdd/></UDNButton>
+      }
     }
 
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
@@ -316,28 +355,31 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
+      storages,
+      properties,
       params,
       locationPermissions,
-      storageContentItems
+      storagePermission,
+      params: { brand, account, group }
     } = this.props
+
+    const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
+    const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+    const groupHasMediaDeliveryService = hasService(activeGroup, MEDIA_DELIVERY_SERVICE_ID)
+
+    /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
+    const modifyStorageAllowed = modifyAllowed && false
+
     let trafficTotals = Immutable.List()
+
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
-      if(!fetchingMetrics) {
+      if (!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-      // Remove the trial url from trial property names
-      if (trialNameRegEx.test(item.get('id'))) {
-        item = item.merge({
-          id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1'),
-          isTrialHost: true
-        })
-      }
+
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
@@ -345,7 +387,8 @@ class ContentItems extends React.Component {
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
-    if(!fetchingMetrics){
+
+    if (!fetchingMetrics) {
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
     }
@@ -353,17 +396,22 @@ class ContentItems extends React.Component {
     // have identical metrics. In that case the amoebas will all get the minimum
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
-    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
+
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
       .range([rangeMin, rangeMax]);
+
     const foundSort = sortOptions.find(opt => {
       return Immutable.is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
     })
+
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
-    const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
+    const toggleView = (type) => {
+      return type ? this.props.toggleChartView : () => {/*no-op*/}
+    }
 
     const addHostTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
     const addHostSubTitle = activeAccount && activeGroup
@@ -379,7 +427,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton()}
+                {this.renderAddButton(groupHasMediaDeliveryService, createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -407,68 +455,73 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
-            <ReactCSSTransitionGroup
-              component="div"
-              className="content-transition"
-              transitionName="content-transition"
-              transitionEnterTimeout={400}
-              transitionLeaveTimeout={250}>
 
-              {!storageContentItems.isEmpty() &&
-                <div>
-                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
-                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                    {!viewingChart && storageContentItems.map(storage => {
-                      const id = storage.get('id')
+            <div
+              key={viewingChart}
+              className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
-                      // TODO UNDP-2906
-                      // Fix this in scope of integration with create/edit forms task, analytics
-                      const itemProps = {
-                        id,
-                        name: storage.get('name'),
-                        location: storage.get('location'),
-                        linkTo: '',
-                        disableLinkTo: false,
-                        configurationLink: '',
-                        onConfiguration: () => {this.editItem(id)},
-                        analyticsLink: '',
-                        delete: this.props.deleteItem,
-                        primaryData: Immutable.List(),
-                        maxTransfer: storage.get('maxTransfer'),
-                        minTransfer: storage.get('minTransfer'),
-                        avgTransfer: storage.get('avgTransfer'),
-                        currentUsage: storage.get('currentUsage'),
-                        usageQuota: storage.get('usageQuota'),
-                        fetchingMetrics: this.props.fetchingMetrics,
-                        isAllowedToConfigure: this.props.isAllowedToConfigure,
-                        chartWidth: '450'
-                      }
+                { /* STORAGES -header on List view */
+                  this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
+                  <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
+                }
 
-                      return (
-                        <ContentItem key={`content-item-${id}`}
-                          isChart={viewingChart}
-                          isStorage={true}
-                          itemProps={itemProps}
-                          deleteItem={this.props.deleteItem}/>
-                      )
-                    })}
-                  </div>
-                  <br />
-                  <br />
-                </div>}
+                {/* Storages */}
+                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+                      <div className="storage-wrapper">
+                        { groupHasStorageService && storages.sort(sortContent(this.getCustomSortPath('storages'), sortDirection)).map((storage, i) => {
+                          const id = storage.get('ingest_point_id')
+                          //const reduxId = buildReduxId(group, id)
 
-              {this.getTier() === 'group' && !viewingChart &&
-                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
-              <div
-                key={viewingChart}
-                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+                          if (viewingChart) {
+                            return (
+                              <StorageChartContainer
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
+                                storageId={id}
+                                params={params} />
+                            )
+                          } else {
+                            return (
+                              <StorageListContainer
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
+                                storageId={id}
+                                params={params}
+                              />
+                            )
+                          }
+                        })
+                        }
+                      </div>
+                </IsAllowed>
 
-                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                { /* PROPETIES -header on List view */
+                  this.getTier() === 'group' && !viewingChart &&
+                  <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>
+                }
 
-                {contentItems.map(content => {
+                { /* Properties */}
+                { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
+                  return (
+                    <PropertyItemContainer
+                      key={i}
+                      propertyId={property.get('published_host_id')}
+                      params={params}
+                      viewingChart={viewingChart}
+                    />)
+                }
+                  )
+                }
+
+                {/* OTHER ContentItems (brand / accouts / groups) */}
+                { properties.isEmpty() && storages.isEmpty() && contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
                   const isTrialHost = item.get('isTrialHost')
@@ -514,7 +567,6 @@ class ContentItems extends React.Component {
                   )
                 })}
               </div>
-            </ReactCSSTransitionGroup>
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
@@ -551,6 +603,7 @@ class ContentItems extends React.Component {
               >
 
               <AddHost
+                activeGroup={activeGroup}
                 createHost={this.onItemAdd}
                 cancelChanges={this.hideModal}
               />
@@ -560,11 +613,15 @@ class ContentItems extends React.Component {
           {
             this.state.showStorageModal && this.getTier() === 'group' &&
             <StorageFormContainer
-              show= {true}
+              brand={brand}
+              accountId={account}
+              groupId={group}
+              storageId={this.state.itemToEdit}
+              show={true}
               editing={false}
               fetching={false}
               onCancel={this.hideStorageModal}
-              onSubmit={()=>{/* onsubmit here */}}
+              onSubmit={() => {/* onsubmit here */}}
             />
           }
         </PageContainer>
@@ -597,6 +654,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   // eslint-disable-next-line react/no-unused-prop-types
   selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
@@ -608,8 +666,8 @@ ContentItems.propTypes = {
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.List),
+  storagePermission: React.PropTypes.object,
+  storages: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -622,9 +680,10 @@ ContentItems.defaultProps = {
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
-  storageContentItems: Immutable.List(),
-  storageIds: Immutable.List(),
-  user: Immutable.Map()
+  storages: Immutable.List(),
+  properties: Immutable.List(),
+  user: Immutable.Map(),
+  storagePermission: {}
 }
 
 export default withRouter(ContentItems)

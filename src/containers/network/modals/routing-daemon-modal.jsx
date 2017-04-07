@@ -3,7 +3,7 @@ import { formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import RoutingDaemonForm from '../../../components/network/forms/routing-daemon-form'
 
 class RoutingDaemonFormContainer extends React.Component {
@@ -25,7 +25,8 @@ class RoutingDaemonFormContainer extends React.Component {
       intl,
       onCancel,
       show,
-      initialValues
+      initialValues,
+      readOnly
     } = this.props
 
     const edit = !!initialValues.bgp_as_number
@@ -43,6 +44,7 @@ class RoutingDaemonFormContainer extends React.Component {
         editing={edit}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
+        readOnly={readOnly}
       />
       </SidePanel>
     )
@@ -55,9 +57,11 @@ RoutingDaemonFormContainer.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  readOnly: PropTypes.bool,
   show: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('pod-form')
 
@@ -70,6 +74,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

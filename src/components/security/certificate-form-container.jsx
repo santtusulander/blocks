@@ -19,7 +19,7 @@ import * as securityActionCreators from '../../redux/modules/security'
 import CertificateForm from './certificate-form'
 
 const validate = values => {
-  let errors = {}
+  const errors = {}
   const { title, privateKey, certificate, group } = values
 
   if (!group || group === '') {
@@ -49,7 +49,7 @@ class CertificateFormContainer extends Component {
     this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
 
-  handleFormSubmit(values){
+  handleFormSubmit(values) {
     const { certificateToEdit, upload, edit, securityActions, resetForm, toggleModal, showNotification } = this.props
     const cert = certificateToEdit && certificateToEdit.get('cn')
     const data = [
@@ -64,7 +64,7 @@ class CertificateFormContainer extends Component {
       }
     ]
 
-    if(cert) {
+    if (cert) {
       data.push(cert)
     }
 
@@ -149,6 +149,7 @@ CertificateFormContainer.defaultProps = {
   groups: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const certificateToEdit = state.security.get('certificateToEdit')
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
@@ -169,6 +170,7 @@ const mapStateToProps = (state) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
 

@@ -52,7 +52,7 @@ export function isValidFloat(str) {
  * @returns {boolean}
  */
 export function isValidIP(addresses, IPversion = 4) {
-  if(Array.isArray(addresses)) {
+  if (Array.isArray(addresses)) {
     const hasInvalidIP = addresses.some(address => !validator.isIP(address, IPversion))
     return !hasInvalidIP
   }
@@ -68,9 +68,9 @@ export function isValidIP(addresses, IPversion = 4) {
 export function isValidIPv4Address(address, onlyCIDR) {
   const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1 || onlyCIDR) {
+  if (splitAddr.length > 1 || onlyCIDR) {
     const cidr = Number(splitAddr[1])
-    return validator.isIP(splitAddr[0], 4) && ( (cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32 )
+    return validator.isIP(splitAddr[0], 4) && ((cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32)
   }
 
   return !!address && validator.isIP(address, 4)
@@ -85,8 +85,8 @@ export function isValidIPv6Address(address) {
 
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) <= 32 )
+  if (splitAddr.length > 1) {
+    return validator.isIP(splitAddr[0], 6) && (parseInt(splitAddr[1]) <= 32)
   }
 
   return !!address && validator.isIP(address, 6)
@@ -154,7 +154,9 @@ export function isValidHostName(hostName) {
     - doesn't begin or end with a hyphen;
     - can end with a dot.
   */
-  if (hostName.length > 255) return false
+  if (hostName.length > 255) {
+    return false
+  }
   return matchesRegexp(hostName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }
 
@@ -219,8 +221,8 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !isNaN(int) &&
-         parseInt(Number(int)) == int &&
+  // eslint-disable-next-line eqeqeq
+  return !isNaN(int) && parseInt(Number(int)) == int &&
          !isNaN(parseInt(int, 10));
 }
 
@@ -258,11 +260,14 @@ export function isValidPhoneNumber(str) {
  */
 export function isValidASN(asn) {
 
-  if (!matchesRegexp(asn, /^[0-9]+$/)) return
+  if (!matchesRegexp(asn, /^[0-9]+$/)) {
+    return
+  }
   let isValid = false
 
   if (asn >= ASN_MIN && asn <= ASN_MAX) {
     isValid = true
+    // eslint-disable-next-line eqeqeq
     if (asn == ASN_RESERVED || (asn >= ASN_RESERVED_RANGE_START && asn <= ASN_RESERVED_RANGE_END)) {
       isValid = false
     }
@@ -325,8 +330,8 @@ export function isValidEstimatedUsage(str) {
 }
 
 /**
- * Check if valid host-name
- * @param hostName
+ * Check if valid storage nama
+ * @param storageName
  * @returns {boolean|*}
  */
 export function isValidStorageName(storageName) {
@@ -334,9 +339,31 @@ export function isValidStorageName(storageName) {
     - isn't longer than 255 characters.
     Each segment:
     - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-z0-9-];
+    - hyphen is not allowed;
+  */
+  if (storageName.length > 255) {
+    return false
+  }
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/, true)
+}
+
+/**
+ * Check if valid CNAME
+ * @param cName
+ * @returns {boolean|*}
+ */
+export function isValidCName(cName) {
+  /* Rules matching CloudScale's Hostname validation:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
     - consists only of allowed characters [a-zA-Z0-9-];
     - doesn't begin or end with a hyphen;
+    - can end with a dot.
   */
-  if (storageName.length > 255) return false
-  return matchesRegexp(storageName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*?$/)
+  if (cName.length > 255) {
+    return false
+  }
+  return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }

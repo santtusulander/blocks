@@ -26,7 +26,9 @@ const emptyTopology = Immutable.Map({
 
 export const getCountryTopo = (state) => {
   const countries = state.topo.get('countries')
-  if (countries) return countries.toJS()
+  if (countries) {
+    return countries.toJS()
+  }
 
   return {}
 }
@@ -108,7 +110,7 @@ export default handleActions({
 export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
   return axios.get(`${topoBase()}/countries.topo.json`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -117,7 +119,7 @@ export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
 export const fetchStates = createAction(TOPO_STATES_FETCHED, (country) => {
   return axios.get(`${topoBase()}/states_${country}.topo.json`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -126,7 +128,7 @@ export const fetchStates = createAction(TOPO_STATES_FETCHED, (country) => {
 export const fetchCities = createAction(TOPO_CITIES_FETCHED, (country) => {
   return axios.get(`${topoBase()}/cities_${country}.topo.json`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });

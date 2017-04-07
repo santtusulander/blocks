@@ -1,31 +1,29 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
-import FieldFormGroup from '../form/field-form-group'
-import FormFooterButtons from '../form/form-footer-buttons'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
 import { Button, Table } from 'react-bootstrap'
 
-import IconAdd from '../icons/icon-add'
-import IconEdit from '../icons/icon-edit'
+import IconAdd from '../shared/icons/icon-add'
+import IconEdit from '../shared/icons/icon-edit'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import ActionButtons from '../../components/action-buttons'
-import TruncatedTitle from '../../components/truncated-title'
-import ButtonDisableTooltip from '../../components/button-disable-tooltip'
-import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import ActionButtons from '../../components/shared/action-buttons'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import ButtonDisableTooltip from '../shared/tooltips/button-disable-tooltip'
+import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
 import ServiceOptionSelector from './service-option-selector'
-import SectionContainer from '../layout/section-container'
-import SectionHeader from '../layout/section-header'
-import HelpTooltip from '../../components/help-tooltip'
-import IsAllowed from '../../components/is-allowed'
+import SectionContainer from '../shared/layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import HelpTooltip from '../../components/shared/tooltips/help-tooltip'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_LOCATION, VIEW_LOCATION, DELETE_GROUP, MODIFY_GROUP } from '../../constants/permissions'
 
 import {
   checkForErrors
 } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
-
-import './group-form.scss'
 
 const validate = ({ name }) => {
   const conditions = {
@@ -44,6 +42,7 @@ const validate = ({ name }) => {
 const GroupForm = ({
   accountIsServiceProviderType,
   accountIsContentProviderType,
+  canEditServices,
   canSeeLocations,
   groupId,
   handleSubmit,
@@ -60,6 +59,7 @@ const GroupForm = ({
   onDeleteHost,
   onShowLocation,
   onSubmit,
+  readOnly,
   serviceOptions,
   showServiceItemForm,
   submitting
@@ -82,11 +82,12 @@ const GroupForm = ({
         id="name-field"
         placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.account.groupForm.name.label" />}/>
+        label={<FormattedMessage id="portal.account.groupForm.name.label" />}
+        disabled={readOnly} />
 
         <hr/>
 
-        {(accountIsContentProviderType) &&
+        {(canEditServices && accountIsContentProviderType) &&
           <div>
             <Field
               name="services"
@@ -222,6 +223,7 @@ GroupForm.displayName = "GroupForm"
 GroupForm.propTypes = {
   accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
+  canEditServices: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
@@ -231,7 +233,6 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onChangeServiceItem: PropTypes.func,
@@ -239,6 +240,7 @@ GroupForm.propTypes = {
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
   serviceOptions: PropTypes.array,
   showServiceItemForm: PropTypes.func,
   ...reduxFormPropTypes

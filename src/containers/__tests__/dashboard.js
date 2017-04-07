@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 jest.unmock('../dashboard.jsx')
+jest.unmock('../../redux/modules/fetching/actions.js')
 import Dashboard from '../dashboard.jsx'
 
 jest.mock('../../util/status-codes', () => {
@@ -27,6 +28,7 @@ jest.mock('../../util/helpers', () => {
 
 function filterActionsMaker() {
   return {
+    resetFilters: jest.fn(),
     fetchContentProvidersWithTrafficForSP: jest.fn(),
     fetchServiceProvidersWithTrafficForCP: jest.fn()
   }
@@ -98,6 +100,7 @@ describe('Dashboard', () => {
       props = {
         dashboard: fakeDashboard,
         dashboardActions: dashboardActionsMaker(),
+        fetchAccount: () => Promise.resolve(),
         filterActions: filterActionsMaker(),
         filterOptions: Immutable.fromJS([{serviceProviders: 1}]),
         filtersActions: filtersActionsMaker(),

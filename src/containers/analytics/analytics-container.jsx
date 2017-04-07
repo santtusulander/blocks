@@ -8,34 +8,32 @@ import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
 import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
 import AnalyticsFilters from '../../components/analytics/analytics-filters'
 import DateRanges from '../../constants/date-ranges'
 
-//layout
-import PageContainer from '../../components/layout/page-container'
-import Content from '../../components/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
+import Content from '../../components/shared/layout/content'
 
-import { getTabName, userIsServiceProvider } from '../../util/helpers.js'
+import { getTabName, userIsServiceProvider, accountIsServiceProviderType } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
-import './analytics-container.scss'
-
 const BODY_MIN_HEIGHT = 850
 
 class AnalyticsContainer extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.fetchData = this.fetchData.bind(this)
     this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
-  componentWillMount(){
+  componentWillMount() {
     //Reset filters to default when entering analytics page
     this.props.filtersActions.resetFilters();
     this.fetchData(this.props.params, true)
@@ -46,7 +44,7 @@ class AnalyticsContainer extends React.Component {
     window.addEventListener('scroll', this.handleScroll);
   }
 
-  componentWillReceiveProps( nextProps ) {
+  componentWillReceiveProps(nextProps) {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
@@ -63,13 +61,17 @@ class AnalyticsContainer extends React.Component {
 
   handleScroll() {
     const docBody = document.body
-    const pageHeaderHeight = document.querySelector('.page-header-container').offsetHeight
-    const analyticsTabsHeight = document.querySelector('.analytics-tabs').offsetHeight
+    const pageHeaderHeight = document.querySelector('.page-header-container')
+      ? document.querySelector('.page-header-container').offsetHeight
+      : 0
+    const analyticsTabsHeight = document.querySelector('.analytics-tabs')
+      ? document.querySelector('.analytics-tabs').offsetHeight
+      : 0
     const pageHeaderTotalHeight = pageHeaderHeight + analyticsTabsHeight
     const analyticsContainer = document.querySelector('.analytics-container')
 
     if (window.innerHeight > BODY_MIN_HEIGHT && window.pageYOffset > pageHeaderTotalHeight) {
-      if(!docBody.classList.contains('sticky-filters')) {
+      if (!docBody.classList.contains('sticky-filters')) {
         const analyticsFiltersHeight = document.querySelector('.analytics-filters').offsetHeight
         analyticsContainer.style.marginTop = `${analyticsFiltersHeight}px`
         docBody.classList.add('sticky-filters')
@@ -93,34 +95,33 @@ class AnalyticsContainer extends React.Component {
     ])
   }
 
-  fetchData(params, refresh){
+  fetchData(params, refresh) {
     const brandChanged = params.brand !== this.props.params.brand
     const accountChanged = params.account !== this.props.params.account
     const groupChanged = params.group !== this.props.params.group
-    if((brandChanged || refresh) && checkPermissions(
+    if ((brandChanged || refresh) && checkPermissions(
       this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
       this.props.filtersActions.fetchServiceProviders(params.brand)
     }
 
-    if((brandChanged || accountChanged || refresh) && params.account) {
+    if ((brandChanged || accountChanged || refresh) && params.account) {
       this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
     // service providers cannot see properties, UDNP-1498
     if (!userIsServiceProvider(this.props.user) &&
-        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group)
-    {
+        (brandChanged || accountChanged || groupChanged || refresh) && params.account && params.group) {
       this.props.propertyActions.fetchHosts(params.brand, params.account, params.group)
     }
   }
 
-  onFilterChange( filterName, filterValue){
+  onFilterChange(filterName, filterValue) {
     this.props.filtersActions.setFilterValue({
       filterName: filterName,
       filterValue: filterValue
-    } )
+    })
   }
 
   renderFilters() {
@@ -137,7 +138,7 @@ class AnalyticsContainer extends React.Component {
       return null
     }
 
-    const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
+    const tabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
     const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -145,6 +146,11 @@ class AnalyticsContainer extends React.Component {
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
+    const tabConfigFilters = tabConfig.get('filters')
+    const isTrafficConfig = (tabConfig.get('key') === 'traffic')
+    const isSPAccount = this.props.activeAccount && accountIsServiceProviderType(this.props.activeAccount)
+    //UDNP-1859: Remove 'recordType' filter from Traffic tab for SP accounts
+    const showFilters = (isTrafficConfig && isSPAccount) ? tabConfigFilters.filter(item => item !== 'recordType') : tabConfigFilters
 
     return (
       <AnalyticsFilters
@@ -154,7 +160,7 @@ class AnalyticsContainer extends React.Component {
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
-        showFilters={thisTabConfig.get('filters')}
+        showFilters={showFilters}
       />
     )
   }
@@ -185,7 +191,7 @@ class AnalyticsContainer extends React.Component {
     )
   }
 
-  render(){
+  render() {
     const {
       params,
       children,
@@ -203,11 +209,11 @@ class AnalyticsContainer extends React.Component {
           location={this.props.location}
           activeTab={getTabName(pathname)}
         />
-        <AnalyticsTabControl
+        {!params.storage && <AnalyticsTabControl
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
-        />
+        />}
         {this.renderFilters()}
         {this.renderContent(children, filters)}
       </Content>
@@ -228,13 +234,13 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   propertyActions: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 AnalyticsContainer.defaultProps = {
   filters: Immutable.Map(),
-  roles: Immutable.List(),
+  roles: Immutable.Map(),
   user: Immutable.Map()
 }
 
@@ -244,7 +250,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     user: state.user.get('currentUser')
   }
 }

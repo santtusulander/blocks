@@ -47,5 +47,9 @@
   "portal.user.edit.timezone.text": "Timezone",
   "portal.user.edit.addMiddleName.text": "Add Middle Name",
   "portal.user.edit.unsavedChanges.text": "Profile has unsaved changes.",
-  "portal.user.delete.disclaimer.text": "Will lose access to UDN immediately and will not be able to log in anymore."
+  "portal.user.delete.disclaimer.text": "Will lose access to UDN immediately and will not be able to log in anymore.",
+  "portal.user.edit.recoveryKey.button.showRecoveryKey": "Show Recovery Key",
+  "portal.user.edit.recoveryKey.helpText": "You can use one-time recovery key to access your account if you lose your phone or otherwise have problems with accessing your account.",
+  "portal.user.edit.recoveryKey.modal.title": "Recovery Key",
+  "portal.user.edit.recoveryKey.modal.helpText": "This is one-time recovery key. Store it somewhere safe."
 }

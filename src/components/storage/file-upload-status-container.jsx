@@ -3,7 +3,7 @@ import { Button, Panel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 import StatusItem from './file-upload-status-item'
-import IconHeaderCaret from '../icons/icon-header-caret'
+import IconHeaderCaret from '../shared/icons/icon-header-caret'
 
 class FileUploadStatus extends React.Component {
   constructor(props) {
@@ -21,9 +21,9 @@ class FileUploadStatus extends React.Component {
   }
 
   render() {
-    const { uploads } = this.props
+    const { uploads, inlineStyle, cancelAll } = this.props
     return (
-      <div className='file-upload-status-wrapper'>
+      <div className='file-upload-status-wrapper' style={inlineStyle}>
         <div className='file-upload-status-header'>
           <FormattedMessage
             id="portal.storage.uploadContent.uploading.text"
@@ -41,7 +41,7 @@ class FileUploadStatus extends React.Component {
           <div className='file-upload-status-cancel-link'>
             <Button
               bsStyle="link"
-              onClick={() => {}}>
+              onClick={() => cancelAll(uploads)}>
               <FormattedMessage id="portal.storage.uploadContent.cancel.text" />
             </Button>
           </div>
@@ -54,6 +54,8 @@ class FileUploadStatus extends React.Component {
 
 FileUploadStatus.displayName = "FileUploadStatus"
 FileUploadStatus.propTypes = {
+  cancelAll: PropTypes.func,
+  inlineStyle: PropTypes.object,
   uploads: PropTypes.array
 }
 

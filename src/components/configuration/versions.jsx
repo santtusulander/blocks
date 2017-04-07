@@ -2,29 +2,31 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button } from 'react-bootstrap'
 
-import IconAdd from '../icons/icon-add.jsx'
-import { SidebarLinks } from '../sidebar-links'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import { SidebarLinks } from '../shared/sidebar-link/sidebar-links'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 export class ConfigurationVersions extends React.Component {
 
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+    if (this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
       config = config.set('active', i === this.props.activeIndex)
-      if(config.get('configuration_status').get('deployment_status') == 3){
+
+      // eslint-disable-next-line eqeqeq
+      if (config.get('configuration_status').get('deployment_status') == 3) {
         built.production.push(config)
-      }
-      else if(config.get('configuration_status').get('deployment_status') == 2){
+        // eslint-disable-next-line eqeqeq
+      } else if (config.get('configuration_status').get('deployment_status') == 2) {
         built.staging.push(config)
-      }
-      else {
+      } else {
         built.inprocess.push(config)
       }
+
       return built
     }, {production: [], staging: [], inprocess: []})
     return (

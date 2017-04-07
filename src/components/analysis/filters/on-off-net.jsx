@@ -6,18 +6,18 @@ import { FormattedMessage } from 'react-intl'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
+// eslint-disable-next-line no-shadow
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
   const toggle = type => () => {
     // TODO: Maybe some general error messaging box?
-    if(onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
+    if (onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
       showInfoDialog({
         title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
         content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,
         okButton: true,
         cancel: () => hideInfoDialog()
       });
-    }
-    else {
+    } else {
       toggleFilter(type)
     }
   }

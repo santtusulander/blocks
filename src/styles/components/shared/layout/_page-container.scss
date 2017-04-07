@@ -1,0 +1,17 @@
+// Page Container Layout
+// =====================
+
+$page-container-vertical-padding: rem(42px);
+$page-container-horizontal-padding: rem(30px);
+
+.page-container {
+  position: relative;
+  padding: $page-container-vertical-padding $page-container-horizontal-padding;
+
+  > .loading-spinner {
+    .spinner-content {
+      position: fixed;
+      margin-left: $navigation-sidebar-width / 2;
+    }
+  }
+}

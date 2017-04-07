@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react'
+import classNames from 'classnames'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
-import classNames from 'classnames'
-import './area-tooltip.scss'
 
 /* eslint-disable react/no-multi-comp  */
 const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
-  const currentPayload = payload.filter( ({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
-  const comparisonPayload = payload.filter( ({dataKey}) => dataKey.includes('comparison_'))
+  const currentPayload = payload.filter(({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
+  const comparisonPayload = payload.filter(({dataKey}) => dataKey.includes('comparison_'))
 
   const normalPayload = comparisonPayload.length === 1 ? [...comparisonPayload, ...currentPayload] : currentPayload;   // combine payload if they're 1:1 comparison
   return (
@@ -46,14 +45,17 @@ AreaTooltip.propTypes = {
 export default AreaTooltip
 
 const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
-  const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0), true)
+  const total = valueFormatter(payload.reduce((sum, { value }) => {
+    const result = sum + value
+    return result
+  }, 0), true)
   const ts = payload && payload[0] && payload[0].payload && payload[0].payload.timestamp
   return (
     <div>
       <div className="tooltip-item">
         <span className="legend-label">
           <span className="legend-line">
-            {formatUnixTimestamp( ts, "MMM D H:mm A") }
+            {formatUnixTimestamp(ts, "MMM D H:mm A") }
           </span>
         </span>
       </div>

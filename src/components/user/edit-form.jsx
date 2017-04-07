@@ -5,13 +5,17 @@ import { Link } from 'react-router'
 import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
+import axios from 'axios'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupToggle from '../form/field-form-group-toggle'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import FieldTelephoneInput from '../form/field-telephone-input'
-import FieldPasswordFields from '../form/field-passwordfields'
-import SaveBar from '../save-bar'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
+import FieldPasswordFields from '../shared/form-fields/field-passwordfields'
+import SaveBar from '../shared/page-elements/save-bar'
+import ModalWindow from '../shared/modal'
+
+import { BASE_URL_AAA } from '../../redux/util'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
@@ -21,6 +25,7 @@ import { AUTHY_APP_DOWNLOAD_LINK,
 import '../../styles/components/user/_edit-form.scss'
 
 import { isValidPhoneNumber } from '../../util/validators'
+
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
@@ -42,8 +47,12 @@ const validate = (values) => {
   } = values
 
   if (changingPassword) {
-    if ( !(current_password && new_password && validPass) ) errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
-    if ( new_password && !validPass ) errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
+    if (!(current_password && new_password && validPass)) {
+      errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
+    }
+    if (new_password && !validPass) {
+      errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
+    }
   } else {
     if (!first_name) {
       errors.first_name = <FormattedMessage id="portal.user.edit.firstNameRequired.text" />
@@ -66,15 +75,27 @@ const validate = (values) => {
   return errors;
 }
 
+const fetchRecoveryKey = (userId) => {
+  return axios.get(`${BASE_URL_AAA}/users/${userId}/tfa_recovery_code`)
+    .then((res) => {
+      return res ? res.data : ''
+    })
+}
+
 class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      recoveryKey: '',
+      showRecoveryKeyModal: false
+    }
+
     this.onSubmit = this.onSubmit.bind(this);
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
-
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
-
+    this.toggleRecoveryKeyModal = this.toggleRecoveryKeyModal.bind(this)
+    this.copyToClipboard = this.copyToClipboard.bind(this)
   }
 
   componentWillUpdate(nextProps) {
@@ -95,14 +116,14 @@ class UserEditForm extends React.Component {
     }
   }
 
-  onSubmit(values){
+  onSubmit(values) {
     //strip out unneeded values
     const {tfa_toggle, tfa} = values;
 
     const data = {
       first_name: values.first_name,
       middle_name: values.middle_name,
-      last_name:  values.last_name,
+      last_name: values.last_name,
       phone_country_code: values.phone.phone_country_code,
       phone_number: values.phone.phone_number
     }
@@ -130,7 +151,7 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          throw new SubmissionError( {'current_password': response.payload.message})
+          throw new SubmissionError({'current_password': response.payload.message})
         } else {
           /* eslint-disable no-unused-vars */
           /* stip unneeded vars from values */
@@ -142,7 +163,7 @@ class UserEditForm extends React.Component {
           } = values
           /* eslint-enable no-unused-vars */
 
-          this.props.initialize( {...formData, changingPassword: false} )
+          this.props.initialize({...formData, changingPassword: false})
 
         }
       })
@@ -157,7 +178,7 @@ class UserEditForm extends React.Component {
   }
 
   tfaMethodOptions() {
-    let tfaOptions = []
+    const tfaOptions = []
 
     TWO_FA_METHODS_OPTIONS.forEach((option) => {
       tfaOptions.push({
@@ -204,6 +225,28 @@ class UserEditForm extends React.Component {
     }
   }
 
+  toggleRecoveryKeyModal() {
+    // Fetch Recovery Key only once
+    if (this.state.recoveryKey) {
+      this.setState({ showRecoveryKeyModal: !this.state.showRecoveryKeyModal })
+    } else {
+      fetchRecoveryKey(this.props.initialValues.email)
+        .then(res => {
+          this.setState({
+            showRecoveryKeyModal: !this.state.showRecoveryKeyModal,
+            recoveryKey: res
+          })
+        })
+    }
+  }
+
+  copyToClipboard() {
+    const recoveryKey = document.querySelector('.recovery-key-modal input')
+    recoveryKey.select()
+    document.execCommand('copy');
+    recoveryKey.blur();
+  }
+
   render() {
     const {
       changingPassword,
@@ -216,7 +259,8 @@ class UserEditForm extends React.Component {
       resetForm,
       submitting,
       tfa,
-      tfa_toggle
+      tfa_toggle,
+      initialTfa
     } = this.props
     const showSaveBar = this.props.dirty
 
@@ -345,32 +389,57 @@ class UserEditForm extends React.Component {
             <FormattedMessage id="portal.user.edit.2FA.text" />
           </ControlLabel>
 
-          <Col xs={3}>
-            <Field
-              name="tfa_toggle"
-              component={FieldFormGroupToggle}
-            />
-          </Col>
+          <Col xs={9}>
+            <Row>
+              <Col xs={3}>
+                <Field
+                  name="tfa_toggle"
+                  component={FieldFormGroupToggle}
+                />
+              </Col>
+              <Col xs={2}>
+                <p className="form-control-static">
+                  <FormattedMessage id="portal.user.edit.2FA.method.text" />
+                </p>
+              </Col>
+              <Col xs={1}>
+                <Field
+                  name="tfa"
+                  component={FieldFormGroupSelect}
+                  disabled={!tfa_toggle}
+                  options={this.tfaMethodOptions()}
+                />
+              </Col>
+              <Col xs={3}>
+                <div className="select-box-tooltip">
+                  {this.renderTwoFAMethodsTooltips(tfa)}
+                </div>
+              </Col>
+            </Row>
 
-          <Col xs={2}>
-            <p className="form-control-static">
-              <FormattedMessage id="portal.user.edit.2FA.method.text" />
-            </p>
-          </Col>
+            { initialTfa && tfa &&
+              <Row className="recovery-key">
+                <Button bsStyle="primary" onClick={this.toggleRecoveryKeyModal}>
+                  <FormattedMessage id="portal.user.edit.recoveryKey.button.showRecoveryKey"/>
+                </Button>
+                <div><FormattedMessage id="portal.user.edit.recoveryKey.helpText"/></div>
+              </Row>
+            }
 
-          <Col xs={1}>
-            <Field
-              name="tfa"
-              component={FieldFormGroupSelect}
-              disabled={!tfa_toggle}
-              options={this.tfaMethodOptions()}
-            />
-          </Col>
+            { this.state.showRecoveryKeyModal &&
+              <ModalWindow
+                okButton={true}
+                className="recovery-key-modal"
+                title={<FormattedMessage id="portal.user.edit.recoveryKey.modal.title"/>}
+                cancel={() => this.toggleRecoveryKeyModal()}>
 
-          <Col xs={3}>
-            <div className="select-box-tooltip">
-              {this.renderTwoFAMethodsTooltips( tfa )}
-            </div>
+                 <FormattedMessage id="portal.user.edit.recoveryKey.modal.helpText"/>
+                 <input type="text" value={this.state.recoveryKey} readOnly="true"/>
+                 <a href="#" onClick={() => this.copyToClipboard()}>
+                   <FormattedMessage id="portal.common.copyToClipboard"/>
+                 </a>
+              </ModalWindow>
+            }
           </Col>
         </Row>
 
@@ -400,6 +469,7 @@ UserEditForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),
@@ -409,11 +479,12 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) ),
-    changeSelectedTFAMethod: (method) => dispatch( change('user-edit-form', 'tfa', method) ),
-    clearPasswordRow: (values) => dispatch( initialize('user-edit-form', values) )
+    resetForm: () => dispatch(initialize('user-edit-form', ownProps.initialValues)),
+    changeSelectedTFAMethod: (method) => dispatch(change('user-edit-form', 'tfa', method)),
+    clearPasswordRow: (values) => dispatch(initialize('user-edit-form', values))
   }
 }
 
@@ -421,8 +492,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'user-edit-form',
   validate: validate,
   onSubmitFail: (errors, dispatch) => {
-    if(errors.current_password) {
-      dispatch( blur('user-edit-form', 'current_password', '') )
+    if (errors && errors.current_password) {
+      dispatch(blur('user-edit-form', 'current_password', ''))
     }
   }
 })(injectIntl(UserEditForm)))

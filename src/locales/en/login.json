@@ -16,7 +16,13 @@
   "portal.login.2fa.verificationHintReEnter.text": "Please re-enter the code.",
   "portal.login.2fa.verificationHintTryAgain.text": "Please try again.",
   "portal.login.2fa.verificationByApp.authyApp.text": "Authy App",
-  "portal.login.2fa.goBack.text": "Having trouble? Let's try again.",
+  "portal.login.2fa.tryAgain.text": "Let's try again",
+  "portal.login.2fa.orUseYour.text": "or use your",
+  "portal.login.2fa.recoveryKeyHint.text": "Please enter the Recovery Key.",
+  "portal.login.2fa.recoveryKeyHintReEnter.text": "Please re-enter the key.",
+  "portal.login.2fa.recoveryKey.text": "recovery key",
+  "portal.login.2fa.recoveryKey.title": "Enter Recovery Key",
+  "portal.login.2fa.recoveryKey.keyRegeneration.text": "A new one-time Recovery Key has been generated in profile settings.",
   "portal.login.2fa.havingTrouble.text": "Having trouble?",
   "portal.login.2fa.havingTrouble.title": "Trouble With Login?",
   "portal.login.2fa.havingTrouble.tryThese.text": "Try these:",
@@ -24,5 +30,6 @@
   "portal.login.2fa.havingTrouble.voiceItem.text": "Receive Verification Code from a Voice Call",
   "portal.login.2fa.havingTrouble.authySoftToken.text": "Use Authy SoftToken to login",
   "portal.login.2fa.havingTrouble.authyOneTouchItem.text": "Use Authy OneTouch to login",
-  "portal.login.2fa.havingTrouble.supportHelp.text": "You can also get help at support.ericssonudn.com or contact your System Administator."
+  "portal.login.2fa.havingTrouble.supportHelp.text": "You can also get help at support.ericssonudn.com or contact your System Administator.",
+  "portal.login.localStorage.error.text": "Portal doesn't support Safari in Private mode. Please turn off Private mode and try again."
 }

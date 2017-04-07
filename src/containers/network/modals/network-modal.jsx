@@ -14,13 +14,16 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
-import '../../../components/account-management/group-form.scss'
+
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
 
 class NetworkFormContainer extends React.Component {
   constructor(props) {
@@ -28,11 +31,11 @@ class NetworkFormContainer extends React.Component {
     this.networkId = null
     this.notificationTimeout = null
     this.state = {
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const { brand, accountId, groupId, networkId } = this.props
 
     // If editing => fetch data from API
@@ -43,7 +46,7 @@ class NetworkFormContainer extends React.Component {
 
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     const { brand, accountId, groupId, networkId } = nextProps
 
     // If editing => fetch data from API
@@ -86,7 +89,9 @@ class NetworkFormContainer extends React.Component {
       payload: data
     }
 
-    if (edit) params.id = values.name;
+    if (edit) {
+      params.id = values.name;
+    }
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
@@ -110,7 +115,7 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(){
+  onDelete() {
     const params = {
       brand: 'udn',
       account: this.props.accountId,
@@ -121,7 +126,7 @@ class NetworkFormContainer extends React.Component {
     return this.props.onDelete(params)
       .then(() => {
         // Unselect network item
-        if (this.props.selectedEntityId == this.networkId) {
+        if (this.props.selectedEntityId === this.networkId) {
           this.props.handleSelectedEntity(this.networkId)
         }
         this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
@@ -141,7 +146,7 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, isFetching, onCancel, networkPermissions} = this.props
+    const { account, group, network, initialValues, isFetching, onCancel, allowModify } = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -166,7 +171,8 @@ class NetworkFormContainer extends React.Component {
             }
             }
             onCancel={onCancel}
-            networkPermissions={networkPermissions}
+            readOnly={!allowModify}
+            disabled={true}
           />
         </SidePanel>
 
@@ -193,6 +199,7 @@ NetworkFormContainer.displayName = "NetworkFormContainer"
 NetworkFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountId: PropTypes.string,
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -205,7 +212,6 @@ NetworkFormContainer.propTypes = {
   isFetching: PropTypes.bool,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
-  networkPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -223,18 +229,21 @@ NetworkFormContainer.defaultProps = {
 }
 
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const networkId = buildReduxId(ownProps.groupId, ownProps.networkId)
   const network = ownProps.networkId && getNetworkById(state, networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
+  const roles = getRoles(state)
+  const currentUser = state.user.get('currentUser')
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network,
     pops,
-
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK),
     initialValues: {
       name: edit && network ? network.get('name') : '',
       description: edit && network ? network.get('description') : ''
@@ -242,18 +251,19 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( networkActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( networkActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( networkActions.remove( {...params } )),
+    onCreate: (params, data) => dispatch(networkActions.create({...params, data })),
+    onUpdate: (params, data) => dispatch(networkActions.update({...params, data })),
+    onDelete: (params) => dispatch(networkActions.remove({...params })),
 
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPops: (params) => dispatch( popActions.fetchAll(params) ),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
+    fetchPops: (params) => dispatch(popActions.fetchAll(params)),
 
-    showNotification: (message) => dispatch( changeNotification(message) )
+    showNotification: (message) => dispatch(changeNotification(message))
   }
 }
 

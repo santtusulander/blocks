@@ -150,3 +150,13 @@ $form-error-color: $red;
     }
   }
 }
+
+.modal-button-toolbar {
+  width: 100%;
+}
+
+.main-content ~ div {
+  div[role='dialog'] {
+    background: rgba($black, 0.5);
+  }
+}

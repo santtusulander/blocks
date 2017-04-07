@@ -19,7 +19,7 @@ export class Aspera {
       sdkLocation: ASPERA_CONNECT_INSTALLER,
       minVersion: ASPERA_MIN_VER,
       dragDropEnabled: dragDropEnabled,
-      containerId: containerId
+      id: containerId
     });
 
     this.asperaInitConnect = this.asperaInitConnect.bind(this)
@@ -50,12 +50,13 @@ export class Aspera {
     });
 
     const statusEventListener = function (eventType, data) {
+      // eslint-disable-next-line eqeqeq
       if (eventType === AW4.Connect.EVENT.STATUS && data == AW4.Connect.STATUS.INITIALIZING) {
-        statusFunctions.showLaunching();
+        statusFunctions.showLaunching(); // eslint-disable-next-line eqeqeq
       } else if (eventType === AW4.Connect.EVENT.STATUS && data == AW4.Connect.STATUS.FAILED) {
-        statusFunctions.showDownload();
+        statusFunctions.showDownload(); // eslint-disable-next-line eqeqeq
       } else if (eventType === AW4.Connect.EVENT.STATUS && data == AW4.Connect.STATUS.OUTDATED) {
-        statusFunctions.showUpdate();
+        statusFunctions.showUpdate(); // eslint-disable-next-line eqeqeq
       } else if (eventType === AW4.Connect.EVENT.STATUS && data == AW4.Connect.STATUS.RUNNING) {
         statusFunctions.connected();
       }

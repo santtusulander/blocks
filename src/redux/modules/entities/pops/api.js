@@ -29,7 +29,7 @@ const baseUrl = ({ brand, account, group, network }) => {
  */
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize(data, pop)
     })
 }
@@ -40,9 +40,9 @@ export const fetch = ({id, ...params}) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = ( params ) => {
+export const fetchAll = (params) => {
   return axios.get(baseUrl(params))
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize(data.data, [ pop ])
     })
 }

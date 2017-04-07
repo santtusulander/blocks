@@ -22,11 +22,11 @@ import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 const REQUEST_TAG = 'req-token-auth'
 
 class TabTokenAuthentication extends Component {
-  componentDidMount(){
+  componentWillMount() {
     this.fetchData()
   }
 
-  fetchData(){
+  fetchData() {
     const {brand,account, group} = this.props.params
 
     if (group) {
@@ -34,20 +34,22 @@ class TabTokenAuthentication extends Component {
     } else {
       /* Fetch all groups and properties */
       this.props.fetchGroups(this.props.params)
-        .then( () => {
-          this.props.groups.map( group => {
+        .then(() => {
+          this.props.groups.map((group) => {
             this.props.fetchProperties({brand, account, group: group.get('id')})
+
+            return false
           })
         })
     }
   }
 
-  render(){
+  render() {
     const {properties, isFetching} = this.props
 
     const editUrlBuilder = (propertyId, policyParams) => editOrDelete => {
 
-      const property = this.props.properties.find( p => p.get('published_host_id') === propertyId )
+      const property = this.props.properties.find(p => p.get('published_host_id') === propertyId)
 
       const propertyParams = {
         brand: this.props.params.brand,
@@ -57,10 +59,11 @@ class TabTokenAuthentication extends Component {
       return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
     }
 
-    if ( isFetching )
+    if (isFetching) {
       return <LoadingSpinner />
+    }
 
-    const tokenAuthRules = getTokenAuthRules( properties.toJS() )
+    const tokenAuthRules = getTokenAuthRules(properties.toJS())
 
     return (
           <TokenAuthList rules={tokenAuthRules} editUrlBuilder={editUrlBuilder}/>
@@ -84,6 +87,7 @@ TabTokenAuthentication.defaultProps = {
   properties: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {params: {account, group} } = ownProps
 
@@ -95,11 +99,12 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAccount: (params) => dispatch( accountActions.fetchOne({...params, requestTag: REQUEST_TAG}) ),
-    fetchGroups: (params) => dispatch( groupActions.fetchAll({...params, requestTag: REQUEST_TAG}) ),
-    fetchProperties: (params) => dispatch( propertyActions.fetchAll({...params, requestTag: REQUEST_TAG} ))
+    fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, requestTag: REQUEST_TAG})),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll({...params, requestTag: REQUEST_TAG})),
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true}))
   }
 }
 

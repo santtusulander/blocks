@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 import { FormGroup, Checkbox } from 'react-bootstrap'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterChecklistDropdown from '../shared/form-elements/filter-checklist-dropdown.jsx'
 
 function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   const
     isChecked = option =>
-    option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
+    option.filter((singleOption) => values.findIndex(value => value === singleOption) >= 0).length === option.length,
     fiveHundreds = [500, 501, 502, 503],
     fourHundreds = [400, 401, 402, 403, 404, 405, 411, 412, 413],
     twoHundreds = [200, 201, 202, 204],
@@ -20,7 +20,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       } else {
         if (values.size !== options.size) {
           optionValue.forEach(item => {
-            if(!values.includes(item)) {
+            if (!values.includes(item)) {
               values = values.push(item)
             }
           })

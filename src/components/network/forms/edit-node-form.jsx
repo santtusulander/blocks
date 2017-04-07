@@ -9,14 +9,14 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import DefaultErrorBlock from '../../form/default-error-block'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
-import HelpPopover from '../../help-popover'
-import ButtonDisableTooltip from '../../button-disable-tooltip'
-import IsAllowed from '../../is-allowed'
-import HelpTooltip from '../../help-tooltip'
+import DefaultErrorBlock from '../../shared/form-elements/default-error-block'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import HelpPopover from '../../shared/tooltips/help-popover'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -77,7 +77,7 @@ const validate = function({ custom_grains, ...values }, props) {
 
 
 function getValueLabel(options, value) {
-  if(!options || !options.length) {
+  if (!options || !options.length) {
     return value;
   }
   for (let i = 0, len = options.length; i < len; i++) {
@@ -143,7 +143,7 @@ class NetworkEditNodeForm extends React.Component {
     const { nodeValues, nodes } = this.props
     const updatedNodeValues = nodes.slice(0)
 
-    for (let field in formValues) {
+    for (const field in formValues) {
       const originalNodeValue = nodeValues[field]
       const fieldValue = formValues[field]
       let updatedValue
@@ -185,13 +185,13 @@ class NetworkEditNodeForm extends React.Component {
   }
 
   getFields() {
-    const { nodes, nodeValues } = this.props
+    const { nodes, nodeValues, readOnly } = this.props
     const { hasMultipleNodes, expandedFields } = this.state
-
     const fields = [
       {
         name: 'status',
         component: FieldFormGroupSelect,
+        disabled: readOnly,
         options: STATUS_OPTIONS.map(({value, label}) => ({ value, label: this.props.intl.formatMessage({id: label}) })),
         labelId: 'portal.network.item.status.label'
       },
@@ -424,6 +424,7 @@ NetworkEditNodeForm.propTypes = {
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
+  readOnly: React.PropTypes.bool,
   show: React.PropTypes.bool,
   ...reduxFormPropTypes
 }

@@ -1,17 +1,19 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, ControlLabel, FormControl, Modal, Row } from 'react-bootstrap'
+import { Button, Col, ControlLabel, FormControl, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Toggle from '../../toggle'
-import Select from '../../select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Toggle from '../../shared/form-elements/toggle'
+import Select from '../../shared/form-elements/select'
 
 import { secondsToUnit, secondsFromUnit } from '../helpers'
 
 class Cache extends React.Component {
   constructor(props) {
     super(props)
-    let maxAge = props.set.get('max_age')
+    const setKey = props.set
+    let maxAge = setKey.get('max_age')
 
     if (!maxAge) {
       maxAge = secondsFromUnit(7, 'days')
@@ -32,10 +34,10 @@ class Cache extends React.Component {
     }
 
     this.state = {
-      checkEtag: props.set.get('check_etag') || 'false',
-      honorOrigin: props.set.get('honor_origin') || false,
+      checkEtag: setKey.get('check_etag', 'false'),
+      honorOrigin: setKey.get('honor_origin', false),
       maxAge: maxAge,
-      noStore: props.set.get('no_store') || false,
+      noStore: setKey.get('no_store', false),
       ttlType: ttlType
     }
 
@@ -48,7 +50,7 @@ class Cache extends React.Component {
   }
   handleChange(key) {
     return e => {
-      let stateObj = {}
+      const stateObj = {}
       stateObj[key] = e.target.value
       this.setState(stateObj)
     }
@@ -61,7 +63,7 @@ class Cache extends React.Component {
   }
   handleToggleChange(key) {
     return value => {
-      let stateObj = {}
+      const stateObj = {}
       stateObj[key] = value
       this.setState(stateObj)
     }
@@ -84,16 +86,12 @@ class Cache extends React.Component {
     return maxAge;
   }
   saveChanges() {
-    this.props.changeValue(
-      this.props.path,
-      this.props.set.merge({
-        check_etag: this.state.checkEtag,
-        max_age: this.getMaxAge(),
-        no_store: this.state.noStore,
-        honor_origin: this.state.honorOrigin
-      })
-    )
-    this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, {
+      check_etag: this.state.checkEtag,
+      max_age: this.getMaxAge(),
+      no_store: this.state.noStore,
+      honor_origin: this.state.honorOrigin
+    })
   }
   render() {
     return (
@@ -171,14 +169,14 @@ class Cache extends React.Component {
             </Col>
           </Row>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
               Save Action
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
@@ -188,11 +186,12 @@ class Cache extends React.Component {
 
 Cache.displayName = 'Cache'
 Cache.propTypes = {
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  saveAction: React.PropTypes.func,
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.string
 }
 
 module.exports = injectIntl(Cache)

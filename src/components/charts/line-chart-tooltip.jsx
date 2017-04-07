@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { formatUnixTimestamp, formatBytes} from '../../util/helpers'
-import './line-chart-tooltip.scss';
 
 const LineChartTooltip = ({ payload = [], valueFormatter = formatBytes }) => {
 
@@ -10,7 +9,7 @@ const LineChartTooltip = ({ payload = [], valueFormatter = formatBytes }) => {
       {payload.map(({ name, value, dataKey, payload }, i) =>
         <div key={i} className="tooltip-item">
           <span className="legend-label">
-            {formatUnixTimestamp( timestamp, "MMM DD HH:mm") } { valueFormatter(value, true) }
+            {formatUnixTimestamp(timestamp, "MMM DD HH:mm") } { valueFormatter(value, true) }
           </span>
         </div>
       )}

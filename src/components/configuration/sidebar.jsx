@@ -1,30 +1,32 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import IconClose from '../icons/icon-close.jsx'
+import classnames from 'classnames'
+import IconClose from '../shared/icons/icon-close.jsx'
 
 class ConfigurationSidebar extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
-    let className = 'configuration-sidebar'
-    if(this.props.rightColVisible) {
-      className = className + ' ' + 'right-col-visible'
-    }
+    const { rightColVisible, handleRightColClose } = this.props
+
     return (
-      <Modal show={true}
-        dialogClassName={className}
-        onHide={this.props.onHide}>
-        {this.props.children}
-        {this.props.rightColVisible ?
-          <div className="sidebar-right-col">
-            <a className="sidebar-right-col-close btn-icon"
-              onClick={this.props.handleRightColClose}>
-              <IconClose width={20} height={20}/>
+      <Modal
+        show={true}
+        dialogClassName="side-panel double-side-modal-container"
+        onHide={this.props.onHide}
+      >
+        <div className={classnames('primary-side-modal', { disabled: rightColVisible })}>
+          {this.props.children}
+        </div>
+        {rightColVisible &&
+          <div className="modal-content secondary-side-modal">
+            <a onClick={handleRightColClose} className="secondary-side-modal-close">
+              <IconClose />
             </a>
             {this.props.rightColContent}
           </div>
-        : ''}
+        }
       </Modal>
     )
   }

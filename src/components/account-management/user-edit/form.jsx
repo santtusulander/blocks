@@ -3,10 +3,10 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Row, Col } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldTelephoneInput from '../../form/field-telephone-input'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldTelephoneInput from '../../shared/form-fields/field-telephone-input'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 
 let errors = {}
@@ -15,18 +15,18 @@ const validate = (values) => {
 
   const { first_name, last_name, email, role } = values
 
-  if(!first_name) {
+  if (!first_name) {
     errors.first_name = <FormattedMessage id="portal.account.editUser.firstNameRequired.text"/>
   }
-  if(!last_name) {
+  if (!last_name) {
     errors.last_name = <FormattedMessage id="portal.account.editUser.lastNameRequired.text"/>
   }
 
-  if(!email) {
+  if (!email) {
     errors.email = <FormattedMessage id="portal.account.editUser.emailRequired.text"/>
   }
 
-  if(!role) {
+  if (!role) {
     errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
   }
 

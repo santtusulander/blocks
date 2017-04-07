@@ -7,23 +7,27 @@ import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 import { isInt } from '../../../util/validators'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FormFooterButtons from '../../form/form-footer-buttons'
-import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FieldFormGroupNumber from '../../form/field-form-group-number'
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
-import IsAllowed from '../../is-allowed'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { DELETE_POP, MODIFY_POP } from '../../../constants/permissions'
 import { POP_ID_MIN, POP_ID_MAX, STATUS_OPTIONS } from '../../../constants/network.js'
 
-const validate = ({ name, locationId, id }) => {
+const validate = ({ name, billing_region, locationId, id }) => {
 
   const customConditions = {
     name: {
       condition: !isValidTextField(name),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
+    },
+    billing_region: {
+      condition: !billing_region,
+      errorText: <FormattedMessage id='portal.network.popEditForm.billing_region.validation.error.text'/>
     },
     locationId: {
       condition: !locationId,
@@ -31,17 +35,18 @@ const validate = ({ name, locationId, id }) => {
     },
     id: {
       condition: !isInt(id),
-      errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
+      errorText: <FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
 
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
+    billing_region: <FormattedMessage id='portal.network.popEditForm.billing_region.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
     id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, billing_region, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {
@@ -57,7 +62,8 @@ const NetworkPopForm = (props) => {
     initialValues,
     hasPods,
     dirty,
-    handleSubmit
+    handleSubmit,
+    readOnly
   } = props
 
   const edit = !!initialValues.id
@@ -80,22 +86,34 @@ const NetworkPopForm = (props) => {
           name="name"
           placeholder={intl.formatMessage({id: 'portal.network.popEditForm.popName.placeholder'})}
           component={FieldFormGroup}
-          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
+          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />}
+          disabled={readOnly} />
 
         {edit &&
           <Field
             name="status"
             component={FieldFormGroupSelect}
-            options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+            options={STATUS_OPTIONS.map(({value, label}) => {
+              return { value, label: intl.formatMessage({id: label}) }
+            })}
             label={<FormattedMessage id="portal.network.item.status.label" />}
+            disabled={readOnly}
           />
         }
+
+        <Field
+          name="billing_region"
+          className="input-select"
+          component={FieldFormGroupSelect}
+          options={initialValues.billingRegionOptions}
+          label={<FormattedMessage id="portal.network.popEditForm.billing_region.label" />}
+          disabled={readOnly} />
 
         <Field
           name="locationId"
           className="input-select"
           component={FieldFormGroupSelect}
-          disabled={edit}
+          disabled={edit || readOnly}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
@@ -103,7 +121,7 @@ const NetworkPopForm = (props) => {
           ? <Field
               name="id"
               component={FieldFormGroupNumber}
-              disabled={edit}
+              disabled={edit || readOnly}
               addonBefore={`${iata}`}
               min={POP_ID_MIN}
               max={POP_ID_MAX}
@@ -157,6 +175,7 @@ NetworkPopForm.propTypes = {
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
   popId: PropTypes.string,
+  readOnly: PropTypes.bool,
 
   ...reduxFormPropTypes
 }

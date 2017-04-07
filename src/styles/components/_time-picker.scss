@@ -1,0 +1,25 @@
+// sass-lint:disable class-name-format
+.time-picker {
+  .rdtPicker {
+    width: auto;
+    padding: 10px;
+
+    table {
+      width: 100%;
+    }
+  }
+
+  .rdtCounters {
+    display: flex;
+    align-items: center;
+  }
+
+  .rdtCounter {
+    text-align: center;
+    flex: 1 0 0;
+  }
+
+  .rdtBtn {
+    cursor: pointer;
+  }
+}

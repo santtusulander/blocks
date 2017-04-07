@@ -3,8 +3,8 @@ import Immutable from 'immutable'
 import { FormControl, FormGroup, Radio } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
 import {getTopURLs, formatBytes} from '../../util/helpers'
@@ -32,7 +32,9 @@ class AnalysisURLReport extends React.Component {
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps(nextProps) {

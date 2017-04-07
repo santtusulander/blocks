@@ -35,9 +35,7 @@ const groupsElem =
     userActions={{
       fetchUsers: genAsyncMock
     }}
-    groupActions={{
-      fetchGroups: genAsyncMock
-    }}
+    fetchGroups={jest.fn()}
     router= { routerMock }
     intl={intlMaker()}
   />
@@ -89,50 +87,6 @@ describe('AccountManagementAccountGroups', () => {
     const sortedData2 = getSortData(fakeGroups, 'created', -1)
     expect(sortedData2.first().get('name')).toBe('ccc')
 
-  })
-
-  it('should save an added group', () => {
-    const addGroup = jest.genMockFn().mockReturnValue(promisify('whateva'))
-    const groups = shallow(
-      <Groups
-        groups={fakeGroups}
-        params={{}}
-        userActions={{
-          fetchUsers: genAsyncMock
-        }}
-        groupActions={{
-          fetchGroups: genAsyncMock
-        }}
-        router= { routerMock }
-        addGroup={ addGroup }
-        intl={intlMaker()}
-      />
-    )
-
-    groups.instance().saveNewGroup({name: 'zzz'})
-    expect(addGroup).toBeCalledWith({name: 'zzz'})
-  })
-
-  it('should save an edited group', () => {
-    const editGroup = jest.genMockFn().mockReturnValue(promisify('whateva'))
-    const groups = shallow(
-      <Groups
-        groups={fakeGroups}
-        params={{}}
-        userActions={{
-          fetchUsers: genAsyncMock
-        }}
-        groupActions={{
-          fetchGroups: genAsyncMock
-        }}
-        router= { routerMock }
-        editGroup={ editGroup }
-        intl={intlMaker()}
-      />)
-
-    groups.instance().saveEditedGroup(1)('zzz')
-    expect(editGroup.mock.calls[0][0]).toBe(1)
-    expect(editGroup.mock.calls[0][1]).toBe('zzz')
   })
 
   it('should search groups', () => {

@@ -44,7 +44,8 @@ const emptyUser = Map({
   currentUser: Map(),
   fetching: false,
   loggedIn: false,
-  username: null
+  username: null,
+  storageAccessToken: null
 })
 
 // REDUCERS
@@ -73,7 +74,7 @@ export function updateFailure(state) {
 }
 
 export function updatePasswordSuccess(state, action) {
-  setUserToken( action.payload.token)
+  setUserToken(action.payload.token)
 
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
@@ -82,7 +83,7 @@ export function updatePasswordSuccess(state, action) {
   })
 }
 
-export function userLoggedInSuccess(state, action){
+export function userLoggedInSuccess(state, action) {
   switch (action.payload.status) {
     case 200:
       setUserToken(action.payload.token)
@@ -103,7 +104,7 @@ export function userLoggedInSuccess(state, action){
   }
 }
 
-export function userLoggedInFailure(){
+export function userLoggedInFailure() {
   return emptyUser
 }
 
@@ -135,7 +136,7 @@ export function fetchAllFailure(state) {
   })
 }
 
-export function userLoggedOutSuccess(state){
+export function userLoggedOutSuccess(state) {
   deleteUserToken()
   deleteTokenMeta()
 
@@ -144,11 +145,11 @@ export function userLoggedOutSuccess(state){
   return state.merge({'loggedIn': false, 'fetching': false})
 }
 
-export function userStartFetch(state){
+export function userStartFetch(state) {
   return state.set('fetching', true)
 }
 
-export function userFinishFetch(state){
+export function userFinishFetch(state) {
   return state.set('fetching', false)
 }
 
@@ -177,16 +178,15 @@ export function deleteUserFailure(state) {
   return state
 }
 
-export function userTokenChecked(state, action){
-  if(action.payload && action.payload.token) {
+export function userTokenChecked(state, action) {
+  if (action.payload && action.payload.token) {
     setUserToken(action.payload.token)
     setTokenMeta(action.payload.tokenMeta)
 
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
-  }
-  else {
+  } else {
     deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -194,11 +194,10 @@ export function userTokenChecked(state, action){
   }
 }
 
-export function userNameSave(state, action){
-  if(action.payload) {
+export function userNameSave(state, action) {
+  if (action.payload) {
     setUserName(action.payload)
-  }
-  else {
+  } else {
     deleteUserName()
   }
   return state.set('username', action.payload)
@@ -253,7 +252,7 @@ export function getAccessKeyFailure(state) {
 }
 
 export default handleActions({
-  USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
+  USER_LOGGED_IN: mapReducers(userLoggedInSuccess, userLoggedInFailure),
   USER_LOGGED_OUT: userLoggedOutSuccess,
   USER_START_FETCH: userStartFetch,
   USER_FINISH_FETCH: userFinishFetch,
@@ -358,6 +357,28 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
   });
 })
 
+export const twoFALogInWithRecoveryKey = createAction(USER_LOGGED_IN, (username, key) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "recovery_code": key
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        code: res.code,
+        token: res.data
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
 export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = getUserToken()
 
@@ -366,16 +387,17 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
       {headers: {'X-Auth-Token': token}}
     )
   }
+  return Promise.resolve({ message: 'Token not found' })
 })
 
-export const getAccessKeyByToken = createAction(USER_ACCESS_KEY_RECEIVED, (storageId) => {
+export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brandId, accountId, groupId, storageId) => {
   const token = getUserToken()
   const axiosInstanse = axios.create({
     headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
   })
 
-  if (storageId && token) {
-    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys`)
+  if (storageId && token && groupId) {
+    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`)
                         .then(parseResponseData)
   } else {
     return Promise.reject({ data: { message: "No token" } })
@@ -388,13 +410,13 @@ export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
   const token = getUserToken()
-  if(token) {
+  if (token) {
     return loginAxios.get(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
       //TODO: UDNP-2357 Should we save services object?
-      if(res) {
+      if (res) {
         return {
           token: token,
           username: res.data.username,
@@ -408,7 +430,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     })
   }
 
-  return Promise.reject({data:{message:"No token"}})
+  return Promise.reject({data: {message: "No token"}})
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
@@ -503,7 +525,7 @@ export const resetPassword = createAction(USER_PASSWORD_RESET, (email, password,
  * @param  {[type]} state [description]
  * @return {[type]}       [description]
  */
-export const getUserRoles = ( state ) => {
+export const getUserRoles = (state) => {
   return state.getIn(['roles'])
 }
 
@@ -512,8 +534,10 @@ export const getUserRoles = ( state ) => {
  * @param  {state}  currentUser state
  * @return {Boolean}
  */
-export const isUdnAdmin = ( state ) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
+export const isUdnAdmin = (state) => {
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {
+    return true
+  }
 
   return false
 }

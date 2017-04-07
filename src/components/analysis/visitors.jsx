@@ -4,11 +4,11 @@ import Immutable from 'immutable'
 import moment from 'moment'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
 
 
@@ -42,7 +42,9 @@ class AnalysisVisitors extends React.Component {
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
@@ -80,24 +82,22 @@ class AnalysisVisitors extends React.Component {
     const startVis = data.get('detail').first().get('uniq_vis') || 0
     const endVis = data.get('detail').last().get('uniq_vis') || 0
     let trending = endVis ? startVis / endVis : 0
-    if(trending > 1) {
+    if (trending > 1) {
       trending = numeral((trending - 1) * -1).format('0%')
-    }
-    else {
+    } else {
       trending = numeral(trending).format('+0%');
     }
     return trending
   }
   sortedData(data, sortBy, sortDir, sortType) {
     let sortFunc = ''
-    if((sortType === 'country' && this.state.sortCountryFunc === 'trending') ||
+    if ((sortType === 'country' && this.state.sortCountryFunc === 'trending') ||
       (sortType === 'browser' && this.state.sortBrowserFunc === 'trending') ||
       (sortType === 'os' && this.state.sortOSFunc === 'trending')) {
       sortFunc = data.sort((a, b) => {
-        if(this.getTrending(a) < this.getTrending(b)) {
+        if (this.getTrending(a) < this.getTrending(b)) {
           return -1 * sortDir
-        }
-        else if(this.getTrending(a) > this.getTrending(b)) {
+        } else if (this.getTrending(a) > this.getTrending(b)) {
           return 1 * sortDir
         }
         return 0
@@ -106,10 +106,9 @@ class AnalysisVisitors extends React.Component {
       sortFunc = data.sort((a, b) => {
         const _a = typeof a.get(sortBy) === 'string' ? a.get(sortBy).toLowerCase() : a.get(sortBy)
         const _b = typeof b.get(sortBy) === 'string' ? b.get(sortBy).toLowerCase() : b.get(sortBy)
-        if(_a < _b) {
+        if (_a < _b) {
           return -1 * sortDir
-        }
-        else if(_a > _b) {
+        } else if (_a > _b) {
           return 1 * sortDir
         }
         return 0
@@ -137,7 +136,7 @@ class AnalysisVisitors extends React.Component {
     }
     const sortedOS = !this.props.fetching ? this.sortedData(this.props.byOS, this.state.sortOSBy, this.state.sortOSDir, 'os') : ''
     const datasets = []
-    if(this.props.byTime.size) {
+    if (this.props.byTime.size) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -222,7 +221,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(countryData.size) {
+                    if (countryData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,
@@ -299,7 +298,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(browserData.size) {
+                    if (browserData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,
@@ -376,7 +375,7 @@ class AnalysisVisitors extends React.Component {
                       )
                     })
                     const datasets = []
-                    if(osData.size) {
+                    if (osData.size) {
                       datasets.push({
                         area: false,
                         color: paleblue,

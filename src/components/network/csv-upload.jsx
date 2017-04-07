@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl'
 import Dropzone from 'react-dropzone'
 import moment from 'moment'
 
-import IconClose from '../icons/icon-close'
-import IconFile from '../icons/icon-file'
+import IconClose from '../shared/icons/icon-close'
+import IconFile from '../shared/icons/icon-file'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 class CsvUploadArea extends Component {
@@ -33,8 +33,8 @@ class CsvUploadArea extends Component {
 
   onDrop(acceptedFiles) {
     const { asyncValidation, contentValidation, maxSize } = this.props
-    let validatedFiles = []
-    let rejectedFiles = []
+    const validatedFiles = []
+    const rejectedFiles = []
 
     if (this.state.validFiles.length > 0) {
       // Don't allow upload additional files
@@ -57,6 +57,8 @@ class CsvUploadArea extends Component {
       } else {
         rejectedFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({
@@ -72,8 +74,8 @@ class CsvUploadArea extends Component {
 
   // Callback for async validation
   validationCallback(files) {
-    let validatedFiles = this.state.validFiles.slice()
-    let rejectedFiles = this.state.rejectedFiles.slice()
+    const validatedFiles = this.state.validFiles.slice()
+    const rejectedFiles = this.state.rejectedFiles.slice()
 
     // Expect one or more files here
     if (!(files instanceof Array)) {
@@ -88,11 +90,13 @@ class CsvUploadArea extends Component {
           return validFile.preview === file.preview
         })
 
-        if (indexToRemove != -1) {
+        if (indexToRemove !== -1) {
           validatedFiles.splice(indexToRemove, 1);
           rejectedFiles.push(file)
         }
       }
+
+      return false
     })
 
     this.setState({
@@ -105,12 +109,14 @@ class CsvUploadArea extends Component {
   }
 
   onDelete(fileName) {
-    let newFiles = []
+    const newFiles = []
 
     this.state.validFiles.map((file) => {
       if (file.name !== fileName) {
         newFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({

@@ -8,15 +8,15 @@ const FilterStorageType = ({ storageType = '', toggleStorageType }) => (
     <div className="sidebar-content form-inline">
       <FormGroup>
         <Radio
-          checked={storageType.includes('usage')}
-          onChange={() => toggleStorageType('usage')}>
+          checked={storageType.includes('bytes')}
+          onChange={() => toggleStorageType('bytes')}>
           <span>{<FormattedMessage id="portal.analysis.filters.storageType.usage.title"/>}</span>
         </Radio>
       </FormGroup>
       <FormGroup>
         <Radio
-          checked={storageType.includes('files')}
-          onChange={() => toggleStorageType('files')}>
+          checked={storageType.includes('files_count')}
+          onChange={() => toggleStorageType('files_count')}>
          <span>{<FormattedMessage id="portal.analysis.filters.storageType.files.title"/>}</span>
         </Radio>
       </FormGroup>

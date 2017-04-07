@@ -3,10 +3,10 @@ import { Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Field } from 'redux-form'
 
-import Input from '../form/field-form-group'
-import FormGroupSelect from '../form/field-form-group-select'
-import FormFooterButtons from '../form/form-footer-buttons'
-import FieldFormGroupNumber from '../form/field-form-group-number'
+import Input from '../shared/form-fields/field-form-group'
+import FormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import FieldFormGroupNumber from '../shared/form-fields/field-form-group-number'
 
 import recordTypes from '../../constants/dns-record-types'
 import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_PRIO, DNS_MAX_PRIO } from '../../constants/account-management-options'
@@ -17,7 +17,7 @@ const RecordForm = ({ type, submitting, domain, edit, onSubmit, cancel, handleSu
       <Field
         name="type"
         disabled={edit}
-        options={recordTypes.map(type => [type, type])}
+        options={recordTypes.map(recType => [recType, recType])}
         component={FormGroupSelect}
         label={<FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>}/>
       {shouldShowField('name') &&

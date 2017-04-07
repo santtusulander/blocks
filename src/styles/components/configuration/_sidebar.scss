@@ -37,9 +37,17 @@
       width: 96%;
       margin-right: 0;
 
+      .configuration-rule-edit {
+        opacity: 0.5;
+      }
+
       .modal-content {
         display: flex;
         max-width: 100%;
+      }
+
+      .condition {
+        cursor: not-allowed;
       }
     }
   }
@@ -65,6 +73,7 @@
         rgba($ericsson-dark-blue, 0.7));
       background-size: 100%;
     }
+
     .light-theme & {
       color: $lt-text-color;
       background-color: $silver-20;
@@ -90,6 +99,7 @@
     .dark-theme & {
       background: rgba($pale-blue, 0.2);
     }
+
     .light-theme & {
       color: $white;
       background: $pale-blue;
@@ -105,71 +115,6 @@
 
     @include sm {
       padding: 40px ($md-bar-height / 2);
-    }
-  }
-
-  .configuration-cache-rules {
-    width: 100%;
-    transition: width 0.3s ease-out;
-  }
-
-  .sidebar-right-col {
-    width: $sidebar-right-col-width;
-
-    @include md {
-      width: $md-sidebar-right-col-width;
-    }
-
-    @include sm {
-      width: $sm-sidebar-right-col-width;
-    }
-
-    .dark-theme &,
-    .light-theme & {
-      background-color: $black;
-      background-image: linear-gradient(rgba($pale-blue, 0.9),
-        rgba($ericsson-dark-blue, 0.9));
-      background-size: 100%;
-    }
-
-    .modal-header {
-      background: transparent;
-
-      .dark-theme &,
-      .light-theme & {
-        border-bottom: 1px solid rgba($pale-blue, 0.2);
-      }
-    }
-  }
-
-  .sidebar-right-col-close {
-    position: absolute;
-    top: $bar-height / 2;
-    right: $bar-height / 2;
-    width: 20px;
-    height: 20px;
-    margin: -10px -10px 0 0;
-    cursor: pointer;
-
-    @include md {
-      top: $md-bar-height / 2;
-      right: $md-bar-height / 2;
-    }
-
-    .dark-theme &,
-    .light-theme & {
-      fill: $dt-text-color;
-      stroke: $dt-text-color;
-    }
-
-    &:hover {
-
-      .dark-theme &,
-      .light-theme & {
-        color: $white;
-        fill: $white;
-        stroke: $white;
-      }
     }
   }
 

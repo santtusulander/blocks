@@ -6,13 +6,14 @@ const ROUTES = {
   analyticsAccount: '/analysis/:brand/:account',
   analyticsGroup: '/analysis/:brand/:account/:group',
   analyticsProperty: '/analysis/:brand/:account/:group/:property',
+  analyticsStorage: '/analysis/:brand/:account/:group/:storage/storage',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabContribution: 'contribution',
-  analyticsStorage: 'storage',
+  analyticsTabStorage: 'storage-overview',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
@@ -24,6 +25,8 @@ const ROUTES = {
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
+  contentStorage: '/content/:brand/:account/groups/:group/storage/:storage',
+  contentStorageConfiguration: '/content/:brand/:account/groups/:group/storage/:storage/configuration',
 
   contentPropertyTabSummary: 'summary',
   contentPropertyTabPurgeStatus: 'purge-status',
@@ -32,7 +35,8 @@ const ROUTES = {
   configurationTabDefaults: 'defaults',
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
-  configurationTabStreaming: 'streaming',
+  configurationTabGlobalTrafficManager: 'gtm',
+  configurationTabAdvanced: 'advanced',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 
@@ -52,7 +56,7 @@ const ROUTES = {
   accountManagementTabSystemDNS: 'dns',
   accountManagementTabSystemRoles: 'roles',
   accountManagementTabSystemServices: 'services',
-  accountManagementTabSystemStorages: 'storages',
+  accountManagementTabSystemStorages: 'storage',
 
   services: '/services',
   servicesBrand: '/services/:brand',
@@ -102,8 +106,6 @@ const ROUTES = {
   networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }
 
-export const ENTRY_ROUTE_SERVICE_PROVIDER = ROUTES.network
-export const ENTRY_ROUTE_DEFAULT = ROUTES.content
 export const ENTRY_ROUTE_ROOT = ROUTES.root
 
 export default ROUTES

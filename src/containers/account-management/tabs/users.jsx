@@ -9,29 +9,31 @@ import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import PageContainer from '../../../components/layout/page-container'
-import SectionHeader from '../../../components/layout/section-header'
-import SelectWrapper from '../../../components/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import ActionButtons from '../../../components/action-buttons'
-import FieldFormGroup from '../../../components/form/field-form-group'
-import FieldFormGroupSelect from '../../../components/form/field-form-group-select'
-import InlineAdd from '../../../components/inline-add'
-import IconAdd from '../../../components/icons/icon-add'
-import IconInfo from '../../../components/icons/icon-info'
-import TableSorter from '../../../components/table-sorter'
+import roleNameActions from '../../../redux/modules/entities/role-names/actions'
+import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
+
+import PageContainer from '../../../components/shared/layout/page-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
+import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
+// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
+import ActionButtons from '../../../components/shared/action-buttons'
+import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
+import InlineAdd from '../../../components/shared/page-elements/inline-add'
+import IconAdd from '../../../components/shared/icons/icon-add'
+import IconInfo from '../../../components/shared/icons/icon-info'
+import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
-import ArrayCell from '../../../components/array-td/array-td'
-import ModalWindow from '../../../components/modal'
+import ArrayCell from '../../../components/shared/page-elements/array-td'
+import ModalWindow from '../../../components/shared/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {
@@ -55,7 +57,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
@@ -71,12 +72,12 @@ export class AccountManagementAccountUsers extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
-    this.props.rolesActions.fetchRoles()
     router.setRouteLeaveHook(route, this.shouldLeave)
+    this.props.fetchRoleNames()
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account) {
+    if (this.props.params.account !== nextProps.params.account) {
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
     }
@@ -86,11 +87,6 @@ export class AccountManagementAccountUsers extends React.Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
-  showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
 
   changeSort(column, direction) {
     this.setState({
@@ -109,10 +105,10 @@ export class AccountManagementAccountUsers extends React.Component {
       group_id: this.state.usersGroups.toJS()
     }
     return createUser(requestBody).then(res => {
-      if(res.error){
+      if (res.error) {
         throw new SubmissionError({email: res.payload.message})
-      }
-      else {
+      } else {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
     })
@@ -133,10 +129,12 @@ export class AccountManagementAccountUsers extends React.Component {
   getRoleOptions(roleMapping, props) {
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+      .map(mapped_role => {
+        const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
+        return matchedRole
+              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
+      })
   }
 
   getInlineAddFields() {
@@ -242,15 +240,14 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   deleteUser(user) {
-    if(user === this.props.currentUser) {
+    if (user === this.props.currentUser) {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
-    }
-    else {
+    } else {
       this.props.deleteUser(user)
     }
   }
@@ -270,13 +267,10 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   saveUser(user) {
-    // Get the username from the user we have in state for editing purposes.
-    //user.username = this.state.userToEdit.get('username')
-
     return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
+          this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
@@ -302,7 +296,7 @@ export class AccountManagementAccountUsers extends React.Component {
       activeDirection: this.state.sortDir
     }
     const filteredUsersByRole = users.filter((user) => {
-      if(this.state.filteredRoles === 'all') {
+      if (this.state.filteredRoles === 'all') {
         return true
       } else {
         return user.get('roles').find(role => {
@@ -311,7 +305,7 @@ export class AccountManagementAccountUsers extends React.Component {
       }
     })
     const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if(this.state.filteredGroups === 'all') {
+      if (this.state.filteredGroups === 'all') {
         return true
       } else {
         return user.get('group_id').find(group => {
@@ -324,7 +318,7 @@ export class AccountManagementAccountUsers extends React.Component {
     })
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
 
     const groupOptions = this.props.groups.map(group => [
@@ -401,7 +395,9 @@ export class AccountManagementAccountUsers extends React.Component {
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_USER}>
                       <ActionButtons
-                        onEdit={() => {this.editUser(user)}}
+                        onEdit={() => {
+                          this.editUser(user)
+                        }}
                         onDelete={() => this.deleteUser(user.get('email'))} />
                     </IsAllowed>
                   </td>
@@ -443,27 +439,28 @@ export class AccountManagementAccountUsers extends React.Component {
             closeModal={true}
             closeButton={true}
             cancel={this.togglePermissionModal}>
-              {this.props.roles.map((role, i) => (
-                role.getIn(['permissions', 'ui']) ?
-                <PanelGroup accordion={true} key={i} defaultActiveKey="">
-                  <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
-                    <Table striped={true} key={i}>
+              {this.props.roles.map((role, roleIndex) => {
+                return role.getIn(['permissions', 'ui']) ?
+                (<PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
+                  <Panel header={role.get('name')} className="permission-panel" eventKey={roleIndex}>
+                    <Table striped={true} key={roleIndex}>
                       <tbody>
-                      {this.props.permissions.get('ui').map((uiPermission, i) => {
+                      {this.props.permissions.get('ui').map((uiPermission, uiPermissionIndex) => {
                         const permissionTitle = uiPermission.get('title')
                         const permissionName = uiPermission.get('name')
-                        return(
-                          <tr key={i}>
+                        return (
+                          <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
                             <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
                           </tr>
-                        )}
+                        )
+                      }
                       )}
                       </tbody>
                     </Table>
                   </Panel>
-                </PanelGroup> : null
-              ))}
+                </PanelGroup>) : null
+              })}
           </ModalWindow>
         }
       </PageContainer>
@@ -476,24 +473,29 @@ AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
+  fetchRoleNames: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
-  rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showNotification: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)
 }
 
+AccountManagementAccountUsers.defaultProps = {
+  roles: List()
+}
+
 function mapStateToProps(state) {
   return {
     form: state.form,
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
@@ -505,9 +507,9 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    fetchRoleNames: () => dispatch(roleNameActions.fetchAll({}))
   };
 }
 

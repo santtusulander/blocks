@@ -1,5 +1,5 @@
 {
-  "portal.storage.uploadContent.uploading.text": "Uploading {number} items",
+  "portal.storage.uploadContent.uploading.text": "Uploading {number, plural, one {# item} other {# items}}",
   "portal.storage.uploadContent.cancel.text": "Cancel All",
 
   "portal.storage.kpi.gain.title": "Gain",
@@ -11,11 +11,16 @@
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
 
+  "portal.storage.storageForm.add.success.status": "Storage created successfully",
+  "portal.storage.storageForm.update.success.status": "Storage updated successfully",
+  "portal.storage.storageForm.delete.success.status": "Storage deleted successfully",
+  "portal.storage.storageForm.delete.failed.status": "Deleting storage failed",
+
   "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
   "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
   "portal.storage.storageForm.name.required.error": "Storage name is required",
   "portal.storage.storageForm.name.placeholder": "Enter Storage Name",
-  "portal.storage.storageForm.name.validation.error": "Storage Name is invalid",
+  "portal.storage.storageForm.name.validation.error": "Storage Name is invalid. Only alphanumeric lowercase letters are allowed.",
   "portal.storage.storageForm.locations.label": "Locations",
   "portal.storage.storageForm.locations.required.error": "At least one location is required",
   "portal.storage.storageForm.estimate.label": "Estimated Usage",
@@ -31,5 +36,20 @@
   "portal.storage.storageForm.estimate.help.label": "Estimated Usage",
   "portal.storage.storageForm.estimate.help.text": "By setting this value the user will be able to track their actual usage against their estimated usage across the UDN portal in analytics. The value entered here doesn't serve as a quota or a cap for actual usage.",
   "portal.storage.storageForm.abrProfile.help.label": "ABR Workflow",
-  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest."
+  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest.",
+
+  "portal.storage.summaryPage.title": "SUMMARY",
+  "portal.storage.summaryPage.contents.noFiles.title": "No Files",
+  "portal.storage.summaryPage.contents.hasContents.title": "{folders} Folders, {files} Files",
+  "portal.storage.summaryPage.contents.asperaToggle.title": "Aspera Upload",
+  "portal.storage.summaryPage.contents.newFile.label": "New File Upload",
+  "portal.storage.summaryPage.contents.newFolder.label": "New Folder",
+  "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
+  "portal.storage.summaryPage.contentBrowser.status.label": "Status",
+  "portal.storage.summaryPage.contentBrowser.noOfFiles.label": "No of Files",
+
+  "portal.storage.topBar.storage.label": "Back to Groups",
+  "portal.storage.topBar.group.label": "Back to Accounts",
+  "portal.storage.topBar.account.label": "UDN Admin",
+  "portal.storage.topBar.brand.label": "UDN Admin"
 }

@@ -10,9 +10,9 @@ import {
   getContentUrl,
   getUrl
 } from '../../util/routes.js'
-import IsAllowed from '../is-allowed'
-import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../icons/icon-caret-down'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 
 function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
@@ -21,23 +21,23 @@ function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
   const itemSelector = (...params) => {
     // This check is done to prevent UDN admin from accidentally hitting
     // the account detail endpoint, which they don't have permission for
-    if(router.isActive('/content') || router.isActive('/network')) {
+    if (router.isActive('/content') || router.isActive('/network')) {
       if (params[0] === 'account' && userIsCloudProvider(user)) {
         params[0] = 'groups'
       }
     }
 
-    if(router.isActive('/content') || router.isActive('/network')) {
+    if (router.isActive('/content') || router.isActive('/network')) {
       router.push(getContentUrl(...params))
-    } else if(router.isActive('/analysis')) {
+    } else if (router.isActive('/analysis')) {
       router.push(getAnalyticsUrl(...params))
-    } else if(router.isActive('/account-management')) {
+    } else if (router.isActive('/account-management')) {
       router.push(getUrl('/account-management', ...params))
-    } else if(router.isActive('/security')) {
+    } else if (router.isActive('/security')) {
       router.push(getUrl('/security', ...params))
-    } else if(router.isActive('/support')) {
+    } else if (router.isActive('/support')) {
       router.push(getUrl('/support', ...params))
-    } else if(router.isActive('/dashboard')) {
+    } else if (router.isActive('/dashboard')) {
       router.push(getUrl('/dashboard', ...params))
     }
   }

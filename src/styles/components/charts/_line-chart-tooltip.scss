@@ -1,0 +1,23 @@
+@import '../../base/chart-legend';
+@import '../../base/colors';
+
+.line-chart-tooltip {
+  @extend %chart-legend;
+  position: relative;
+  top: auto;
+  right: auto;
+  padding: 8px;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.8);
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
+  .tooltip-item {
+    @extend %legend-item;
+    padding: 0 8px;
+  }
+}

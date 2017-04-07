@@ -9,13 +9,19 @@ import footprintActions from '../../../redux/modules/entities/footprints/actions
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
 
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
 
-const normalizeValueToAPI = (value) => value.map(item => item.label)
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
+const normalizeValueToAPI = (value, type) => value.map(item => {
+  return type === 'ipv4cidr' ? item.label : item.id
+})
 const normalizeValueFromAPI = (value) => value.map(item => ({ id: item, label: item }))
 
 class FootprintFormContainer extends React.Component {
@@ -38,7 +44,7 @@ class FootprintFormContainer extends React.Component {
   onSave(edit, values) {
 
     const finalValues = Object.assign({}, values, {
-      value: normalizeValueToAPI(values[`value_${values.data_type}`]),
+      value: normalizeValueToAPI(values[`value_${values.data_type}`], values.data_type),
       location: this.props.location
     })
 
@@ -127,14 +133,12 @@ class FootprintFormContainer extends React.Component {
 
   render() {
     const {
-      ASNOptions,
-      CIDROptions,
       fetching,
       footprint,
       initialValues,
+      allowModify,
       intl,
-      onCancel,
-      footprintPermissions
+      onCancel
     } = this.props
 
     const edit = !!footprint && !footprint.isEmpty()
@@ -155,15 +159,13 @@ class FootprintFormContainer extends React.Component {
           editing={edit}
           footprintId={footprint && !footprint.isEmpty() && footprint.get('id')}
           fetching={fetching}
-          ASNOptions={ASNOptions}
-          CIDROptions={CIDROptions}
           udnTypeOptions={FOOTPRINT_UDN_TYPES}
           showNotification={this.showNotification}
           onCSVSave={this.onCSVSave}
           onSave={(values) => this.onSave(edit, values)}
           onDelete={this.onDelete}
           onCancel={onCancel}
-          footprintPermissions={footprintPermissions}
+          readOnly={!allowModify}
         />
 
       </SidePanel>
@@ -176,13 +178,11 @@ FootprintFormContainer.defaultProps = {
   footprint: Map()
 }
 FootprintFormContainer.propTypes = {
-  ASNOptions: PropTypes.array,
-  CIDROptions: PropTypes.array,
   accountId: PropTypes.number,
   addFootprintToPod: PropTypes.func,
+  allowModify: PropTypes.bool,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
-  footprintPermissions: PropTypes.object,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
@@ -193,6 +193,7 @@ FootprintFormContainer.propTypes = {
   uiActions: PropTypes.object
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
@@ -202,9 +203,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
+
+  const roles = getRoles(state)
+  const currentUser = state.user.get('currentUser')
 
   const defaultValues = {
     addFootprintMethod: 'manual',
@@ -223,6 +228,7 @@ const mapStateToProps = (state, ownProps) => {
   initialValues.value_asnlist = normalizeValueFromAPI(initialValues.value && initialValues.data_type === 'asnlist' ? initialValues.value : [])
 
   return {
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_FOOTPRINT),
     footprint,
     initialValues
   }

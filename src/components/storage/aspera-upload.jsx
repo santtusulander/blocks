@@ -44,7 +44,9 @@ class AsperaUpload extends Component {
     this.asperaListener = this.asperaListener.bind(this)
     this.displayInsideDropZone = this.displayInsideDropZone.bind(this)
 
-    this.onClick = this.onClick.bind(this)
+    this.onFileUploadClick = this.onFileUploadClick.bind(this)
+    this.onDirectoryUploadClick = this.onDirectoryUploadClick.bind(this)
+
     this.onDragEnter = this.onDragEnter.bind(this)
     this.onDragLeave = this.onDragLeave.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
@@ -54,9 +56,9 @@ class AsperaUpload extends Component {
   }
 
   componentWillMount() {
-    const { storageId } = this.props
+    const { brandId, accountId, groupId, storageId } = this.props
 
-    this.props.userActions.getAccessKeyByToken(storageId).then((res) => {
+    this.props.userActions.getStorageAccessKey(brandId, accountId, groupId, storageId).then((res) => {
       if (res.error) {
         this.setState({
           asperaError: res.payload.data.message,
@@ -73,11 +75,17 @@ class AsperaUpload extends Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
-      clearTimeout(this.notificationTimeout)
     }
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeAsperaNotification('')
+    this.props.uiActions.setAsperaUploadInstanse({
+      asperaInitialized: false,
+      asperaShowSelectFileDialog: null,
+      asperaShowSelectFolderDialog: null
+    })
   }
 
   initAspera() {
@@ -113,6 +121,12 @@ class AsperaUpload extends Component {
 
     if ((this.state.isAsperaInitialized) && (code === AW4.Connect.STATUS.RUNNING)) {
       this.notificationTimeout = setTimeout(this.props.uiActions.changeAsperaNotification, 10000)
+
+      this.props.uiActions.setAsperaUploadInstanse({
+        asperaInitialized: true,
+        asperaShowSelectFileDialog: this.onFileUploadClick,
+        asperaShowSelectFolderDialog: this.onDirectoryUploadClick
+      })
     }
   }
 
@@ -150,9 +164,36 @@ class AsperaUpload extends Component {
     this.aspera.asperaStartTransfer(transferSpec, connectSettings, callbacks, files)
   }
 
-  onClick(e) {
-    e.stopPropagation();
+  onFileUploadClick(e) {
+    if (e) {
+      e.stopPropagation()
+    }
+
     this.aspera.asperaShowSelectFileDialog({
+      success: (data) => {
+        const files = data.dataTransfer.files
+        if (files.length > 0) {
+          this.startTransfer(files)
+        }
+      },
+      error: (res) => {
+        this.setState({
+          asperaError: res.error.internal_message
+        })
+
+        this.showNotification(ASPERA_STATUS_TRANSFER_ERROR)
+      }
+    }, {
+      allowMultipleSelection: this.props.multiple
+    })
+  }
+
+  onDirectoryUploadClick(e) {
+    if (e) {
+      e.stopPropagation()
+    }
+
+    this.aspera.asperaShowSelectFolderDialog({
       success: (data) => {
         const files = data.dataTransfer.files
         if (files.length > 0) {
@@ -241,13 +282,13 @@ class AsperaUpload extends Component {
     )
 
     return (
-      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+      <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
              className="filedrop-container"
-             onClick={openUploadModalOnClick ? this.onClick : null} >
+             onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
 
           <div className={classNames}>
-            <div className="welcome-text">
+            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
               { this.displayInsideDropZone() }
             </div>
           </div>
@@ -260,7 +301,10 @@ class AsperaUpload extends Component {
 
 AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
+  accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
+  brandId: React.PropTypes.string,
+  groupId: React.PropTypes.string,
   multiple: React.PropTypes.bool,
   openUploadModalOnClick: React.PropTypes.bool,
   storageId: React.PropTypes.string,
