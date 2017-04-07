@@ -64,6 +64,8 @@ class AccountManagementAccountGroups extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.account !== this.props.params.account) {
       const { brand, account } = nextProps.params
+
+      this.props.fetchGroups({brand, account})
       this.props.userActions.fetchUsers(brand, account)
     }
   }
