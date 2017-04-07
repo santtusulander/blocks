@@ -4909,10 +4909,6 @@ multi-stage-sourcemap@^0.2.1:
   dependencies:
     source-map "^0.1.34"
 
-multireducer@^3.0.3:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/multireducer/-/multireducer-3.1.0.tgz#28819a997e29fa3bc76bbe361febad085d7eea0a"
-
 mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
