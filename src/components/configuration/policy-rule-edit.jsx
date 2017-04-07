@@ -373,7 +373,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <FormFooterButtons>
             <Button
-              bsStyle="primary"
+              className="btn-secondary"
               onClick={this.props.cancelAction}
               disabled={disabled}
             >
