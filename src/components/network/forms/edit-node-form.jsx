@@ -268,7 +268,7 @@ class NetworkEditNodeForm extends React.Component {
               <Table striped={true} condensed={true}>
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                     <th><FormattedMessage id="portal.common.value"/></th>
                   </tr>
                 </thead>
@@ -331,7 +331,7 @@ class NetworkEditNodeForm extends React.Component {
             <Table striped={true} condensed={true}>
               <thead>
               <tr>
-                <th>ID</th>
+                <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
               </tr>
               </thead>
               <tbody>{idFieldValues}</tbody>
@@ -350,7 +350,7 @@ class NetworkEditNodeForm extends React.Component {
             <Table striped={true} condensed={true}>
               <thead>
               <tr>
-                <th>ID</th>
+                <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                 <th><FormattedMessage id="portal.common.value"/></th>
               </tr>
               </thead>
@@ -372,7 +372,7 @@ class NetworkEditNodeForm extends React.Component {
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
           <FormGroup>
-            <label>ID</label>
+            <label><FormattedMessage id="portal.network.editNodeForm.id"/></label>
             <div className="input-group">{idValues}</div>
           </FormGroup>
           <FormGroup>

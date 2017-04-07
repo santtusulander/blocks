@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const BrandlistUsedBy = (props) => {
   let content
@@ -6,7 +7,7 @@ const BrandlistUsedBy = (props) => {
   if (Array.isArray(props.fieldVal)) {
     return (
       <a>
-        {props.fieldVal.length} accounts
+        {props.fieldVal.length} <FormattedMessage id="portal.account.manage.newAccountButton.title" values={{accountsCount: props.fieldVal.length}}/>
       </a>
 
       /* TODO: create a tooltip

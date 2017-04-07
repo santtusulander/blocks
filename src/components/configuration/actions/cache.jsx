@@ -171,10 +171,10 @@ class Cache extends React.Component {
 
           <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
-              Cancel
+              <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
-              Save Action
+              <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </FormFooterButtons>
 
