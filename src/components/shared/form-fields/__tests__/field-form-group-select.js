@@ -50,11 +50,11 @@ describe('FieldFormGroupSelect', () => {
   })
 
   it('error text should exist when error flags are true', () => {
-    expect(subject('', '', 'error').find('HelpBlock').length).toBe(1)
+    expect(subject('', '', 'error').find('DefaultErrorBlock').length).toBe(1)
   })
 
   it('error text should not exist when error flags are false', () => {
-    expect(subject('', '', '').find('HelpBlock').length).toBe(0)
+    expect(subject('', '', '').find('DefaultErrorBlock').length).toBe(0)
   })
 
   it('label should exist when it was given', () => {
