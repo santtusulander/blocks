@@ -90,7 +90,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   * @param  {[type]} levels            which levels are set for an instance of the GAS
   * @return {[type]}                   [description]
   */
-const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
+const accountSelectorStateToProps = (state, { params: { storage, property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
   const canView = permissionCheck(levels, state.user.get('currentUser'), getRoles(state))
 
@@ -117,7 +117,7 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
   if (canViewAccount && account) {
     activeNode = account
   }
-  if (canViewGroup && property) {
+  if (canViewGroup && (property || storage)) {
     activeNode = group
   }
 
