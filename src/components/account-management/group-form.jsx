@@ -104,7 +104,7 @@ const GroupForm = ({
           {(canSeeLocations && groupId) &&
             <SectionContainer>
               <SectionHeader
-                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
+                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/><FormattedMessage id="portal.spaceWithAsterisk" /></label>}
                 addonAfter={
                   <HelpTooltip
                     id="tooltip-help"

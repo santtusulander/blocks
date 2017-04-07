@@ -28,7 +28,7 @@ class CacheKeyQueryString extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Cache Key - Query String</h1>
+          <h1><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h1>
         </Modal.Header>
         <Modal.Body>
 

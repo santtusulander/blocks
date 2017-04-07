@@ -7,6 +7,7 @@ import * as accountActionCreators from '../redux/modules/account'
 
 import Content from '../components/shared/layout/content'
 import ServicesPageHeader from '../components/services/services-page-header'
+import { FormattedMessage } from 'react-intl'
 
 export class Services extends React.Component {
   constructor(props) {
@@ -26,7 +27,9 @@ export class Services extends React.Component {
           fetchAccount={fetchAccount}/>
         {/*Not in 0.8.1*/}
         {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
-        <p className='text-center'>Coming soon!</p>
+        <p className='text-center'>
+          <FormattedMessage tagName="tspan" id="portal.services.comingSoon.text"/>
+        </p>
       </Content>
     )
   }

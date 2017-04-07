@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 
 import Checkbox from '../form-elements/checkbox'
+import { FormattedMessage } from 'react-intl'
 
 const PermissionSelection = ({ className, disabled, onChange, permissions }) => {
   const handleChange = (value) => {
@@ -34,15 +35,21 @@ const PermissionSelection = ({ className, disabled, onChange, permissions }) => 
         checked={permission === 0}
         disabled={disabled}
         label="x"
-        onChange={e => handleChange(e.target.value)}>x</Checkbox>
+        onChange={e => handleChange(e.target.value)}>
+        <FormattedMessage id='portal.shared.permissions.selection.permissions.x.text' />
+      </Checkbox>
       <Checkbox
         checked={permission === 1}
         disabled={disabled}
-        onChange={e => handleChange(e.target.value)}>R</Checkbox>
+        onChange={e => handleChange(e.target.value)}>
+        <FormattedMessage id='portal.shared.permissions.selection.permissions.r.text' />
+      </Checkbox>
       <Checkbox
         checked={permission === 2}
         disabled={disabled}
-        onChange={e => handleChange(e.target.value)}>R/W</Checkbox>
+        onChange={e => handleChange(e.target.value)}>
+        <FormattedMessage id='portal.shared.permissions.selection.permissions.rw.text' />
+      </Checkbox>
     </div>
   )
 }

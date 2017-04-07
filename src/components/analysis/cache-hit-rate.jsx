@@ -2,7 +2,7 @@ import React from 'react'
 import numeral from 'numeral'
 import moment from 'moment'
 import Immutable from 'immutable'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import BarChart from '../charts/bar-chart'
@@ -132,10 +132,10 @@ class AnalysisCacheHitRate extends React.Component {
             <thead>
               <tr>
                 <TableSorter {...sorterProps} column="timestamp">
-                Date
+                  <FormattedMessage id="portal.analytics.report.table.date.text" />
                 </TableSorter>
                 <TableSorter {...sorterProps} column="chit_ratio">
-                Cache Hit Rate (%)
+                  <FormattedMessage id="portal.analytics.tabs.cacheHitRatePercentage.label" />
                 </TableSorter>
               </tr>
             </thead>
