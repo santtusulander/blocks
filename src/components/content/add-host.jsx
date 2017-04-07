@@ -103,7 +103,7 @@ class AddHost extends React.Component {
         />
 
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /> *</ControlLabel>
+          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
             <Field
               name="deploymentMode"
               type="radio"
@@ -123,7 +123,7 @@ class AddHost extends React.Component {
 
         {(hasMDSupport || hasVODSupport) &&
           <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /> *</ControlLabel>
+            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
               {hasMDSupport &&
                 <Field
                   name="serviceType"

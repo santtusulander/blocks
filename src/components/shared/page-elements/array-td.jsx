@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 const ArrayTd = (props) => {
   let classNames = 'array-td'
@@ -23,7 +24,7 @@ const ArrayTd = (props) => {
             </Tooltip>
           }>
           <a className="array-td-more-link">
-            +{hiddenItems.length}
+            <FormattedMessage id='portal.plus' />{hiddenItems.length}
           </a>
         </OverlayTrigger>
       : null}

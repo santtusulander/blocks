@@ -31,6 +31,8 @@ class OriginHostname extends React.Component {
   }
   render() {
     const isOtherHostHeader = this.state.activeFilter === 'other_origin_hostname'
+    const mockedOrigin = "origin.foo.com"
+
     return (
       <div>
         <Modal.Header>
@@ -42,7 +44,7 @@ class OriginHostname extends React.Component {
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.originHostname.header"/>
             </ControlLabel>
-            <p>origin.foo.com</p>
+            <p>{mockedOrigin}</p>
           </FormGroup>
 
           <hr />

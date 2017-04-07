@@ -12,6 +12,7 @@ import security from './security.json'
 import services from './services.json'
 import storage from './storage.json'
 import support from './support.json'
+import shared from './shared.json';
 import user from './user.json'
 import dns from './dns.json'
 import validators from './validators.json';
@@ -31,6 +32,7 @@ export default Object.assign({},
   services,
   storage,
   support,
+  shared,
   user,
   dns,
   validators

@@ -11,14 +11,14 @@ function FilterRecordType ({ recordType = '', toggleRecordType }) {
           <Radio
             checked={recordType.includes('transfer_rates')}
             onChange={() => toggleRecordType('transfer_rates')}>
-            <span>Bandwidth</span>
+            <span><FormattedMessage id="portal.analytics.trafficOverview.byCountry.bandwidth.header"/></span>
           </Radio>
         </FormGroup>
         <FormGroup>
           <Radio
             checked={recordType.includes('requests')}
             onChange={() => toggleRecordType('requests')}>
-           <span>Requests</span>
+           <span><FormattedMessage id="portal.analytics.trafficOverview.byCountry.request.header"/></span>
           </Radio>
         </FormGroup>
       </div>

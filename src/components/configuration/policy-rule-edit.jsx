@@ -179,7 +179,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       return (
         <div className="condition-name">
           {filterType}&nbsp;
-          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}:&nbsp;
+          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}<FormattedMessage id="portal.colon" />&nbsp;
           <TruncatedTitle
             content={match.values.map(getFormattedCountry).join(', ')}
           />
@@ -189,7 +189,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     return (
       <div className="condition-name">
-        {match.name}:&nbsp;
+        {match.name}<FormattedMessage id="portal.colon" />&nbsp;
         <TruncatedTitle
           content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
         />
