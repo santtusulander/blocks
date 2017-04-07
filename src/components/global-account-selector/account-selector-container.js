@@ -8,7 +8,7 @@ import storageActions from '../../redux/modules/entities/CIS-ingest-points/actio
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
-import { getGroups, getBrands, getAccounts } from './menu-selectors'
+import { getGroups, getBrands, getAccounts } from '../drillable-menu/menu-selectors'
 
 import {
   VIEW_CONTENT_ACCOUNTS,
@@ -18,7 +18,7 @@ import {
 
 import checkPermissions from '../../util/permissions'
 
-import DrillableMenu from './menu'
+import DrillableMenu from '../drillable-menu/menu'
 
 /**
  * Runs check for a permission to determine whether the entity tree
@@ -128,4 +128,4 @@ const accountSelectorStateToProps = (state, { params: { storage, property, group
   }
 }
 
-export const AccountSelector = connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(DrillableMenu)
+export default connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(DrillableMenu)
