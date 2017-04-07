@@ -74,7 +74,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         { isUDNCore &&
           <IsAllowed to={VIEW_CONTENT_SECTION}>
             <li>
-              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+              <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
                 <IconDashboard />
                 <FormattedMessage id="portal.navigation.dashboard.text"/>
               </Link>
