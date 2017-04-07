@@ -322,7 +322,7 @@ class FootprintForm extends React.Component {
           />
 
           <ControlLabel>
-            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
+            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/><FormattedMessage id="portal.asterisk"/>
           </ControlLabel>
 
           <Field

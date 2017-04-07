@@ -18,6 +18,9 @@ import {
   getTicketTypeLabel
 } from '../../util/support-helper'
 
+/* TODO: uncomment when this tab will be implemented */
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class SupportTicketModal extends React.Component {
 
   static getTicketType(ticket) {

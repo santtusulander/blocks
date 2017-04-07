@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
-import { ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import UDNButton from '../shared/form-elements/button'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
   const groupsOptions = groups.map(group => [
@@ -60,7 +60,7 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
         label={<FormattedMessage id="portal.security.ssl.edit.certificate.text" />}
       />
 
-      <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
+      <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
           id="cancel_button"
           outLine={true}
@@ -74,7 +74,7 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
           onClick={onSubmit}>
           {intl.formatMessage({id: 'portal.common.button.save'})}
         </UDNButton>
-      </ButtonToolbar>
+      </FormFooterButtons>
     </form>
   )
 }

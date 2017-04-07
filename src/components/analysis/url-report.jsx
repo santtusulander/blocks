@@ -72,10 +72,10 @@ class AnalysisURLReport extends React.Component {
       <div>
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text" values={{urlCount: topURLsCount}}/>}>
           <Radio inline={true} value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}>
-            <span>Bytes</span>
+            <span><FormattedMessage id="portal.analytics.urlList.bytes.text"/></span>
           </Radio>
           <Radio inline={true} value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}>
-            <span>Requests</span>
+            <span><FormattedMessage id="portal.analytics.urlList.requests.text"/></span>
           </Radio>
         </SectionHeader>
         <SectionContainer>
