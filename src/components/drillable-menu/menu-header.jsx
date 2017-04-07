@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormControl } from 'react-bootstrap'
 
 import IconArrowLeft from '../shared/icons/icon-arrow-left'
 
-const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent, fetching }) => {
+const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent, fetching, intl }) => {
 
   const handleParentCaretClick = event => {
     event.nativeEvent.stopImmediatePropagation()
@@ -32,7 +32,7 @@ const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, 
       <FormControl
         className="header-search-input"
         type="text"
-        placeholder="Search"
+        placeholder={intl.formatMessage({ id: "portal.common.search.text"})}
         onChange={onSearchChange}
         value={searchValue}/>
     </span>
@@ -45,10 +45,11 @@ DrillableMenuHeader.propTypes = {
   activeNodeName: PropTypes.string,
   fetching: PropTypes.bool,
   goToParent: PropTypes.func,
+  intl: PropTypes.object,
   onSearchChange: PropTypes.func,
   parentId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   searchValue: PropTypes.string,
   subtitle: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ])
 }
 
-export default DrillableMenuHeader
+export default injectIntl(DrillableMenuHeader)

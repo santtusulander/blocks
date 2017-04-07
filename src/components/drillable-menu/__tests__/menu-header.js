@@ -5,6 +5,7 @@ jest.unmock('../menu-header')
 import Header from '../menu-header'
 
 const defaultProps = {
+  intl: { formatMessage: () => {} },
   searchValue: 'a',
   onSearchChange: () => {},
   subtitle: '',
