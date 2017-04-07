@@ -4,6 +4,7 @@ import { Row, Col, FormGroup } from 'react-bootstrap'
 import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
@@ -18,45 +19,105 @@ import { getById as getMetadata } from '../../redux/modules/entities/metadata/se
 import propertiesActions from '../../redux/modules/entities/properties/actions'
 import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
 
+import { buildReduxId } from '../../redux/util'
 
-const REQUEST = 'request'
-const RESPONSE = 'response'
-const FINAL_REQUEST = 'final_request'
-const FINAL_RESPONSE = 'final_response'
+const getServiceType = (property) => {
+  return property && property.getIn(['services', 0, 'service_type'])
+}
+
+/* Field Names */
+const FIELD_REQUEST = 'custom_request_policy_xml'
+const FIELD_RESPONSE = 'custom_response_policy_xml'
+const FIELD_FINAL_REQUEST = 'custom_final_request_policy_xml'
+const FIELD_FINAL_RESPONSE = 'custom_final_response_policy_xml'
+
+const FIELD_USE_REQUEST = 'use_custom_request_policy_xml'
+const FIELD_USE_RESPONSE = 'use_custom_response_policy_xml'
+const FIELD_USE_FINAL_REQUEST = 'use_custom_final_request_policy_xml'
+const FIELD_USE_FINAL_RESPONSE = 'use_custom_final_response_policy_xml'
 
 class ConfigurationAdvanced extends React.Component {
   constructor(props) {
     super(props)
 
-    this.handleSave = this.handleSave.bind(this)
     this.restoreConfig = this.restoreConfig.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+
   }
 
   componentWillMount() {
-    console.log('componentWillMount');
     const {brand, account, group, property} = this.props.params
-    this.props.fetchProperty({brand, account, group, id: property})
-  }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps);
-
-    //If property Changed, fetch metadata
-    if (!is(this.props.property, nextProps.property) ) {
-      console.log('fetching metadata');
-      const {brand, account, group, property} = nextProps.params
-      //const activeConfig = getActiveConfig(nextProps.property)
-      const serviceType = 'large'
-
-      this.props.fetchMetadata({brand, account, group, property, serviceType})
+    if (this.props.property) {
+      this.fetchMetadata(this.props)
+    } else {
+      this.props.fetchProperty({brand, account, group, id: property})
     }
   }
 
-  handleSave(e) {
+  componentWillReceiveProps(nextProps) {
+    //If property Changed, fetch metadata
+    if (!is(this.props.property, nextProps.property)) {
+      this.fetchMetadata(nextProps)
+    }
+
+    if (!is(this.props.customPolicyConfig, nextProps.customPolicyConfig)) {
+      this.setInitialValues(nextProps)
+    }
+  }
+
+  fetchMetadata(props) {
+    const {brand, account, group, property} = props.params
+    const serviceType = getServiceType(props.property)
+
+    props.fetchMetadata({brand, account, group, property, serviceType})
+  }
+
+  setInitialValues(props) {
+    console.log('setInitialValues', props);
+
+    const {customPolicyConfig} = props
+
+    const requestXML = customPolicyConfig.get(FIELD_REQUEST) !== ''
+      ? customPolicyConfig.get(FIELD_REQUEST)
+      : customPolicyConfig.get('request_policy_xml')
+
+    const responseXML = customPolicyConfig.get(FIELD_RESPONSE) !== ''
+      ? customPolicyConfig.get(FIELD_RESPONSE)
+      : customPolicyConfig.get('response_policy_xml')
+
+
+    const finalRequestXML = customPolicyConfig.get(FIELD_FINAL_REQUEST) !== ''
+      ? customPolicyConfig.get(FIELD_FINAL_REQUEST)
+      : customPolicyConfig.get('final_request_policy_xml')
+
+    const finalResponseXML = customPolicyConfig.get(FIELD_FINAL_RESPONSE) !== ''
+      ? customPolicyConfig.get(FIELD_FINAL_RESPONSE)
+      : customPolicyConfig.get('final_response_policy_xml')
+
+
+
+    this.props.initialize({
+      [FIELD_USE_REQUEST]: customPolicyConfig.get(FIELD_USE_REQUEST),
+      [FIELD_USE_RESPONSE]: customPolicyConfig.get(FIELD_USE_RESPONSE),
+      [FIELD_USE_FINAL_REQUEST]: customPolicyConfig.get(FIELD_USE_FINAL_REQUEST),
+      [FIELD_USE_FINAL_RESPONSE]: customPolicyConfig.get(FIELD_USE_FINAL_RESPONSE),
+
+      [FIELD_REQUEST]: requestXML,
+      [FIELD_RESPONSE]: responseXML,
+      [FIELD_FINAL_REQUEST]: finalRequestXML,
+      [FIELD_FINAL_RESPONSE]: finalResponseXML
+    })
+  }
+
+  onSubmit(values) {
     /*
       TODO: UDNP-3136 - Integrate Manual Metadata Submission Redux with form
     */
-    e.preventDefault()
+    console.log('onSubmit-- values', values)
+    const {brand, account, group, property} = this.props.params
+
+    this.props.createMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: values})
   }
 
   restoreConfig(configName) {
@@ -64,31 +125,39 @@ class ConfigurationAdvanced extends React.Component {
       TODO: UDNP-3136 - Integrate Manual Metadata Submission Redux with form
     */
     switch (configName) {
-      case REQUEST:
-
-        break;
-
-      case RESPONSE:
-
-        break;
-
-      case FINAL_REQUEST:
-
-        break;
-
-      case FINAL_RESPONSE:
-
-        break;
-
-      default:
-        break;
+    //   case REQUEST:
+    //
+    //     break;
+    //
+    //   case RESPONSE:
+    //
+    //     break;
+    //
+    //   case FINAL_REQUEST:
+    //
+    //     break;
+    //
+    //   case FINAL_RESPONSE:
+    //
+    //     break;
+    //
+    //   default:
+    //     break;
     }
   }
 
   render() {
-    const { config, invalid, submitting, intl,
-            isRequestEnabled, isResponseEnabled,
-            isFinalRequestEnabled, isFinalResponseEnabled } = this.props
+    const {
+      config,
+      invalid,
+      submitting,
+      intl,
+      isRequestEnabled,
+      isResponseEnabled,
+      isFinalRequestEnabled,
+      isFinalResponseEnabled,
+      handleSubmit
+    } = this.props
 
     if (!config || !config.size) {
       return (
@@ -97,15 +166,16 @@ class ConfigurationAdvanced extends React.Component {
     }
 
     return (
-      <form className="configuration-advanced" onSubmit={this.handleSave}>
+      <form className="configuration-advanced" onSubmit={handleSubmit(this.onSubmit)}>
 
         {/* Override Request Policies */}
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.requestPolicies.label"/>}
           addonBefore={
             <Field
-              name="request_checkbox"
+              name={FIELD_USE_REQUEST}
               component={FieldFormGroupCheckbox}
+              checked={this.props.request_checkbox ? 'checked' : ''}
             />
           }
         />
@@ -117,7 +187,7 @@ class ConfigurationAdvanced extends React.Component {
               <FormGroup>
                 <Col xs={4}>
                   <Field
-                    name={REQUEST}
+                    name={FIELD_REQUEST}
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
@@ -126,7 +196,7 @@ class ConfigurationAdvanced extends React.Component {
                 </Col>
                 <Col xs={1}>
                   <Button
-                    onClick={() => this.restoreConfig(REQUEST)}
+                    onClick={() => this.restoreConfig(FIELD_REQUEST)}
                     bsStyle="primary"
                     disabled={invalid || submitting || (!isRequestEnabled)}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
@@ -143,7 +213,7 @@ class ConfigurationAdvanced extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.responsePolicies.label"/>}
           addonBefore={
             <Field
-              name="response_checkbox"
+              name={FIELD_USE_RESPONSE}
               component={FieldFormGroupCheckbox}
             />
           }
@@ -156,7 +226,7 @@ class ConfigurationAdvanced extends React.Component {
               <FormGroup>
                 <Col xs={4}>
                   <Field
-                    name={RESPONSE}
+                    name={FIELD_RESPONSE}
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
@@ -165,7 +235,7 @@ class ConfigurationAdvanced extends React.Component {
                 </Col>
                 <Col xs={1}>
                   <Button
-                    onClick={() => this.restoreConfig(RESPONSE)}
+                    onClick={() => this.restoreConfig(FIELD_RESPONSE)}
                     bsStyle="primary"
                     disabled={invalid || submitting || (!isResponseEnabled)}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
@@ -181,7 +251,7 @@ class ConfigurationAdvanced extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.finalRequestPolicies.label"/>}
           addonBefore={
             <Field
-              name="final_request_checkbox"
+              name={FIELD_USE_FINAL_REQUEST}
               component={FieldFormGroupCheckbox}
             />
           }
@@ -194,7 +264,7 @@ class ConfigurationAdvanced extends React.Component {
               <FormGroup>
                 <Col xs={4}>
                   <Field
-                    name={FINAL_REQUEST}
+                    name={FIELD_FINAL_REQUEST}
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
@@ -203,7 +273,7 @@ class ConfigurationAdvanced extends React.Component {
                 </Col>
                 <Col xs={1}>
                   <Button
-                    onClick={() => this.restoreConfig(FINAL_REQUEST)}
+                    onClick={() => this.restoreConfig(FIELD_FINAL_REQUEST)}
                     bsStyle="primary"
                     disabled={invalid || submitting || (!isFinalRequestEnabled)}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
@@ -219,7 +289,7 @@ class ConfigurationAdvanced extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.finalResponsePolicies.label"/>}
           addonBefore={
             <Field
-              name="final_response_checkbox"
+              name={FIELD_USE_FINAL_RESPONSE}
               component={FieldFormGroupCheckbox}
             />
           }
@@ -232,7 +302,7 @@ class ConfigurationAdvanced extends React.Component {
               <FormGroup>
                 <Col xs={4}>
                   <Field
-                    name={FINAL_RESPONSE}
+                    name={FIELD_FINAL_RESPONSE}
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
@@ -241,7 +311,7 @@ class ConfigurationAdvanced extends React.Component {
                 </Col>
                 <Col xs={1}>
                   <Button
-                    onClick={() => this.restoreConfig(FINAL_RESPONSE)}
+                    onClick={() => this.restoreConfig(FIELD_FINAL_RESPONSE)}
                     bsStyle="primary"
                     disabled={invalid || submitting || (!isFinalResponseEnabled)}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
@@ -279,7 +349,9 @@ ConfigurationAdvanced.propTypes = {
 
 ConfigurationAdvanced.defaultProps = {
   config: Map(),
-  metadata: Map()
+  metadata: Map(),
+  property: Map(),
+  customPolicyConfig: Map()
 }
 
 /* istanbul ignore next */
@@ -287,10 +359,10 @@ const mapStateToProps = (state, ownProps) => {
 
   const selector = formValueSelector('advancedForm')
 
-  const requestCheckbox = selector(state, 'request_checkbox')
-  const responseCheckbox = selector(state, 'response_checkbox')
-  const finalRequestCheckbox = selector(state, 'final_request_checkbox')
-  const finalResponseCheckbox = selector(state, 'final_response_checkbox')
+  const requestCheckbox = selector(state, FIELD_USE_REQUEST)
+  const responseCheckbox = selector(state, FIELD_USE_RESPONSE)
+  const finalRequestCheckbox = selector(state, FIELD_USE_FINAL_REQUEST)
+  const finalResponseCheckbox = selector(state, FIELD_USE_FINAL_RESPONSE)
 
 
   /*
@@ -298,20 +370,32 @@ const mapStateToProps = (state, ownProps) => {
   */
 
   const property = getPropertyById(state, ownProps.params.property)
-console.log((property && property.toJS()));
+  const metadata = property && getMetadata(state, buildReduxId(property.get('published_host_id'), getServiceType(property)))
+
+  const customPolicyConfig = metadata && metadata.get('customPolicyConfig')
+
+  const initialValues = customPolicyConfig && customPolicyConfig.toJS()
+
   return {
     property,
-
-
+    metadata,
+    customPolicyConfig,
     isRequestEnabled: requestCheckbox,
     isResponseEnabled: responseCheckbox,
     isFinalRequestEnabled: finalRequestCheckbox,
     isFinalResponseEnabled: finalResponseCheckbox,
+
     initialValues: {
-      request: '<html><html>',
-      response: '<html><html>',
-      final_request: '<html><html>',
-      final_response: '<html><html>'
+      ...initialValues
+      // [FIELD_USE_REQUEST]: true, //customPolicyConfig && custom PolicyConfig.get('use_custom_request_policy_xml'),
+      // [FIELD_USE_RESPONSE]: true, //customPolicyConfig && customPolicyConfig.get('use_custom_response_policy_xml'),
+      // [FIELD_USE_FINAL_REQUEST]: true, //customPolicyConfig && customPolicyConfig.get('use_custom_final_request_policy_xml'),
+      // [FIELD_USE_FINAL_RESPONSE]: true, //customPolicyConfig && customPolicyConfig.get('use_custom_final_response_policy_xml'),
+      //
+      // [FIELD_REQUEST]: customPolicyConfig && customPolicyConfig.get(FIELD_REQUEST),
+      // [FIELD_RESPONSE]: customPolicyConfig && customPolicyConfig.get(FIELD_RESPONSE),
+      // [FIELD_FINAL_REQUEST]: customPolicyConfig && customPolicyConfig.get(FIELD_FINAL_REQUEST),
+      // [FIELD_FINAL_RESPONSE]: customPolicyConfig && customPolicyConfig.get(FIELD_FINAL_RESPONSE)
     }
   }
 }
