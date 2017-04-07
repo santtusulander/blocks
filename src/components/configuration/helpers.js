@@ -101,6 +101,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasEquals={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
