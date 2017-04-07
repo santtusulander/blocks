@@ -73,10 +73,10 @@ class Select extends Component {
     if (this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const { onTouch, unselectedValue } = this.props
+    const { onFocus, onTouch, unselectedValue } = this.props
     return (
       <Dropdown id="select" disabled={this.props.disabled} className={className}
-                onSelect={this.selectOption} onClose={onTouch}>
+                onSelect={this.selectOption} onClose={onTouch} onClick={onFocus}>
         <Dropdown.Toggle noCaret={true} className={this.props.disabled && 'disabled'}>
           <IconSelectCaret/>
           {this.getSelectedItem()}
@@ -101,6 +101,7 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.object]),
   numericValues: PropTypes.bool,
+  onFocus: PropTypes.func,
   onSelect: PropTypes.func,
   onTouch: PropTypes.func,
   options: PropTypes.array,
