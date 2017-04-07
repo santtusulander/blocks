@@ -473,6 +473,7 @@
   "portal.policy.edit.editRule.type.text": "Apply To",
   "portal.policy.edit.editRule.matchConditions.text": "Conditions",
   "portal.policy.edit.editRule.chooseCondition.text": "Choose condition",
+  "portal.policy.edit.editRule.chooseAction.text": "Choose action",
   "portal.policy.edit.editRule.actions.text": "Actions",
   "portal.policy.edit.editRule.defaultActions.text": "Default Actions",
   "portal.policy.edit.editRule.applyActions.text": "Apply Actions When",
