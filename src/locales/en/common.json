@@ -288,7 +288,7 @@
   "portal.percentage": "%",
   "portal.colon": ":",
   "portal.dash": "-",
-  "portal.mdashWithSpace": "\u2014",
+  "portal.mdashWithSpace": "\u2014 ",
   "portal.colonWithSpace": ": ",
   "portal.pipeWithSpaces": " | ",
   "portal.dashWithSpaces": "- ",
