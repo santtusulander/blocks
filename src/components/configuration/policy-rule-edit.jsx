@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col } from 'react-bootstrap'
+import { Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, InputGroup } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ActionButtons from '../shared/action-buttons'
@@ -255,23 +255,27 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         <Modal.Body>
 
           <FormGroup controlId="configure__edge__add-cache-rule__rule-name">
-            <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
-            <FormControl
-              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']), '')}
-              onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}
-              disabled={disabled}
-            />
+            <InputGroup>
+              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
+              <FormControl
+                value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']), '')}
+                onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}
+                disabled={disabled}
+              />
+              </InputGroup>
           </FormGroup>
 
           <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
-            <Select
-              className="input-select"
-              value={ruleType}
-              onSelect={this.props.changeActiveRuleType}
-              options={policyRuleTypeOptions}
-              disabled={disabled}
-            />
+            <InputGroup>
+              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
+              <Select
+                className="input-select"
+                value={ruleType}
+                onSelect={this.props.changeActiveRuleType}
+                options={policyRuleTypeOptions}
+                disabled={disabled}
+              />
+            </InputGroup>
           </FormGroup>
 
           <Row className="header-btn-row">
