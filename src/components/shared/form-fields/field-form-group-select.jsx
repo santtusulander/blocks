@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
+import {FormGroup, ControlLabel, InputGroup} from 'react-bootstrap';
 
 import Select from '../form-elements/select.jsx'
 import { getReduxFormValidationState } from '../../../util/helpers'
