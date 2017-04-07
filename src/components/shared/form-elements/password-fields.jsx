@@ -175,11 +175,29 @@ export class PasswordFields extends Component {
 
     const requirementsTooltip = showPasswordRequirements ?
       (<Tooltip id="password-requirements" placement="top" className="input-tooltip interactive-password-tooltip in">
-        <span>Requirements:</span><br/>
-        <span className={this.state.passwordLengthValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordLengthValid.text"/></span><br/>
-        <span className={this.state.passwordUppercaseValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordUppercaseValid.text"/></span><br/>
-        <span className={this.state.passwordNumberValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordNumberValid.text"/></span><br/>
-        <span className={this.state.passwordSpecialCharValid ? 'valid' : ''}>- <FormattedMessage id="portal.password.passwordSpecialCharValid.text"/></span>
+        <span>
+          <FormattedMessage id="portal.common.textFieldMultilineValidation.heading"/>
+        </span>
+        <br/>
+        <span className={this.state.passwordLengthValid ? 'valid' : ''}>
+          <FormattedMessage id="portal.dashWithSpaces"/>
+          <FormattedMessage id="portal.password.passwordLengthValid.text"/>
+        </span>
+        <br/>
+        <span className={this.state.passwordUppercaseValid ? 'valid' : ''}>
+          <FormattedMessage id="portal.dashWithSpaces"/>
+          <FormattedMessage id="portal.password.passwordUppercaseValid.text"/>
+        </span>
+        <br/>
+        <span className={this.state.passwordNumberValid ? 'valid' : ''}>
+          <FormattedMessage id="portal.dashWithSpaces"/>
+          <FormattedMessage id="portal.password.passwordNumberValid.text"/>
+        </span>
+        <br/>
+        <span className={this.state.passwordSpecialCharValid ? 'valid' : ''}>
+          <FormattedMessage id="portal.dashWithSpaces"/>
+          <FormattedMessage id="portal.password.passwordSpecialCharValid.text"/>
+        </span>
       </Tooltip>)
     : null
 

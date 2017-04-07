@@ -19,6 +19,7 @@ class ConfigurationDiffBar extends React.Component {
   }
   render() {
     const configDiff = diff(this.props.originalConfig, this.props.currentConfig)
+
     return (
       <ReactCSSTransitionGroup
         component="div"
@@ -49,7 +50,7 @@ class ConfigurationDiffBar extends React.Component {
                 {configDiff.map((change, i) => {
                   return (
                     <span key={i}>
-                      [{change.get('op')} {change.get('path')}]
+                      <FormattedMessage id="portal.configuration.changes.list.text" values={{op: change.get('op'), path: change.get('path')}}/>
                     </span>
                   )
                 })}

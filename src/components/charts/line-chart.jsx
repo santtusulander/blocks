@@ -1,17 +1,19 @@
-import React, {PropTypes} from 'react'
+import React, { PropTypes } from 'react'
 import { paleblue, black } from '../../constants/colors'
 import CustomTooltip from './line-chart-tooltip'
 import { formatBitsPerSecond } from '../../util/helpers.js'
+import { FormattedMessage } from 'react-intl'
 
-import {LineChart as ReactLineCharts, ResponsiveContainer, Tooltip, Line} from 'recharts'
+import { LineChart as ReactLineCharts, ResponsiveContainer, Tooltip, Line } from 'recharts'
 
 const LineChart = ({data, dataKey, valueFormatter = formatBitsPerSecond}) => {
   //if No data found
   if (!data || !data[0][dataKey]) {
-    return <div>-</div>
+    return <div><FormattedMessage id="portal.dash"/></div>
   }
+
   return (
-    <ResponsiveContainer height={50} width={'100%'}>
+    <ResponsiveContainer height={50} width='100%'>
       <ReactLineCharts data={data} >
         <Tooltip
         cursor={{stroke: black}}

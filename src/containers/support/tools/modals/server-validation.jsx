@@ -14,6 +14,8 @@ import LoadingSpinner from '../../../../components/loading-spinner/loading-spinn
 import IconServerValidation from '../../../../components/shared/icons/icon-server-validation'
 import IconServerError from '../../../../components/shared/icons/icon-server-error'
 
+const MOCK_IP_ADDRESS = "123.123.123.12"
+
 class ModalServerValidation extends React.Component {
   constructor(props) {
     super(props)
@@ -48,7 +50,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.notUdnServer.text"/></h3>
         </td>
       </tr>)
@@ -60,7 +62,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnPartnerServer.text"/></h3>
         </td>
       </tr>
@@ -72,7 +74,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnServer.text"/></h3>
         </td>
       </tr>

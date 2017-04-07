@@ -372,10 +372,10 @@ export class AccountManagementAccountUsers extends React.Component {
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="email" width="40%">
-                Email
+                <FormattedMessage id="portal.user.list.email.text" />
               </TableSorter>
-              <th width="19%">Role</th>
-              <th width="20%">Groups</th>
+              <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+              <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
               <th width="1%"/>
             </tr>
           </thead>
@@ -410,16 +410,18 @@ export class AccountManagementAccountUsers extends React.Component {
         {sortedUsers.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
-              <span>No users found with the search term &quot;{this.state.search}&quot;</span>
+              <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: this.state.search}} /></span>
             :
-              <span>No users found</span>
+              <span><FormattedMessage id="portal.user.list.noUsersFound.text" /></span>
             }
             {this.state.filteredRoles !== 'all' &&
-              <span> {this.state.search.length > 0 ? 'and ' : 'with '}
-                a role of &quot;{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}&quot;</span>
+              <span>
+                {this.state.search.length > 0 ? <FormattedMessage id="portal.user.list.andWithSpace.text" /> : <FormattedMessage id="portal.user.list.withWithSpace.text" />}
+                <FormattedMessage id="portal.user.list.aRoleOf.text" values={{name: this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}} />
+              </span>
             }
             {this.state.filteredGroups !== 'all' &&
-              <span> within the group &quot;{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}&quot;</span>
+              <span><FormattedMessage id="portal.user.list.aRoleOf.text" values={{name: this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}} /></span>
             }
           </div>
         }
@@ -452,7 +454,15 @@ export class AccountManagementAccountUsers extends React.Component {
                         return (
                           <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
-                            <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
+                            <td>
+                              <b>
+                                {
+                                  role.getIn(['permissions', 'ui']).get(permissionName)
+                                  ? <FormattedMessage id="portal.button.yes" />
+                                  : <FormattedMessage id="portal.button.no" />
+                                }
+                              </b>
+                            </td>
                           </tr>
                         )
                       }

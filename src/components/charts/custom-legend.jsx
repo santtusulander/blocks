@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const CustomLegend = ({ data = [], payload, order }) => {
   if (!data.length && payload.length) {
@@ -12,7 +13,7 @@ const CustomLegend = ({ data = [], payload, order }) => {
       {data.map(({ name, className }, i) =>
         <div key={i} className="bar-chart-legend-item">
           <span className="legend-label">
-            <span className={`legend-icon ${className}`}>&mdash; </span>
+            <span className={`legend-icon ${className}`}><FormattedMessage id="portal.mdashWithSpace"/></span>
             {name}
           </span>
         </div>

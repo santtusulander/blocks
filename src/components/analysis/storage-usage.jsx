@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 
 import AnalysisStackedByTime from './stacked-by-time'
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class AnalysisStorageUsageReport extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class AnalysisStorageUsageReport extends React.Component {
     const stats = this.props.storageStats
     return (
       <div className="analysis-storage-usage">
-        <h3>Storage Volume Reporting</h3>
+        <h3><FormattedMessage id="portal.storage.report.title"/></h3>
         <div ref="chartHolder">
           {this.props.fetching ?
             <div><FormattedMessage id="portal.loading.text"/></div> :

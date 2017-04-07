@@ -75,6 +75,8 @@ import { cityData, filterCheckboxOptions, spDashboardData,
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class Styleguide extends React.Component {
 
   constructor(props) {

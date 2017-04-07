@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 // import Typeahead from '../shared/form-elements/typeahead'
 
@@ -679,7 +680,7 @@ class Mapbox extends React.Component {
                 <table>
                   <tbody>
                     <tr>
-                      <td className="bold">Total</td>
+                      <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
                       <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
                     </tr>
                   </tbody>
@@ -723,9 +724,9 @@ class Mapbox extends React.Component {
 
         {this.state.zoom < MAPBOX_CITY_LEVEL_ZOOM &&
           <div className="map-heat-legend">
-            <span>Low</span>
+            <span><FormattedMessage id="portal.analytics.map.low"/></span>
             <div className="heat-gradient" />
-            <span>High</span>
+            <span><FormattedMessage id="portal.analytics.map.high"/></span>
           </div>
         }
 

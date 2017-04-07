@@ -241,6 +241,7 @@
   "portal.configuration.updated.text": "UPDATED",
   "portal.configuration.deployed.text": "DEPLOYED",
   "portal.configuration.sidebar.pubVer.text": "Publish Version",
+  "portal.configuration.changes.list.text": "[{op} {path}]",
 
   "portal.configurationList.showAll.text": "Show all properties",
   "portal.configurationList.filter1.text": "Filter 1",
@@ -472,6 +473,7 @@
   "portal.policy.edit.editRule.type.text": "Apply To",
   "portal.policy.edit.editRule.matchConditions.text": "Conditions",
   "portal.policy.edit.editRule.chooseCondition.text": "Choose condition",
+  "portal.policy.edit.editRule.chooseAction.text": "Choose action",
   "portal.policy.edit.editRule.actions.text": "Actions",
   "portal.policy.edit.editRule.defaultActions.text": "Default Actions",
   "portal.policy.edit.editRule.applyActions.text": "Apply Actions When",

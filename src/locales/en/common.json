@@ -1,4 +1,5 @@
 {
+  "portal.UDN.text": "UDN",
   "portal.button.add": "Add",
   "portal.button.adding": "Adding...",
   "portal.button.submit": "Submit",
@@ -94,6 +95,7 @@
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
   "portal.common.of.value.text": "of {value}",
+  "portal.common.selectFileType.label": "Select file type",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
@@ -219,7 +221,9 @@
   "portal.exportPanel.sendEmail.text": "Send Email",
 
   "portal.footer.poweredBy.text": "Powered By",
+  "portal.footer.ericsson.text": " Ericsson ",
   "portal.footer.termsOfUse.text": "Terms of Use",
+  "portal.footer.version.text": "(v {VERSION}).",
 
   "portal.fileInput.chooseFile.text": "Choose file",
   "portal.fileInput.dropFile.text": "Drop file here",
@@ -265,5 +269,30 @@
 
   "portal.common.copyToClipboard": "Copy to Clipboard",
   "portal.common.goToProfileSettings": "Go to profile settings ",
-  "portal.common.toSaveForFutureUse": "to save for future use"
+  "portal.common.toSaveForFutureUse": "to save for future use",
+
+  "portal.starburst.help.mock.date1": "6/21/16",
+  "portal.starburst.help.mock.date2": "6/14/16",
+  "portal.starburst.help.mock.date3": "6/1/16",
+  "portal.starburst.help.mock.moreTraffic1": "More traffic during that week the ",
+  "portal.starburst.help.mock.moreTraffic2": "previous month",
+  "portal.starburst.help.mock.sameTraffic1": "Same amount of traffic during that week ",
+  "portal.starburst.help.mock.sameTraffic2": "the previous month",
+  "portal.starburst.help.mock.lessTraffic1": "Less traffic during that week the ",
+  "portal.starburst.help.mock.lessTraffic2": "previous month",
+
+  "portal.asterisk": "*",
+  "portal.dot": ".",
+  "portal.plus": "+",
+  "portal.question": "?",
+  "portal.percentage": "%",
+  "portal.colon": ":",
+  "portal.dash": "-",
+  "portal.mdashWithSpace": "\u2014 ",
+  "portal.colonWithSpace": ": ",
+  "portal.pipeWithSpaces": " | ",
+  "portal.dashWithSpaces": "- ",
+  "portal.slashWithSpace": "/ ",
+  "portal.spaceWithPercentage": " %",
+  "portal.spaceWithAsterisk": " *"
 }

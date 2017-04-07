@@ -105,5 +105,6 @@
   "portal.support.tickets.label.type.text": "Type",
   "portal.support.tickets.label.priority.text": "Priority",
   "portal.support.tickets.label.assignee.text": "Assignee",
+  "portal.support.tickets.label.assigneeWithColon.text": "Assignee: ",
   "portal.support.tickets.label.support.text": "Support"
 }
