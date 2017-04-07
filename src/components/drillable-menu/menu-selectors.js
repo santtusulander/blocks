@@ -172,9 +172,9 @@ const getStoragesAndProperties = (state, parents, canView) => {
 
     headerSubtitle = (
       <span>
-      <FormattedMessage id="portal.common.property.multiple" values={{numProperties: propertyCount}}/>
-      , <FormattedMessage id="portal.common.storage.multiple" values={{numStorages: storageCount}}/>
-    </span>
+        <FormattedMessage id="portal.common.property.multiple" values={{numProperties: propertyCount}}/>
+        , <FormattedMessage id="portal.common.storage.multiple" values={{numStorages: storageCount}}/>
+      </span>
     )
 
   }

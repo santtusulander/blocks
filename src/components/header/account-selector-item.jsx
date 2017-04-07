@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
@@ -14,7 +15,7 @@ import IconCaretDown from '../shared/icons/icon-caret-down'
 import { AccountSelector } from '../drillable-menu/containers'
 
 function AccountSelectorItem({ activeAccount, router, params }) {
-  const activeAccountName = params.account ? activeAccount.get('name') : 'UDN Admin'
+  const activeAccountName = params.account ? activeAccount.get('name') : <FormattedMessage id="portal.content.property.topBar.brand.label" />
   const activeAccountNameNoPlaceholder = params.account ? activeAccount.get('name') : ''
 
   const onItemClick = ({ nodeInfo, id }) => {
@@ -38,7 +39,7 @@ function AccountSelectorItem({ activeAccount, router, params }) {
   return (
     <li className="header__account-selector">
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <AccountSelector params={params} levels={[ 'brand' ]} onItemClick={onItemClick}>
+        <AccountSelector params={params} onItemClick={onItemClick}>
           <div className="btn btn-link dropdown-toggle header-toggle">
             <TruncatedTitle content={activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
             <IconCaretDown />
