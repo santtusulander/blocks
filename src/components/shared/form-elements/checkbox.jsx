@@ -3,7 +3,9 @@ import { Checkbox as BSCheckbox } from 'react-bootstrap'
 
 const Checkbox = (props) => (
   <BSCheckbox {...props}>
-    <span>{props.children}</span>
+    <span>
+      <div className="menu-item-label"> {props.children} </div>
+    </span>
   </BSCheckbox>
 )
 
