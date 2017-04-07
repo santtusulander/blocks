@@ -58,13 +58,6 @@ const rangeMax = 500
 let trafficMin = 0
 let trafficMax = 0
 
-const itemSelectorTexts = {
-  property: 'Back to Groups',
-  group: 'Back to Accounts',
-  account: 'UDN Admin',
-  brand: 'UDN Admin'
-}
-
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
   const val2 = item2.getIn(path) && item2.getIn(path).toLowerCase && item2.getIn(path).toLowerCase() || item2.getIn(path)
