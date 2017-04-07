@@ -6,6 +6,8 @@ import classNames from 'classnames'
 import Typeahead from '../form-elements/typeahead'
 import { getReduxFormValidationState } from '../../../util/helpers'
 
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 const FieldFormGroupTypeahead = ({
   allowNew = false,
   asyncMode,

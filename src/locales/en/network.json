@@ -80,6 +80,7 @@
   "portal.network.addNodeForm.grains.title": "Grains",
   "portal.network.addNodeForm.createNode.status": "Node created successfully.",
 
+  "portal.network.editNodeForm.id": "ID",
   "portal.network.editNodeForm.node": "Node",
   "portal.network.editNodeForm.title": "Edit Node",
   "portal.network.editNodeForm.title.multiple": "Edit {numNodes, plural, one {# Node} other {# Nodes}}",

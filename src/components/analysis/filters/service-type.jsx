@@ -38,7 +38,7 @@ class FilterServiceType extends React.Component {
               checked={serviceTypes.includes('http')}
               disabled={serviceTypes.includes('http') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('http')}>
-              <span>HTTP</span>
+              <span><FormattedMessage id="portal.analytics.trafficOverview.httpDatasetLabel.text"/></span>
             </Checkbox>
           </FormGroup>
           <FormGroup>
@@ -46,7 +46,7 @@ class FilterServiceType extends React.Component {
               checked={serviceTypes.includes('https')}
               disabled={serviceTypes.includes('https') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('https')}>
-              <span>HTTPS</span>
+              <span><FormattedMessage id="portal.analytics.trafficOverview.httpsDatasetLabel.text"/></span>
             </Checkbox>
           </FormGroup>
         </div>

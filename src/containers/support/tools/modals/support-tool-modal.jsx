@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 class SupportToolModal extends React.Component {
   constructor(props) {
@@ -16,7 +17,9 @@ class SupportToolModal extends React.Component {
         <Modal.Body>
           {children}
           <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary" onClick={handleCloseModal}>Close</Button>
+            <Button bsStyle="primary" onClick={handleCloseModal}>
+              <FormattedMessage id="portal.button.close" />
+            </Button>
           </ButtonToolbar>
         </Modal.Body>
       </Modal>

@@ -66,6 +66,17 @@
   "portal.analytics.onOffNet.primaryLabel.text": "On Net",
   "portal.analytics.onOffNet.secondaryLabel.text": "Off Net",
 
+  "portal.analytics.report.table.date.text": "Date",
+  "portal.analytics.report.table.onNetBytes.text": "On Net (Bytes)",
+  "portal.analytics.report.table.onNetPercentage.text": "On Net (%)",
+  "portal.analytics.report.table.offNetBytes.text": "Off Net (Bytes)",
+  "portal.analytics.report.table.offNetPercentage.text": "Off Net (%)",
+  "portal.analytics.report.table.total.text": "Total (Bytes)",
+
+  "portal.analytics.status.code2.text": "2XX",
+  "portal.analytics.status.code4.text": "4XX",
+  "portal.analytics.status.code5.text": "5XX",
+
   "portal.analytics.demoPlayback.safariNotSupported.text": "This demonstration page is not supported on Safari, please use Chrome, IE11, or Firefox",
   "portal.analytics.demoPlayback.ttfp.text": "Time to First Play",
   "portal.analytics.demoPlayback.dominantBitrate.text": "Dominant Bitrate",
@@ -114,6 +125,7 @@
   "portal.analytics.visitors.grid.totalVisitors.header": "Total Visitors",
   "portal.analytics.visitors.grid.percentage.header": "% of Visitors",
   "portal.analytics.visitors.grid.periodTrend.header": "Period Trend",
+  "portal.analytics.visitors.grid.country.header": "Country",
 
   "portal.analytics.storage.usage.text": "Usage",
   "portal.analytics.storage.files.text": "Files",
@@ -131,6 +143,7 @@
   "portal.analytics.tabs.traffic.propertyTitle": "Property Traffic Overview",
   "portal.analytics.tabs.traffic.groupTitle": "Group Traffic Overview",
   "portal.analytics.tabs.traffic.accountTitle": "Account Traffic Overview",
+  "portal.analytics.tabs.cacheHitRatePercentage.label": "Cache Hit Rate (%)",
   "portal.analytics.tabs.cacheHitRate.label": "Daily Cache Hit Rate",
   "portal.analytics.tabs.cacheHitRate.propertyTitle": "Property Cache Hit Rate",
   "portal.analytics.tabs.cacheHitRate.groupTitle": "Group Cache Hit Rate",
@@ -192,5 +205,9 @@
   "portal.analytics.fileErrors.clientErrors.label": "Client errors",
   "portal.analytics.fileErrors.serverErrors.label": "Server errors",
 
-  "portal.analytics.dataRangeFilter.pleaseSelect.label": "Server errors"
+  "portal.analytics.dataRangeFilter.pleaseSelect.label": "Server errors",
+
+  "portal.analytics.map.total": "Total",
+  "portal.analytics.map.low": "Low",
+  "portal.analytics.map.high": "High"
 }

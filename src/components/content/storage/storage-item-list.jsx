@@ -73,7 +73,7 @@ class StorageItemList extends React.Component {
 
             <div className="content-item-list-section section-lg">
               <Row>
-                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix">/ {formatBitsPerSecond(estimate)}</span></h1>
+                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix"><FormattedMessage id="portal.slashWithSpace" />{formatBitsPerSecond(estimate)}</span></h1>
                 <p className="text-sm"><FormattedMessage id="portal.common.current" /></p>
               </Row>
             </div>

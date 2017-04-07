@@ -12,9 +12,9 @@ const StorageContentBrowser = ({ contents }) => {
     <Table striped={true}>
       <thead>
         <tr>
-          <th><FormattedMessage id={'portal.storage.summaryPage.contentBrowser.lastModified.label'} /></th>
-          <th><FormattedMessage id={'portal.storage.summaryPage.contentBrowser.status.label'} /></th>
-          <th><FormattedMessage id={'portal.storage.summaryPage.contentBrowser.noOfFiles.label'} /></th>
+          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' /></th>
+          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.status.label' /></th>
+          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.noOfFiles.label' /></th>
           <th width="1%"/>
         </tr>
       </thead>

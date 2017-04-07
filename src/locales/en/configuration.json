@@ -241,6 +241,7 @@
   "portal.configuration.updated.text": "UPDATED",
   "portal.configuration.deployed.text": "DEPLOYED",
   "portal.configuration.sidebar.pubVer.text": "Publish Version",
+  "portal.configuration.changes.list.text": "[{op} {path}]",
 
   "portal.configurationList.showAll.text": "Show all properties",
   "portal.configurationList.filter1.text": "Filter 1",
