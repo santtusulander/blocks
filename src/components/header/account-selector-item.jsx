@@ -12,7 +12,7 @@ import {
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
-import { AccountSelector } from '../drillable-menu/containers'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
 function AccountSelectorItem({ activeAccount, router, params }) {
   const activeAccountName = params.account ? activeAccount.get('name') : <FormattedMessage id="portal.content.property.topBar.brand.label" />
