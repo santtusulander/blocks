@@ -3,10 +3,11 @@ import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 
 import Select from '../form-elements/select.jsx'
 import { getReduxFormValidationState } from '../../../util/helpers'
+import DefaultErrorBlock from '../form-elements/default-error-block'
 
 const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
                                  input, options, numericValues, className,
-                                 disabled, meta, meta: { touched, error },
+                                 ErrorComponent, disabled, meta, meta: { touched, error },
                                  label, emptyLabel, required = true, unselectedValue }) => {
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
@@ -50,14 +51,20 @@ const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
       </InputGroup>
 
       {error && touched &&
-        <HelpBlock className="error-msg">{error}</HelpBlock>
+        <ErrorComponent {...meta}/>
       }
     </FormGroup>
   );
 }
 
 FieldFormGroupSelect.displayName = 'FieldFormGroupSelect'
+
+FieldFormGroupSelect.defaultProps = {
+  ErrorComponent: DefaultErrorBlock
+}
+
 FieldFormGroupSelect.propTypes = {
+  ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
