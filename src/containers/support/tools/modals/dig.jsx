@@ -18,6 +18,9 @@ import LoadingSpinner from '../../../../components/loading-spinner/loading-spinn
 
 import IconArrowXlDown from '../../../../components/shared/icons/icon-arrow-xl-down'
 
+/* TODO: uncomment once tab will be enabled */
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class ModalDig extends React.Component {
   constructor(props) {
     super(props)

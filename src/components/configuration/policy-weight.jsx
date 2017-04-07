@@ -15,7 +15,7 @@ class PolicyWeight extends Component {
       for (let i = 0; i <= tickSteps; i++) {
         ticksArr.push(
           <span className="tick" key={i}>
-            { i % 2 === 0 && <span className="tick-label">{numeral(i * (max - min) / tickSteps).format(numbersFormat)}%</span> }
+            { i % 2 === 0 && <span className="tick-label">{numeral(i * (max - min) / tickSteps).format(numbersFormat)}<FormattedMessage id="portal.percentage" /></span> }
           </span>
         )
       }

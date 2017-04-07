@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
 
@@ -64,7 +65,7 @@ const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
         {payload.map(({ name, value, dataKey }, i) =>
           <div key={i} className="tooltip-item">
             <span className="legend-label">
-              <span className={`legend-icon ${dataKey} ${iconClass}`}>&mdash; </span>
+              <span className={`legend-icon ${dataKey} ${iconClass}`}><FormattedMessage id="portal.mdashWithSpace"/></span>
               {name}
             </span>
             <span className='legend-value'>{valueFormatter(value, true)}</span>
@@ -78,7 +79,7 @@ const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
           <div className="tooltip-item">
             <span className="legend-label">
               <span className="legend-line">
-                Total
+                <FormattedMessage id="portal.common.total.text"/>
               </span>
             </span>
             <span id="tooltip-total" className="legend-value">{total}</span>
