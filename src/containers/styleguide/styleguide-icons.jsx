@@ -50,6 +50,8 @@ import IconFile          from '../../components/shared/icons/icon-file'
 import IconFolder        from '../../components/shared/icons/icon-folder'
 import LoadingSpinnerSmall from '../../components/loading-spinner/loading-spinner-sm'
 
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 const StyleguideIcons = () => {
   return (
     <div>

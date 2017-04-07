@@ -14,7 +14,7 @@ export const AccountManagementSidebar = props => {
       <div className="configuration-versions">
         <div className="accounts-sidebar-header">
           <UDNButton id="add" bsStyle="primary" onClick={addAccount}>
-            New Account
+            <FormattedMessage id="portal.account.manage.newAccountButton.title"/>
           </UDNButton>
         </div>
         <h5><FormattedMessage id="portal.account.manage.sidebar.title"/></h5>
