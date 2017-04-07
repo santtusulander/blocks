@@ -52,7 +52,7 @@ class ExportFileForm extends React.Component {
 
         <div className="file-types">
           <FormGroup>
-          <ControlLabel>Select file type</ControlLabel>
+          <ControlLabel><FormattedMessage id="portal.common.selectFileType.label"/></ControlLabel>
             {fileTypes.map((fileType, index) => (
               <Radio
                 key={`radio-${index}`}

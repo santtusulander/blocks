@@ -12,7 +12,7 @@ import {
 } from 'redux-form'
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Modal } from 'react-bootstrap'
+import SidePanel from '../shared/side-panel'
 
 import * as securityActionCreators from '../../redux/modules/security'
 
@@ -99,12 +99,7 @@ class CertificateFormContainer extends Component {
     const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, ...formProps } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-form-panel">
-        <Modal.Header>
-          <h1>{title}</h1>
-          {!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}
-        </Modal.Header>
-        <Modal.Body>
+      <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
           <Fields
             names={[
               'group',
@@ -119,8 +114,7 @@ class CertificateFormContainer extends Component {
             onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
             {...formProps}
           />
-        </Modal.Body>
-      </Modal>
+      </SidePanel>
     )
   }
 }

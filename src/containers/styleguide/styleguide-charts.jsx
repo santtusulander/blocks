@@ -19,6 +19,8 @@ import { stackedBarChartData,
          composedChartData
   } from '../__mocks__/chart-data'
 
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 const StyleguideCharts = () => {
   return (
     <div>

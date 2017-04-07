@@ -47,7 +47,7 @@ export class ConfigurationVersions extends React.Component {
             activate={this.props.activate}
             emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
             items={configs.production}
-            tag={'config'}/>
+            tag='config'/>
         <div className="sidebar-section-header">
           <FormattedMessage id="portal.policy.edit.versions.activeStaging.text"/>
         </div>
@@ -55,7 +55,7 @@ export class ConfigurationVersions extends React.Component {
             activate={this.props.activate}
             emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
             items={configs.staging}
-            tag={'config'}/>
+            tag='config'/>
         <div className="sidebar-section-header">
           <FormattedMessage id="portal.policy.edit.versions.saved.text"/>
         </div>
@@ -63,7 +63,7 @@ export class ConfigurationVersions extends React.Component {
           activate={this.props.activate}
           emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
           items={configs.inprocess}
-          tag={'config'}/>
+          tag='config'/>
         <div className="sidebar-section-header">
           <FormattedMessage id="portal.policy.edit.versions.deactivated.text"/>
         </div>
@@ -71,7 +71,7 @@ export class ConfigurationVersions extends React.Component {
           activate={this.props.activate}
           emptyMsg={this.props.intl.formatMessage({id: 'portal.policy.edit.versions.none.text'})}
           items={[]}
-          tag={'config'}/>
+          tag='config'/>
       </div>
     );
   }

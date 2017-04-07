@@ -98,7 +98,7 @@ const getContentTargetingActionName = (action) => {
 
 const getActionName = (actionName, action) => {
   if (actionName === '_temp') {
-    return <FormattedMessage id="portal.policy.edit.actionSelection.chooseActions.text"/>
+    return <FormattedMessage id="portal.policy.edit.editRule.chooseAction.text"/>
   }
 
   if (actionName === 'reply') {

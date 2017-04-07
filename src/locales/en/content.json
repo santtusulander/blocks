@@ -1,6 +1,9 @@
 {
   "portal.content.createNewProperties": "You can create new properties by clicking the Add New (+) button",
 
+  "portal.content.avgHitRate.text": "Avg. Cache Hit Rate",
+  "portal.content.avgHitRateWithPercentage.text": "% Avg. Cache Hitrate",
+  "portal.content.TTFB.text": " TTFB",
   "portal.content.contentProvider": "CP",
   "portal.content.serviceProvider": "SP",
   "portal.content.property.topBar.property.label": "Back to Groups",

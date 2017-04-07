@@ -1,5 +1,8 @@
 import React from 'react'
 
+/* TODO: uncomment when this tab will be implemented */
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class Purge extends React.Component {
   constructor(props) {
     super(props);

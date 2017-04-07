@@ -132,9 +132,13 @@ class RolesList extends React.Component {
                       this.props.permissions.get('ui')
                       ).toArray()
                     ]} />
-                    : <td>No permissions found</td>}
+                    : (
+                      <td>
+                        <FormattedMessage id="portal.role.list.search.noPermissionsResults.text"/>
+                      </td>
+                    )}
                   <td>
-                    {userCount} User{userCount !== 1 && 's'}
+                    {userCount} <FormattedMessage id="portal.role.list.search.userCount.text" values={{userCount: userCount}}/>
                   </td>
                   <td className="nowrap-column">
                     <ActionButtons
