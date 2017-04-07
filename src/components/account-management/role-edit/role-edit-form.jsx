@@ -156,6 +156,7 @@ RoleEditForm.propTypes = {
   submitting: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const editPermsUI = Immutable.Map([
@@ -174,6 +175,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

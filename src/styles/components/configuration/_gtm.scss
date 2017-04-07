@@ -51,9 +51,24 @@ $input-height: 36px;
 
     font-weight: 400;
   }
-}
 
-.configuration-gtm-rules {
-  width: 100%;
-  transition: width 0.3s ease-out;
+  .configuration-gtm-rules {
+    width: 100%;
+    transition: width 0.3s ease-out;
+
+    tr {
+      td {
+        max-width: 200px;
+      }
+
+      .matches {
+        .btn {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+      }
+    }
+  }
 }

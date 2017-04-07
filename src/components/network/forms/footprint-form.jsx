@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Papa from 'papaparse'
 import _ from 'lodash'
 
-import UDNButton from '../../button'
+import UDNButton from '../../shared/form-elements/button'
 import IconAdd from '../../shared/icons/icon-add'
 import FieldRadio from '../../shared/form-fields/field-radio'
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
@@ -322,7 +322,7 @@ class FootprintForm extends React.Component {
           />
 
           <ControlLabel>
-            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
+            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/><FormattedMessage id="portal.asterisk"/>
           </ControlLabel>
 
           <Field
@@ -419,6 +419,7 @@ const form = reduxForm({
   validate
 })(FootprintForm)
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('footprintForm')
   const addFootprintMethod = selector(state, 'addFootprintMethod')

@@ -297,9 +297,9 @@ class ContentItemChart extends React.Component {
                   {this.props.name}
                 </div>
                 <div className="content-item-text-sm">
-                  <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
+                  <p>{this.props.cacheHitRate}<FormattedMessage id="portal.content.avgHitRateWithPercentage.text"/></p>
                   <p>
-                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'} TTFB
+                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}<FormattedMessage id="portal.content.TTFB.text"/>
                   </p>
                 </div>
               </div>

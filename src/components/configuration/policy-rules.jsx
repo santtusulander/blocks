@@ -6,9 +6,11 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../shared/page-elements/confirmation.jsx'
 import ActionButtons from '../shared/action-buttons.jsx'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import {
   parsePolicy
 } from '../../util/policy-config'
+import { policyRuleTypeOptions } from '../../constants/property-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
@@ -28,6 +30,8 @@ class ConfigurationPolicyRules extends React.Component {
     this.deleteRule = this.deleteRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
     this.closeConfirmation = this.closeConfirmation.bind(this)
+    this.getListOfConditionActionNames = this.getListOfConditionActionNames.bind(this)
+    this.getRuleTypeName = this.getRuleTypeName.bind(this)
   }
 
   componentWillMount() {
@@ -72,12 +76,25 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
 
+  getListOfConditionActionNames(items = []) {
+    return items.map((item, j) => <span key={j}>{item.name}</span>)
+                .reduce((prev, curr) => {
+                  return prev === null ? [curr] : [prev, ', ', curr]
+                }, null)
+  }
+
+  getRuleTypeName(type) {
+    const ruleType = policyRuleTypeOptions.find(item => item.value === `${type}_policy`)
+
+    return ruleType ? ruleType.label : type
+  }
+
   render() {
     const policyMapper = type => (rule, i) => {
       const { matches, sets, default_sets } = parsePolicy(rule, [])
-      const matchLabel = matches.map(match => match.field).join(', ')
-      const actionsLabel = sets.map(set => set.setkey).join(', ')
-      const defaultActionsLabel = default_sets.map(set => set.setkey).join(', ')
+      const matchLabel = this.getListOfConditionActionNames(matches)
+      const actionsLabel = this.getListOfConditionActionNames(sets)
+      const defaultActionsLabel = this.getListOfConditionActionNames(default_sets)
 
       const actionButtons = (
         <ActionButtons
@@ -88,8 +105,8 @@ class ConfigurationPolicyRules extends React.Component {
 
       return (
         <tr key={rule + i}>
-          <td>{rule.get('rule_name')}</td>
-          <td className="text-right">{type}</td>
+          <td><TruncatedTitle content={rule.get('rule_name')} /></td>
+          <td className="text-right">{this.getRuleTypeName(type)}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td>{defaultActionsLabel}</td>
@@ -128,7 +145,7 @@ class ConfigurationPolicyRules extends React.Component {
     ]
     const isEmpty = !rows.filter(Boolean).length
     return (
-      <div className="configuration-cache-rules">
+      <div className="configuration-policies">
         <Table striped={true}>
           <thead>
             <tr>
@@ -143,7 +160,7 @@ class ConfigurationPolicyRules extends React.Component {
           <tbody>
             {rows}
             {isEmpty ? <tr>
-              <td colSpan={5}>
+              <td colSpan={6}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
               </td>
             </tr>

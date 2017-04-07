@@ -20,6 +20,9 @@ import LoadingSpinner from '../../../../components/loading-spinner/loading-spinn
 
 import '../../../../assets/img/temp-support-tools-modals-mtr-map.png'
 
+/* TODO: uncomment once tab will be enabled */
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class ModalMtr extends React.Component {
   constructor(props) {
     super(props)

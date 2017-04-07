@@ -34,9 +34,7 @@ describe('AccountManagementAccountUsers', () => {
         }}
         resetRoles={ jest.fn() }
         roles={ Immutable.List() }
-        rolesActions={ {
-          fetchRoles: genAsyncMock,
-        }}
+        fetchRoleNames={jest.fn()}
         route={ {} }
         router={ routerMock }
         uiActions= {{}}

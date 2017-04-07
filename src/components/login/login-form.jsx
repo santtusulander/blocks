@@ -109,6 +109,7 @@ export class LoginForm extends Component {
                 <FormControl
                   type="text"
                   id="username"
+                  tabIndex="1"
                   disabled={!IS_LOCAL_STORAGE_SUPPORTED}
                   onFocus={this.checkUsernameActive(true)}
                   onBlur={this.checkUsernameActive(false)}
@@ -124,6 +125,7 @@ export class LoginForm extends Component {
                 <FormControl
                   id="password"
                   type="password"
+                  tabIndex="2"
                   disabled={!IS_LOCAL_STORAGE_SUPPORTED}
                   onFocus={this.checkPasswordActive(true)}
                   onBlur={this.checkPasswordActive(false)}

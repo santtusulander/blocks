@@ -137,7 +137,7 @@ class AnalysisByTime extends React.Component {
 
   render() {
     if (!this.props.width || !this.props.dataSets) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     if (!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {

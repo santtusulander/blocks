@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
+import { Button, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import Select from '../../shared/form-elements/select'
 import InputConnector from '../../shared/page-elements/input-connector'
 import {
@@ -228,7 +229,7 @@ class Matcher extends React.Component {
             </div>
           }
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button
               className="btn-secondary"
               onClick={this.props.close}
@@ -242,7 +243,7 @@ class Matcher extends React.Component {
             >
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>

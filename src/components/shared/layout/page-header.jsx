@@ -22,7 +22,7 @@ const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSu
       <div className="page-header-details">
         {pageHeaderDetailsUpdated &&
           <div>
-            <h5><FormattedMessage id="portal.configuration.updated.text"/>: </h5>
+            <h5><FormattedMessage id="portal.configuration.updated.text"/><FormattedMessage id="portal.colonWithSpace" /></h5>
             <p className="text-sm right-separator">
               {pageHeaderDetailsUpdated.map((detail, index) =>
                 <span key={index} id={'updated-' + index}>
@@ -34,7 +34,7 @@ const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSu
         }
         {pageHeaderDetailsDeployed &&
           <div>
-            <h5><FormattedMessage id="portal.configuration.deployed.text"/>: </h5>
+            <h5><FormattedMessage id="portal.configuration.deployed.text"/><FormattedMessage id="portal.colonWithSpace" /></h5>
             <p className="text-sm right-separator">
               {pageHeaderDetailsDeployed.map((detail, index) =>
                 <span key={index} id={'deployed-' + index}>

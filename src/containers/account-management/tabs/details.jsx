@@ -44,7 +44,7 @@ class AccountDetails extends React.Component {
             ? <LoadingSpinner />
             : <div className='account-details'>
                 <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
-                <span className='value'>UDN</span>
+                <span className='value'><FormattedMessage id="portal.UDN.text"/></span>
 
                 <label><FormattedMessage id="portal.account.manage.accountName.title" /></label>
                 <span className='value'>{account.get('name')}</span>
@@ -109,6 +109,7 @@ AccountDetails.defaultProps = {
   servicesInfo: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),
@@ -118,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     accountStartFetching: () => dispatch(accountStartFetching()),

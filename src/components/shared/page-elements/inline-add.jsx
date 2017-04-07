@@ -4,7 +4,7 @@ import { reduxForm, propTypes as reduxFormPropTypes, getFormValues, getFormSyncE
 import { connect } from 'react-redux'
 import classnames from 'classnames'
 
-import UDNButton from './../../button'
+import UDNButton from '../form-elements/button'
 import IconClose from '../icons/icon-close'
 
 import { FormattedMessage } from 'react-intl'

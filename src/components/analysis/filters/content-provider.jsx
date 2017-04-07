@@ -3,11 +3,11 @@ import { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 
 const FilterContentProvider = (props) => {
   const arrayMapping = (option) => {
-    return Immutable.fromJS({ value: option.get('id'), label: option.get('name') }) 
+    return Immutable.fromJS({ value: option.get('id'), label: option.get('name') })
   }
   const contentProviderOptions = Immutable.fromJS(props.contentProviderOptions.map(arrayMapping))
   const contentProviderGroupOptions = Immutable.fromJS(props.contentProviderGroupOptions.map(arrayMapping))

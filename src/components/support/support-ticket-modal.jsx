@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap'
 
 import IconEdit from '../shared/icons/icon-configuration'
 import IconClose from '../shared/icons/icon-close'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import Toggle from '../shared/form-elements/toggle'
 import SupportTicketAttachments from './support-ticket-attachments'
 import SupportTicketComments from './support-ticket-comments'
@@ -17,6 +17,9 @@ import {
   getTicketPriorityLabel,
   getTicketTypeLabel
 } from '../../util/support-helper'
+
+/* TODO: uncomment when this tab will be implemented */
+/* eslint-disable react-intl/string-is-marked-for-translation */
 
 class SupportTicketModal extends React.Component {
 

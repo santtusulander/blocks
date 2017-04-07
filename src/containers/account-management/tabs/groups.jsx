@@ -17,7 +17,7 @@ import SectionHeader from '../../../components/shared/layout/section-header'
 import ActionButtons from '../../../components/shared/action-buttons'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import TableSorter from '../../../components/shared/table-sorter'
-// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
+// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 import ArrayTd from '../../../components/shared/page-elements/array-td'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
@@ -64,6 +64,8 @@ class AccountManagementAccountGroups extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.account !== this.props.params.account) {
       const { brand, account } = nextProps.params
+
+      this.props.fetchGroups({brand, account})
       this.props.userActions.fetchUsers(brand, account)
     }
   }
@@ -256,6 +258,7 @@ AccountManagementAccountGroups.defaultProps = {
   users: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {account} = ownProps.params
 
@@ -265,6 +268,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
 
   return {

@@ -962,6 +962,7 @@ Network.defaultProps = {
   groups: Immutable.List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const { group, network, pop, pod } = ownProps.params
   return {

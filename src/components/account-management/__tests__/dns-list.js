@@ -10,7 +10,7 @@ jest.unmock('../../../components/shared/icons/icon-edit')
 jest.unmock('../../../components/shared/icons/icon-trash')
 jest.unmock('../dns-record-table')
 jest.unmock('../../shared/table-sorter')
-jest.unmock('../../button')
+jest.unmock('../../shared/form-elements/button')
 jest.unmock('../dns-list')
 import DNSList from '../dns-list'
 import { DNSRecordTable } from '../dns-record-table'

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 
-import UDNButton from '../../components/button'
+import UDNButton from '../../components/shared/form-elements/button'
 import Sidebar from '../../components/shared/layout/section-header'
 import { SidebarLinks } from '../shared/sidebar-link/sidebar-links'
 
@@ -14,7 +14,7 @@ export const AccountManagementSidebar = props => {
       <div className="configuration-versions">
         <div className="accounts-sidebar-header">
           <UDNButton id="add" bsStyle="primary" onClick={addAccount}>
-            New Account
+            <FormattedMessage id="portal.account.manage.newAccountButton.title"/>
           </UDNButton>
         </div>
         <h5><FormattedMessage id="portal.account.manage.sidebar.title"/></h5>
