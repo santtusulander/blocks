@@ -31,7 +31,7 @@ import { getById as getAccountById} from '../../redux/modules/entities/accounts/
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
 import ModalWindow from '../../components/shared/modal'
-import AccountSelector from '../../components/global-account-selector/global-account-selector'
+import { AccountSelector } from '../../components/drillable-menu/containers'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
@@ -399,12 +399,14 @@ export class AccountManagement extends Component {
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
-              as="accountManagement"
-              params={{ brand, account }}
-              topBarTexts={{ brand: 'UDN Admin' }}
-              topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
-              onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-              restrictedTo="account">
+              params={params}
+              levels={[ 'brand' ]}
+              onItemClick={(entity) => {
+
+                const { nodeInfo, idKey = 'id' } = entity
+                router.push(`${getUrl(getRoute('accountManagement'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+
+              }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>

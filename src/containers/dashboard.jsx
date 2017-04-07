@@ -42,7 +42,7 @@ import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/s
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import { AccountSelector } from '../components/drillable-menu/containers'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/shared/layout/content'
@@ -391,7 +391,6 @@ export class Dashboard extends React.Component {
   render() {
     const { activeAccount, fetching, filterOptions, filters, intl, params, router, user } = this.props
     const showFilters = List(['dateRange'])
-    const dashboardParams = { brand: params.brand, account: params.account }
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -404,13 +403,14 @@ export class Dashboard extends React.Component {
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
-              as="dashboard"
-              params={dashboardParams}
-              topBarTexts={{ brand: 'UDN Admin' }}
-              topBarAction={() => router.push(getDashboardUrl('brand', 'udn', {}))}
-              onSelect={(...dashboardParams) => router.push(getDashboardUrl(...dashboardParams))}
-              drillable={false}
-              restrictedTo="account">
+              params={params}
+              onItemClick={(entity) => {
+
+                const { nodeInfo, idKey = 'id' } = entity
+                router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
+
+              }}
+              levels={[ 'brand' ]}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1>
                   <TruncatedTitle

@@ -41,7 +41,7 @@ export const getGroups = (state, parents, canView) => {
         headerSubtitle,
         fetchChildren: (dispatch) => Promise.all([
           dispatch(propertyActions.fetchAll({ ...parents, group: String(group.id), requestTag })),
-          dispatch(storageActions.fetchAll({ ...parents, group: String(group.id) }))
+          dispatch(storageActions.fetchAll({ ...parents, group: String(group.id), requestTag }))
         ]),
         entityType: 'group',
         parents,
