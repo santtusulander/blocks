@@ -98,9 +98,7 @@ class ContentItems extends React.Component {
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-
-    this.storageSorter = this.storageSorter.bind(this)
-    this.propertySorter = this.propertySorter.bind(this)
+    this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -124,6 +122,21 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+
+  getCustomSortPath(tag) {
+    const [sortBy] = this.props.sortValuePath
+    if (sortBy === 'item') {
+      if (tag === 'storages') {
+        return Immutable.fromJS(['ingest_point_id'])
+      }
+      if (tag === 'properties') {
+        return Immutable.fromJS(['published_host_id'])
+      }
+    }
+
+    return Immutable.fromJS(['totalTraffic'])
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.changeNotification(message)
@@ -328,56 +341,6 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
-  /** TODO: UDNP-3069 Refactor sorters */
-  storageSorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('ingest_point_id').toLowerCase()
-      valB = b.get('ingest_point_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
-  }
-  /** TODO: UDNP-3069 Refactor sorters */
-  propertySorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('published_host_id').toLowerCase()
-      valB = b.get('published_host_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
-  }
 
   render() {
     const {
@@ -508,7 +471,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.sort(this.storageSorter).map((storage, i) => {
+                        { groupHasStorageService && storages.sort(sortContent(this.getCustomSortPath('storages'), sortDirection)).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -545,7 +508,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort(this.propertySorter).map((property,i) => {
+                { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}

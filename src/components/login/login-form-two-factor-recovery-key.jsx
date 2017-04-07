@@ -166,7 +166,7 @@ export class LoginFormTwoFactorRecoveryKey extends Component {
                   <p><FormattedMessage id="portal.login.2fa.recoveryKeyHint.text"/></p>
                 }
                 { this.state.loginError &&
-                  <p>{this.state.loginError} | <FormattedMessage id="portal.login.2fa.recoveryKeyHintReEnter.text"/></p>
+                  <p>{this.state.loginError}<FormattedMessage id="portal.pipeWithSpaces"/><FormattedMessage id="portal.login.2fa.recoveryKeyHintReEnter.text"/></p>
                 }
               </div>
               <InputGroup className={codeInputsClass}>
@@ -204,7 +204,7 @@ LoginFormTwoFactorRecoveryKey.propTypes = {
   username: React.PropTypes.string
 }
 
- /* istanbul ignore next */ 
+ /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
@@ -212,7 +212,7 @@ function mapStateToProps(state) {
   };
 }
 
- /* istanbul ignore next */ 
+ /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
     changeNotification: (message) => dispatch(changeNotification(message)),

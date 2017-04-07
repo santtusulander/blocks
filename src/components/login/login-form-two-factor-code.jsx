@@ -137,7 +137,7 @@ export class LoginFormTwoFactorCode extends Component {
                   <p><FormattedMessage id="portal.login.2fa.verificationByCodeHint.text"/></p>
                 }
                 { this.props.loginError &&
-                  <p>{this.props.loginError} | <FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
+                  <p>{this.props.loginError}<FormattedMessage id="portal.pipeWithSpaces"/><FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
                 }
               </div>
               <InputGroup className={codeInputsClass}>

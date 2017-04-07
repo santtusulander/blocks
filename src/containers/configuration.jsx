@@ -462,7 +462,7 @@ export class Configuration extends React.Component {
 
         {this.state.showPublishModal &&
           <Modal show={true}
-            dialogClassName="configuration-sidebar"
+            dialogClassName="side-panel"
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1><FormattedMessage id="portal.configuration.sidebar.pubVer.text" /></h1>

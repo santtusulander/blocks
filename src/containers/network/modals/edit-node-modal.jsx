@@ -94,13 +94,13 @@ class EditNodeFormContainer extends React.Component {
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
-          {createdText}{": "}
+          {createdText}<FormattedMessage id="portal.colonWithSpace" />
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-created" buttonText={multipleValuesText} title={createdText} placement="bottom">
             <Table striped={true} condensed={true}>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                   <th><FormattedMessage id="portal.common.date"/></th>
                 </tr>
               </thead>
@@ -109,15 +109,15 @@ class EditNodeFormContainer extends React.Component {
           </HelpPopover>}
           {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, NETWORK_DATE_FORMAT)}</span>}
         </span>
-        {" | "}
+        <FormattedMessage id="portal.pipeWithSpaces" />
         <span className="edit-node__dates edit-node__dates--updated">
-          {updatedText}{": "}
+          {updatedText}<FormattedMessage id="portal.colonWithSpace" />
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-updated" buttonText={multipleValuesText} title={updatedText} placement="bottom">
             <Table striped={true} condensed={true}>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                   <th><FormattedMessage id="portal.common.date"/></th>
                 </tr>
               </thead>

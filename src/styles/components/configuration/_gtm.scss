@@ -62,7 +62,12 @@ $input-height: 36px;
       }
 
       .matches {
-        overflow: hidden;
+        .btn {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
       }
     }
   }
