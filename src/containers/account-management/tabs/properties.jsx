@@ -207,7 +207,8 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
-  //
+  // This function adds display names for group, deployment mode and origin host name
+  // to properties so user will be able to sort data by any of those.
   getModifiedData(data) {
     return data.map(property => (
       property

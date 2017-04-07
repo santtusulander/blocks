@@ -154,6 +154,9 @@ permissionMapping[PERMISSIONS.CREATE_PROPERTY] =
 permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
   (role) => role.getIn([ 'north', 'published_hosts', 'modify', 'allowed'])
 
+permissionMapping[PERMISSIONS.LIST_PROPERTY] =
+  (role) => role.getIn([ 'north', 'published_hosts', 'list', 'allowed'])
+
 // Network permissions
 permissionMapping[PERMISSIONS.CREATE_NETWORK] =
   (role) => role.getIn([ 'north', 'networks', 'create', 'allowed'])

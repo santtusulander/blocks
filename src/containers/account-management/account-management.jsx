@@ -437,10 +437,11 @@ export class AccountManagement extends Component {
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
           {accountIsContentProviderType(activeAccount) &&
-            // UDNP-2410 Permission check should be added
-            <li data-eventKey="properties">
-              <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
-            </li>
+            <IsAllowed to={PERMISSIONS.LIST_PROPERTY}>
+              <li data-eventKey="properties">
+                <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
+              </li>
+            </IsAllowed>
           }
           {accountIsContentProviderType(activeAccount) &&
            <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
