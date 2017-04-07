@@ -207,7 +207,7 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
-  // UDNP-2410 this function may need a better name
+  //
   getModifiedData(data) {
     return data.map(property => (
       property
