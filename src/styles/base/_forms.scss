@@ -466,6 +466,10 @@ textarea {
   }
 }
 
+.no-margin-top.help-block {
+  margin-top: 0 !important;
+}
+
 .search-input {
   height: $btn-height;
   padding: 10px 0 10px 50px;
