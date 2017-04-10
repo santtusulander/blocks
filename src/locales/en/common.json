@@ -97,6 +97,11 @@
   "portal.common.of.value.text": "of {value}",
   "portal.common.selectFileType.label": "Select file type",
 
+  "portal.common.account.multiple": "{numAccounts, number} {numAccounts, plural, one {Account} other {Accounts}}",
+  "portal.common.storage.multiple": "{numStorages, number} {numStorages, plural, one {Storage} other {Storages}}",
+  "portal.common.group.multiple": "{numGroups, number} {numGroups, plural, one {Group} other {Groups}}",
+  "portal.common.property.multiple": "{numProperties, number} {numProperties, plural, one {Property} other {Properties}}",
+
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
   "portal.common.statusCode.102": "Processing",
@@ -288,6 +293,7 @@
   "portal.percentage": "%",
   "portal.colon": ":",
   "portal.dash": "-",
+  "portal.commaWithSpace": ", ",
   "portal.mdashWithSpace": "\u2014 ",
   "portal.colonWithSpace": ": ",
   "portal.pipeWithSpaces": " | ",

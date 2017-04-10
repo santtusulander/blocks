@@ -33,7 +33,7 @@ import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
 import Content from '../components/shared/layout/content'
 import PageHeader from '../components/shared/layout/page-header'
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import AccountSelector from '../components/global-account-selector/account-selector-container'
 import IconTrash from '../components/shared/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
@@ -287,16 +287,17 @@ export class Configuration extends React.Component {
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector
-            as="configuration"
             params={this.props.params}
-            topBarTexts={{}}
-            onSelect={(tier, value, params) => {
+            onItemClick={(entity) => {
+
+              const { nodeInfo, idKey = 'id' } = entity
               const { params: { brand, account, group }, hostActions } = this.props
               hostActions.startFetching()
-              hostActions.fetchHost(brand, account, group, value).then(() => {
-                const url = getContentUrl('propertyConfiguration', value, params)
+              hostActions.fetchHost(brand, account, group, entity[idKey]).then(() => {
+                const url = getContentUrl('propertyConfiguration', entity[idKey], nodeInfo.parents)
                 this.props.router.push(`${url}/${children.props.route.path}`)
               })
+
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">

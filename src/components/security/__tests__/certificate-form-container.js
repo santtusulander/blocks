@@ -9,7 +9,7 @@ describe('CertificateFormContainer', () => {
   it('should exist', () => {
     const container = shallow(<CertificateFormContainer
       fetchGroups={jest.fn()}
-      activeAccount={Map()}
+      activeAccount=''
       toEdit={Map()}
       handleSubmit={jest.fn()}
       />)

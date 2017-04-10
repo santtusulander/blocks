@@ -24,7 +24,7 @@ import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../shared/layout/page-container'
-import AccountSelector from '../global-account-selector/global-account-selector'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
 import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
@@ -57,13 +57,6 @@ const rangeMax = 500
 
 let trafficMin = 0
 let trafficMax = 0
-
-const itemSelectorTexts = {
-  property: 'Back to Groups',
-  group: 'Back to Accounts',
-  account: 'UDN Admin',
-  brand: 'UDN Admin'
-}
 
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
@@ -298,7 +291,7 @@ class ContentItems extends React.Component {
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
   }
 
-  renderAccountSelector(props, itemSelectorTopBarAction) {
+  renderAccountSelector(props) {
     if (props.selectionDisabled === true) {
       return (
         <div className="dropdown-toggle header-toggle">
@@ -311,26 +304,13 @@ class ContentItems extends React.Component {
 
     return (
       <AccountSelector
-        as="content"
         params={props.params}
-        startTier={props.selectionStartTier}
-        topBarTexts={itemSelectorTexts}
-        topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => {
-          // This check is done to prevent UDN admin from accidentally hitting
-          // the account detail endpoint, which they don't have permission for
-          const currentUser = props.user.get('currentUser')
-          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
-            params[0] = 'groups'
-          }
+        onItemClick={(entity) => {
 
-          const url = getContentUrl(...params)
+          const { nodeInfo, idKey = 'id' } = entity
+          const url = getContentUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents)
+          props.router.push(url)
 
-          // We perform this check to prevent routing to unsupported routes
-          // For example, prevent clicking to SP group route (not yet supported)
-          if (url) {
-            props.router.push(url)
-          }
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>

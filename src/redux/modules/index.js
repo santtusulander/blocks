@@ -1,6 +1,3 @@
-import accountSelector from './account-selector'
-import multireducer from 'multireducer'
-
 export const account = require('./account').default;
 export const form = require('redux-form').reducer;
 export const group = require('./group').default;
@@ -44,19 +41,3 @@ export const pagination = require('./pagination').default;
 
 //HTTP file upload
 export const storageUploads = require('./http-file-upload').default;
-
-// Account Selectors
-export const accountSelectors = multireducer({
-  header: accountSelector,
-  support: accountSelector,
-  accountManagement: accountSelector,
-  configuration: accountSelector,
-  propertySummary: accountSelector,
-  storageSummary: accountSelector,
-  content: accountSelector,
-  security: accountSelector,
-  analytics: accountSelector,
-  serviceInfo: serviceInfo,
-  dashboard: accountSelector
-
-})
