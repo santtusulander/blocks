@@ -73,10 +73,17 @@ class Select extends Component {
     if (this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const { onTouch, unselectedValue } = this.props
+    const { onFocus, onTouch, unselectedValue } = this.props
     return (
+
       <Dropdown id="select" disabled={this.props.disabled} className={className}
-                onSelect={this.selectOption} onClose={onTouch}>
+                onSelect={this.selectOption} onClose={onTouch}
+                // UDNP-3338 onFocus function comes from underlying input of redux-form Field element
+                // and as redux-form uses focus status to hide error messages on Field, I'm passing
+                // onFocus to onClick so if there's any error tooltip/message it would disappear
+                // whenever user opens select dropdown. This way dropdown select element would behave
+                // like any other form element.
+                onClick={onFocus}>
         <Dropdown.Toggle noCaret={true} className={this.props.disabled && 'disabled'}>
           <IconSelectCaret/>
           {this.getSelectedItem()}
@@ -101,6 +108,7 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.object]),
   numericValues: PropTypes.bool,
+  onFocus: PropTypes.func,
   onSelect: PropTypes.func,
   onTouch: PropTypes.func,
   options: PropTypes.array,
