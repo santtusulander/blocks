@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
 
+import '../../styles/components/charts/_area-tooltip.scss'
+
 /* eslint-disable react/no-multi-comp  */
 const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
   const currentPayload = payload.filter(({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
