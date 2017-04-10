@@ -410,7 +410,7 @@
   "portal.policy.edit.mimetype.mimetype.placeholder": "Enter MIME Types separated by commas",
   "portal.policy.edit.mimetype.matches.text": "Matches",
   "portal.policy.edit.mimetype.doesntMatch.text": "Does not match",
-  "portal.policy.edit.actionSelection.chooseActions.text": "Choose Actions",
+  "portal.policy.edit.actionSelection.chooseActions.text": "Choose Action",
   "portal.policy.edit.actionSelection.selecetActionType.text": "Select the action type",
   "portal.policy.edit.actionSelection.cache.text": "Cache",
   "portal.policy.edit.actionSelection.cacheKeyQueryString.text": "Cache Key - Query String",
