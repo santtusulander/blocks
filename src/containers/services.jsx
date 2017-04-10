@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Map, List } from 'immutable'
+import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
 
