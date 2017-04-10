@@ -95,7 +95,7 @@ export class Brand extends React.Component {
 
     // Only UDN admins can see list of all accounts
     const currentUser = user.get('currentUser')
-    const showAccountList = activeAccount && activeAccount.isEmpty() && userIsCloudProvider(currentUser)
+    const showAccountList = activeAccount.isEmpty() && userIsCloudProvider(currentUser)
     const contentItems = showAccountList
                       ? accounts
                       : List.of(activeAccount)
