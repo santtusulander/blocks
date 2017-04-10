@@ -44,7 +44,6 @@ Services.defaultProps = {
 }
 function mapStateToProps(state, ownProps) {
   return {
-    accounts: state.account.get ('allAccounts'),
     activeAccount: getAccountById(state, ownProps.params.account)
   };
 }
