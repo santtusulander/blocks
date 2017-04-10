@@ -64,7 +64,7 @@ class ConfigurationPublishVersion extends React.Component {
 
         {/* Action buttons */}
         <FormFooterButtons>
-          <Button bsStyle="primary" onClick={this.props.hideAction}>
+          <Button className="btn-secondary" onClick={this.props.hideAction}>
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
           <Button bsStyle="primary"

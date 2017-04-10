@@ -179,7 +179,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       return (
         <div className="condition-name">
           {filterType}&nbsp;
-          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}<FormattedMessage id="portal.colon" />&nbsp;
+          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}
+          <FormattedMessage id="portal.colonWithSpace" />&nbsp;
           <TruncatedTitle
             content={match.values.map(getFormattedCountry).join(', ')}
           />
@@ -188,22 +189,67 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     return (
-      <div className="condition-name">
-        {match.name}<FormattedMessage id="portal.colon" />&nbsp;
-        <TruncatedTitle
-          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
-        />
+      <Row>
+        <Col xs={4}>
+          <div className="condition-name">
+            {match.name}
+            {match.fieldDetail && <FormattedMessage id="portal.colonWithSpace" />}&nbsp;
+            {match.fieldDetail && 
+              <TruncatedTitle content={match.fieldDetail}/>
+            }
+          </div>
+        </Col>
+        <Col xs={6}>
+          <p>
+            {getConditionFilterText(match)}
+          </p>
+        </Col>
+      </Row>
+    )
+  }
+
+
+  renderConditions(conditions) {
+    const { disabled, activeMatchPath } = this.props
+
+    return (
+      <div className="conditions">
+        {conditions.map((match, i) => {
+          const active = Immutable.fromJS(match.path).equals(activeMatchPath)
+
+          return (
+            <div key={i}
+              className={active ? 'condition clearfix active' : 'condition clearfix'}
+              onClick={this.activateMatch(match.path)}>
+              <Col xs={10}>
+                {match.field
+                  ? this.renderConditionName(match)
+                  : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
+                }
+              </Col>
+
+              <Col xs={2} className="text-right">
+                <ActionButtons
+                  className="secondary"
+                  onDelete={this.deleteMatch(match.path)}
+                  deleteDisabled={disabled}
+                />
+              </Col>
+            </div>
+          )
+        })}
       </div>
     )
   }
 
   renderActions(actions) {
-    const { disabled } = this.props
+    const { disabled, activeSetPath } = this.props
+
     return (
       <div className="conditions">
         {actions.map((set, i) => {
           let active = false
-          if (Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
+          if (Immutable.fromJS(set.path).equals(activeSetPath)) {
             active = true
           }
           return (
@@ -293,40 +339,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               </Button>
             </Col>
           </Row>
-
-          <div className="conditions">
-            {flattenedPolicy.matches.map((match, i) => {
-              let active = false
-              if (Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
-                active = true
-              }
-
-              return (
-                <div key={i}
-                  className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateMatch(match.path)}>
-                  <Col xs={7}>
-                    {match.field
-                      ? this.renderConditionName(match)
-                      : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
-                    }
-                  </Col>
-                  <Col xs={3}>
-                    <p>
-                      {getConditionFilterText(match)}
-                    </p>
-                  </Col>
-                  <Col xs={2} className="text-right">
-                    <ActionButtons
-                      className="secondary"
-                      onDelete={this.deleteMatch(match.path)}
-                      deleteDisabled={disabled}
-                    />
-                  </Col>
-                </div>
-              )
-            })}
-          </div>
+          {this.renderConditions(flattenedPolicy.matches)}
 
           <Row className="header-btn-row">
             <Col xs={8}>
