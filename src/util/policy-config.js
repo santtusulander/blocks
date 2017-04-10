@@ -62,9 +62,9 @@ export function getConditionFilterText(match) {
     case 'does_not_contain':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
     case 'equals':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text" values={match}/>
     case 'does_not_equal':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text" values={match}/>
     case 'empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':

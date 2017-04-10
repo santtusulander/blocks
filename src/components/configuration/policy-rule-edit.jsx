@@ -179,7 +179,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       return (
         <div className="condition-name">
           {filterType}&nbsp;
-          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}<FormattedMessage id="portal.colon" />&nbsp;
+          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}
+          <FormattedMessage id="portal.colonWithSpace" />&nbsp;
           <TruncatedTitle
             content={match.values.map(getFormattedCountry).join(', ')}
           />
@@ -189,10 +190,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     return (
       <div className="condition-name">
-        {match.name}<FormattedMessage id="portal.colon" />&nbsp;
-        <TruncatedTitle
-          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
-        />
+        {match.name}
+        {match.fieldDetail && <FormattedMessage id="portal.colonWithSpace" />}
+        {match.fieldDetail && 
+          <TruncatedTitle content={match.fieldDetail}/>
+        }
       </div>
     )
   }
@@ -305,13 +307,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
-                  <Col xs={7}>
+                  <Col xs={4}>
                     {match.field
                       ? this.renderConditionName(match)
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
-                  <Col xs={3}>
+                  <Col xs={6}>
                     <p>
                       {getConditionFilterText(match)}
                     </p>
