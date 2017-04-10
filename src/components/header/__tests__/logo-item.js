@@ -32,6 +32,6 @@ describe('LogoItem', function() {
 
   it('should have a link', () => {
     const component = subject()
-    expect(component.find('Link').length).toBeGreaterThan(0)
+    expect(component.find('.logo').length).toBeGreaterThan(0)
   })
 })
