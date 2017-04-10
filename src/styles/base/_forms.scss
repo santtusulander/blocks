@@ -11,6 +11,7 @@ $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
 $number-input-btn-width: $btn-height / 2;
+$checkbox-width: 30px;
 
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
@@ -350,6 +351,11 @@ textarea {
 .radio,
 .radio-inline {
   margin: 0;
+
+  .menu-item-label {
+    display: inline-block;
+    width: calc(100% - $checkbox-width);
+  }  
 
   input {
     display: none;
