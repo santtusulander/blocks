@@ -4,6 +4,8 @@ import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
+import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+
 import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/shared/layout/page-container'
 import Content from '../../components/shared/layout/content'
@@ -95,9 +97,9 @@ Support.defaultProps = {
   currentUser: Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: getAccountById(state, ownProps.params.account),
     currentUser: state.user.get('currentUser')
   };
 }
