@@ -41,6 +41,7 @@ class PurgeModal extends React.Component {
     this.purgeObjInput = this.purgeObjInput.bind(this)
     this.parseTypeahead = this.parseTypeahead.bind(this)
   }
+
   showPurgeOption(type) {
     this.setState({
       purgeObjectsError: '',
@@ -58,6 +59,7 @@ class PurgeModal extends React.Component {
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', allHostIds))
     }
   }
+
   change(path) {
     return (e) => {
       if (path[1] === 'email') {
@@ -72,6 +74,7 @@ class PurgeModal extends React.Component {
       this.props.changePurge(this.props.activePurge.setIn(path, e.target.value))
     }
   }
+
   parsePurgeObjects(e) {
     const maxObjects = 100
     const value = e.target.value
@@ -98,11 +101,13 @@ class PurgeModal extends React.Component {
 
     this.validatePurgeObjects(e)
   }
+
   parseTypeahead(e) {
     const parsedTypeahead = e.map(val => val.label)
     parsedTypeahead.length ? this.setState({invalid: false}) : this.setState({invalid: true})
     this.props.changePurge(this.props.activePurge.set('published_hosts', Immutable.List(parsedTypeahead)))
   }
+
   validatePurgeObjects(e) {
     const value = e.target.value
     this.setState({invalid: false})
@@ -131,6 +136,7 @@ class PurgeModal extends React.Component {
       }
     }
   }
+
   validateEmail() {
     if (this.props.activePurge.get('feedback') &&
       (!this.props.activePurge.getIn(['feedback', 'email']) || !isValidEmail(this.props.activePurge.getIn(['feedback', 'email'])))) {
@@ -140,6 +146,7 @@ class PurgeModal extends React.Component {
       return true
     }
   }
+
   submitForm(e) {
     e.preventDefault()
     let hasErrors = false;
@@ -148,6 +155,7 @@ class PurgeModal extends React.Component {
       this.props.savePurge()
     }
   }
+
   toggleNotification() {
     if (!this.props.activePurge.get('feedback')) {
       this.props.changePurge(this.props.activePurge.set('feedback', Immutable.Map({email: ''})))
@@ -158,17 +166,15 @@ class PurgeModal extends React.Component {
       purgeEmailError: ''
     })
   }
+
   purgeObjInput({title, help, placeholder}) {
     help = this.state.purgeObjectsError || this.state.purgeObjectsWarning || help
 
     return (
       <div>
-        <FormGroup
-          controlId="purge__objects"
-          validationState={this.state.purgeObjectsError ? 'error' : null}
-        >
+        <FormGroup controlId="purge__objects" validationState={this.state.purgeObjectsError ? 'error' : null}>
           <ControlLabel>{title}</ControlLabel>
-          <HelpBlock className="pull-right">{help}</HelpBlock>
+          <HelpBlock className="no-margin-top pull-right">{help}</HelpBlock>
           <FormControl
             componentClass="textarea"
             placeholder={placeholder}
@@ -180,6 +186,7 @@ class PurgeModal extends React.Component {
       </div>
     )
   }
+
   render() {
     const showPropertySelect = this.props.availableProperties && this.props.changeProperty
     const allHosts = this.props.allHosts
@@ -202,7 +209,7 @@ class PurgeModal extends React.Component {
             {/* SECTION - Property */}
             {showPropertySelect ?
               <div>
-                <h3><FormattedMessage id="portal.analytics.purgeModal.property.text"/></h3>
+                <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.property.text"/></ControlLabel>
 
                 {/* If it's possible to change the property, show a list */}
                 <Select className="input-select"
@@ -217,7 +224,7 @@ class PurgeModal extends React.Component {
             }
 
             {/* SECTION - What do you want to purge? */}
-            <h3><FormattedMessage id="portal.analytics.purgeModal.whatDoYouWantToPurge.text"/></h3>
+            <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.whatDoYouWantToPurge.text"/></ControlLabel>
             <Select className="input-select"
               value={this.state.type}
               options={[
@@ -243,12 +250,12 @@ class PurgeModal extends React.Component {
 
               {this.state.type === 'hostname' &&
               <div>
-                <h3><FormattedMessage id="portal.analytics.purgeModal.hostname.title"/></h3>
+                <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.hostname.title"/></ControlLabel>
                 <Typeahead
                   multiple={true}
                   options={hostnamesArray}
                   onChange={this.parseTypeahead}/>
-                <hr/>
+                <hr />
               </div>}
 
               {/* SECTION - Content Removal Method */}
@@ -256,20 +263,18 @@ class PurgeModal extends React.Component {
                 <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></ControlLabel>
 
                 {/* Invalidate content on platform */}
-                <Radio
-                  id="purge__content-removal-method-invalidate"
-                  value="invalidate"
-                  checked={this.props.activePurge.get('action') === 'invalidate'}
-                  onChange={this.change(['action'])}
-                ><FormattedMessage id="portal.analytics.purgeModal.invalidate.label" /></Radio>
+                <Radio id="purge__content-removal-method-invalidate" value="invalidate"
+                       checked={this.props.activePurge.get('action') === 'invalidate'}
+                       onChange={this.change(['action'])}>
+                  <FormattedMessage id="portal.analytics.purgeModal.invalidate.label" />
+                </Radio>
 
                 {/* Delete content from platform */}
-                <Radio
-                  id="purge__content-removal-method-delete"
-                  value="purge"
-                  checked={this.props.activePurge.get('action') === 'purge'}
-                  onChange={this.change(['action'])}
-                ><FormattedMessage id="portal.analytics.purgeModal.delete.label" /></Radio>
+                <Radio id="purge__content-removal-method-delete" value="purge"
+                       checked={this.props.activePurge.get('action') === 'purge'}
+                       onChange={this.change(['action'])}>
+                  <FormattedMessage id="portal.analytics.purgeModal.delete.label" />
+                </Radio>
 
               </FormGroup>
 
@@ -278,10 +283,9 @@ class PurgeModal extends React.Component {
               {/* SECTION - Notification */}
               <FormGroup controlId="purge__notification">
                 <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.notification.section.title"/></ControlLabel>
-                <Checkbox
-                  checked={!!this.props.activePurge.get('feedback')}
-                  onChange={this.toggleNotification}
-                ><FormattedMessage id="portal.analytics.purgeModal.notification.label" /></Checkbox>
+                <Checkbox checked={!!this.props.activePurge.get('feedback')} onChange={this.toggleNotification}>
+                  <FormattedMessage id="portal.analytics.purgeModal.notification.label" />
+                </Checkbox>
               </FormGroup>
 
               {/* Email Address */}
