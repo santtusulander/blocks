@@ -123,6 +123,7 @@ class TabSslCertificate extends Component {
             title={modalTitle}
             showNotification={this.showNotification}
             activeAccount={this.props.params.account}
+            activeGroup={this.props.params.group}
             fetchAccount={fetchAccount}
             toggleModal={toggleModal}
           />

@@ -146,14 +146,13 @@ CertificateFormContainer.defaultProps = {
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const certificateToEdit = state.security.get('certificateToEdit')
-  const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
 
   return {
     certificateToEdit,
     initialValues: {
       title: certificateToEdit.get('title'),
       account: certificateToEdit.get('account') || ownProps.activeAccount,
-      group: certificateToEdit.get('group') || activeGroup,
+      group: certificateToEdit.get('group') || Number(ownProps.activeGroup),
       privateKey: certificateToEdit.get('privateKey') || null,
       certificate: certificateToEdit.get('certificate') || null,
       intermediateCertificates: certificateToEdit.get('intermediateCertificates') || null
