@@ -8,7 +8,7 @@ import storageActions from '../../redux/modules/entities/CIS-ingest-points/actio
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
-import { getGroups, getBrands, getAccounts } from '../drillable-menu/menu-selectors'
+import { getGroups, getBrands, getAccounts, getGroupForPropertyConfig } from './menu-selectors'
 
 import {
   VIEW_CONTENT_ACCOUNTS,
@@ -127,5 +127,52 @@ const accountSelectorStateToProps = (state, { params: { storage, property, group
     tree
   }
 }
+
+/**
+ * dispatch to props for property configuration page account selector
+ * @param  {[type]} dispatch [description]
+ * @param  {[type]} params   URL params
+ * @return {[type]}          [description]
+ */
+const propertyConfigDispatchToProps = (dispatch, { params }) => {
+
+  return {
+    dispatch,
+    fetchData: (user, roles) => {
+      const shouldFetch = permissionCheck([ 'group' ], user, roles)
+
+      return Promise.all([
+        shouldFetch(VIEW_CONTENT_GROUPS) && dispatch(groupActions.fetchOne(params)),
+        shouldFetch(VIEW_CONTENT_PROPERTIES) && dispatch(propertyActions.fetchAll(params))
+      ])
+    }
+  }
+}
+
+/**
+ * state to props for property configuration page account selector
+ * @param  {[type]} dispatch [description]
+ * @param  {[type]} params   URL params
+ * @return {[type]}          [description]
+ */
+const propertyConfigStateToProps = (state, { params }) => {
+
+  const canView = permissionCheck([ 'group' ], state.user.get('currentUser'), getRoles(state))
+
+  const tree = []
+
+  if (canView(VIEW_CONTENT_PROPERTIES)) {
+
+    tree.push(getGroupForPropertyConfig(state, params, canView))
+  }
+
+  return {
+    fetching: getFetchingByTag(state, 'GAS-REQUEST'),
+    activeNode: params.group,
+    tree
+  }
+}
+
+export const PropertyConfigAccountSelector = connect(propertyConfigStateToProps, propertyConfigDispatchToProps)(DrillableMenu)
 
 export default connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(DrillableMenu)
