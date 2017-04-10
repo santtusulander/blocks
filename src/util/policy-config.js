@@ -69,6 +69,8 @@ export function getConditionFilterText(match) {
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
+    case 'regexp':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.regexp.text" values={match}/>
     default:
       return ''
   }
