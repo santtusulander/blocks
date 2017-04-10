@@ -59,9 +59,10 @@ class Cache extends React.Component {
   }
 
   saveChanges(values) {
+    const { path, setKey } = this.props
     const { noStore, checkEtag, honorOrigin, ttlValue, ttlUnit } = values
 
-    this.props.saveAction(this.props.path, this.props.setKey, {
+    this.props.saveAction(path, setKey, {
       check_etag: checkEtag,
       max_age: secondsFromUnit(ttlValue, ttlUnit),
       no_store: noStore,
@@ -70,7 +71,8 @@ class Cache extends React.Component {
   }
 
   render() {
-    const { disabled, handleSubmit, close } = this.props
+    const { disabled, handleSubmit, close, invalid } = this.props
+
     return (
       <div>
         <Modal.Header>
@@ -78,15 +80,15 @@ class Cache extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit(this.saveChanges)}>
-
             <Row className="form-group">
-              <Col lg={4} xs={6} className="toggle-label">
+              <Col xs={6} className="toggle-label">
                 <ControlLabel>
                   <FormattedMessage id="portal.policy.edit.cache.noStore.text"/>
                 </ControlLabel>
               </Col>
-              <Col lg={8} xs={6}>
+              <Col xs={6}>
                 <Field
+                  className="pull-right"
                   name="noStore"
                   component={FieldFormGroupToggle}
                 />
@@ -96,13 +98,14 @@ class Cache extends React.Component {
             <hr />
 
             <Row className="form-group">
-              <Col lg={4} xs={6} className="toggle-label">
+              <Col xs={6} className="toggle-label">
                 <ControlLabel>
                   <FormattedMessage id="portal.policy.edit.cache.honorCacheControl.text"/>
                 </ControlLabel>
               </Col>
-              <Col lg={8} xs={6}>
+              <Col xs={6}>
                 <Field
+                  className="pull-right"
                   name="honorOrigin"
                   component={FieldFormGroupToggle}
                   readonly={disabled}
@@ -113,13 +116,14 @@ class Cache extends React.Component {
             <hr />
 
             <Row className="form-group">
-              <Col lg={4} xs={6} className="toggle-label">
+              <Col xs={6} className="toggle-label">
                 <ControlLabel>
                   <FormattedMessage id="portal.policy.edit.cache.honorEtag.text"/>
                 </ControlLabel>
               </Col>
-              <Col lg={8} xs={6}>
+              <Col xs={6}>
                 <Field
+                  className="pull-right"
                   name="checkEtag"
                   component={FieldFormGroupSelect}
                   options={cacheControlEtagOptions}
@@ -131,12 +135,12 @@ class Cache extends React.Component {
             <hr/>
 
             <Row className="form-group">
-              <Col lg={4} xs={6} className="toggle-label">
+              <Col xs={4}>
                 <ControlLabel>
                   <FormattedMessage id="portal.policy.edit.cache.ttlValue.text"/>
                 </ControlLabel>
               </Col>
-              <Col lg={2} xs={3}>
+              <Col xs={4}>
                 <Field
                   name="ttlValue"
                   component={FieldFormGroupNumber}
@@ -144,9 +148,10 @@ class Cache extends React.Component {
                   disabled={disabled}
                 />
               </Col>
-              <Col xs={3}>
+              <Col xs={4}>
                 <Field
                   name="ttlUnit"
+                  className="pull-right"
                   component={FieldFormGroupSelect}
                   options={ttlUnitOptions}
                   disabled={disabled}
@@ -156,14 +161,17 @@ class Cache extends React.Component {
 
             <FormFooterButtons>
               <Button
+                id="cancel-btn"
                 className="btn-secondary"
                 onClick={close}
               >
                 <FormattedMessage id="portal.button.cancel"/>
               </Button>
+
               <Button
                 type="submit"
                 bsStyle="primary"
+                disabled={invalid}
               >
                 <FormattedMessage id="portal.button.saveAction"/>
               </Button>
@@ -186,16 +194,12 @@ Cache.propTypes = {
   ...reduxFormPropTypes
 }
 
-const cacheFormSelector = formValueSelector('cache-form')
-
-const mapStateToProps = (state) => (
-  {
-    disabled: cacheFormSelector(state, 'no_store')
-  }
-)
-
 const form = reduxForm({
   form: 'cache-form'
 })(Cache)
 
-export default connect(mapStateToProps)(injectIntl(form))
+const cacheFormSelector = formValueSelector('cache-form')
+
+export default connect((state) => ({
+  disabled: cacheFormSelector(state, 'noStore')
+}))(injectIntl(form))
