@@ -4556,7 +4556,7 @@ lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4.x.x, lodash@^4.0.0, lodash@^4.12.0, lodash@^4.14.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1, lodash@~4.17.4:
+lodash@4.x.x, lodash@^4.0.0, lodash@^4.12.0, lodash@^4.14.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1, lodash@~4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -6271,13 +6271,13 @@ react-style-normalizer@1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/react-style-normalizer/-/react-style-normalizer-1.2.8.tgz#7e84b3d25cea6225545c5af68963b225885344a2"
 
-react-telephone-input@^3.5.0:
-  version "3.8.6"
-  resolved "https://registry.yarnpkg.com/react-telephone-input/-/react-telephone-input-3.8.6.tgz#f0aa27fdec78dd0840792d9b2f53ab2a7c7bd206"
+react-telephone-input@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-telephone-input/-/react-telephone-input-4.0.1.tgz#9ff2004e4d27f9e7d3a00f014949fc6415d1867d"
   dependencies:
     classnames "^2.1.2"
     country-telephone-data "0.4.2"
-    lodash "^3.10.1"
+    lodash "^4.17.4"
     react-onclickoutside "5.3.1"
 
 react@^15.4.2:
