@@ -47,8 +47,9 @@
 
     .condition-name {
       display: flex;
-      margin-top: $btn-height / 4;
 
+      margin-top: $btn-height / 4;
+    
       @include md {
         margin-top: $md-btn-height / 4;
       }

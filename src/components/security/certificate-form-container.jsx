@@ -12,7 +12,7 @@ import {
 } from 'redux-form'
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Modal } from 'react-bootstrap'
+import SidePanel from '../shared/side-panel'
 
 import * as securityActionCreators from '../../redux/modules/security'
 
@@ -46,7 +46,7 @@ class CertificateFormContainer extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
+    this.props.fetchGroups('udn', this.props.activeAccount)
   }
 
   handleFormSubmit(values) {
@@ -99,12 +99,7 @@ class CertificateFormContainer extends Component {
     const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, ...formProps } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-form-panel">
-        <Modal.Header>
-          <h1>{title}</h1>
-          {!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}
-        </Modal.Header>
-        <Modal.Body>
+      <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
           <Fields
             names={[
               'group',
@@ -119,8 +114,7 @@ class CertificateFormContainer extends Component {
             onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
             {...formProps}
           />
-        </Modal.Body>
-      </Modal>
+      </SidePanel>
     )
   }
 }
@@ -129,7 +123,7 @@ CertificateFormContainer.displayName = "CertificateFormContainer"
 CertificateFormContainer.propTypes = {
   ...reduxFormPropTypes,
   accounts: PropTypes.instanceOf(List),
-  activeAccount: PropTypes.instanceOf(Map),
+  activeAccount: PropTypes.string,
   cancel: PropTypes.func,
   certificateToEdit: PropTypes.instanceOf(Map),
   edit: PropTypes.func,
@@ -144,22 +138,21 @@ CertificateFormContainer.propTypes = {
 }
 CertificateFormContainer.defaultProps = {
   accounts: List(),
-  activeAccount: Map(),
+  activeAccount: '',
   certificateToEdit: Map(),
   groups: List()
 }
 
 /* istanbul ignore next */
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const certificateToEdit = state.security.get('certificateToEdit')
-  const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
   const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
 
   return {
     certificateToEdit,
     initialValues: {
       title: certificateToEdit.get('title'),
-      account: certificateToEdit.get('account') || activeAccount,
+      account: certificateToEdit.get('account') || ownProps.activeAccount,
       group: certificateToEdit.get('group') || activeGroup,
       privateKey: certificateToEdit.get('privateKey') || null,
       certificate: certificateToEdit.get('certificate') || null,

@@ -137,7 +137,7 @@ class AnalysisByTime extends React.Component {
 
   render() {
     if (!this.props.width || !this.props.dataSets) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     if (!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
@@ -210,7 +210,7 @@ class AnalysisByTime extends React.Component {
     return (
       <div className={className}
       onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
+      onMouseLeave={!this.props.noHover && this.deactivateTooltip}>
         <svg
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}

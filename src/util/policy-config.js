@@ -62,13 +62,15 @@ export function getConditionFilterText(match) {
     case 'does_not_contain':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
     case 'equals':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text" values={match}/>
     case 'does_not_equal':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text" values={match}/>
     case 'empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
+    case 'regexp':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.regexp.text" values={match}/>
     default:
       return ''
   }
@@ -98,7 +100,7 @@ const getContentTargetingActionName = (action) => {
 
 const getActionName = (actionName, action) => {
   if (actionName === '_temp') {
-    return <FormattedMessage id="portal.policy.edit.actionSelection.chooseActions.text"/>
+    return <FormattedMessage id="portal.policy.edit.editRule.chooseAction.text"/>
   }
 
   if (actionName === 'reply') {

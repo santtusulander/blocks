@@ -388,7 +388,7 @@ class PropertySummary extends React.Component {
           <div className="kpi">
             <FormattedMessage id="portal.content.property.summary.cacheHitRate.title"/>
             <h3>
-              {avg_cache_hit_rate}%
+              {avg_cache_hit_rate}<FormattedMessage id="portal.percentage" />
             </h3>
           </div>
           <div className="kpi">

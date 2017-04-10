@@ -44,7 +44,7 @@ class AccountDetails extends React.Component {
             ? <LoadingSpinner />
             : <div className='account-details'>
                 <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
-                <span className='value'>UDN</span>
+                <span className='value'><FormattedMessage id="portal.UDN.text"/></span>
 
                 <label><FormattedMessage id="portal.account.manage.accountName.title" /></label>
                 <span className='value'>{account.get('name')}</span>

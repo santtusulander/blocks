@@ -24,7 +24,7 @@ import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../shared/layout/page-container'
-import AccountSelector from '../global-account-selector/global-account-selector'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
 import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
@@ -57,13 +57,6 @@ const rangeMax = 500
 
 let trafficMin = 0
 let trafficMax = 0
-
-const itemSelectorTexts = {
-  property: 'Back to Groups',
-  group: 'Back to Accounts',
-  account: 'UDN Admin',
-  brand: 'UDN Admin'
-}
 
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
@@ -98,9 +91,7 @@ class ContentItems extends React.Component {
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-
-    this.storageSorter = this.storageSorter.bind(this)
-    this.propertySorter = this.propertySorter.bind(this)
+    this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -124,6 +115,21 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+
+  getCustomSortPath(tag) {
+    const [sortBy] = this.props.sortValuePath
+    if (sortBy === 'item') {
+      if (tag === 'storages') {
+        return Immutable.fromJS(['ingest_point_id'])
+      }
+      if (tag === 'properties') {
+        return Immutable.fromJS(['published_host_id'])
+      }
+    }
+
+    return Immutable.fromJS(['totalTraffic'])
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.changeNotification(message)
@@ -285,7 +291,7 @@ class ContentItems extends React.Component {
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
   }
 
-  renderAccountSelector(props, itemSelectorTopBarAction) {
+  renderAccountSelector(props) {
     if (props.selectionDisabled === true) {
       return (
         <div className="dropdown-toggle header-toggle">
@@ -298,26 +304,13 @@ class ContentItems extends React.Component {
 
     return (
       <AccountSelector
-        as="content"
         params={props.params}
-        startTier={props.selectionStartTier}
-        topBarTexts={itemSelectorTexts}
-        topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => {
-          // This check is done to prevent UDN admin from accidentally hitting
-          // the account detail endpoint, which they don't have permission for
-          const currentUser = props.user.get('currentUser')
-          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
-            params[0] = 'groups'
-          }
+        onItemClick={(entity) => {
 
-          const url = getContentUrl(...params)
+          const { nodeInfo, idKey = 'id' } = entity
+          const url = getContentUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents)
+          props.router.push(url)
 
-          // We perform this check to prevent routing to unsupported routes
-          // For example, prevent clicking to SP group route (not yet supported)
-          if (url) {
-            props.router.push(url)
-          }
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
@@ -327,56 +320,6 @@ class ContentItems extends React.Component {
         </div>
       </AccountSelector>
     )
-  }
-  /** TODO: UDNP-3069 Refactor sorters */
-  storageSorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('ingest_point_id').toLowerCase()
-      valB = b.get('ingest_point_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
-  }
-  /** TODO: UDNP-3069 Refactor sorters */
-  propertySorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('published_host_id').toLowerCase()
-      valB = b.get('published_host_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
   }
 
   render() {
@@ -508,7 +451,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.sort(this.storageSorter).map((storage, i) => {
+                        { groupHasStorageService && storages.sort(sortContent(this.getCustomSortPath('storages'), sortDirection)).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -545,7 +488,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort(this.propertySorter).map((property,i) => {
+                { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}

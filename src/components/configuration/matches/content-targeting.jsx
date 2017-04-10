@@ -1,11 +1,12 @@
 import React from 'react'
-import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { List, fromJS, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import classNames from 'classnames'
 
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
 
@@ -87,7 +88,7 @@ class ContentTargeting extends React.Component {
 
             <hr />
 
-            <ButtonToolbar className="text-right">
+            <FormFooterButtons>
               <Button
                 id="cancel-btn"
                 className="btn-secondary"
@@ -104,7 +105,7 @@ class ContentTargeting extends React.Component {
                 <FormattedMessage id="portal.policy.edit.policies.saveMatch.text"/>
               </Button>
 
-            </ButtonToolbar>
+            </FormFooterButtons>
           </form>
         </Modal.Body>
       </div>

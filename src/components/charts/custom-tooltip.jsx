@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 import { formatBytes } from '../../util/helpers'
 
@@ -14,7 +15,7 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
 
         <div key={i} className="tooltip-item">
           <span className="legend-label">
-            <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
+            <span className={`legend-icon ${iconClass(dataKey)}`}><FormattedMessage id="portal.mdashWithSpace"/></span>
             {formattedDate || name}
           </span>
           <span className='legend-value'>{valueFormatter(value)}</span>
@@ -25,7 +26,7 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
         <hr key="hr" style={{ margin: '7px 0' }}/>,
         <div key="totalRow" className="tooltip-item">
           <span className="legend-label">
-            Total
+            <FormattedMessage id="portal.common.total.text"/>
           </span>
           <span id="tooltip-total" className="legend-value">{total}</span>
         </div>]}

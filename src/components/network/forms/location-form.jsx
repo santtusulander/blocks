@@ -38,7 +38,7 @@ const validate = ({
         condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
+            fieldLabel='portal.network.locationForm.name.label'
             minValue={LOCATION_NAME_MIN_LENGTH}
             maxValue={LOCATION_NAME_MAX_LENGTH}/>
         )
@@ -69,7 +69,7 @@ const validate = ({
         condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.cloudProviderLocationId.label'}
+            fieldLabel='portal.network.locationForm.cloudProviderLocationId.label'
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
         )
@@ -95,7 +95,7 @@ const validate = ({
   if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
     errors.cloudProviderRegion = (
       <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.cloudProviderRegion.text'}
+        fieldLabel='portal.network.locationForm.cloudProviderRegion.text'
         minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
         maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
     )
@@ -157,7 +157,7 @@ const NetworkLocationForm = (props) => {
             options={iataCodes}
             emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
-            labelKey={'iata'}
+            labelKey='iata'
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
             component={FieldFormGroupTypeahead}
             label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}

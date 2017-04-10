@@ -85,7 +85,7 @@ import SupportTabTickets from './containers/support/tabs/tickets'
 import SupportTabTools from './containers/support/tabs/tools'
 import SupportTabDocumentation from './containers/support/tabs/documentation'
 import StarburstHelp from './containers/starburst-help'
-import Styleguide from './containers/styleguide'
+import Styleguide from './containers/styleguide/styleguide'
 import User from './containers/user'
 
 import ContentTransition from './transitions/content'
