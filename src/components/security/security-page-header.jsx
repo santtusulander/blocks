@@ -1,14 +1,12 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import AccountSelector from '../global-account-selector/global-account-selector'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import PageHeader from '../shared/layout/page-header'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc, params }) => {
-  const { account } = params
-  const restriction = account ? "group" : null
   let headerText = intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})
 
   if (activeGroup) {
@@ -17,22 +15,12 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
     headerText = activeAccount
   }
 
-  const topBarTexts = {
-    account: intl.formatMessage({ id: 'portal.content.property.topBar.account.label' }),
-    brand: intl.formatMessage({ id: 'portal.content.property.topBar.brand.label' })
-  }
-
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
         <AccountSelector
-          as="security"
           params={params}
-          topBarTexts={topBarTexts}
-          topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-          onSelect={itemSelectorFunc}
-          restrictedTo={restriction}
-          startTier={account ? "group" : "account"}
-          drillable={true}>
+          onItemClick={itemSelectorFunc}
+          levels={[ 'brand', 'account' ]}>
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" /></h1>
             <IconCaretDown />

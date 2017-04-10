@@ -47,8 +47,9 @@ export class Security extends Component {
       params
     } = this.props
 
-    const itemSelectorFunc = (linkType, val, params) => {
-      this.props.router.push(getUrl('/security', linkType, val, params))
+    const itemSelectorFunc = (entity) => {
+      const { nodeInfo, idKey = 'id' } = entity
+      this.props.router.push(getUrl('/security', nodeInfo.entityType, entity[idKey], nodeInfo.parents))
     }
 
     const securityBaseUrl = getSecurityUrlFromParams(params);
