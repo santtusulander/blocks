@@ -222,7 +222,7 @@ $rdp-month-btn-width: 36px;
 
   .react-date-picker__month-view-day-text {
     position: relative;
-    z-index: 1;
+    z-index: $zindex-default-low;
     width: $md-bar-height / 2;
     height: $md-bar-height / 2;
     text-align: center;

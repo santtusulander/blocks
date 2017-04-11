@@ -28,7 +28,7 @@ $highlight-color: $gradient-teal;
 
     .policy-weight-slider {
       position: relative;
-      z-index: 10; //TODO: abstract this value in the scope of UDNP-2181
+      z-index: $zindex-policy-weight;
       width: 100%;
       height: $slidre-height;
       margin: $slider-vertical-margin 0;
