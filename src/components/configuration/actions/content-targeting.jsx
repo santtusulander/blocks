@@ -37,6 +37,17 @@ const getDefaultStatusCodeForType = (type) => {
   }
 }
 
+const validate = ({ code, location }) => {
+  const errors = {}
+  const isRedirect= getTypeFromStatusCode(code) === 'redirect'
+
+  if (isRedirect && !location) {
+    errors.location = <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.location.required.error" />
+  }
+
+  return errors
+}
+
 class ContentTargeting extends React.Component {
   constructor(props) {
     super(props)
@@ -153,7 +164,8 @@ ContentTargeting.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'content-targeting-form'
+  form: 'content-targeting-form',
+  validate
 })(ContentTargeting)
 
 const selector = formValueSelector('content-targeting-form')
