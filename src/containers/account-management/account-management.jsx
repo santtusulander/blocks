@@ -17,7 +17,6 @@ import { getLocationPermissions } from '../../util/permissions'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
-import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as permissionsActionCreators from '../../redux/modules/permissions'
 import * as rolesActionCreators from '../../redux/modules/roles'
@@ -27,6 +26,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 import accountsActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+import groupActionCreators from '../../redux/modules/entities/groups/actions'
 
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
@@ -159,7 +159,7 @@ export class AccountManagement extends Component {
 
   addGroupToActiveAccount({ data, usersToAdd }) {
     const {activeAccount, groupActions, hostActions, users, userActions, toggleModal } = this.props
-    return groupActions.createGroup('udn', activeAccount.get('id'), data)
+    return groupActions.create({brand: 'udn', account: activeAccount.get('id'), payload: data})
       .then(({ payload }) => {
         hostActions.clearFetchedHosts()
         return Promise.all(usersToAdd.map(email => {
@@ -178,11 +178,11 @@ export class AccountManagement extends Component {
   }
 
   deleteGroupFromActiveAccount(group) {
-    return this.props.groupActions.deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      group.get('id')
-    ).then(response => {
+    return this.props.groupActions.remove({
+      brand: 'udn',
+      account: this.props.activeAccount.get('id'),
+      id: group.get('id')
+    }).then(response => {
       this.props.toggleModal(null)
       if (response.error) {
         this.props.uiActions.showInfoDialog({
@@ -213,11 +213,13 @@ export class AccountManagement extends Component {
       })
     })
     return Promise.all([
-      this.props.groupActions.updateGroup(
-        'udn',
-        this.props.activeAccount.get('id'),
-        groupId,
-        data
+      this.props.groupActions.update(
+        {
+          brand: 'udn',
+          account: this.props.activeAccount.get('id'),
+          id: groupId,
+          payload: data
+        }
       ),
       ...addUserActions,
       ...deleteUserActions
@@ -229,11 +231,11 @@ export class AccountManagement extends Component {
   }
 
   showGroupModal(group) {
-    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    const { toggleModal, groupActions, params: { account, brand } } = this.props
     if (!group) {
       toggleModal(ADD_GROUP)
     } else {
-      fetchGroup(brand, account, group.get('id')).then(() => {
+      groupActions.fetchOne({brand, account, id: group.get('id')}).then(() => {
         this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
