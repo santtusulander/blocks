@@ -3,7 +3,7 @@
 
 .chart-tooltip {
   position: absolute;
-  z-index: 1040;
+  z-index: $zindex-tooltip;
   padding: 10px 15px;
   white-space: nowrap;
   opacity: 1;

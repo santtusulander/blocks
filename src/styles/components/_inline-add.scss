@@ -176,7 +176,7 @@
 }
 
 .inline-add-dropdown {
-  z-index: 1;
+  z-index: $zindex-default-low;
   width: 100%;
   height: 60px;
   min-width: 60px;
