@@ -345,6 +345,8 @@ AccountManagementStorages.propTypes = {
 }
 
 AccountManagementStorages.defaultProps = {
+  account: Map(),
+  groups: List(),
   storages: List()
 }
 
