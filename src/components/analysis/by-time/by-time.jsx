@@ -21,7 +21,7 @@ const getExtent = (datasets, key) => {
   ]
 }
 
-const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
+const configureTooltip = (date, positionVal, height, width, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
   const val = actualVal || 0
   const formattedValue = formatY(val)
@@ -32,7 +32,8 @@ const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, ac
     text: text,
     x: xScale(date),
     y: yScale(positionVal),
-    top: yScale(positionVal) + 50 > height
+    top: yScale(positionVal) + 50 > height,
+    left: xScale(date) > width/2
   }
 }
 
@@ -45,6 +46,7 @@ class AnalysisByTime extends React.Component {
       tooltipX: [],
       tooltipY: [],
       tooltipOffsetTop: [],
+      tooltipOffsetLeft: [],
       labelWidth: []
     }
 
@@ -59,6 +61,7 @@ class AnalysisByTime extends React.Component {
       time,
       positionData,
       this.props.height,
+      this.props.width,
       this.formatY,
       xScale,
       yScale,
@@ -116,7 +119,8 @@ class AnalysisByTime extends React.Component {
         tooltipText: tooltipData.map(tooltip => tooltip.text),
         tooltipX: tooltipData.map(tooltip => tooltip.x),
         tooltipY: tooltipData.map(tooltip => tooltip.y),
-        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top)
+        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top),
+        tooltipOffsetLeft: tooltipData.map(tooltip => tooltip.left)
       })
     }
   }
@@ -318,6 +322,7 @@ class AnalysisByTime extends React.Component {
               y={this.state.tooltipY[i]}
               hidden={!this.state.tooltipText[i]}
               offsetTop={this.state.tooltipOffsetTop[i]}
+              offsetLeft={this.state.tooltipOffsetLeft[i]}
             >
                 {this.state.tooltipText[i]}
             </Tooltip>

@@ -9,6 +9,11 @@ class Tooltip extends React.Component {
     if (this.props.offsetTop) {
       className = className + ' offset-top'
     }
+
+    if (this.props.offsetLeft) {
+      className = className + ' offset-left'
+    }
+
     if (this.props.hidden) {
       return (
         <div className={`${className} hidden`} />
@@ -26,6 +31,7 @@ Tooltip.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,
   hidden: React.PropTypes.bool,
+  offsetLeft: React.PropTypes.bool,
   offsetTop: React.PropTypes.bool,
   x: React.PropTypes.number,
   y: React.PropTypes.number
