@@ -382,7 +382,6 @@ const  mapStateToProps = (state, ownProps) => {
   //Since group object in new redux has several property that are not accepted by the server,
   //we have to filter out those fields. This is temporary until we have better solution
   const filteredGroupData = activeGroup && activeGroup.delete('backend_id').delete('parentId')
-
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -399,7 +398,7 @@ const  mapStateToProps = (state, ownProps) => {
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: groupId ? activeGroup.get('name') : '',
     serviceOptions: allServiceOptions
-                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List()))
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup && activeGroup.get('services') || List()))
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
