@@ -123,7 +123,7 @@ class AddChargeNumbersForm extends React.Component {
           }
           <Button
             id='cancel-button'
-            className="btn-outline"
+            className="btn-secondary"
             onClick={onCancel}
           >
             <FormattedMessage id='portal.common.button.cancel' />
