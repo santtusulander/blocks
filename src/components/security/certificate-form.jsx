@@ -63,7 +63,7 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
       <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
           id="cancel_button"
-          outLine={true}
+          className="btn-secondary"
           onClick={onCancel}>
           {intl.formatMessage({id: 'portal.common.button.cancel'})}
         </UDNButton>
