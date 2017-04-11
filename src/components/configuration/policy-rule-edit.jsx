@@ -268,7 +268,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     this.moveSet(set.path, i+1) : () => false}
                   arrowDownDisabled={i >= actions.length - 1 || disabled}
                   onDelete={this.deleteSet(set.path)}
-                  deleteDisabled={actions.length === 1 || disabled}
                 />
               </Col>
             </div>
