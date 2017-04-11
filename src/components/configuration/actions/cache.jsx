@@ -38,10 +38,13 @@ class Cache extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { set } = nextProps
+    const { disabled } = nextProps
 
-    if (this.props.set !== set) {
-      this.updateProps(set)
+    if ((typeof this.props.disabled !== 'undefined') && (this.props.disabled !== disabled)) {
+      this.props.change('checkEtag', 'false')
+      this.props.change('honorOrigin', false)
+      this.props.change('ttlValue', 0)
+      this.props.change('ttlUnit', 'seconds')
     }
   }
 
@@ -62,12 +65,18 @@ class Cache extends React.Component {
     const { path, setKey } = this.props
     const { noStore, checkEtag, honorOrigin, ttlValue, ttlUnit } = values
 
-    this.props.saveAction(path, setKey, {
-      check_etag: checkEtag,
-      max_age: secondsFromUnit(ttlValue, ttlUnit),
-      no_store: noStore,
-      honor_origin: honorOrigin
-    })
+    if (noStore) {
+      this.props.saveAction(path, setKey, {
+        no_store: true
+      })
+    } else {
+      this.props.saveAction(path, setKey, {
+        check_etag: checkEtag,
+        max_age: secondsFromUnit(ttlValue, ttlUnit),
+        no_store: noStore,
+        honor_origin: honorOrigin
+      })
+    }
   }
 
   render() {
@@ -186,6 +195,7 @@ class Cache extends React.Component {
 Cache.displayName = 'Cache'
 Cache.propTypes = {
   close: React.PropTypes.func,
+  disabled: React.PropTypes.bool,
   intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   saveAction: React.PropTypes.func,
