@@ -24,6 +24,7 @@ import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metr
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { getByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -349,7 +350,7 @@ AccountManagementStorages.defaultProps = {
 
 
 function mapStateToProps(state, ownProps) {
-  const account = state.account.get('activeAccount')
+  const account = getAccountById(state, ownProps.params.account)
   const groups = getByAccount(state, ownProps.params.account)
 
   return {
