@@ -167,6 +167,7 @@ AnalyticsTabContribution.propTypes = {
 AnalyticsTabContribution.defaultProps = {
   currentUser: Immutable.Map(),
   filters: Immutable.Map(),
+  filterOptions: Immutable.Map(),
   contribution: Immutable.List()
 }
 
