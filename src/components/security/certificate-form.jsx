@@ -7,7 +7,7 @@ import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
-export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
+export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title, fromSubmitting }) => {
   const groupsOptions = groups.map(group => [
     group.get('id'),
     group.get('name')
@@ -70,9 +70,13 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
         <UDNButton
           id="save_button"
           bsStyle="primary"
-          disabled={invalid || submitting}
+          disabled={invalid || fromSubmitting || submitting}
           onClick={onSubmit}>
-          {intl.formatMessage({id: 'portal.common.button.save'})}
+          {
+            fromSubmitting
+            ? <FormattedMessage id='portal.common.button.saving' />
+            : <FormattedMessage id='portal.common.button.save' />
+          }
         </UDNButton>
       </FormFooterButtons>
     </form>
@@ -83,6 +87,7 @@ CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
   certificate: PropTypes.object,
   editMode: PropTypes.bool,
+  fromSubmitting: PropTypes.bool,
   group: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   intermediateCertificates: PropTypes.object,
