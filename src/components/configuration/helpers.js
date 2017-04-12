@@ -26,10 +26,7 @@ import ConfigurationActionHeader from './actions/header'
 // import ConfigurationActionCors from './actions/cors'
 import ConfigurationContentTargetingAction from './actions/content-targeting'
 
-import {
-  //matchIsContentTargeting,
-  matchIsFileExtension
-} from '../../util/policy-config'
+import { matchIsFileExtension } from '../../util/policy-config'
 
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const { changeValue, formatMessage, activateSet, activateMatch, cancelActiveEditForm } = actions
@@ -78,6 +75,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasExists={true}
+            hasContains={true}
             hasEquals={true}
             hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}

@@ -96,7 +96,7 @@ class CertificateFormContainer extends Component {
   }
 
   render() {
-    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, ...formProps } = this.props
+    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, submitting, ...formProps } = this.props
 
     return (
       <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
@@ -112,6 +112,7 @@ class CertificateFormContainer extends Component {
             editMode={!certificateToEdit.isEmpty()}
             onCancel={() => cancel(toggleModal)}
             onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
+            fromSubmitting={submitting}
             {...formProps}
           />
       </SidePanel>

@@ -39,7 +39,7 @@ label {
 .light-theme {
   input[disabled],
   textarea[disabled] {
-    color: rgba($lt-text-color, 0.2);
+    color: rgba($lt-text-color, 0.4);
     opacity: 0.6;
     user-select: none;
 
@@ -355,7 +355,7 @@ textarea {
   .menu-item-label {
     display: inline-block;
     width: calc(100% - $checkbox-width);
-  }  
+  }
 
   input {
     display: none;
