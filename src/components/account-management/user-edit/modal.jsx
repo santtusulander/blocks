@@ -35,7 +35,9 @@ class UserEditModal extends React.Component {
       groups: user.get('group_id'),
       first_name: user.get('first_name'),
       last_name: user.get('last_name'),
-      phone: {phone_number: user.get('phone_number'), phone_country_code: user.get('phone_country_code') }
+      full_phone_number: ` ${user.get('phone_country_code')}${user.get('phone_number')}`,
+      phone_country_code: user.get('phone_country_code'),
+      phone_number: user.get('phone_number')
     } : {}
 
     const title = <FormattedMessage id='portal.account.editUser.title' />
