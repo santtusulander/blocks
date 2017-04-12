@@ -165,10 +165,18 @@ AnalyticsTabContribution.defaultProps = {
 function mapStateToProps(state) {
   let contribution = state.traffic.getIn(['contribution', 'details'])
   const serviceProviders = state.filters.getIn(['filterOptions', 'serviceProviders'])
+  const contentProviders = state.filters.getIn(['filterOptions', 'contentProviders'])
 
   if (contribution && serviceProviders) {
     contribution = contribution.map(con => {
       const service = serviceProviders.find(s => s.get('id') === con.get('sp_account'))
+      return service ? con.set('name', service.get('name')) : con
+    })
+  }
+
+  if (contribution && contentProviders) {
+    contribution = contribution.map(con => {
+      const service = contentProviders.find(s => s.get('id') === con.get('account'))
       return service ? con.set('name', service.get('name')) : con
     })
   }
