@@ -40,7 +40,8 @@ const validate = (values) => {
     changingPassword,
     first_name,
     last_name,
-    phone,
+    phone_country_code,
+    phone_number,
     current_password,
     new_password,
     validPass
@@ -62,13 +63,13 @@ const validate = (values) => {
       errors.last_name = <FormattedMessage id="portal.user.edit.lastNameRequired.text" />
     }
 
-    if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
-      errors.phone = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
+    if (phone_number && !isValidPhoneNumber(phone_number)) {
+      errors.full_phone_number = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
     }
 
-    const fullPhone = phone.phone_country_code + phone.phone_number;
-    if (!isValidPhoneNumber(fullPhone)) {
-      errors.phone = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
+    const fullPhone = phone_country_code + phone_number;
+    if (!phone_country_code || !isValidPhoneNumber(fullPhone)) {
+      errors.full_phone_number = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
     }
   }
 
@@ -124,8 +125,8 @@ class UserEditForm extends React.Component {
       first_name: values.first_name,
       middle_name: values.middle_name,
       last_name: values.last_name,
-      phone_country_code: values.phone.phone_country_code,
-      phone_number: values.phone.phone_number
+      phone_country_code: values.phone_country_code,
+      phone_number: values.phone_number
     }
 
     //handle 2FA,  add method if ON
