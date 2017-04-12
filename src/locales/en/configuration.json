@@ -496,5 +496,7 @@
   "portal.policy.edit.versions.none.text": "None",
   "portal.policy.edit.versions.activeStaging.text": "Active Staging",
   "portal.policy.edit.versions.saved.text": "Saved",
-  "portal.policy.edit.versions.deactivated.text": "De-Activated"
+  "portal.policy.edit.versions.deactivated.text": "De-Activated",
+  "portal.policy.edit.matcher.required.error": "This field is required",
+  "portal.policy.edit.matcher.invalid.error": "This field is invalid"
 }

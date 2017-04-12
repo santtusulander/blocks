@@ -191,18 +191,20 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     return (
       <Row>
         <Col xs={4}>
-          <div className="condition-name">
-            {match.name}
-            {match.fieldDetail && <FormattedMessage id="portal.colonWithSpace" />}&nbsp;
+          <div>
+            {!match.fieldDetail && match.name}
             {match.fieldDetail && 
-              <TruncatedTitle content={match.fieldDetail}/>
+              <div className="condition-name">
+                {match.name} <FormattedMessage id="portal.colonWithSpace" />&nbsp;
+                <TruncatedTitle content={match.fieldDetail}/>
+              </div>
             }
           </div>
         </Col>
         <Col xs={6}>
-          <p>
-            {getConditionFilterText(match)}
-          </p>
+          <div className="condition-name">
+            <TruncatedTitle content={getConditionFilterText(match)}/>
+          </div>
         </Col>
       </Row>
     )
