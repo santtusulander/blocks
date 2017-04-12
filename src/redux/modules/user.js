@@ -6,7 +6,7 @@ import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          PAGINATION_MOCK, mapReducers,
          parseResponseData } from '../util'
 import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
-import { setUserName as setUserNameToStorage, deleteUserName as deleteUserNameFromStorage} from '../../util/local-storage.js'
+import { setUserName as setUserNameToStorage, deleteUserName as deleteUserNameFromStorage } from '../../util/local-storage.js'
 
 import {
   getUserToken,
