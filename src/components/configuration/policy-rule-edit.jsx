@@ -24,8 +24,8 @@ const getFormattedCountry = (item) => {
 }
 
 const ruleMatchTypeOptions = [
-  {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
-  {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
+  {value: 'and', label: <FormattedMessage id="portal.configuration.condition.and" />},
+  {value: 'or', label: <FormattedMessage id="portal.configuration.condition.or" />}
 ]
 
 class ConfigurationPolicyRuleEdit extends React.Component {
@@ -201,7 +201,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             }
           </div>
         </Col>
-        <Col xs={6}>
+        <Col xs={5}>
           <div className="condition-name">
             <TruncatedTitle content={getConditionFilterText(match)}/>
           </div>
@@ -211,9 +211,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
 
 
-  renderConditions(conditions) {
+  renderConditions(conditions, ruleMatchType) {
     const { disabled, activeMatchPath } = this.props
-
+    const { label } = ruleMatchTypeOptions.find(opt => opt.value === ruleMatchType)
+  
     return (
       <div className="conditions">
         {conditions.map((match, i) => {
@@ -223,13 +224,18 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             <div key={i}
               className={active ? 'condition clearfix active' : 'condition clearfix'}
               onClick={this.activateMatch(match.path)}>
-              <Col xs={10}>
+              <Col xs={9}>
                 {match.field
                   ? this.renderConditionName(match)
                   : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                 }
               </Col>
 
+              <Col xs={1} className="text-right">
+                {i < conditions.length - 1 &&
+                  <h4>{label}</h4>
+                }
+              </Col>
               <Col xs={2} className="text-right">
                 <ActionButtons
                   className="secondary"
@@ -332,21 +338,33 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           </FormGroup>
 
           <Row className="header-btn-row">
-            <Col sm={8}>
+            <Col sm={7}>
               <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
-            <Col sm={4} className="text-right">
-              <Button
-                bsStyle="success"
-                className="btn-icon btn-add-new"
-                onClick={this.addCondition()}
-                disabled={disabled}
-              >
-                <IconAdd />
-              </Button>
+
+            <Col sm={5} className="text-right">
+              <FormGroup>
+                <InputGroup>
+                  {!!flattenedPolicy.matches.length &&
+                    <Select
+                      onSelect={value => this.props.changeValue(this.props.rulePath.concat(['rule_body', 'match_type']), value)}
+                      value={ruleMatchType}
+                      options={ruleMatchTypeOptions}
+                    />
+                  }&nbsp;&nbsp;
+                  <Button
+                    bsStyle="success"
+                    className="btn-icon btn-add-new"
+                    onClick={this.addCondition()}
+                    disabled={disabled}
+                  >
+                    <IconAdd />
+                  </Button>
+                </InputGroup>
+              </FormGroup>
             </Col>
           </Row>
-          {this.renderConditions(flattenedPolicy.matches)}
+          {this.renderConditions(flattenedPolicy.matches, ruleMatchType)}
 
           <Row className="header-btn-row">
             <Col xs={8}>
@@ -381,19 +399,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
           </Row>
           {this.renderActions(flattenedPolicy.default_sets)}
-
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.editRule.applyActions.text"/>
-            </ControlLabel>
-            <Select
-              className="input-select"
-              onSelect={value => this.props.changeValue(this.props.rulePath.concat(['rule_body', 'match_type']), value)}
-              value={ruleMatchType}
-              disabled={flattenedPolicy.matches.length < 2 || disabled}
-              options={ruleMatchTypeOptions}
-            />
-          </FormGroup>
 
           <FormFooterButtons>
             <Button
