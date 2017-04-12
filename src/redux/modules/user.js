@@ -6,6 +6,7 @@ import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          PAGINATION_MOCK, mapReducers,
          parseResponseData } from '../util'
 import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
+import { setUserName as setUserNameToStorage, deleteUserName as deleteUserNameFromStorage} from '../../util/local-storage.js'
 
 import {
   getUserToken,
@@ -303,6 +304,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
 
         case 202:
         default:
+          setUserNameToStorage(username)
           return {
             data: res.data,
             status: res.status
@@ -385,7 +387,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   if (token) {
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
-    )
+    ).then(() => deleteUserNameFromStorage())
   }
   return Promise.resolve({ message: 'Token not found' })
 })
