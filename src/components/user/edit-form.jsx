@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, initialize, change, blur, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, Fields, initialize, change, blur, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
@@ -314,8 +314,8 @@ class UserEditForm extends React.Component {
           </Col>
 
           <Col xs={3}>
-            <Field
-              name="phone"
+            <Fields
+              names={['full_phone_number', 'phone_number', 'phone_country_code']}
               component={FieldTelephoneInput}
             />
           </Col>
