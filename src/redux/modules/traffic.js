@@ -3,7 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 import moment from 'moment'
 
-import { BASE_URL_AAA, analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
+import { analyticsBase, qsBuilder, parseResponseData, mapReducers } from '../util'
 
 const TRAFFIC_START_FETCH = 'TRAFFIC_START_FETCH'
 const TRAFFIC_FINISH_FETCH = 'TRAFFIC_FINISH_FETCH'
@@ -183,7 +183,7 @@ export function trafficServiceProvidersFailure(state) {
 
 export function trafficContentProvidersSuccess(state, action) {
   return state.merge({
-    contribution: Immutable.fromJS(action.payload)
+    contribution: Immutable.fromJS(action.payload.data)
   })
 }
 export function trafficContentProvidersFailure(state) {
@@ -279,35 +279,8 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
 })
 
 export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
-  const data = {}
-  let totals = {}
   return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
-  .then(action => {
-    totals = action.data.totals
-    return action.data.details
-  })
-  .then(details => Promise.all(details.map(datum => {
-    const account = Number(datum.account)
-    const group = Number(datum.group)
-
-    if (opts.group_ids && group) {
-      data[group] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
-    } else {
-      data[account] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
-    }
-  })))
-  .then(resp => {
-    return ({
-      totals: totals,
-      details: resp.map(resp => {
-        const name = resp.data.name || `ID: ${resp.data.id}`
-        return Object.assign({}, data[resp.data.id], {name: name})
-      })
-    })
-  })
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {
