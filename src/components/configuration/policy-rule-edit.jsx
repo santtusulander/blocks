@@ -303,7 +303,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <FormGroup controlId="configure__edge__add-cache-rule__rule-name">
             <InputGroup>
-              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.editRule.ruleName.text" />
+                <FormattedMessage id="portal.spaceWithAsterisk" />
+              </ControlLabel>
               <FormControl
                 value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']), '')}
                 onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}
@@ -314,7 +317,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <FormGroup>
             <InputGroup>
-              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.editRule.type.text"/>
+                <FormattedMessage id="portal.spaceWithAsterisk" />
+              </ControlLabel>
               <Select
                 className="input-select"
                 value={ruleType}
@@ -344,7 +350,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col xs={8}>
-              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/><FormattedMessage id="portal.spaceWithAsterisk" /></h3>
             </Col>
             <Col xs={4} className="text-right">
               <Button
