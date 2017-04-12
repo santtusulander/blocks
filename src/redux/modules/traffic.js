@@ -274,35 +274,8 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 })
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
-  const data = {}
-  let totals = {}
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
-  .then(action => {
-    totals = action.data.totals
-    return action.data.details
-  })
-  .then(details => Promise.all(details.map(datum => {
-    const account = Number(datum.sp_account)
-    const group = Number(datum.sp_group)
-
-    if (opts.sp_group_ids && group) {
-      data[group] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}/groups/${group}`)
-    } else {
-      data[account] = datum
-      return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
-    }
-  })))
-  .then(resp => {
-    return ({
-      totals: totals,
-      details: resp.map(resp => {
-        const name = resp.data.name || `ID: ${resp.data.id}`
-        return Object.assign({}, data[resp.data.id], {name: name})
-      })
-    })
-  })
 })
 
 export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
