@@ -3,12 +3,12 @@ import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 import { FormGroup, FormControl } from 'react-bootstrap'
 
-import SectionHeader from '../../layout/section-header'
+import SectionHeader from '../../shared/layout/section-header'
 import RoleEditForm from './role-edit-form.jsx'
-import ActionButtons from '../../action-buttons.jsx'
+import ActionButtons from '../../shared/action-buttons.jsx'
 
-import TableSorter from '../../table-sorter'
-import ArrayTd from '../../array-td/array-td'
+import TableSorter from '../../shared/table-sorter'
+import ArrayTd from '../../shared/page-elements/array-td'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -132,9 +132,13 @@ class RolesList extends React.Component {
                       this.props.permissions.get('ui')
                       ).toArray()
                     ]} />
-                    : <td>No permissions found</td>}
+                    : (
+                      <td>
+                        <FormattedMessage id="portal.role.list.search.noPermissionsResults.text"/>
+                      </td>
+                    )}
                   <td>
-                    {userCount} User{userCount !== 1 && 's'}
+                    {userCount} <FormattedMessage id="portal.role.list.search.userCount.text" values={{userCount: userCount}}/>
                   </td>
                   <td className="nowrap-column">
                     <ActionButtons

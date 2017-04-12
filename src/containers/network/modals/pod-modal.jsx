@@ -23,8 +23,8 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 
 import { buildReduxId } from '../../../redux/util'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'
@@ -438,6 +438,7 @@ PodFormContainer.defaultProps = {
   UIFootprints: []
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
@@ -493,6 +494,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(podActions.create({ ...params, data })),

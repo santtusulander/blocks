@@ -4,6 +4,7 @@
 $token-background: $gradient-teal;
 $token-vertical-padding: em(4px, $form-font-size);
 $token-horizontal-padding: em(12px, $form-font-size);
+$hint-input-left-padding: 40px;
 
 .bootstrap-typeahead {
 
@@ -24,6 +25,10 @@ $token-horizontal-padding: em(12px, $form-font-size);
   .bootstrap-tokenizer-input div {
     // This fixes the input width calculations
     font-size: rem($form-font-size) !important;
+  }
+
+  .bootstrap-typeahead-input-hint {
+    padding-left: $hint-input-left-padding;
   }
 
   .token {

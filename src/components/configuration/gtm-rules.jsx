@@ -4,9 +4,10 @@ import { Field, FieldArray } from 'redux-form'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import HelpTooltip from '../help-tooltip'
-import Confirmation from '../confirmation'
-import ActionButtons from '../../components/action-buttons'
+import HelpTooltip from '../shared/tooltips/help-tooltip'
+import Confirmation from '../shared/page-elements/confirmation'
+import ActionButtons from '../shared/action-buttons'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
@@ -66,14 +67,16 @@ class ConfigurationGTMTrafficRules extends React.Component {
 
     return (
       <tr key={index}>
-        <td>{input.value.name}</td>
+        <td><TruncatedTitle content={input.value.name} /></td>
         <td>
-          <HelpTooltip
-            id='gtm-match-tooltip'
-            buttonText={matches}
-            title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
-            {matches}
-          </HelpTooltip>
+          <div className="matches">
+            <HelpTooltip
+              id='gtm-match-tooltip'
+              buttonText={matches}
+              title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
+              {matches}
+            </HelpTooltip>
+          </div>
         </td>
         <td>{trafficSplit}</td>
         {!this.props.readOnly &&

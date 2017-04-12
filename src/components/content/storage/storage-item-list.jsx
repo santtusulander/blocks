@@ -9,7 +9,7 @@ import LineAreaComposedChart from '../../charts/line-area-composed-chart'
 import IconChart from '../../shared/icons/icon-chart.jsx'
 import IconConfiguration from '../../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond } from '../../../util/helpers'
-import TruncatedTitle from '../../truncated-title'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 import LinkWrapper from '../link-wrapper'
 
 class StorageItemList extends React.Component {
@@ -73,7 +73,7 @@ class StorageItemList extends React.Component {
 
             <div className="content-item-list-section section-lg">
               <Row>
-                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix">/ {formatBitsPerSecond(estimate)}</span></h1>
+                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix"><FormattedMessage id="portal.slashWithSpace" />{formatBitsPerSecond(estimate)}</span></h1>
                 <p className="text-sm"><FormattedMessage id="portal.common.current" /></p>
               </Row>
             </div>

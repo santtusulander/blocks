@@ -5,7 +5,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import {FormattedMessage} from 'intl'
 
-import ModalWindow from '../modal.jsx'
+import ModalWindow from '../shared/modal.jsx'
 import ThemeWrap from './theme-wrap.jsx'
 
 const reducer = combineReducers({ form });

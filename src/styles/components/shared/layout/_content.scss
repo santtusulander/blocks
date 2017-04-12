@@ -1,0 +1,20 @@
+// Content Layout
+// ==============
+
+.content-layout {
+  min-height: calc(100vh - #{$header-total-height});
+  margin-bottom: -$footer-height;
+
+  &::after {
+    display: block;
+    height: $footer-height;
+    content: '';
+  }
+
+  > .loading-spinner {
+    .spinner-content {
+      position: fixed;
+      margin-left: $navigation-sidebar-width / 2;
+    }
+  }
+}

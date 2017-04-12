@@ -11,6 +11,8 @@ import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
 
+import '../../styles/components/charts/_line-area-composed-chart.scss'
+
 const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, keyLabel, comparisonKeyLabel, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height, isComparison}) => {
   let dateFormat = defaultTickDateFormat
   const haveEstimate = data && data[0] && data[0].estimate
@@ -97,6 +99,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             }
 
             <Tooltip
+              isAnimationActive={false}
               cursor={{stroke: black}}
               content={
                 <LineAreaComposedChartTooltip

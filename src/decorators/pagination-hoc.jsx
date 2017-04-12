@@ -53,6 +53,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
         fields: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), null]),
         filter_by: PropTypes.string,
         filter_value: PropTypes.string,
+        isPristine: PropTypes.bool,
         offset: PropTypes.number,
         page_size: PropTypes.number,
         paginationActions: PropTypes.object,
@@ -224,7 +225,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
           }
         },
         reset: () => {
-          subscribers.length = 0 
+          subscribers.length = 0
         }
       });
     }

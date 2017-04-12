@@ -37,7 +37,7 @@
   }
 
   .dropdown-menu {
-    z-index: 9999; // TODO UDNP-2181 - Abstract z-index values to variables
+    z-index: $zindex-dropdown-menu;
   }
 
   .btn-toolbar {
@@ -63,13 +63,13 @@
     }
 
     .dark-theme & {
-      z-index: 1060; // TODO UDNP-2181 - Abstract z-index values to variables
+      z-index: $zindex-button-toolbar;
       background: rgba($pale-blue, 0.2);
       background: #1c486b; // sass-lint:disable-line no-duplicate-properties
     }
 
     .light-theme & {
-      z-index: 1060; // TODO UDNP-2181 - Abstract z-index values to variables
+      z-index: $zindex-button-toolbar;
       background: $white;
     }
   }

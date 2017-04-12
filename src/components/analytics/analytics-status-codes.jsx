@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 import { FormGroup, Checkbox } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import FilterChecklistDropdown from '../shared/form-elements/filter-checklist-dropdown.jsx'
 
 function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   const
@@ -42,7 +43,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
             value={twoHundreds}
             checked={twoHundredsChecked}
             onChange={handleCheck(twoHundreds, twoHundredsChecked)}>
-            <span>2XX</span>
+            <span><FormattedMessage id="portal.analytics.status.code2.text"/></span>
           </Checkbox>
         </FormGroup>
       </li>
@@ -53,7 +54,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
           value={fourHundreds}
           checked={fourHundredsChecked}
           onChange={handleCheck(fourHundreds, fourHundredsChecked)}>
-          <span>4XX</span>
+          <span><FormattedMessage id="portal.analytics.status.code4.text"/></span>
         </Checkbox>
       </FormGroup>
     </li>
@@ -63,7 +64,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
           value={fiveHundreds}
           checked={fiveHundredsChecked}
           onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}>
-          <span>5XX</span>
+          <span><FormattedMessage id="portal.analytics.status.code5.text"/></span>
         </Checkbox>
       </FormGroup>
       </li>

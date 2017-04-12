@@ -7,18 +7,18 @@ import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } 
 import { Button } from 'react-bootstrap'
 
 import IconAdd from '../shared/icons/icon-add.jsx'
-import IsAllowed from '../is-allowed'
-import HelpTooltip from '../help-tooltip'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import HelpTooltip from '../shared/tooltips/help-tooltip'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
-import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
 
 import RuleModal from './traffic-rule-form/rule-modal'
 
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupToggle from '../form/field-form-group-toggle'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
@@ -266,6 +266,7 @@ ConfigurationGlobalTrafficManager.defaultProps = {
   config: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   const selector = formValueSelector('gtmForm')
   const GTMToggle = selector(state, 'GTMToggle')

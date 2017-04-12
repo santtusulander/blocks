@@ -7,7 +7,7 @@ import {
 } from '../constants/property-config'
 
 import { TOKEN_AUTH_STREAMING } from '../constants/configuration'
-import { availableActions } from '../constants/property-config'
+import { availableActions, availableMatches } from '../constants/property-config'
 
 export const ALLOW_RESPONSE_CODES = [200]
 export const DENY_RESPONSE_CODES = [401, 403, 404, 500]
@@ -62,13 +62,15 @@ export function getConditionFilterText(match) {
     case 'does_not_contain':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
     case 'equals':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text" values={match}/>
     case 'does_not_equal':
-      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text"/>
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text" values={match}/>
     case 'empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
     case 'does_not_empty':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
+    case 'regexp':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.regexp.text" values={match}/>
     default:
       return ''
   }
@@ -98,7 +100,7 @@ const getContentTargetingActionName = (action) => {
 
 const getActionName = (actionName, action) => {
   if (actionName === '_temp') {
-    return 'New ACtion'
+    return <FormattedMessage id="portal.policy.edit.editRule.chooseAction.text"/>
   }
 
   if (actionName === 'reply') {
@@ -110,6 +112,12 @@ const getActionName = (actionName, action) => {
   const actionConfig = availableActions.find(item => item.key === actionName)
 
   return actionConfig ? <FormattedMessage id={actionConfig.name}/> : actionName
+}
+
+const getConditionName = (fieldName) => {
+  const conditionConfig = availableMatches.find(item => item.key === fieldName)
+
+  return conditionConfig ? <FormattedMessage id={conditionConfig.name}/> : fieldName
 }
 
 export function policyContainsMatchField(policy, field, count) {
@@ -140,7 +148,8 @@ const parseConditions = (items, path) => {
       fieldDetail: item.get('field_detail'),
       filterType: getMatchFilterType(item),
       values: (Array.isArray(value)) ? value : [value],
-      path: path.concat([i])
+      path: path.concat([i]),
+      name: getConditionName(item.get('field'))
     }
   }).toJS() : []
 }

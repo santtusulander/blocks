@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import PageContainer from '../../layout/page-container'
+import PageContainer from '../../shared/layout/page-container'
 import LoadingSpinner from '../../loading-spinner/loading-spinner'
 import RolesList from '../role-edit/roles-list.jsx'
 

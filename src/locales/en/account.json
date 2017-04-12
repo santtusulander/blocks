@@ -1,4 +1,5 @@
 {
+  "portal.accountManagement.brandList.accounts.text": " {accountsCount, plural, one {# account} other {# accounts}}",
   "portal.accountManagement.groupPropertiesName.text": "Name",
   "portal.accountManagement.groupProperties.text": "Properties",
   "portal.accountManagement.noGroupProperties.text": "No Properties",
@@ -141,6 +142,8 @@
   "portal.role.list.header.permissions.title": "Permissions",
   "portal.role.list.header.assignedTo.title": "Assigned To",
   "portal.role.list.search.noResults.text": "No roles found",
+  "portal.role.list.search.userCount.text": " {userCount, plural, one {# User} other {# Users}}",
+  "portal.role.list.search.noPermissionsResults.text": "No permissions found",
   "portal.role.list.search.noResultsWithTerm.text": "No roles found with the search term {searchTerm}",
 
   "portal.accountManagement.accountNameAlreadyUsed.text": "That account name is taken",
@@ -151,6 +154,7 @@
   "portal.accountManagement.invalidAccountName.text": "Account name is invalid.",
   "portal.accountManagement.account.text": "ACCOUNT",
   "portal.accountManagement.accounts.text": "ACCOUNTS",
+  "portal.accountManagement.accountsType.unknown.text": "Unknown",
   "portal.accountManagement.groups.text": "GROUPS",
   "portal.accountManagement.users.text": "USERS",
   "portal.accountManagement.dns.text": "DNS",
@@ -217,6 +221,7 @@
   "portal.account.manage.providerTypeUnknown.text": "Unknown",
   "portal.account.manage.editAccount.title": "Edit Account",
   "portal.account.manage.newAccount.title": "Add New Account",
+  "portal.account.manage.newAccountButton.title": "New Account",
   "portal.account.manage.noAccounts.text": "No accounts.",
   "portal.account.manage.selectAccount.text": "Select Account",
 

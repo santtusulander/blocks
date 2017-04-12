@@ -26,11 +26,11 @@ import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
-import Footer from '../components/footer'
+import Footer from '../components/shared/layout/footer'
 
-import ModalWindow from '../components/modal'
-import Notification from '../components/notification'
-import BannerNotification from '../components/shared/banner-notification'
+import ModalWindow from '../components/shared/modal'
+import Notification from '../components/shared/notification-wrappers/notification'
+import BannerNotification from '../components/shared/notification-wrappers/banner-notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
@@ -293,6 +293,7 @@ Main.childContextTypes = {
   roles: PropTypes.instanceOf(Map)
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params
@@ -301,7 +302,7 @@ const mapStateToProps = (state, ownProps) => {
   const stateMap = Map(rest)
   const fetching = stateMap.some(
     store => store && (store.get ? store.get('fetching') : store.fetching)
-  ) || getGlobalFetching({entities, ...state})
+  ) || getGlobalFetching({entities})
 
   return {
     accounts: getAccountsByBrand(state, brand),
@@ -325,6 +326,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),

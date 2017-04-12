@@ -29,17 +29,17 @@ import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
 import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
 
-import PageContainer from '../components/layout/page-container'
-import Sidebar from '../components/layout/sidebar'
-import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import PageContainer from '../components/shared/layout/page-container'
+import Sidebar from '../components/shared/layout/section-header'
+import Content from '../components/shared/layout/content'
+import PageHeader from '../components/shared/layout/page-header'
+import { PropertyConfigAccountSelector as AccountSelector } from '../components/global-account-selector/account-selector-container'
 import IconTrash from '../components/shared/icons/icon-trash.jsx'
-import TruncatedTitle from '../components/truncated-title'
-import IsAllowed from '../components/is-allowed'
-import ModalWindow from '../components/modal'
-import Tabs from '../components/tabs'
-import IsAdmin from '../components/is-admin'
+import TruncatedTitle from '../components/shared/page-elements/truncated-title'
+import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
+import ModalWindow from '../components/shared/modal'
+import Tabs from '../components/shared/page-elements/tabs'
+import IsAdmin from '../components/shared/permission-wrappers/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
@@ -287,16 +287,17 @@ export class Configuration extends React.Component {
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector
-            as="configuration"
             params={this.props.params}
-            topBarTexts={{}}
-            onSelect={(tier, value, params) => {
+            onItemClick={(entity) => {
+
+              const { nodeInfo, idKey = 'id' } = entity
               const { params: { brand, account, group }, hostActions } = this.props
               hostActions.startFetching()
-              hostActions.fetchHost(brand, account, group, value).then(() => {
-                const url = getContentUrl('propertyConfiguration', value, params)
+              hostActions.fetchHost(brand, account, group, entity[idKey]).then(() => {
+                const url = getContentUrl('propertyConfiguration', entity[idKey], nodeInfo.parents)
                 this.props.router.push(`${url}/${children.props.route.path}`)
               })
+
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
@@ -462,7 +463,7 @@ export class Configuration extends React.Component {
 
         {this.state.showPublishModal &&
           <Modal show={true}
-            dialogClassName="configuration-sidebar"
+            dialogClassName="side-panel"
             onHide={this.togglePublishModal}>
             <Modal.Header>
               <h1><FormattedMessage id="portal.configuration.sidebar.pubVer.text" /></h1>

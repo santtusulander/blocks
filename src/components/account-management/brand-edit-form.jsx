@@ -3,10 +3,10 @@ import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { connect } from 'react-redux'
 
-import SidePanel from '../side-panel'
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import Radio from '../../components/radio'
+import SidePanel from '../shared/side-panel'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import Radio from '../shared/form-elements/radio'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -119,7 +119,9 @@ const BrandEditForm = (props) => {
 
           </FormGroup>
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>
+            <FormattedMessage id='portal.common.button.cancel' />
+          </Button>
           <Button disabled={props.submitting || props.invalid} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
         </ButtonToolbar>
       </form>

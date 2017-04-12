@@ -8,6 +8,7 @@ import { Col, Row, Table } from 'react-bootstrap'
 
 import {
   accountIsContentProviderType,
+  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
@@ -16,10 +17,6 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import {
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CONTENT_PROVIDER
-} from '../constants/account-management-options'
 import { getDashboardUrl } from '../util/routes'
 
 import checkPermissions from '../util/permissions'
@@ -45,20 +42,20 @@ import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/s
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
-import AccountSelector from '../components/global-account-selector/global-account-selector'
+import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
-import Content from '../components/layout/content'
+import Content from '../components/shared/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import IconCaretDown from '../components/shared/icons/icon-caret-down'
-import IsAllowed from '../components/is-allowed'
+import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
-import MiniChart from '../components/mini-chart'
-import PageContainer from '../components/layout/page-container'
-import PageHeader from '../components/layout/page-header'
-import StackedByTimeSummary from '../components/stacked-by-time-summary'
-import TruncatedTitle from '../components/truncated-title'
+import MiniChart from '../components/charts/mini-chart'
+import PageContainer from '../components/shared/layout/page-container'
+import PageHeader from '../components/shared/layout/page-header'
+import StackedByTimeSummary from '../components/charts/stacked-by-time-summary'
+import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 
 import { buildAnalyticsOptsForContribution, buildFetchOpts } from '../util/helpers.js'
 import { getCitiesWithinBounds } from '../util/mapbox-helpers'
@@ -101,7 +98,7 @@ export class Dashboard extends React.Component {
     }
 
     if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
-      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
+      this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
     if (this.measureContainersTimeout) {
@@ -119,57 +116,57 @@ export class Dashboard extends React.Component {
     clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(urlParams, filters, activeAccount) {
+  fetchData(urlParams, filters) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id})
+      this.props.fetchAccount({brand, id}).then(() => {
+        const params = { brand: urlParams.brand, account: urlParams.account }
 
-      const params = { brand: urlParams.brand, account: urlParams.account }
+        const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+        dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+        const accountType = this.props.activeAccount.get('provider_type')
+        const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-      const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
-        ? ACCOUNT_TYPE_CONTENT_PROVIDER
-        : ACCOUNT_TYPE_SERVICE_PROVIDER
-      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
+        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
+          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
 
-      const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
-        ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-        : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+        /**
+         * If user has permission to list storages and view storage analytics and if the active account is a content provider:
+         * fetch all groups and storage metrics of this account, all storages of each group.
+         * @type {[Promise]}
+         */
+        const fetchStorageData =
+          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+          accountIsContentProviderType(this.props.activeAccount) &&
 
-      /**
-       * If user has permission to list storages and view storage analytics and if the active account is a content provider:
-       * fetch all groups and storage metrics of this account, all storages of each group.
-       * @type {[Promise]}
-       */
-      const fetchStorageData =
-        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+          this.props.fetchGroups(params).then((response) => {
+            let groupIds = []
+            if (response) {
+              groupIds = Object.keys(response.entities.groups)
+            } else {
+              // We don't always have to fetch groups because of caching, in those cases use selector
+              // to get group IDs for this account from the store.
+              groupIds = this.props.getGroupIds()
+            }
+            return Promise.all([
+              ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
+              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
+            ])
+          })
 
-        this.props.fetchGroups(params).then((response) => {
-          let groupIds = []
-          if (response) {
-            groupIds = Object.keys(response.entities.groups)
-          } else {
-            // We don't always have to fetch groups because of caching, in those cases use selector
-            // to get group IDs for this account from the store.
-            groupIds = this.props.getGroupIds()
-          }
-          return Promise.all([
-            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
-            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
-          ])
-        })
-
-      return Promise.all([
-        this.props.dashboardActions.startFetching(),
-        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-        fetchProviders,
-        fetchStorageData
-      ])
-      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
+        return Promise.all([
+          this.props.dashboardActions.startFetching(),
+          this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+          fetchProviders,
+          fetchStorageData
+        ])
+        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
+      })
     }
   }
 
@@ -394,7 +391,6 @@ export class Dashboard extends React.Component {
   render() {
     const { activeAccount, fetching, filterOptions, filters, intl, params, router, user } = this.props
     const showFilters = List(['dateRange'])
-    const dashboardParams = { brand: params.brand, account: params.account }
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -402,19 +398,19 @@ export class Dashboard extends React.Component {
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
-
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
-              as="dashboard"
-              params={dashboardParams}
-              topBarTexts={{ brand: 'UDN Admin' }}
-              topBarAction={() => router.push(getDashboardUrl('brand', 'udn', {}))}
-              onSelect={(...dashboardParams) => router.push(getDashboardUrl(...dashboardParams))}
-              drillable={false}
-              restrictedTo="account">
+              params={params}
+              onItemClick={(entity) => {
+
+                const { nodeInfo, idKey = 'id' } = entity
+                router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
+
+              }}
+              levels={[ 'brand' ]}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1>
                   <TruncatedTitle
@@ -490,6 +486,7 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { params: { account } }) => {
   return {
     getGroupIds: () => getIdsByAccount(state, account),
@@ -505,6 +502,7 @@ const mapStateToProps = (state, { params: { account } }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),

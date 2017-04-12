@@ -21,35 +21,35 @@ import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
-import UDNButton from '../button'
+import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
-import PageContainer from '../layout/page-container'
-import AccountSelector from '../global-account-selector/global-account-selector'
+import PageContainer from '../shared/layout/page-container'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
 import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
 
 import PropertyItemContainer from '../../containers/content/property-item-container'
 
-import Content from '../layout/content'
-import PageHeader from '../layout/page-header'
+import Content from '../shared/layout/content'
+import PageHeader from '../shared/layout/page-header'
 import ContentItem from './content-item'
-import Select from '../select'
+import Select from '../shared/form-elements/select'
 import IconAdd from '../shared/icons/icon-add.jsx'
-import ButtonDropdown from '../button-dropdown'
+import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import IconCaretDown from '../shared/icons/icon-caret-down.jsx'
 import IconItemList from '../shared/icons/icon-item-list.jsx'
 import IconItemChart from '../shared/icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import TruncatedTitle from '../../components/truncated-title'
-import IsAllowed from '../is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import SidePanel from '../side-panel'
+import SidePanel from '../shared/side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 const rangeMin = 400
@@ -57,13 +57,6 @@ const rangeMax = 500
 
 let trafficMin = 0
 let trafficMax = 0
-
-const itemSelectorTexts = {
-  property: 'Back to Groups',
-  group: 'Back to Accounts',
-  account: 'UDN Admin',
-  brand: 'UDN Admin'
-}
 
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
@@ -98,9 +91,7 @@ class ContentItems extends React.Component {
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-
-    this.storageSorter = this.storageSorter.bind(this)
-    this.propertySorter = this.propertySorter.bind(this)
+    this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -124,6 +115,21 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+
+  getCustomSortPath(tag) {
+    const [sortBy] = this.props.sortValuePath
+    if (sortBy === 'item') {
+      if (tag === 'storages') {
+        return Immutable.fromJS(['ingest_point_id'])
+      }
+      if (tag === 'properties') {
+        return Immutable.fromJS(['published_host_id'])
+      }
+    }
+
+    return Immutable.fromJS(['totalTraffic'])
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.changeNotification(message)
@@ -285,7 +291,7 @@ class ContentItems extends React.Component {
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
   }
 
-  renderAccountSelector(props, itemSelectorTopBarAction) {
+  renderAccountSelector(props) {
     if (props.selectionDisabled === true) {
       return (
         <div className="dropdown-toggle header-toggle">
@@ -298,26 +304,13 @@ class ContentItems extends React.Component {
 
     return (
       <AccountSelector
-        as="content"
         params={props.params}
-        startTier={props.selectionStartTier}
-        topBarTexts={itemSelectorTexts}
-        topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => {
-          // This check is done to prevent UDN admin from accidentally hitting
-          // the account detail endpoint, which they don't have permission for
-          const currentUser = props.user.get('currentUser')
-          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
-            params[0] = 'groups'
-          }
+        onItemClick={(entity) => {
 
-          const url = getContentUrl(...params)
+          const { nodeInfo, idKey = 'id' } = entity
+          const url = getContentUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents)
+          props.router.push(url)
 
-          // We perform this check to prevent routing to unsupported routes
-          // For example, prevent clicking to SP group route (not yet supported)
-          if (url) {
-            props.router.push(url)
-          }
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
@@ -327,56 +320,6 @@ class ContentItems extends React.Component {
         </div>
       </AccountSelector>
     )
-  }
-  /** TODO: UDNP-3069 Refactor sorters */
-  storageSorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('ingest_point_id').toLowerCase()
-      valB = b.get('ingest_point_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
-  }
-  /** TODO: UDNP-3069 Refactor sorters */
-  propertySorter(a,b) {
-    const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
-
-    let valA, valB
-
-    //sort By Name
-    if (sortBy === 'item') {
-      valA = a.get('published_host_id').toLowerCase()
-      valB = b.get('published_host_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
-    }
-
-    if (valA > valB) {
-      return sortDirection
-    }
-    if (valA < valB) {
-      return -1 * sortDirection
-    }
-
-    return 0
   }
 
   render() {
@@ -508,7 +451,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.sort(this.storageSorter).map((storage, i) => {
+                        { groupHasStorageService && storages.sort(sortContent(this.getCustomSortPath('storages'), sortDirection)).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -545,7 +488,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort(this.propertySorter).map((property,i) => {
+                { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}

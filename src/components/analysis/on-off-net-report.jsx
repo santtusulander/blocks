@@ -5,11 +5,11 @@ import moment from 'moment'
 import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
@@ -69,10 +69,10 @@ class AnalysisOnOffNetReport extends React.Component {
 
         // the following conditionals handle cases where a & b contain null data
         if (!lhs && rhs) {
-          return -1 * sortDir 
+          return -1 * sortDir
         }
         if (lhs && !rhs) {
-          return 1 * sortDir 
+          return 1 * sortDir
         }
         if (lhs && rhs) {
           if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {
@@ -101,15 +101,16 @@ class AnalysisOnOffNetReport extends React.Component {
     const statsToday = this.props.onOffStatsToday
 
     let chart = null
-    const onNet = stats.get('detail').map(datapoint => {
+    const details = stats.get('detail')
 
+    const onNet = details && details.map(datapoint => {
       return {
         bytes: datapoint.getIn(['net_on' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')
       }
     })
 
-    const offNet = stats.get('detail').map(datapoint => {
+    const offNet = details && details.map(datapoint => {
       return {
         bytes: datapoint.getIn(['net_off' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')
@@ -207,7 +208,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
-                    <h4>On-net</h4>
+                    <h4><FormattedMessage id="portal.analytics.onNet.title" /></h4>
                     <p className="on-net">
                       {numeral(statsToday.getIn(['net_on', 'percent_total'])).format('0,0%')}
                     </p>
@@ -215,7 +216,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 }
                 {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
-                    <h4>Off-net</h4>
+                    <h4><FormattedMessage id="portal.analytics.offNet.title" /></h4>
                     <p className="off-net">
                       {numeral(statsToday.getIn(['net_off', 'percent_total'])).format('0,0%')}
                     </p>
@@ -230,7 +231,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
-                    <h4>On-net</h4>
+                    <h4><FormattedMessage id="portal.analytics.onNet.title" /></h4>
                     <p className="on-net">
                         {numeral(stats.getIn(['net_on', 'percent_total'])).format('0,0%')}
                     </p>
@@ -238,7 +239,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 }
                 {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
-                    <h4>Off-net</h4>
+                    <h4><FormattedMessage id="portal.analytics.offNet.title" /></h4>
                     <p className="off-net">
                         {numeral(stats.getIn(['net_off', 'percent_total'])).format('0,0%')}
                     </p>
@@ -266,22 +267,22 @@ class AnalysisOnOffNetReport extends React.Component {
               <thead>
                 <tr>
                   <TableSorter {...sorterProps} column="timestamp">
-                    Date
+                    <FormattedMessage id="portal.analytics.report.table.date.text" />
                   </TableSorter>
                   <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
-                    On Net (Bytes)
+                    <FormattedMessage id="portal.analytics.report.table.onNetBytes.text" />
                   </TableSorter>
                   <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
-                    On Net (%)
+                    <FormattedMessage id="portal.analytics.report.table.onNetPercentage.text" />
                   </TableSorter>
                   <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
-                    Off Net (Bytes)
+                    <FormattedMessage id="portal.analytics.report.table.offNetBytes.text" />
                   </TableSorter>
                   <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
-                    Off Net (%)
+                    <FormattedMessage id="portal.analytics.report.table.offNetPercentage.text" />
                   </TableSorter>
                   <TableSorter {...sorterProps} column="total">
-                    Total (Bytes)
+                    <FormattedMessage id="portal.analytics.report.table.total.text" />
                   </TableSorter>
                 </tr>
               </thead>

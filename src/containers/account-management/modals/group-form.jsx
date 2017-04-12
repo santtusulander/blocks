@@ -12,6 +12,8 @@ import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
+import {getById as getGroupsById} from '../../../redux/modules/entities/groups/selectors'
+
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
@@ -20,10 +22,10 @@ import { getAll as getRoles } from '../../../redux/modules/entities/roles/select
 
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 
-import TruncatedTitle from '../../../components/truncated-title'
-import ModalWindow from '../../../components/modal'
+import TruncatedTitle from '../../../components/shared/page-elements/truncated-title'
+import ModalWindow from '../../../components/shared/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'
@@ -63,6 +65,7 @@ class GroupFormContainer extends React.Component {
   componentWillMount() {
     const { hostActions: { fetchHosts, startFetching }, params: { brand, account },
             groupId, canSeeLocations, canFetchNetworks, fetchServiceInfo } = this.props
+
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
@@ -366,17 +369,19 @@ GroupFormContainer.defaultProps = {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, group, host } = state
+  const { user, host } = state
   const { groupId, params: { account } } = ownProps
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = getAccountById(state, account)
-  const activeGroup = group.get('activeGroup') || Map()
+  const activeGroup = getGroupsById(state, groupId)
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
   const roles = getRoles(state)
-
+  //Since group object in new redux has several property that are not accepted by the server,
+  //we have to filter out those fields. This is temporary until we have better solution
+  const filteredGroupData = activeGroup && activeGroup.delete('backend_id').delete('parentId')
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -385,15 +390,15 @@ const  mapStateToProps = (state, ownProps) => {
     canFetchNetworks,
     hosts: groupId && host.get('allHosts'),
     initialValues: {
-      ...(groupId ? activeGroup.toJS() : {}),
+      ...(groupId && filteredGroupData ? filteredGroupData.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: host.get('fetching'),
     isFetchingEntities: getFetchingByTag(state, 'location') || getFetchingByTag(state, 'network'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
-    name: groupId ? group.getIn(['activeGroup', 'name']) : '',
+    name: groupId ? activeGroup.get('name') : '',
     serviceOptions: allServiceOptions
-                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List()))
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup && activeGroup.get('services') || List()))
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
@@ -402,6 +407,7 @@ const  mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),

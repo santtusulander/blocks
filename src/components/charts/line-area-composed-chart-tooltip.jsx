@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react'
 import { formatUnixTimestamp, formatBytes} from '../../util/helpers'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
+
+import '../../styles/components/charts/_line-area-composed-chart-tooltip.scss'
 
 const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatBytes, iconClassNamePicker, ignoreValues=[] }) => {
   const timestamp = payload[0] && payload[0].payload && payload[0].payload.timestamp
@@ -17,7 +20,7 @@ const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatByt
           </div>
           <div className="legend">
             <span className="legend-label">
-              <span className={classNames("legend-icon", iconClassNamePicker(dataKey))}>&mdash; </span>
+              <span className={classNames("legend-icon", iconClassNamePicker(dataKey))}><FormattedMessage id="portal.mdashWithSpace"/></span>
               {name}
             </span>
             <span className="legend-value">

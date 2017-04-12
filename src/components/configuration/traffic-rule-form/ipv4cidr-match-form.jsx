@@ -5,8 +5,8 @@ import { reduxForm, Field } from 'redux-form'
 
 import { isValidIPv4Address } from '../../../util/validators'
 
-import Typeahead from '../../form/field-form-group-typeahead'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ ipv4CIDR }) => {
   if (!ipv4CIDR.length) {
@@ -47,7 +47,7 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

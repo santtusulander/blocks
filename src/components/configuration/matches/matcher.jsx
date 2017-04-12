@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
+import { Button, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 import {
   getMatchFilterType
 } from '../../../util/policy-config'
@@ -12,11 +13,13 @@ import { FormattedMessage } from 'react-intl'
 
 class Matcher extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+
+    const hasFieldDetail = props.hasFieldDetail
     const fieldDetail = props.match.get('field_detail')
     const value = props.match.get('value')
-    
-    const containsVal = fieldDetail ? value : ''
+
+    const containsVal = hasFieldDetail ? value : ''
 
     this.state = {
       activeFilter: getMatchFilterType(props.match),
@@ -30,13 +33,14 @@ class Matcher extends React.Component {
     this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
     this.renderValueField = this.renderValueField.bind(this)
+    this.hasValueField = this.hasValueField.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
     if (!Immutable.is(nextProps.match, this.props.match)) {
       const fieldDetail = nextProps.match.get('field_detail')
       const value = nextProps.match.get('value')
-      const containsVal = fieldDetail ? value : ''
+      const containsVal = this.props.hasFieldDetail ? value : ''
 
       this.setState({
         activeFilter: getMatchFilterType(nextProps.match),
@@ -63,28 +67,25 @@ class Matcher extends React.Component {
 
   validate() {
     const {
-      activeFilter,
       val,
       containsVal
     } = this.state
 
-    switch (activeFilter) {
-      case 'contains':
-      case 'does_not_contain':
+    if (this.hasValueField()) {
+      if (this.props.hasFieldDetail) {
         return !!val && !!containsVal
-      default:
-        return true
+      } else {
+        return !!val
+      }
     }
+
+    return true
   }
 
   saveChanges() {
     let newMatch = this.props.match
 
     newMatch = newMatch.delete('_temp')
-
-    if (this.props.hasContains) {
-      newMatch = newMatch.set('field_detail', this.state.val)
-    }
 
     switch (this.state.activeFilter) {
       case 'exists':
@@ -94,7 +95,7 @@ class Matcher extends React.Component {
         break
       case 'contains':
         newMatch = newMatch.set('type', 'substr')
-                           .set('value', this.state.containsVal)
+                           .set('value', this.state.val)
                            .set('inverted', false)
         break
       case 'equals':
@@ -114,7 +115,7 @@ class Matcher extends React.Component {
         break
       case 'does_not_contain':
         newMatch = newMatch.set('type', 'substr')
-                           .set('value', this.state.containsVal)
+                           .set('value', this.state.val)
                            .set('inverted', true)
         break
       case 'does_not_equal':
@@ -129,19 +130,26 @@ class Matcher extends React.Component {
         break
     }
 
+    if (this.props.hasFieldDetail) {
+      newMatch = newMatch.set('field_detail', this.state.val)
+                         .set('value', this.state.containsVal)
+    }
+
     this.props.changeValue(this.props.path, newMatch)
     this.props.activateMatch(null)
   }
 
-  renderValueField() {
-    const hasValueField = this.state.activeFilter === 'equals' ||
-                          this.state.activeFilter === 'does_not_equal' || 
-                          this.state.activeFilter === 'contains' || 
-                          this.state.activeFilter === 'does_not_contain'
+  hasValueField() {
+    return this.state.activeFilter === 'equals' ||
+           this.state.activeFilter === 'does_not_equal' ||
+           this.state.activeFilter === 'contains' ||
+           this.state.activeFilter === 'does_not_contain'
+  }
 
+  renderValueField() {
     return (
       <div>
-        {(this.props.hasContains || hasValueField) &&
+        {(this.props.hasFieldDetail || this.hasValueField()) &&
         <FormGroup controlId="matches_val">
           <ControlLabel>{this.props.label}</ControlLabel>
           <FormControl
@@ -152,16 +160,14 @@ class Matcher extends React.Component {
           />
         </FormGroup>
         }
-
         <hr />
       </div>
     )
   }
 
   render() {
-    const hasContainingRule = this.state.activeFilter === 'contains' ||
-      this.state.activeFilter === 'does_not_contain'
- 
+    const hasContainingRule = this.props.hasFieldDetail && this.hasValueField()
+
     const matchOpts = []
 
     if (this.props.hasExists) {
@@ -195,40 +201,38 @@ class Matcher extends React.Component {
         <Modal.Body>
           {this.renderValueField()}
 
-          {!this.props.disableRuleSelector &&
-            <div className="form-groups">
-              <InputConnector
-                show={hasContainingRule}
-                noLabel={true}
+          <div className="form-groups">
+            <InputConnector
+              show={hasContainingRule}
+              noLabel={true}
+            />
+            <FormGroup>
+              <Select
+                className="input-select"
+                onSelect={this.handleMatchesChange}
+                value={this.state.activeFilter}
+                options={matchOpts}
               />
+            </FormGroup>
+
+            <Panel
+              className="form-panel"
+              collapsible={true}
+              expanded={hasContainingRule}
+            >
               <FormGroup>
-                <Select
-                  className="input-select"
-                  onSelect={this.handleMatchesChange}
-                  value={this.state.activeFilter}
-                  options={matchOpts}
+                <ControlLabel>
+                  <FormattedMessage id="portal.policy.edit.matcher.value.text" />
+                </ControlLabel>
+                <FormControl
+                  value={this.state.containsVal}
+                  onChange={this.handleContainsValChange}
                 />
               </FormGroup>
+            </Panel>
+          </div>
 
-              <Panel
-                className="form-panel"
-                collapsible={true}
-                expanded={hasContainingRule}
-              >
-                <FormGroup>
-                  <ControlLabel>
-                    <FormattedMessage id="portal.policy.edit.matcher.value.text" />
-                  </ControlLabel>
-                  <FormControl
-                    value={this.state.containsVal}
-                    onChange={this.handleContainsValChange}
-                  />
-                </FormGroup>
-              </Panel>
-            </div>
-          }
-
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button
               className="btn-secondary"
               onClick={this.props.close}
@@ -242,7 +246,7 @@ class Matcher extends React.Component {
             >
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
@@ -256,11 +260,11 @@ Matcher.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   description: React.PropTypes.string,
-  disableRuleSelector: React.PropTypes.bool,
   hasContains: React.PropTypes.bool,
   hasEmpty: React.PropTypes.bool,
   hasEquals: React.PropTypes.bool,
   hasExists: React.PropTypes.bool,
+  hasFieldDetail: React.PropTypes.bool,
   label: React.PropTypes.string,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,

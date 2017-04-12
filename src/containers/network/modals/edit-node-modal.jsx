@@ -19,9 +19,9 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
-import HelpPopover from '../../../components/help-popover'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
+import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
@@ -94,13 +94,13 @@ class EditNodeFormContainer extends React.Component {
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
-          {createdText}{": "}
+          {createdText}<FormattedMessage id="portal.colonWithSpace" />
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-created" buttonText={multipleValuesText} title={createdText} placement="bottom">
             <Table striped={true} condensed={true}>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                   <th><FormattedMessage id="portal.common.date"/></th>
                 </tr>
               </thead>
@@ -109,15 +109,15 @@ class EditNodeFormContainer extends React.Component {
           </HelpPopover>}
           {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, NETWORK_DATE_FORMAT)}</span>}
         </span>
-        {" | "}
+        <FormattedMessage id="portal.pipeWithSpaces" />
         <span className="edit-node__dates edit-node__dates--updated">
-          {updatedText}{": "}
+          {updatedText}<FormattedMessage id="portal.colonWithSpace" />
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-updated" buttonText={multipleValuesText} title={updatedText} placement="bottom">
             <Table striped={true} condensed={true}>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th><FormattedMessage id="portal.network.editNodeForm.id"/></th>
                   <th><FormattedMessage id="portal.common.date"/></th>
                 </tr>
               </thead>
@@ -189,6 +189,7 @@ EditNodeFormContainer.propTypes = {
   subTitle: React.PropTypes.string
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, { nodeIds, params }) => {
   const nodes = nodeIds.map(id => {
 
@@ -218,6 +219,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/

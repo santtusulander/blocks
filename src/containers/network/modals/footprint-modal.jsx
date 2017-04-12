@@ -11,7 +11,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
 
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
@@ -193,6 +193,7 @@ FootprintFormContainer.propTypes = {
   uiActions: PropTypes.object
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
@@ -202,6 +203,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)

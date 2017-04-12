@@ -137,7 +137,7 @@ export class LoginFormTwoFactorCode extends Component {
                   <p><FormattedMessage id="portal.login.2fa.verificationByCodeHint.text"/></p>
                 }
                 { this.props.loginError &&
-                  <p>{this.props.loginError} | <FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
+                  <p>{this.props.loginError}<FormattedMessage id="portal.pipeWithSpaces"/><FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
                 }
               </div>
               <InputGroup className={codeInputsClass}>
@@ -151,9 +151,16 @@ export class LoginFormTwoFactorCode extends Component {
                 <div className='token-input-info loading'><LoadingSpinnerSmall /></div>
               }
               { !this.props.fetching &&
-                <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
-                  <FormattedMessage id="portal.login.2fa.goBack.text"/>
-                </Link>
+                <div className="having-trouble-link">
+                  <FormattedMessage id="portal.login.2fa.havingTrouble.text"/>
+                  <Link to={`/`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.tryAgain.text"/>
+                  </Link>
+                  <FormattedMessage id="portal.login.2fa.orUseYour.text"/>
+                  <Link to={`/recovery-key`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.recoveryKey.text"/>
+                  </Link>
+                </div>
               }
             </div>
           </form>

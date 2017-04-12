@@ -100,7 +100,7 @@ describe('Dashboard', () => {
       props = {
         dashboard: fakeDashboard,
         dashboardActions: dashboardActionsMaker(),
-        fetchAccount: jest.fn(),
+        fetchAccount: () => Promise.resolve(),
         filterActions: filterActionsMaker(),
         filterOptions: Immutable.fromJS([{serviceProviders: 1}]),
         filtersActions: filtersActionsMaker(),

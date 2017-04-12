@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
-import SectionHeader from '../../../components/layout/section-header'
+import SectionHeader from '../../../components/shared/layout/section-header'
 
 import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
@@ -69,19 +69,16 @@ class AnalyticsTabContribution extends React.Component {
         fetchOpts
       )
 
-      // TODO: this outer check is TEMPORARY and should be removed as part of UDNP-1577
-      if (userIsCloudProvider(this.props.currentUser)) {
-        if (filters.get('serviceProviders').size === 1) {
-          const spAccount = filters.getIn(['serviceProviders', 0])
-          const filterFetchOpts = Object.assign({}, fetchOpts)
-          delete filterFetchOpts.sp_account_ids
+      if (filters.get('serviceProviders').size === 1) {
+        const spAccount = filters.getIn(['serviceProviders', 0])
+        const filterFetchOpts = Object.assign({}, fetchOpts)
+        delete filterFetchOpts.sp_account_ids
 
-          this.props.filterActions.fetchServiceProviderGroupsWithTrafficForCP(
-            params.brand,
-            spAccount,
-            filterFetchOpts
-          )
-        }
+        this.props.filterActions.fetchServiceProviderGroupsWithTrafficForCP(
+          params.brand,
+          spAccount,
+          filterFetchOpts
+        )
       }
 
       fetchDataAction = this.props.trafficActions.fetchServiceProviders

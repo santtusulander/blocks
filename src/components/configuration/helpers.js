@@ -66,6 +66,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             hasContains={true}
             hasEquals={true}
             hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.header.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -90,6 +91,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasEquals={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -101,6 +103,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasEquals={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
@@ -115,6 +118,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             hasContains={true}
             hasEquals={true}
             hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -128,6 +132,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             hasExists={true}
             hasEquals={true}
             hasContains={true}
+            hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}

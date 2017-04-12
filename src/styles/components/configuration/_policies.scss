@@ -1,0 +1,15 @@
+// Configuration Policies
+// ===================
+
+.configuration-policies {
+  width: 100%;
+  transition: width 0.3s ease-out;
+
+  .table {
+    tr {
+      td {
+        max-width: 200px;
+      }
+    }
+  }
+}

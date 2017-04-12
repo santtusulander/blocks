@@ -6,8 +6,8 @@ import { reduxForm, Field } from 'redux-form'
 import countriesList from '../../../constants/country-list'
 import { checkForErrors } from '../../../util/helpers'
 
-import Typeahead from '../../form/field-form-group-typeahead'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ countries }) => checkForErrors({ countries })
 
@@ -35,7 +35,7 @@ const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmi
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

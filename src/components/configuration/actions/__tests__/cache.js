@@ -18,17 +18,28 @@ function intlMaker() {
 }
 
 describe('Cache', () => {
+  let handleSubmit, close, change, component
+
+  beforeEach(() => {
+    handleSubmit = jest.fn()
+    close = jest.fn()
+    change = jest.fn()
+
+    let props = {
+      change,
+      handleSubmit,
+      close,
+      invalid: false,
+      set: Immutable.Map(),
+      intl: intlMaker(),
+      saveAction: jest.fn()
+    }
+
+    component = shallow(<Cache {...props} />)
+  })
 
   it('should exist', () => {
-    let cache = shallow(
-      <Cache
-        set={fakeConfig}
-        path={fakePath}
-        intl={intlMaker()}
-        saveAction={jest.fn()}
-      />
-    );
-    expect(cache).toBeTruthy();
+    expect(component).toBeTruthy();
   })
 
 //TODO-2277

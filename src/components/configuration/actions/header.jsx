@@ -1,10 +1,11 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
+import { Button, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class Header extends React.Component {
   constructor(props) {
@@ -229,14 +230,14 @@ class Header extends React.Component {
 
           </div>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>

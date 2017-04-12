@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
-import FormFooterButtons from '../../../form/form-footer-buttons'
+import FormFooterButtons from '../../../shared/form-elements/form-footer-buttons'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { reduxForm, Field, FieldArray, propTypes as reduxFormPropTypes} from 'redux-form'
 import { fromJS, Map, List } from 'immutable'
 
-import FieldFormGroup from '../../../form/field-form-group'
-import FieldFormGroupCheckboxes from '../../../form/field-form-group-checkboxes'
+import FieldFormGroup from '../../../shared/form-fields/field-form-group'
+import FieldFormGroupCheckboxes from '../../../shared/form-fields/field-form-group-checkboxes'
 import ChargeNumbersField from './charge-numbers-field'
 import RegionsField from './regions-field'
 
@@ -123,7 +123,7 @@ class AddChargeNumbersForm extends React.Component {
           }
           <Button
             id='cancel-button'
-            className="btn-outline"
+            className="btn-secondary"
             onClick={onCancel}
           >
             <FormattedMessage id='portal.common.button.cancel' />

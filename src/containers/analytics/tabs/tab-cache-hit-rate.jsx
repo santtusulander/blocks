@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
-import SectionHeader from '../../../components/layout/section-header'
-import SectionContainer from '../../../components/layout/section-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
+import SectionContainer from '../../../components/shared/layout/section-container'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import AnalysisCacheHitRate from '../../../components/analysis/cache-hit-rate.jsx'
@@ -116,6 +116,7 @@ AnalyticsTabCacheHitRate.defaultProps = {
   trafficByTime: Immutable.Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => ({
   activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
   fetching: state.traffic.get('fetching'),

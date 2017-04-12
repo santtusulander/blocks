@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
@@ -7,8 +7,9 @@ import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } 
 
 import * as StatusCodes from '../../../util/status-codes'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 
 import { CT_DEFAULT_STATUS_CODE } from '../../../constants/configuration'
 
@@ -34,6 +35,17 @@ const getDefaultStatusCodeForType = (type) => {
     default:
       return 200
   }
+}
+
+const validate = ({ code, location }) => {
+  const errors = {}
+  const isRedirect= getTypeFromStatusCode(code) === 'redirect'
+
+  if (isRedirect && !location) {
+    errors.location = <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.location.required.error" />
+  }
+
+  return errors
 }
 
 class ContentTargeting extends React.Component {
@@ -117,7 +129,7 @@ class ContentTargeting extends React.Component {
               />
             }
 
-            <ButtonToolbar className="text-right">
+            <FormFooterButtons>
               <Button
                 id="cancel-btn"
                 className="btn-secondary"
@@ -133,7 +145,7 @@ class ContentTargeting extends React.Component {
               >
                 <FormattedMessage id="portal.button.saveAction"/>
               </Button>
-            </ButtonToolbar>
+            </FormFooterButtons>
           </form>
         </Modal.Body>
       </div>
@@ -152,7 +164,8 @@ ContentTargeting.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'content-targeting-form'
+  form: 'content-targeting-form',
+  validate
 })(ContentTargeting)
 
 const selector = formValueSelector('content-targeting-form')

@@ -17,26 +17,30 @@ import { getLocationPermissions } from '../../util/permissions'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
-import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as permissionsActionCreators from '../../redux/modules/permissions'
 import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
-import ModalWindow from '../../components/modal'
-import AccountSelector from '../../components/global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
-import TruncatedTitle from '../../components/truncated-title'
+
+import accountsActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+import groupActionCreators from '../../redux/modules/entities/groups/actions'
+
+import Content from '../../components/shared/layout/content'
+import PageHeader from '../../components/shared/layout/page-header'
+import ModalWindow from '../../components/shared/modal'
+import AccountSelector from '../../components/global-account-selector/account-selector-container'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 import IconEdit from '../../components/shared/icons/icon-edit'
-import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+import MultilineTextFieldError from '../../components/shared/form-elements/multiline-text-field-error'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -95,6 +99,7 @@ export class AccountManagement extends Component {
       Shouldn't they be loaded on 'Users' -tab?
     */
     if (account) {
+      this.props.fetchActiveAccount({brand, id: account})
       this.props.userActions.fetchUsers(brand, account)
     } else if (this.props.accounts.size) {
       this.props.userActions.startFetching()
@@ -154,7 +159,7 @@ export class AccountManagement extends Component {
 
   addGroupToActiveAccount({ data, usersToAdd }) {
     const {activeAccount, groupActions, hostActions, users, userActions, toggleModal } = this.props
-    return groupActions.createGroup('udn', activeAccount.get('id'), data)
+    return groupActions.create({brand: 'udn', account: activeAccount.get('id'), payload: data})
       .then(({ payload }) => {
         hostActions.clearFetchedHosts()
         return Promise.all(usersToAdd.map(email => {
@@ -173,11 +178,11 @@ export class AccountManagement extends Component {
   }
 
   deleteGroupFromActiveAccount(group) {
-    return this.props.groupActions.deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      group.get('id')
-    ).then(response => {
+    return this.props.groupActions.remove({
+      brand: 'udn',
+      account: this.props.activeAccount.get('id'),
+      id: group.get('id')
+    }).then(response => {
       this.props.toggleModal(null)
       if (response.error) {
         this.props.uiActions.showInfoDialog({
@@ -208,11 +213,13 @@ export class AccountManagement extends Component {
       })
     })
     return Promise.all([
-      this.props.groupActions.updateGroup(
-        'udn',
-        this.props.activeAccount.get('id'),
-        groupId,
-        data
+      this.props.groupActions.update(
+        {
+          brand: 'udn',
+          account: this.props.activeAccount.get('id'),
+          id: groupId,
+          payload: data
+        }
       ),
       ...addUserActions,
       ...deleteUserActions
@@ -224,11 +231,11 @@ export class AccountManagement extends Component {
   }
 
   showGroupModal(group) {
-    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    const { toggleModal, groupActions, params: { account, brand } } = this.props
     if (!group) {
       toggleModal(ADD_GROUP)
     } else {
-      fetchGroup(brand, account, group.get('id')).then(() => {
+      groupActions.fetchOne({brand, account, id: group.get('id')}).then(() => {
         this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
@@ -394,12 +401,14 @@ export class AccountManagement extends Component {
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
-              as="accountManagement"
-              params={{ brand, account }}
-              topBarTexts={{ brand: 'UDN Admin' }}
-              topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
-              onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-              restrictedTo="account">
+              params={params}
+              levels={[ 'brand' ]}
+              onItemClick={(entity) => {
+
+                const { nodeInfo, idKey = 'id' } = entity
+                router.push(`${getUrl(getRoute('accountManagement'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+
+              }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
@@ -555,6 +564,7 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
+  fetchActiveAccount: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
@@ -577,11 +587,11 @@ AccountManagement.defaultProps = {
   users: List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount') || Map({}),
+    activeAccount: getAccountById(state, ownProps.params.account),
     // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     permissions: state.permissions,
@@ -630,6 +640,7 @@ function mapDispatchToProps(dispatch) {
     changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
+    fetchActiveAccount: (params) => dispatch(accountsActions.fetchOne(params)),
     groupActions: groupActions,
     hostActions: hostActions,
     permissionsActions: permissionsActions,

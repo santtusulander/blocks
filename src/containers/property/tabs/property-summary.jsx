@@ -16,10 +16,10 @@ import * as purgeActionCreators from '../../../redux/modules/purge'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
-import PageContainer from '../../../components/layout/page-container'
+import PageContainer from '../../../components/shared/layout/page-container'
 import AnalysisByTime from '../../../components/analysis/by-time'
-import DateRangeSelect from '../../../components/date-range-select'
-import Tooltip from '../../../components/tooltip'
+import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
+import Tooltip from '../../../components/shared/tooltips/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
@@ -388,7 +388,7 @@ class PropertySummary extends React.Component {
           <div className="kpi">
             <FormattedMessage id="portal.content.property.summary.cacheHitRate.title"/>
             <h3>
-              {avg_cache_hit_rate}%
+              {avg_cache_hit_rate}<FormattedMessage id="portal.percentage" />
             </h3>
           </div>
           <div className="kpi">

@@ -3,18 +3,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 import moment from 'moment'
 
-import PageContainer from '../../../components/layout/page-container'
-import SectionHeader from '../../../components/layout/section-header'
+import PageContainer from '../../../components/shared/layout/page-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
 import IconAdd from '../../../components/shared/icons/icon-add'
-import TableSorter from '../../../components/table-sorter'
-import ActionButtons from '../../../components/action-buttons'
-import ModalWindow from '../../../components/modal'
+import TableSorter from '../../../components/shared/table-sorter'
+import ActionButtons from '../../../components/shared/action-buttons'
+import ModalWindow from '../../../components/shared/modal'
 import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
@@ -22,6 +22,9 @@ import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
+
+import { getByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -55,29 +58,48 @@ class AccountManagementStorages extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.deleteStorage = this.deleteStorage.bind(this)
     this.formatOrigins = this.formatOrigins.bind(this)
+    this.fetchStorageData = this.fetchStorageData.bind(this)
   }
 
   componentWillMount() {
-    const account = this.props.account
-    const brandId = account.get('brand_id')
-    const accountId = account.get('id')
-    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
+    const {params: {account, brand, group}, groups, fetchGroups, fetchGroup} = this.props
 
-    this.props.groups.map(group => {
-      const groupId = group.get('id')
+    if (brand && account) {
 
-      this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
-      this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
+      if (groups.size) {
+        this.fetchStorageData(groups)
+      } else {
+        fetchGroups({ brand, account})
+      }
 
-      return false
-    })
-
-    if (this.props.params.group) {
-      this.props.fetchGroup({ brand: brandId, account: accountId, id: this.props.params.group })
+      if (group) {
+        //Fetch activeGroup
+        fetchGroup({ brand, account, id: group })
+      }
     }
 
-    this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
     this.props.fetchClusters({})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //Start fetching storage data when we receive new groups from redux
+    if (!is(this.props.groups, nextProps.groups)) {
+      //Fetch storage data for storages in each group of new Groups
+      this.fetchStorageData(nextProps.groups)
+    }
+  }
+
+  fetchStorageData(groups) {
+    const {params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
+    if (brand && account) {
+      groups.forEach(group => {
+        const groupId = group.get('id')
+        fetchStorages({ brand, account, group: groupId })
+        fetchProperties({ brand, account, group: groupId })
+      })
+      this.props.fetchGroupsMetrics(groups, { start: metricsStartDate, account })
+    }
   }
 
   changeSearch(e) {
@@ -306,6 +328,7 @@ AccountManagementStorages.propTypes = {
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
   fetchGroup: PropTypes.func,
+  fetchGroups: PropTypes.func,
   fetchGroupsMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -322,13 +345,15 @@ AccountManagementStorages.propTypes = {
 }
 
 AccountManagementStorages.defaultProps = {
+  account: Map(),
+  groups: List(),
   storages: List()
 }
 
 
 function mapStateToProps(state, ownProps) {
-  const account = state.account.get('activeAccount')
-  const groups = state.group.get('allGroups')
+  const account = getAccountById(state, ownProps.params.account)
+  const groups = getByAccount(state, ownProps.params.account)
 
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
@@ -353,7 +378,8 @@ function mapDispatchToProps(dispatch) {
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
     fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
-    fetchGroup: (params) => dispatch(groupActions.fetchOne(params))
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll(params))
   };
 }
 

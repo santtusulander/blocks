@@ -3,16 +3,16 @@ import { FormattedMessage } from 'react-intl'
 import { Col, FormGroup } from 'react-bootstrap'
 import { Map } from 'immutable'
 
-import SectionContainer from '../layout/section-container'
-import SectionHeader from '../layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
 import AsperaUpload from './aspera-upload'
 import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
-import ButtonDropdown from '../button-dropdown'
-import Button from '../button'
+import ButtonDropdown from '../shared/form-elements/button-dropdown'
+import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
 
-import Toggle from '../toggle'
+import Toggle from '../shared/form-elements/toggle'
 
 const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0

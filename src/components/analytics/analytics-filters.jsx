@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import FilterDateRange from '../analysis/filters/date-range'
 import ProviderTypes from '../../constants/provider-types'
 import {
@@ -47,9 +47,7 @@ const AnalyticsFilters = (props) => {
     spFilterOptions = ['sp-group']
   } else if (userIsContentProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
-
-    // spFilterOptions = ['sp-account','sp-group'] // TODO: uncomment line as part of UDNP-1577
-    spFilterOptions = ['sp-account'] // TODO: delete line as part of UDNP-1577
+    spFilterOptions = ['sp-account', 'sp-group']
   } else if (userIsCloudProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
     spFilterOptions = ['sp-account','sp-group']

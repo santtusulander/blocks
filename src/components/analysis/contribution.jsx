@@ -2,10 +2,10 @@ import React from 'react'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import BarChart from '../charts/bar-chart'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import {formatBytes} from '../../util/helpers'
 
 import {getTrafficByDateRangeLabel} from './helpers'

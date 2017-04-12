@@ -3,6 +3,9 @@ import classNames from 'classnames'
 import { Map } from 'immutable'
 import { formatDate } from '../../util/helpers'
 
+/* TODO: uncomment when this tab will be implemented */
+/* eslint-disable react-intl/string-is-marked-for-translation */
+
 class SupportTicketComment extends React.Component {
   constructor(props) {
     super(props)

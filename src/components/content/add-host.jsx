@@ -11,9 +11,9 @@ import {
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 
-import FieldRadio from '../form/field-radio'
-import FieldFormGroup from '../form/field-form-group'
-import FormFooterButtons from '../form/form-footer-buttons'
+import FieldRadio from '../shared/form-fields/field-radio'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 import { isValidHostName } from '../../util/validators'
 import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'
@@ -103,7 +103,7 @@ class AddHost extends React.Component {
         />
 
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /> *</ControlLabel>
+          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
             <Field
               name="deploymentMode"
               type="radio"
@@ -123,7 +123,7 @@ class AddHost extends React.Component {
 
         {(hasMDSupport || hasVODSupport) &&
           <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /> *</ControlLabel>
+            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
               {hasMDSupport &&
                 <Field
                   name="serviceType"

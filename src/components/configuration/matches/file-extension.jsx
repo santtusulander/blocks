@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
+import { Button, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import Typeahead from '../../typeahead'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Typeahead from '../../shared/form-elements/typeahead'
 
 import {
   FILE_EXTENSION_REGEXP,
@@ -32,7 +33,7 @@ class FileExtension extends React.Component {
 
     if (rawExtensionList) {
       return rawExtensionList.split('|').map(extension => {
-        return { id: extension, label: extension } 
+        return { id: extension, label: extension }
       })
     } else {
       return []
@@ -109,14 +110,14 @@ class FileExtension extends React.Component {
             />
           </FormGroup>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>

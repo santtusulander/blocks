@@ -1,59 +1,47 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
-import {
-  userIsCloudProvider
-} from '../../util/helpers.js'
+
 import {
   getAnalyticsUrl,
   getContentUrl,
   getUrl
 } from '../../util/routes.js'
-import IsAllowed from '../is-allowed'
-import TruncatedTitle from '../truncated-title'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IconCaretDown from '../shared/icons/icon-caret-down'
-import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import AccountSelector from '../global-account-selector/account-selector-container'
 
-function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
-  const activeAccountName = activeAccount && account ? activeAccount.get('name') : 'UDN Admin'
-  const activeAccountNameNoPlaceholder = activeAccount && account ? activeAccount.get('name') : ''
-  const itemSelector = (...params) => {
-    // This check is done to prevent UDN admin from accidentally hitting
-    // the account detail endpoint, which they don't have permission for
-    if (router.isActive('/content') || router.isActive('/network')) {
-      if (params[0] === 'account' && userIsCloudProvider(user)) {
-        params[0] = 'groups'
-      }
-    }
+function AccountSelectorItem({ activeAccount, router, params }) {
+  const activeAccountName = params.account ? activeAccount.get('name') : <FormattedMessage id="portal.content.property.topBar.brand.label" />
+  const activeAccountNameNoPlaceholder = params.account ? activeAccount.get('name') : ''
+
+  const onItemClick = ({ nodeInfo, id }) => {
+    const parametersToBuildRoute = [nodeInfo.entityType, id, nodeInfo.parents]
 
     if (router.isActive('/content') || router.isActive('/network')) {
-      router.push(getContentUrl(...params))
+      router.push(getContentUrl(...parametersToBuildRoute))
     } else if (router.isActive('/analysis')) {
-      router.push(getAnalyticsUrl(...params))
+      router.push(getAnalyticsUrl(...parametersToBuildRoute))
     } else if (router.isActive('/account-management')) {
-      router.push(getUrl('/account-management', ...params))
+      router.push(getUrl('/account-management', ...parametersToBuildRoute))
     } else if (router.isActive('/security')) {
-      router.push(getUrl('/security', ...params))
+      router.push(getUrl('/security', ...parametersToBuildRoute))
     } else if (router.isActive('/support')) {
-      router.push(getUrl('/support', ...params))
+      router.push(getUrl('/support', ...parametersToBuildRoute))
     } else if (router.isActive('/dashboard')) {
-      router.push(getUrl('/dashboard', ...params))
+      router.push(getUrl('/dashboard', ...parametersToBuildRoute))
     }
   }
 
   return (
     <li className="header__account-selector">
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <AccountSelector
-          as="header"
-          params={{ brand, account }}
-          topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-          topBarAction={() => itemSelector('brand', 'udn', {})}
-          onSelect={itemSelector}
-          restrictedTo="account">
+        <AccountSelector params={params} levels={[ 'brand' ]} onItemClick={onItemClick}>
           <div className="btn btn-link dropdown-toggle header-toggle">
-            <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
+            <TruncatedTitle content={activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
             <IconCaretDown />
           </div>
         </AccountSelector>
@@ -67,15 +55,12 @@ function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
 
 AccountSelectorItem.displayName = 'AccountSelectorItem'
 AccountSelectorItem.propTypes = {
-  account: PropTypes.string,
   activeAccount: PropTypes.instanceOf(Immutable.Map),
-  brand: PropTypes.string,
-  router: PropTypes.object,
-  user: PropTypes.instanceOf(Immutable.Map)
+  params: PropTypes.object,
+  router: PropTypes.object
 }
 AccountSelectorItem.defaultProps = {
-  activeAccount: new Immutable.Map(),
-  user: new Immutable.Map()
+  activeAccount: Immutable.Map()
 }
 
 export default AccountSelectorItem

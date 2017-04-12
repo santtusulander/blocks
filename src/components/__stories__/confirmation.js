@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 
 import ThemeWrap from './theme-wrap'
-import Confirmation from '../confirmation'
+import Confirmation from '../shared/page-elements/confirmation'
 
 storiesOf('Confirmation', module)
   .addDecorator((story) => (

@@ -1,72 +1,41 @@
 import React from 'react';
-import { Map } from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { ButtonToolbar, Button } from 'react-bootstrap'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../../constants/permissions'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import {
   getAnalyticsUrl,
   getContentUrl,
   getNetworkUrl
 } from '../../../util/routes.js'
-import { userIsCloudProvider } from '../../../util/helpers'
 
-import PageHeader from '../../layout/page-header'
-import AccountSelector from '../../global-account-selector/global-account-selector'
-import TruncatedTitle from '../../truncated-title'
+import PageHeader from '../../shared/layout/page-header'
+import AccountSelector from '../../global-account-selector/account-selector-container'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 
 import IconTrash from '../../shared/icons/icon-trash.jsx'
 import IconChart from '../../shared/icons/icon-chart.jsx'
 import IconConfiguration from '../../shared/icons/icon-configuration.jsx'
 import IconCaretDown from '../../shared/icons/icon-caret-down'
 
-const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, currentTab, togglePurge }) => {
-
-  const itemSelectorTexts = {
-    property: intl.formatMessage({ id: 'portal.content.property.topBar.property.label' }),
-    group: intl.formatMessage({ id: 'portal.content.property.topBar.group.label' }),
-    account: intl.formatMessage({ id: 'portal.content.property.topBar.account.label' }),
-    brand: intl.formatMessage({ id: 'portal.content.property.topBar.brand.label' })
-  }
-
-  const itemSelectorTopBarAction = (tier, fetchItems, IDs) => {
-    const { account } = IDs
-    switch (tier) {
-      case 'property':
-        fetchItems('group', 'udn', account)
-        break
-      case 'group':
-        fetchItems('account', 'udn')
-        break
-      case 'brand':
-      case 'account':
-        router.push(getContentUrl('brand', 'udn', {}))
-        break
-    }
-  }
+const PropertyHeader = ({ deleteProperty, params, router, currentTab, togglePurge }) => {
 
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
       <AccountSelector
-        as="propertySummary"
         params={params}
-        topBarTexts={itemSelectorTexts}
-        topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => {
-          // This check is done to prevent UDN admin from accidentally hitting
-          // the account detail endpoint, which they don't have permission for
-          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
-            params[0] = 'groups'
-          }
+        onItemClick={(entity) => {
+
+          const { nodeInfo, idKey = 'id' } = entity
 
           const url = router.isActive('network')
-            ? getNetworkUrl(...params)
-            : getContentUrl(...params)
+            ? getNetworkUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents)
+            : getContentUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents)
 
-          const isOnPropertyTier = params[0] === 'property'
+          const isOnPropertyTier = nodeInfo.entityType === 'property'
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
           if (url) {
@@ -110,13 +79,11 @@ PropertyHeader.defaultProps = {
 }
 PropertyHeader.propTypes = {
   currentTab: React.PropTypes.string,
-  currentUser: React.PropTypes.instanceOf(Map),
   deleteProperty: React.PropTypes.func,
-  intl: React.PropTypes.object,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
   togglePurge: React.PropTypes.func
 }
 
 
-export default withRouter(injectIntl(PropertyHeader))
+export default withRouter(PropertyHeader)

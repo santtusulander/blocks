@@ -9,29 +9,31 @@ import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import PageContainer from '../../../components/layout/page-container'
-import SectionHeader from '../../../components/layout/section-header'
-import SelectWrapper from '../../../components/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
-import ActionButtons from '../../../components/action-buttons'
-import FieldFormGroup from '../../../components/form/field-form-group'
-import FieldFormGroupSelect from '../../../components/form/field-form-group-select'
-import InlineAdd from '../../../components/inline-add'
+import roleNameActions from '../../../redux/modules/entities/role-names/actions'
+import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
+
+import PageContainer from '../../../components/shared/layout/page-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
+import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
+// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
+import ActionButtons from '../../../components/shared/action-buttons'
+import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
+import InlineAdd from '../../../components/shared/page-elements/inline-add'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import IconInfo from '../../../components/shared/icons/icon-info'
-import TableSorter from '../../../components/table-sorter'
+import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
-import ArrayCell from '../../../components/array-td/array-td'
-import ModalWindow from '../../../components/modal'
+import ArrayCell from '../../../components/shared/page-elements/array-td'
+import ModalWindow from '../../../components/shared/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
 
-import IsAllowed from '../../../components/is-allowed'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
 export class AccountManagementAccountUsers extends React.Component {
@@ -70,8 +72,8 @@ export class AccountManagementAccountUsers extends React.Component {
     if (!this.props.groups.toJS().length) {
       this.props.groupActions.fetchGroups(brand, account);
     }
-    this.props.rolesActions.fetchRoles()
     router.setRouteLeaveHook(route, this.shouldLeave)
+    this.props.fetchRoleNames()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -127,10 +129,12 @@ export class AccountManagementAccountUsers extends React.Component {
   getRoleOptions(roleMapping, props) {
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+      .map(mapped_role => {
+        const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
+        return matchedRole
+              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
+      })
   }
 
   getInlineAddFields() {
@@ -164,6 +168,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Field
             name="roles"
             className="inline-add-dropdown"
+            ErrorComponent={errorTooltip}
             options={roleOptions}
             component={FieldFormGroupSelect}/>,
           positionClass: 'row col-xs-10'
@@ -367,10 +372,10 @@ export class AccountManagementAccountUsers extends React.Component {
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="email" width="40%">
-                Email
+                <FormattedMessage id="portal.user.list.email.text" />
               </TableSorter>
-              <th width="19%">Role</th>
-              <th width="20%">Groups</th>
+              <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+              <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
               <th width="1%"/>
             </tr>
           </thead>
@@ -405,16 +410,18 @@ export class AccountManagementAccountUsers extends React.Component {
         {sortedUsers.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
-              <span>No users found with the search term &quot;{this.state.search}&quot;</span>
+              <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: this.state.search}} /></span>
             :
-              <span>No users found</span>
+              <span><FormattedMessage id="portal.user.list.noUsersFound.text" /></span>
             }
             {this.state.filteredRoles !== 'all' &&
-              <span> {this.state.search.length > 0 ? 'and ' : 'with '}
-                a role of &quot;{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}&quot;</span>
+              <span>
+                {this.state.search.length > 0 ? <FormattedMessage id="portal.user.list.andWithSpace.text" /> : <FormattedMessage id="portal.user.list.withWithSpace.text" />}
+                <FormattedMessage id="portal.user.list.aRoleOf.text" values={{name: this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}} />
+              </span>
             }
             {this.state.filteredGroups !== 'all' &&
-              <span> within the group &quot;{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}&quot;</span>
+              <span><FormattedMessage id="portal.user.list.aRoleOf.text" values={{name: this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}} /></span>
             }
           </div>
         }
@@ -447,7 +454,15 @@ export class AccountManagementAccountUsers extends React.Component {
                         return (
                           <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
-                            <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
+                            <td>
+                              <b>
+                                {
+                                  role.getIn(['permissions', 'ui']).get(permissionName)
+                                  ? <FormattedMessage id="portal.button.yes" />
+                                  : <FormattedMessage id="portal.button.no" />
+                                }
+                              </b>
+                            </td>
                           </tr>
                         )
                       }
@@ -469,13 +484,13 @@ AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
+  fetchRoleNames: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
-  rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   showNotification: React.PropTypes.func,
@@ -484,10 +499,14 @@ AccountManagementAccountUsers.propTypes = {
   users: React.PropTypes.instanceOf(List)
 }
 
+AccountManagementAccountUsers.defaultProps = {
+  roles: List()
+}
+
 function mapStateToProps(state) {
   return {
     form: state.form,
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
@@ -499,9 +518,9 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    fetchRoleNames: () => dispatch(roleNameActions.fetchAll({}))
   };
 }
 

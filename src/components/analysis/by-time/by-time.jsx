@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import Tooltip from '../../tooltip'
+import Tooltip from '../../shared/tooltips/tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
 
@@ -21,7 +21,7 @@ const getExtent = (datasets, key) => {
   ]
 }
 
-const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
+const configureTooltip = (date, positionVal, height, width, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
   const val = actualVal || 0
   const formattedValue = formatY(val)
@@ -32,7 +32,8 @@ const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, ac
     text: text,
     x: xScale(date),
     y: yScale(positionVal),
-    top: yScale(positionVal) + 50 > height
+    top: yScale(positionVal) + 50 > height,
+    left: xScale(date) > width/2
   }
 }
 
@@ -45,6 +46,7 @@ class AnalysisByTime extends React.Component {
       tooltipX: [],
       tooltipY: [],
       tooltipOffsetTop: [],
+      tooltipOffsetLeft: [],
       labelWidth: []
     }
 
@@ -59,6 +61,7 @@ class AnalysisByTime extends React.Component {
       time,
       positionData,
       this.props.height,
+      this.props.width,
       this.formatY,
       xScale,
       yScale,
@@ -116,7 +119,8 @@ class AnalysisByTime extends React.Component {
         tooltipText: tooltipData.map(tooltip => tooltip.text),
         tooltipX: tooltipData.map(tooltip => tooltip.x),
         tooltipY: tooltipData.map(tooltip => tooltip.y),
-        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top)
+        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top),
+        tooltipOffsetLeft: tooltipData.map(tooltip => tooltip.left)
       })
     }
   }
@@ -137,7 +141,7 @@ class AnalysisByTime extends React.Component {
 
   render() {
     if (!this.props.width || !this.props.dataSets) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     if (!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
@@ -210,7 +214,7 @@ class AnalysisByTime extends React.Component {
     return (
       <div className={className}
       onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
+      onMouseLeave={!this.props.noHover && this.deactivateTooltip}>
         <svg
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}
@@ -235,7 +239,7 @@ class AnalysisByTime extends React.Component {
 
                     <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
                     <stop offset="100%" stopColor={dataset.color} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
-                    
+
                   </linearGradient>
                 </defs>
               </g>
@@ -318,6 +322,7 @@ class AnalysisByTime extends React.Component {
               y={this.state.tooltipY[i]}
               hidden={!this.state.tooltipText[i]}
               offsetTop={this.state.tooltipOffsetTop[i]}
+              offsetLeft={this.state.tooltipOffsetLeft[i]}
             >
                 {this.state.tooltipText[i]}
             </Tooltip>

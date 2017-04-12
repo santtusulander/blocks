@@ -4,11 +4,11 @@ import Immutable from 'immutable'
 import moment from 'moment'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import SectionHeader from '../layout/section-header'
-import SectionContainer from '../layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import AnalysisByLocation from './by-location'
-import TableSorter from '../table-sorter'
+import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
 
 
@@ -194,15 +194,15 @@ class AnalysisVisitors extends React.Component {
               <thead>
                 <tr>
                   <TableSorter {...countrySorterProps} column="name">
-                    Country
+                    <FormattedMessage id="portal.analytics.visitors.grid.country.header"/>
                   </TableSorter>
                   <TableSorter {...countrySorterProps} column="total">
-                    Total Visitors
+                    <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
                   </TableSorter>
                   <TableSorter {...countrySorterProps} column="percent_total">
-                    % of Visitors
+                    <FormattedMessage id="portal.analytics.visitors.grid.percentage.header"/>
                   </TableSorter>
-                  <th className="text-center">Period Trend</th>
+                  <th className="text-center"><FormattedMessage id="portal.analytics.visitors.grid.periodTrend.header"/></th>
                   {/* Hide in 0.8 UDNP-1109
                   <TableSorter {...countrySorterProps} column="change" sortFunc="trending">
                     Change
@@ -354,9 +354,9 @@ class AnalysisVisitors extends React.Component {
                     <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
                   </TableSorter>
                   <TableSorter {...OSSorterProps} column="percent_total">
-                    % of Visitors
+                    <FormattedMessage id="portal.analytics.visitors.grid.percentage.header"/>
                   </TableSorter>
-                  <th className="text-center">Period Trend</th>
+                  <th className="text-center"><FormattedMessage id="portal.analytics.visitors.grid.periodTrend.header"/></th>
                     {/* Hide in 0.8 UDNP-1109
                     <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
                       Change

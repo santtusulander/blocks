@@ -114,7 +114,7 @@ describe('LoginFormTwoFactorCode', () => {
       const loginFormCode = shallow(
         subject('', true)
       )
-      expect(loginFormCode.find('.token-trouble-btn').length).toBe(0)
+      expect(loginFormCode.find('.having-trouble-link').length).toBe(0)
     })
 
     it('should not show a small loading spinner when fetching data op. has been completed', () => {
@@ -128,7 +128,7 @@ describe('LoginFormTwoFactorCode', () => {
       const loginFormCode = shallow(
         subject()
       )
-      expect(loginFormCode.find('.token-trouble-btn').length).toBe(1)
+      expect(loginFormCode.find('.having-trouble-link').length).toBe(1)
     })
   })
 })
