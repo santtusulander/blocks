@@ -44,8 +44,15 @@
     font-size: 40px;
     color: $white;
     text-align: center;
-    background: $dark-blue;
     border: 0;
+
+    .dark-theme & {
+      background: $dark-blue;
+    }
+
+    .light-theme & {
+      background: $grey-40;
+    }
   }
 
   a {
