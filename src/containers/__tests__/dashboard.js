@@ -116,10 +116,10 @@ describe('Dashboard', () => {
     expect(subject().length).toBe(1);
   })
 
-  it('should show loading spinner', () => {
+  it('should not show loading spinner', () => {
     const component = subject()
     component.setProps({ fetching: true })
-    expect(component.find('LoadingSpinner').length).toBe(1)
+    expect(component.find('LoadingSpinner').length).toBe(0)
   })
 
   it('should show no data text', () => {
