@@ -16,7 +16,7 @@ export const fetchAll = ({ brand, account, group, property, serviceType }) => {
 }
 
 export const create = ({ brand, account, group, property, serviceType, payload }) => {
-  return axios.get(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
+  return axios.post(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({data}) => {
       const [customPolicyConfig] = data.data
       return normalize({ id: buildReduxId(property, serviceType), customPolicyConfig }, metadataSchema)
@@ -24,9 +24,9 @@ export const create = ({ brand, account, group, property, serviceType, payload }
 }
 
 export const update = ({ brand, account, group, property, serviceType, payload }) => {
-  return axios.get(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({data}) => {
-      const [customPolicyConfig] = data.data
+  return axios.put(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
+    .then((data) => {
+      const customPolicyConfig = data.data
       return normalize({ id: buildReduxId(property, serviceType), customPolicyConfig}, metadataSchema)
     })
 }
