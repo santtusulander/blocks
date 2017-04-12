@@ -387,7 +387,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup className="input-without-tooltip">
+              <InputGroup className="input-without-tooltip can-copy-to-clipboard">
                 <FormControl
                   type="text"
                   disabled={true}
@@ -405,8 +405,6 @@ class ConfigurationDetails extends React.Component {
     )
   }
 }
-
-// TODO: UDNP-2945 | Add missing help text for new configuration details field
 
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
