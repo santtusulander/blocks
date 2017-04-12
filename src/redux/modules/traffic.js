@@ -172,7 +172,7 @@ export function trafficOnOffNetTodayFailure(state) {
 
 export function trafficServiceProvidersSuccess(state, action) {
   return state.merge({
-    contribution: Immutable.fromJS(action.payload)
+    contribution: Immutable.fromJS(action.payload.data)
   })
 }
 export function trafficServiceProvidersFailure(state) {
