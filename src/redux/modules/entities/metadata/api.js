@@ -25,8 +25,8 @@ export const create = ({ brand, account, group, property, serviceType, payload }
 
 export const update = ({ brand, account, group, property, serviceType, payload }) => {
   return axios.put(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({data}) => {
-      const [customPolicyConfig] = data.data
+    .then((data) => {
+      const customPolicyConfig = data.data
       return normalize({ id: buildReduxId(property, serviceType), customPolicyConfig}, metadataSchema)
     })
 }
