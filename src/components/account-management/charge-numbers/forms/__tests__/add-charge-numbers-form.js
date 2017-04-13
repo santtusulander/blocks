@@ -17,12 +17,13 @@ describe('AddChargeNumbersForm', () => {
   beforeEach(() => {
     handleSubmit = jest.fn()
 
-    subject = () => {
+    subject = (isEnabled = false, hasGlobalBilling = true, hasRegionalBilling = false) => {
       props = {
         handleSubmit,
+        isEnabled: isEnabled,
         hasFlowDirection: false,
-        hasGlobalBilling: true,
-        hasRegionalBilling: false,
+        hasGlobalBilling: hasGlobalBilling,
+        hasRegionalBilling: hasRegionalBilling,
         intl: intlMaker()
       }
       return shallow(<AddChargeNumbersForm {...props}/>)
@@ -31,6 +32,14 @@ describe('AddChargeNumbersForm', () => {
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
+  })
+
+  it('should render 2 Buttons', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should render 3 Buttons when isEnabled equals to true', () => {
+    expect(subject(true).find('Button').length).toBe(3)
   })
 
   it('should handle onEnable click', () => {
@@ -44,7 +53,7 @@ describe('AddChargeNumbersForm', () => {
     expect(subject().find('Field').length).toBe(1)
   })
 
-  it('should contain 2 Fields', () => {
+  it('should contain 2 Fields when all billing props euqals to true', () => {
     const props = {
       handleSubmit,
       hasFlowDirection: true,
@@ -54,5 +63,29 @@ describe('AddChargeNumbersForm', () => {
     const component = shallow(<AddChargeNumbersForm {...props}/>)
 
     expect(component.find('Field').length).toBe(2)
+  })
+
+  it('should contain FieldArray when all regional billing props euqal to true', () => {
+    const props = {
+      handleSubmit,
+      hasFlowDirection: true,
+      hasGlobalBilling: false,
+      hasRegionalBilling: true
+    }
+    const component = shallow(<AddChargeNumbersForm {...props}/>)
+
+    expect(component.find('FieldArray').length).toBe(1)
+  })
+
+  it('should not contain FieldArray when all regional billing props euqal to true and global billing also euqal to true ', () => {
+    const props = {
+      handleSubmit,
+      hasFlowDirection: true,
+      hasGlobalBilling: true,
+      hasRegionalBilling: true
+    }
+    const component = shallow(<AddChargeNumbersForm {...props}/>)
+
+    expect(component.find('FieldArray').length).toBe(0)
   })
 })
