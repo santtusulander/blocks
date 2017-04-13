@@ -160,6 +160,7 @@ EntityEdit.defaultProps = {
 EntityEdit.displayName = 'EntityEdit'
 EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  disableDelete: PropTypes.bool,
   entityToUpdate: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

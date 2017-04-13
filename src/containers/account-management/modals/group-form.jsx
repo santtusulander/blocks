@@ -337,6 +337,7 @@ GroupFormContainer.propTypes = {
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
+  disableDelete: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
