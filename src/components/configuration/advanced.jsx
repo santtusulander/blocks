@@ -287,7 +287,7 @@ class ConfigurationAdvanced extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={submitting}
+            disabled={invalid || submitting || (!dirty)}
           >
             <FormattedMessage id="portal.button.save"/>
           </Button>
