@@ -97,6 +97,23 @@
   "portal.support.tickets.validation.priority.maxLength.text": "Priority is required",
   "portal.support.tickets.validation.assignee.maxLength.text": "Assignee is required",
 
+  "portal.support.tickets.priority.urgent": "Urgent",
+  "portal.support.tickets.priority.high": "High",
+  "portal.support.tickets.priority.normal": "Normal",
+  "portal.support.tickets.priority.low": "Low",
+
+  "portal.support.tickets.status.new": "New",
+  "portal.support.tickets.status.open": "Open",
+  "portal.support.tickets.status.pending": "Pending",
+  "portal.support.tickets.status.hold": "Hold",
+  "portal.support.tickets.status.solved": "Solved",
+  "portal.support.tickets.status.closed": "Closed",
+
+  "portal.support.tickets.type.problem": "Problem",
+  "portal.support.tickets.type.incident": "Incident",
+  "portal.support.tickets.type.question": "Question",
+  "portal.support.tickets.type.task": "Task",
+
   "portal.support.tickets.label.title.text": "Title",
   "portal.support.tickets.label.description.text": "Description",
   "portal.support.tickets.label.status.text": "Status",

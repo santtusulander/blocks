@@ -263,6 +263,12 @@
   "portal.header.analytics.text": "Analytics",
   "portal.header.configuration.text": "Configuration",
   "portal.header.content.text": "Content",
+  "portal.header.accountManagement.text": "Account Management",
+  "portal.header.services.text": "Services",
+  "portal.header.security.text": "Security",
+  "portal.header.support.text": "Support",
+  "portal.header.configuration.text": "Configuration",
+  "portal.header.dashboard.text": "Dashboard",
 
   "portal.header.menu.theme.title": "UI Theme",
   "portal.header.menu.theme.ericssonTitle.text": "Ericsson {themeTitle} theme",
@@ -300,5 +306,6 @@
   "portal.dashWithSpaces": "- ",
   "portal.slashWithSpace": "/ ",
   "portal.spaceWithPercentage": " %",
-  "portal.spaceWithAsterisk": " *"
+  "portal.spaceWithAsterisk": " *",
+  "portal.select.emptyLabel": "Please Select"
 }
