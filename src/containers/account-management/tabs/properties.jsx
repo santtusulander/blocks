@@ -186,6 +186,7 @@ class AccountManagementProperties extends React.Component {
     const { adding } = this.state
     if (!this.isLeaving && adding) {
       uiActions.showInfoDialog({
+        // UDNP-2410 add translations for properties
         title: <FormattedMessage id="portal.common.error.warning.title"/>,
         content: <FormattedMessage id="portal.account.groups.modal.unsaved.content"/>,
         stayButton: true,
@@ -292,9 +293,11 @@ class AccountManagementProperties extends React.Component {
     return (
       !this.props.params.group
         ?
-          <p className='text-center'>
-            <FormattedMessage id="portal.account.properties.groupRequired.text" />
-          </p>
+          <PageContainer>
+            <p className='text-center'>
+              <FormattedMessage id="portal.account.properties.groupRequired.text" />
+            </p>
+          </PageContainer>
         :
           <PageContainer className="account-management-account-properties">
             { fetching && <LoadingSpinner/> }

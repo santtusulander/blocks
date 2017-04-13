@@ -295,7 +295,6 @@ export const getStoragePermissions = (roles, user) => ({
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-
   const userRoles = user && user.size > 0 && user.get('roles')
   if (!userRoles) {
     return false
