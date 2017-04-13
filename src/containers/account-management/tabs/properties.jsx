@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { SubmissionError } from 'redux-form'
 
-import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -23,21 +22,18 @@ import ActionButtons from '../../../components/shared/action-buttons'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import TableSorter from '../../../components/shared/table-sorter'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
-import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import ModalWindow from '../../../components/shared/modal'
 import SidePanel from '../../../components/shared/side-panel'
 import AddHost from '../../../components/content/add-host'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
-import { checkForErrors } from '../../../util/helpers'
-import { isValidTextField } from '../../../util/validators'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
 
 const IS_FETCHING = 'PropertiesTabFetching'
-
+// UDNP-2410 unit tests
 class AccountManagementProperties extends React.Component {
   constructor(props) {
     super(props);
@@ -227,13 +223,6 @@ class AccountManagementProperties extends React.Component {
   }
 
   // UDNP-2410 remove unused functions
-  getGroupName() {
-    const { groups } = this.props
-    const groupIdNumber = Number(groupId)
-    const group = groups.find(group => group.get('id') === groupIdNumber)
-    return group ? group.get('name') : ''
-  }
-
   getPropertyDeploymentMode(property) {
     return property.get('services').first().get('deployment_mode')
   }
@@ -437,10 +426,12 @@ class AccountManagementProperties extends React.Component {
 
 AccountManagementProperties.displayName  = 'AccountManagementAccountProperties'
 AccountManagementProperties.propTypes    = {
+  createProperty: React.PropTypes.func,
+  currentAccount: React.PropTypes.instanceOf(Immutable.Map),
+  currentGroup: React.PropTypes.instanceOf(Immutable.Map),
   deleteProperty: React.PropTypes.func,
   fetchProperties: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
   pagination: React.PropTypes.shape({
     filtering: React.PropTypes.object,
