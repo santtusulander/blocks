@@ -10,7 +10,7 @@ import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
-import { getByAccount as getPropertiesByAccount } from '../../../redux/modules/entities/properties/selectors'
+import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import withPagination from '../../../decorators/pagination-hoc'
@@ -69,37 +69,41 @@ class AccountManagementProperties extends React.Component {
     const {
       router,
       route,
-      properties,
+      // properties,
       params: {
         brand,
-        account
+        account,
+        group
       }
     } = this.props
 
-    if (properties.isEmpty()) {
+    // if (properties.isEmpty()) {
+    if (group) {
       const { pagination: { getQueryParams } } = this.props
-      this.refreshData(brand, account, getQueryParams())
+      this.refreshData(brand, account, group, getQueryParams())
     }
+    // }
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.account !== this.props.params.account) {
-      const { brand, account, pagination: { getQueryParams } } = nextProps.params
-      this.refreshData(brand, account, getQueryParams())
+    if (nextProps.params.group !== this.props.params.group) {
+      const { brand, account, group, pagination: { getQueryParams } } = nextProps.params
+      this.refreshData(brand, account, group, getQueryParams())
     }
   }
 
-  refreshData(brand, account, pagingParams) {
-    const { fetchGroups, fetchProperties, groups } = this.props
-    fetchGroups({ brand, account }).then(response => {
-      const groupsData = response ? response.entities.groups : groups.toKeyedSeq().toJS()
-      for (const group in groupsData) {
-        if (groupsData.hasOwnProperty(group)) {
-          fetchProperties({ brand, account, group: groupsData[group].id, ...pagingParams })
-        }
-      }
-    })
+  refreshData(brand, account, group, pagingParams) {
+    const { fetchProperties } = this.props
+    fetchProperties({ brand, account, group, ...pagingParams })
+    // fetchGroups({ brand, account }).then(response => {
+    //   const groupsData = response ? response.entities.groups : groups.toKeyedSeq().toJS()
+    //   for (const group in groupsData) {
+    //     if (groupsData.hasOwnProperty(group)) {
+    //       fetchProperties({ brand, account, group: groupsData[group].id, ...pagingParams })
+    //     }
+    //   }
+    // })
   }
 
   cancelAdding() {
@@ -282,116 +286,122 @@ class AccountManagementProperties extends React.Component {
     const headerText = propertyText + hiddenPropertyText
 
     return (
-      <PageContainer className="account-management-account-properties">
-        { fetching && <LoadingSpinner/> }
-        { !fetching &&
-        (<div>
-          <SectionHeader sectionHeaderTitle={headerText}>
-            <FormGroup className="search-input-group">
-              <FormControl
-                type="text"
-                className="search-input"
-                placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
-                value={search}
-                disabled={!properties.size}
-                onChange={this.changeSearch} />
-            </FormGroup>
-            <IsAllowed to={CREATE_PROPERTY}>
-              <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
-                <IconAdd />
-              </Button>
-            </IsAllowed>
-          </SectionHeader>
+      !this.props.params.group
+        ?
+          <p className='text-center'>
+            <FormattedMessage id="portal.account.properties.groupRequired.text" />
+          </p>
+        :
+          <PageContainer className="account-management-account-properties">
+            { fetching && <LoadingSpinner/> }
+            { !fetching &&
+            (<div>
+              <SectionHeader sectionHeaderTitle={headerText}>
+                <FormGroup className="search-input-group">
+                  <FormControl
+                    type="text"
+                    className="search-input"
+                    placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
+                    value={search}
+                    disabled={!properties.size}
+                    onChange={this.changeSearch} />
+                </FormGroup>
+                <IsAllowed to={CREATE_PROPERTY}>
+                  <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
+                    <IconAdd />
+                  </Button>
+                </IsAllowed>
+              </SectionHeader>
 
-          <Table striped={true}>
-            <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="published_host_id">
-                <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="group">
-                <FormattedMessage id="portal.account.groups.single.text"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="deploymentMode">
-                <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="originHostname">
-                <FormattedMessage id="portal.account.properties.table.originHostname.text"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="created">
-                <FormattedMessage id="portal.account.properties.table.deployed.text"/>
-              </TableSorter>
-              <th width="12%"/>
-            </tr>
-            </thead>
-            <tbody>
-            {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
-              const propertyId = property.get('published_host_id')
-              return (
-                <tr key={i}>
-                  <td>{propertyId}</td>
-                  <td>{property.get('group')}</td>
-                  <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
-                  <td>{property.get('originHostname')}</td>
-                  <td>{formatUnixTimestamp(property.get('created'))}</td>
-                  <td className="nowrap-column">
-                    <IsAllowed to={MODIFY_PROPERTY}>
-                      <ActionButtons
-                        onEdit={() => {
-                          editProperty(property)
-                        }}
-                        onDelete={() => {
-                          this.openDeleteModal(property.get('parentId'), propertyId)
-                        }} />
-                    </IsAllowed>
-                  </td>
+              <Table striped={true}>
+                <thead>
+                <tr>
+                  <TableSorter {...sorterProps} column="published_host_id">
+                    <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="group">
+                    <FormattedMessage id="portal.account.groups.single.text"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="deploymentMode">
+                    <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="originHostname">
+                    <FormattedMessage id="portal.account.properties.table.originHostname.text"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="created">
+                    <FormattedMessage id="portal.account.properties.table.deployed.text"/>
+                  </TableSorter>
+                  <th width="12%"/>
                 </tr>
-              )
-            })}
-            {
-              sortedProperties.size === 0 && search.length > 0 &&
-              <tr>
-                <td colSpan="6">
-                  <FormattedMessage id="portal.account.properties.table.noPropertiesFound.text" values={{searchTerm: search}}/>
-                </td>
-              </tr>
-            }
-            {
-              properties.size === 0 && fetching === false &&
-              <tr>
-                <td colSpan="6">
-                  <FormattedMessage id="portal.account.properties.table.noProperties.text" />
-                </td>
-              </tr>
-            }
-            </tbody>
-          </Table>
-        </div>)}
+                </thead>
+                <tbody>
+                {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
+                  const propertyId = property.get('published_host_id')
+                  return (
+                    <tr key={i}>
+                      <td>{propertyId}</td>
+                      <td>{property.get('group')}</td>
+                      <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
+                      <td>{property.get('originHostname')}</td>
+                      <td>{formatUnixTimestamp(property.get('created'))}</td>
+                      <td className="nowrap-column">
+                        <IsAllowed to={MODIFY_PROPERTY}>
+                          <ActionButtons
+                            onEdit={() => {
+                              editProperty(property)
+                            }}
+                            onDelete={() => {
+                              this.openDeleteModal(property.get('parentId'), propertyId)
+                            }} />
+                        </IsAllowed>
+                      </td>
+                    </tr>
+                  )
+                })}
+                {
+                  sortedProperties.size === 0 && search.length > 0 &&
+                  <tr>
+                    <td colSpan="6">
+                      <FormattedMessage id="portal.account.properties.table.noPropertiesFound.text" values={{searchTerm: search}}/>
+                    </td>
+                  </tr>
+                }
+                {
+                  properties.size === 0 && fetching === false &&
+                  <tr>
+                    <td colSpan="6">
+                      <FormattedMessage id="portal.account.properties.table.noProperties.text" />
+                    </td>
+                  </tr>
+                }
+                </tbody>
+              </Table>
+            </div>)}
 
-        {this.state.deleting &&
-          <ModalWindow
-            title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
-            cancelButton={true}
-            deleteButton={true}
-            cancel={() => this.closeDeleteModal()}
-            onSubmit={() => {
-              deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
-                .then((result) => {
-                  this.closeDeleteModal()
-                  if (!result.error) {
-                    this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
-                  }
-                })
-            }}
-            invalid={true}
-            verifyDelete={true}>
-            <p>
-              <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: "Property" }}/>
-            </p>
-          </ModalWindow>
-        }
+            {this.state.deleting &&
+              <ModalWindow
+                title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
+                cancelButton={true}
+                deleteButton={true}
+                cancel={() => this.closeDeleteModal()}
+                onSubmit={() => {
+                  deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
+                    .then((result) => {
+                      this.closeDeleteModal()
+                      if (!result.error) {
+                        this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
+                      }
+                    })
+                }}
+                invalid={true}
+                verifyDelete={true}>
+                <p>
+                  <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: "Property" }}/>
+                </p>
+              </ModalWindow>
+            }
 
-      </PageContainer>
+          </PageContainer>
     )
   }
 }
@@ -429,18 +439,18 @@ const paginationConfig = {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { account } = ownProps.params
+  const { group } = ownProps.params
   return {
     fetching: getFetchingByTag(state, IS_FETCHING),
-    groups: getGroupsByAccount(state, account),
-    properties: getPropertiesByAccount(state, account)
+    // groups: getGroupsByAccount(state, account),
+    properties: getPropertiesByGroup(state, group)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
+    // fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };

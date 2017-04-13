@@ -33,6 +33,7 @@
   "portal.account.groups.modal.unsaved.content": "You have made changes to the Group(s), are you sure you want to exit without saving?",
 
   "portal.account.properties.title": "Properties",
+  "portal.account.properties.groupRequired.text": "Please select a group.",
   "portal.account.properties.counter.text": "{numProperties, plural, one {# property} other {# properties}}",
   "portal.account.properties.hidden.text": "hidden",
   "portal.account.properties.table.publishedHostname.placeholder.text": "hostname-1.com",
