@@ -73,5 +73,6 @@ export const failEntity = (state/*, action*/) => {
  */
 export const removeEntity = (state, action) => {
   const id = String(action.response.id)
+debugger
   return state.delete(id)
 }

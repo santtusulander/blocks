@@ -132,6 +132,7 @@ const propertyMetadata =
 const users =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'users' }),
+    [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())
 

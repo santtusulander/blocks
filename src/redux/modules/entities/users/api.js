@@ -36,7 +36,7 @@ export const fetchAll = ({ brand, account, group }) => {
 export const create = ({payload}) => {
   return axios.post(baseURL(),  payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({data}) => {
-      return normalize(data.data, userSchema)
+      return normalize(data, userSchema)
     })
 }
 
@@ -49,6 +49,4 @@ export const update = ({id, payload}) => {
 
 export const remove = ({id}) =>
   axios.delete(`${baseURL()}/${id}`)
-    .then(() => {
-      return id
-    })
+    .then(() => ({id}))

@@ -271,7 +271,7 @@ export class AccountManagementAccountUsers extends Component {
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
     } else {
-      this.props.deleteUser(user)
+      this.props.deleteUser({id: user})
     }
   }
 
