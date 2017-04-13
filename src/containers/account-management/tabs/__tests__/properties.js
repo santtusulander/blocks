@@ -6,6 +6,7 @@ jest.unmock('../properties.jsx')
 import { PureProperties } from '../properties.jsx'
 
 jest.unmock('../../../../util/helpers.js')
+import { getSortData } from '../../../../util/helpers.js'
 
 jest.unmock('../../../../redux/modules/fetching/actions')
 
@@ -111,10 +112,17 @@ describe('AccountManagementProperties', () => {
     expect(properties.find('tbody tr').first().find('td').length).toBe(6)
   })
 
-  it('should set sort values for table', () => {
+  it('should set sort criteria properly', () => {
     const properties = renderProperties(fakeParams)
     properties.instance().changeSort('name', -1)
     expect(properties.state('sortBy')).toBe('name')
     expect(properties.state('sortDir')).toBe(-1)
+  })
+
+  it('should allow search through properties', () => {
+    const properties = renderProperties(fakeParams)
+    const filteredData = properties.instance().getFilteredData(fakeProperties, 'a')
+    expect(filteredData.count()).toBe(1)
+    expect(filteredData.first().get('published_host_id')).toBe('Property A')
   })
 })
