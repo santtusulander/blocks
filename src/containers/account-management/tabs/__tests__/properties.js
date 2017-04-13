@@ -121,7 +121,7 @@ describe('AccountManagementProperties', () => {
 
   it('should allow search through properties', () => {
     const properties = renderProperties(fakeParams)
-    const filteredData = properties.instance().getFilteredData(fakeProperties, 'a')
+    const filteredData = properties.instance().getFilteredData(fakeProperties, 'property a')
     expect(filteredData.count()).toBe(1)
     expect(filteredData.first().get('published_host_id')).toBe('Property A')
   })
