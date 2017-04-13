@@ -137,7 +137,6 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_REQUEST}
               component={FieldFormGroupCheckbox}
-              checked={isRequestEnabled}
             />
           }
         />
