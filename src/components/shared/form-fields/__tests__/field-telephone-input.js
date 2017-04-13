@@ -12,18 +12,31 @@ describe('FieldTelephoneInput', () => {
                label = (<div></div>)) => {
       const props = {
         label,
-        input: {
-          name: 'name',
-          value: {
-            phone_country_code: '001',
-            phone_number: '99999999'
+        full_phone_number: {
+          input: {
+            name: 'full_phone_number',
+            value: '199999999'
+          },
+          meta: {
+            error: error,
+            touched: error ? true : false
           },
           onChange: () => {}
         },
-        meta: {
-          error: error,
-          touched: error ? true : false
-        }
+        phone_number: {
+          input: {
+            name: 'phone_number',
+            value: '99999999'
+          },
+          onChange: () => {}
+        },
+        phone_country_code: {
+          input: {
+            name: 'phone_country_code',
+            value: '1'
+          },
+          onChange: () => {}
+        },
       }
 
       return shallow(

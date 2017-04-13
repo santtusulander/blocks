@@ -50,7 +50,6 @@ import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
-import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import MiniChart from '../components/charts/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
 import PageHeader from '../components/shared/layout/page-header'
@@ -93,7 +92,7 @@ export class Dashboard extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (this.props.activeAccount !== nextProps.activeAccount) {
+    if (this.props.activeAccount.get('id') !== nextProps.activeAccount.get('id')) {
       this.props.filterActions.resetContributionFilters()
     }
 
@@ -263,133 +262,136 @@ export class Dashboard extends React.Component {
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
 
     return (
-      <DashboardPanels>
-        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
-          <StackedByTimeSummary
-            dataKey="bytes"
-            totalDatasetValue={totalTrafficValue}
-            totalDatasetUnit={totalTrafficUnit}
-            datasetAArray={trafficDatasetA}
-            datasetALabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpDatasetLabel.text' : 'portal.analytics.onNet.title'})}
-            datasetAUnit="%"
-            datasetAValue={trafficDatasetAValue}
-            datasetBArray={trafficDatasetB}
-            datasetBLabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpsDatasetLabel.text' : 'portal.analytics.offNet.title'})}
-            datasetBUnit="%"
-            datasetBValue={trafficDatasetBValue}/>
-          <hr />
-          <Row>
-            <Col xs={6}>
-              <MiniChart
-                label={intl.formatMessage({id: 'portal.dashboard.avgBandwidth.title'})}
-                kpiValue={averageBandwidthValue}
-                kpiUnit={averageBandwidthUnit}
-                dataKey="bits_per_second"
-                data={bandwidthDetail} />
-            </Col>
-            <Col xs={6}>
-              <MiniChart
-                label={intl.formatMessage({id: 'portal.dashboard.avgLatency.title'})}
-                kpiValue={averageLatencyValue}
-                kpiUnit={averageLatencyUnit}
-                dataKey="avg_fbl"
-                data={latencyDetail} />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={6}>
-              <MiniChart
-                label={intl.formatMessage({id: 'portal.dashboard.connectionsPerSec.title'})}
-                kpiValue={averageConnectionsValue}
-                kpiUnit={averageConnectionsUnit}
-                dataKey="connections_per_second"
-                data={connectionsDetail} />
-            </Col>
-            <Col xs={6}>
-              <MiniChart
-                label={intl.formatMessage({id: 'portal.dashboard.avgCacheHitRate.title'})}
-                kpiValue={averageCacheHitValue}
-                kpiUnit={averageCacheHitUnit}
-                dataKey="chit_ratio"
-                data={cacheHitDetail} />
-            </Col>
-          </Row>
-        </DashboardPanel>
-        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={countries.size ? true : false}>
-          <div ref="byLocationHolder">
-            <AnalysisByLocation
-              countryData={countries}
-              cityData={this.props.cityData}
-              getCityData={this.getCityData}
-              theme={theme}
-              height={this.state.byLocationWidth / 1.6}
-              dataKey="bits_per_second"
-              dataKeyFormat={countriesAverageBandwidth}
-              mapBounds={this.props.mapBounds}
-              mapboxActions={this.props.mapboxActions}/>
-          </div>
-        </DashboardPanel>
-        <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
-          <Table className="table-simple">
-            <thead>
-              <tr>
-                <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
-              </tr>
-            </thead>
-            <tbody>
-              {topProviders.map((provider, i) => {
-                const traffic = separateUnit(formatBytes(provider.get('bytes')))
-                return (
-                  <tr key={i}>
-                    <td><b>{topProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
-                    <td>
-                      <MiniChart
-                        kpiRight={true}
-                        kpiValue={traffic.value}
-                        kpiUnit={traffic.unit}
-                        dataKey="bytes"
-                        data={provider.get('detail').toJS()} />
-                    </td>
-                    <td>
-                      <MiniChart
-                        kpiRight={true}
-                        kpiValue={numeral(provider.get('percent_total')).format('0')}
-                        kpiUnit="%"
-                        dataKey="percent_of_timestamp"
-                        data={provider.get('detail').toJS()} />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-          {!topProviders.size &&
-            <div className="no-data">
-              <FormattedMessage id="portal.common.no-data.text"/>
-            </div>}
-        </DashboardPanel>
-
-        { isCP &&
-        <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
-          <DashboardPanel
-            title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}
-            contentClassName="storage-chart-panel">
-              <StorageChartContainer
-                showingAggregate={true}
-                params={this.props.params}
-                entitySelector={getStorageEstimateByAccount}
-                metricsSelector={getStorageMetricsByAccount}/>
+      <PageContainer>
+        <DashboardPanels>
+          <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
+            <StackedByTimeSummary
+              dataKey="bytes"
+              totalDatasetValue={totalTrafficValue}
+              totalDatasetUnit={totalTrafficUnit}
+              datasetAArray={trafficDatasetA}
+              datasetALabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpDatasetLabel.text' : 'portal.analytics.onNet.title'})}
+              datasetAUnit="%"
+              datasetAValue={trafficDatasetAValue}
+              datasetBArray={trafficDatasetB}
+              datasetBLabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpsDatasetLabel.text' : 'portal.analytics.offNet.title'})}
+              datasetBUnit="%"
+              datasetBValue={trafficDatasetBValue}/>
+            <hr />
+            <Row>
+              <Col xs={6}>
+                <MiniChart
+                  label={intl.formatMessage({id: 'portal.dashboard.avgBandwidth.title'})}
+                  kpiValue={averageBandwidthValue}
+                  kpiUnit={averageBandwidthUnit}
+                  dataKey="bits_per_second"
+                  data={bandwidthDetail} />
+              </Col>
+              <Col xs={6}>
+                <MiniChart
+                  label={intl.formatMessage({id: 'portal.dashboard.avgLatency.title'})}
+                  kpiValue={averageLatencyValue}
+                  kpiUnit={averageLatencyUnit}
+                  dataKey="avg_fbl"
+                  data={latencyDetail} />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6}>
+                <MiniChart
+                  label={intl.formatMessage({id: 'portal.dashboard.connectionsPerSec.title'})}
+                  kpiValue={averageConnectionsValue}
+                  kpiUnit={averageConnectionsUnit}
+                  dataKey="connections_per_second"
+                  data={connectionsDetail} />
+              </Col>
+              <Col xs={6}>
+                <MiniChart
+                  label={intl.formatMessage({id: 'portal.dashboard.avgCacheHitRate.title'})}
+                  kpiValue={averageCacheHitValue}
+                  kpiUnit={averageCacheHitUnit}
+                  dataKey="chit_ratio"
+                  data={cacheHitDetail} />
+              </Col>
+            </Row>
           </DashboardPanel>
-        </IsAllowed>}
+          <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={countries.size ? true : false}>
+            <div ref="byLocationHolder">
+              <AnalysisByLocation
+                countryData={countries}
+                cityData={this.props.cityData}
+                getCityData={this.getCityData}
+                theme={theme}
+                height={this.state.byLocationWidth / 1.6}
+                dataKey="bits_per_second"
+                dataKeyFormat={countriesAverageBandwidth}
+                mapBounds={this.props.mapBounds}
+                mapboxActions={this.props.mapboxActions}/>
+            </div>
+          </DashboardPanel>
+          <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+            <Table className="table-simple">
+              <thead>
+                <tr>
+                  <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
+                  <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                  <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
+                </tr>
+              </thead>
+              <tbody>
+                {topProviders.map((provider, i) => {
+                  const traffic = separateUnit(formatBytes(provider.get('bytes')))
+                  return (
+                    <tr key={i}>
+                      <td><b>{topProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
+                      <td>
+                        <MiniChart
+                          kpiRight={true}
+                          kpiValue={traffic.value}
+                          kpiUnit={traffic.unit}
+                          dataKey="bytes"
+                          data={provider.get('detail').toJS()} />
+                      </td>
+                      <td>
+                        <MiniChart
+                          kpiRight={true}
+                          kpiValue={numeral(provider.get('percent_total')).format('0')}
+                          kpiUnit="%"
+                          dataKey="percent_of_timestamp"
+                          data={provider.get('detail').toJS()} />
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+            {!topProviders.size &&
+              <div className="no-data">
+                <FormattedMessage id="portal.common.no-data.text"/>
+              </div>}
+          </DashboardPanel>
 
-      </DashboardPanels>
+          { isCP &&
+            <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
+              <DashboardPanel
+                title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}
+                contentClassName="storage-chart-panel">
+                  <StorageChartContainer
+                    showingAggregate={true}
+                    params={this.props.params}
+                    entitySelector={getStorageEstimateByAccount}
+                    metricsSelector={getStorageMetricsByAccount}/>
+              </DashboardPanel>
+            </IsAllowed>
+          }
+
+        </DashboardPanels>
+      </PageContainer>
     )
   }
 
   render() {
-    const { activeAccount, fetching, filterOptions, filters, intl, params, router, user } = this.props
+    const { activeAccount, filterOptions, filters, intl, params, router, user } = this.props
     const showFilters = List(['dateRange'])
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
@@ -437,12 +439,8 @@ export class Dashboard extends React.Component {
             showFilters={showFilters}
           />
         : null}
-        {fetching ?
-          <LoadingSpinner />
-        :
-        <PageContainer>
-          {this.renderContent()}
-        </PageContainer>}
+
+        {this.renderContent()}
       </Content>
     )
   }
@@ -458,7 +456,6 @@ Dashboard.propTypes = {
   fetchGroups: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
-  fetching: PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
