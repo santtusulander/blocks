@@ -287,7 +287,7 @@ class ConfigurationAdvanced extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={!(isFinalRequestEnabled || isFinalResponseEnabled || isRequestEnabled || isResponseEnabled)}
+            disabled={metadata.fetching}
           >
             <FormattedMessage id="portal.button.save"/>
           </Button>
