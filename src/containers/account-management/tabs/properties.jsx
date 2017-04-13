@@ -55,7 +55,6 @@ class AccountManagementProperties extends React.Component {
     this.editProperty = this.editProperty.bind(this)
     this.cancelAdding = this.cancelAdding.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
-    this.changeNewUsers = this.changeNewUsers.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
 
     this.isLeaving = false
@@ -171,31 +170,6 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
-  changeNewUsers(val) {
-    this.setState({newUsers: val})
-  }
-
-  shouldLeave({ pathname }) {
-    const { router, uiActions } = this.props
-    const { adding } = this.state
-    if (!this.isLeaving && adding) {
-      uiActions.showInfoDialog({
-        title: <FormattedMessage id="portal.common.error.warning.title"/>,
-        content: <FormattedMessage id="portal.account.properties.modal.unsaved.content"/>,
-        stayButton: true,
-        continueButton: true,
-        cancel: () => uiActions.hideInfoDialog(),
-        onSubmit: () => {
-          this.isLeaving = true
-          router.push(pathname)
-          uiActions.hideInfoDialog()
-        }
-      })
-      return false;
-    }
-    return true
-  }
-
   getFilteredData(data, searchTerm) {
     if (!searchTerm) {
       return data
@@ -217,7 +191,6 @@ class AccountManagementProperties extends React.Component {
     ))
   }
 
-  // UDNP-2410 remove unused functions
   getPropertyDeploymentMode(property) {
     return property.get('services').first().get('deployment_mode')
   }
@@ -435,7 +408,6 @@ AccountManagementProperties.propTypes    = {
   }).isRequired,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  route: React.PropTypes.object,
   router: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
