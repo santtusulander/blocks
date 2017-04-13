@@ -93,16 +93,16 @@ export class AccountManagementAccountUsers extends Component {
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
 
-    if (!is(this.props.account, nextProps.account)){
+    if (!is(this.props.account, nextProps.account)) {
 
       this.props.fetchUsers({brand, account})
       this.props.fetchGroups({brand, account})
+
+      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
+      this.props.resetRoles()
+
     }
 
-    // if (this.props.params.account !== nextProps.params.account) {
-    //   !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
-    //   this.props.resetRoles()
-    // }
   }
 
   componentWillUnmount() {
@@ -520,6 +520,7 @@ AccountManagementAccountUsers.propTypes = {
   fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
+  fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
