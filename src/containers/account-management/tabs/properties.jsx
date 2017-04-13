@@ -448,9 +448,7 @@ class AccountManagementProperties extends React.Component {
 
 AccountManagementProperties.displayName  = 'AccountManagementAccountProperties'
 AccountManagementProperties.propTypes    = {
-  addProperty: React.PropTypes.func,
   deleteProperty: React.PropTypes.func,
-  editProperty: React.PropTypes.func,
   fetchProperties: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
