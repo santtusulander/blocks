@@ -101,15 +101,16 @@ class AnalysisOnOffNetReport extends React.Component {
     const statsToday = this.props.onOffStatsToday
 
     let chart = null
-    const onNet = stats.get('detail').map(datapoint => {
+    const details = stats.get('detail')
 
+    const onNet = details && details.map(datapoint => {
       return {
         bytes: datapoint.getIn(['net_on' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')
       }
     })
 
-    const offNet = stats.get('detail').map(datapoint => {
+    const offNet = details && details.map(datapoint => {
       return {
         bytes: datapoint.getIn(['net_off' , 'bytes']) || 0,
         timestamp: datapoint.get('timestamp')

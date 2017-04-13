@@ -71,6 +71,7 @@
   "portal.policy.edit.policies.matchContentTargeting.action.allow": "Allow",
   "portal.policy.edit.policies.matchContentTargeting.action.redirect": "Redirect",
   "portal.policy.edit.policies.matchContentTargeting.action.deny": "Deny",
+  "portal.policy.edit.policies.matchContentTargeting.location.required.error": "Location is required",
   "portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom": "Users from",
   "portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom": "Users NOT from",
   "portal.policy.edit.policies.matchContentTargeting.redirect.to.text": "to",
@@ -495,5 +496,7 @@
   "portal.policy.edit.versions.none.text": "None",
   "portal.policy.edit.versions.activeStaging.text": "Active Staging",
   "portal.policy.edit.versions.saved.text": "Saved",
-  "portal.policy.edit.versions.deactivated.text": "De-Activated"
+  "portal.policy.edit.versions.deactivated.text": "De-Activated",
+  "portal.policy.edit.matcher.required.error": "This field is required",
+  "portal.policy.edit.matcher.invalid.error": "This field is invalid"
 }

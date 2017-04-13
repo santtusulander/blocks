@@ -11,7 +11,7 @@
 
     .dropdown-menu {
       // Prevent checklist dropdown to hide behind the footer
-      z-index: 1061;
+      z-index: $zindex-group-form;
     }
   }
 

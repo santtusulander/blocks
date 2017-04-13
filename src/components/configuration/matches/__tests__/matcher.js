@@ -1,11 +1,9 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import Select from '../../../shared/form-elements/select'
 
 jest.unmock('../matcher.jsx')
-jest.unmock('../../../../util/policy-config.js')
-const Matcher = require('../matcher.jsx')
+import Matcher from '../matcher.jsx'
 
 const fakeConfig = Immutable.fromJS({
   type: 'equals',
@@ -15,13 +13,26 @@ const fakeConfig = Immutable.fromJS({
 const fakePath = Immutable.List(['foo', 'bar'])
 
 describe('Matcher', () => {
+  let handleSubmit, close, change, component
+
+  beforeEach(() => {
+    handleSubmit = jest.fn()
+    close = jest.fn()
+    change = jest.fn()
+
+    let props = {
+      change,
+      handleSubmit,
+      close,
+      invalid: false,
+      match: fakeConfig,
+      path: fakePath
+    }
+
+    component = shallow(<Matcher {...props} />)
+  })
   it('should exist', () => {
-    let matcher = shallow(
-      <Matcher
-        match={fakeConfig}
-        path={fakePath}/>
-    )
-    expect(matcher).toBeDefined()
+    expect(component).toBeDefined()
   })
 
   //TODO-2277

@@ -168,6 +168,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Field
             name="roles"
             className="inline-add-dropdown"
+            ErrorComponent={errorTooltip}
             options={roleOptions}
             component={FieldFormGroupSelect}/>,
           positionClass: 'row col-xs-10'

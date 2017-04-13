@@ -163,7 +163,7 @@ $details-item-margin: rem(6px);
     top: $header-total-height;
     right: 0;
     left: $navigation-sidebar-width;
-    z-index: 2;
+    z-index: $zindex-page-header;
   }
 
   &.dark-theme .page-header-container.secondary-page-header {

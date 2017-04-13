@@ -33,7 +33,7 @@ import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
 import Content from '../components/shared/layout/content'
 import PageHeader from '../components/shared/layout/page-header'
-import AccountSelector from '../components/global-account-selector/account-selector-container'
+import { PropertyConfigAccountSelector as AccountSelector } from '../components/global-account-selector/account-selector-container'
 import IconTrash from '../components/shared/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
@@ -414,7 +414,7 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
-            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
+            originalConfig: this.state.activeConfigOriginal || Immutable.Map(),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
@@ -554,7 +554,7 @@ function mapStateToProps(state) {
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {

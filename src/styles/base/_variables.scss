@@ -127,5 +127,39 @@ $footer-height: 60px;
 
 // Print
 // =====
-
 $print-font-size: 12px;
+
+// Z-index defaults
+// =====
+$zindex-default-min: -999;
+$zindex-default-minus-one: -1;
+$zindex-default-zero: 0;
+$zindex-default-low: 1;
+$zindex-default-medium: 1000;
+$zindex-default-hight: 9999;
+$zindex-default-max: 999999999;
+
+// Z-index
+// =====
+$zindex-page-header: 2;
+$zindex-analysis-nav: 5;
+$zindex-country-list: 10;
+$zindex-policy-weight: 10;
+$zindex-side-panel-veil: 10;
+$zindex-side-panel-footer: 11;
+$zindex-country-list-flag: 13;
+$zindex-notification-panel: 990;
+$zindex-filter-dropdown: 1000;
+$zindex-side-panel: 1000;
+$zindex-file-status: 1000;
+$zindex-nav-sidebar: 1030;
+$zindex-datepicker: 1030;
+$zindex-tooltip: 1040;
+$zindex-button-toolbar: 1060;
+$zindex-group-form: 1061;
+$zindex-tooltip-help: 1070;
+$zindex-configuration-dialog: 1110;
+$zindex-tooltip-long-name: 1120;
+$zindex-dropdown-menu: 9999;
+$zindex-sortable-helper: 10000;
+$zindex-starburst-help: 10000;

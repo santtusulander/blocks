@@ -33,11 +33,6 @@
   }
 
   text {
-    @include print {
-      font-size: $font-size;
-      fill: $black !important;
-    }
-
     .dark-theme & {
       fill: $dt-text-color;
     }

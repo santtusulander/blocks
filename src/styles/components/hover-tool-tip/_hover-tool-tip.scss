@@ -8,7 +8,7 @@
     position: absolute;
     bottom: 20px;
     left: 0;
-    z-index: 1040;
+    z-index: $zindex-tooltip;
     padding: 10px 15px;
     white-space: nowrap;
     opacity: 0;

@@ -10,6 +10,7 @@ import { black } from '../../constants/colors'
 import { defaultTickDateFormat, dayInMilliSeconds } from '../../constants/chart'
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
+import '../../styles/components/charts/_stacked-area-chart.scss'
 
 const renderAreas = (areas) => {
   return areas.map((area, i) =>

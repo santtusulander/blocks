@@ -6,7 +6,7 @@ $help-svg-container-height: rem(678px);
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 10000;
+  z-index: $zindex-starburst-help;
   width: 100vw;
   min-height: 100vh;
   padding: 40px;

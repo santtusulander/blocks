@@ -96,7 +96,7 @@ class CertificateFormContainer extends Component {
   }
 
   render() {
-    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, ...formProps } = this.props
+    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, submitting, ...formProps } = this.props
 
     return (
       <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
@@ -112,6 +112,7 @@ class CertificateFormContainer extends Component {
             editMode={!certificateToEdit.isEmpty()}
             onCancel={() => cancel(toggleModal)}
             onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
+            fromSubmitting={submitting}
             {...formProps}
           />
       </SidePanel>
@@ -146,14 +147,13 @@ CertificateFormContainer.defaultProps = {
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const certificateToEdit = state.security.get('certificateToEdit')
-  const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
 
   return {
     certificateToEdit,
     initialValues: {
       title: certificateToEdit.get('title'),
       account: certificateToEdit.get('account') || ownProps.activeAccount,
-      group: certificateToEdit.get('group') || activeGroup,
+      group: certificateToEdit.get('group') || Number(ownProps.activeGroup),
       privateKey: certificateToEdit.get('privateKey') || null,
       certificate: certificateToEdit.get('certificate') || null,
       intermediateCertificates: certificateToEdit.get('intermediateCertificates') || null

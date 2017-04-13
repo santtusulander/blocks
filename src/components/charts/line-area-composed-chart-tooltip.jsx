@@ -3,6 +3,8 @@ import { formatUnixTimestamp, formatBytes} from '../../util/helpers'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
+import '../../styles/components/charts/_line-area-composed-chart-tooltip.scss'
+
 const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatBytes, iconClassNamePicker, ignoreValues=[] }) => {
   const timestamp = payload[0] && payload[0].payload && payload[0].payload.timestamp
   const comparisonTimestamp = payload[0] && payload[0].payload && payload[0].payload.historical_timestamp

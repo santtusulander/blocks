@@ -11,7 +11,7 @@ $dark-blue-navi: #070d1e;
   position: fixed;
   top: $header-total-height;
   left: 0;
-  z-index: 1030;
+  z-index: $zindex-nav-sidebar;
   width: $navigation-sidebar-width;
   height: 100vh;
   box-sizing: border-box;
