@@ -40,22 +40,7 @@ $input-height: 36px;
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.1);
-  }
-
-  //TODO: UDNP-3028 - Side panel uses old styles
-  .btn-icon {
-    .icon {
-      .light-theme & {
-        fill: $dt-text-color;
-
-        &:hover,
-        &:focus,
-        &:hover:active {
-          fill: $white;
-        }
-      }
-    }
+    background-color: $grey-20;
   }
 
   &--name {
