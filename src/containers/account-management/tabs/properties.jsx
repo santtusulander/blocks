@@ -33,7 +33,7 @@ import { getContentUrl } from '../../../util/routes'
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
 
 const IS_FETCHING = 'PropertiesTabFetching'
-// UDNP-2410 unit tests
+
 class AccountManagementProperties extends React.Component {
   constructor(props) {
     super(props);
