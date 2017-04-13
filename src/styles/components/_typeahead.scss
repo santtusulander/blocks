@@ -112,6 +112,7 @@ $hint-input-left-padding: 40px;
   }
 
   .bootstrap-typeahead-menu > li > a > span {
+    display: block;
     pointer-events: none;
   }
 }
