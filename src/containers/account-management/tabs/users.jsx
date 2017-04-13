@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -91,10 +91,18 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.params.account !== nextProps.params.account) {
-      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
-      this.props.resetRoles()
+    const {brand, account} = nextProps.params
+
+    if (!is(this.props.account, nextProps.account)){
+
+      this.props.fetchUsers({brand, account})
+      this.props.fetchGroups({brand, account})
     }
+
+    // if (this.props.params.account !== nextProps.params.account) {
+    //   !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
+    //   this.props.resetRoles()
+    // }
   }
 
   componentWillUnmount() {
