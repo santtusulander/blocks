@@ -9,6 +9,7 @@ import { withRouter } from 'react-router'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
@@ -24,6 +25,8 @@ import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import ModalWindow from '../../../components/shared/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import AddHost from '../../../components/content/add-host'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
@@ -55,7 +58,6 @@ class AccountManagementProperties extends React.Component {
     this.changeSearch = this.changeSearch.bind(this)
     this.changeNewUsers = this.changeNewUsers.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
-    this.validateInlineAdd = this.validateInlineAdd.bind(this)
 
     this.isLeaving = false
     this.notificationTimeout = null
@@ -135,23 +137,6 @@ class AccountManagementProperties extends React.Component {
       e.stopPropagation()
       this.setState({ editing: property })
     }
-  }
-
-  validateInlineAdd({name = ''}) {
-    const { properties } = this.props
-    const conditions = {
-      name: [
-        {
-          condition: properties.findIndex(property => property.get('name') === name) > -1,
-          errorText: <FormattedMessage id="portal.account.properties.name.error.exists"/>
-        },
-        {
-          condition: !isValidTextField(name),
-          errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
-        }
-      ]
-    }
-    return checkForErrors({ name }, conditions)
   }
 
   getSortedData(data, sortBy, sortDir) {
@@ -270,7 +255,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { deleteProperty, editProperty, group, intl, properties, fetching, params: { brand, account } } = this.props
+    const { currentAccount, deleteProperty, editProperty, currentGroup, intl, properties, fetching, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
@@ -288,13 +273,18 @@ class AccountManagementProperties extends React.Component {
     const hiddenPropertyText = numHiddenProperties ? ` (${numHiddenProperties} ${intl.formatMessage({id: 'portal.account.properties.hidden.text'})})` : ''
     const headerText = propertyText + hiddenPropertyText
 
-    const groupName = group.get('name')
+    const groupName = currentGroup && currentGroup.get('name')
+    const addPropertyTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
+    const addPropertySubTitle = currentAccount && currentGroup
+      ? `${currentAccount.get('name')} / ${currentGroup.get('name')}`
+    : null
 
     return (
       !this.props.params.group
         ?
           <PageContainer>
             <p className='text-center'>
+              {/*UDNP-2410 better text*/}
               <FormattedMessage id="portal.account.properties.groupRequired.text" />
             </p>
           </PageContainer>
@@ -385,6 +375,21 @@ class AccountManagementProperties extends React.Component {
               </Table>
             </div>)}
 
+            {this.state.adding &&
+              <SidePanel
+                show={true}
+                title={addPropertyTitle}
+                subTitle={addPropertySubTitle}
+                cancel={this.cancelAdding}
+              >
+                <AddHost
+                  activeGroup={currentGroup}
+                  createHost={this.onItemAdd}
+                  cancelChanges={this.cancelAdding}
+                />
+              </SidePanel>
+            }
+
             {this.state.deleting &&
               <ModalWindow
                 title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
@@ -418,7 +423,6 @@ AccountManagementProperties.propTypes    = {
   addProperty: React.PropTypes.func,
   deleteProperty: React.PropTypes.func,
   editProperty: React.PropTypes.func,
-  fetchGroups: React.PropTypes.func,
   fetchProperties: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
@@ -446,11 +450,11 @@ const paginationConfig = {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { group } = ownProps.params
+  const { account, group } = ownProps.params
   return {
+    currentAccount: getAccountById(state, account),
     fetching: getFetchingByTag(state, IS_FETCHING),
-    // groups: getGroupsByAccount(state, account),
-    group: getGroupById(state, group),
+    currentGroup: getGroupById(state, group),
     properties: getPropertiesByGroup(state, group)
   }
 }
@@ -458,7 +462,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    // fetchGroup: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
