@@ -55,9 +55,7 @@ class AccountManagementProperties extends React.Component {
     this.editProperty = this.editProperty.bind(this)
     this.cancelAdding = this.cancelAdding.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
-    this.shouldLeave = this.shouldLeave.bind(this)
 
-    this.isLeaving = false
     this.notificationTimeout = null
 
     const { params: { account, brand }, pagination } = this.props
