@@ -146,6 +146,7 @@ class Matcher extends React.Component {
                 name="val"
                 component={FieldFormGroup}
                 label={this.props.label}
+                placeholder={this.props.placeholder}
               />
             }
 
