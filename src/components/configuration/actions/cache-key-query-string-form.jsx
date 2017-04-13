@@ -160,7 +160,10 @@ class CacheKeyQueryStringForm extends React.Component {
 
     return (
       <div className="form-groups">
-        <InputConnector show={hasContainingRule} />
+        <InputConnector
+          show={hasContainingRule}
+          className='action-input-connector'
+        />
         <FormGroup>
           <ControlLabel>
             <FormattedMessage

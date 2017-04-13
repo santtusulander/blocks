@@ -65,17 +65,7 @@ permissionMapping[PERMISSIONS.VIEW_PROPERTY_PURGE_STATUS] =
 
 // Content Item listing
 permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
-  (role, roleId) => {
-    // TODO: This role check was implemented to fix UDNP-1556.
-    // This is a temporary fix and is definitely considered a hack. We should never
-    // do role checking in our permission mapping functions. This should be removed
-    // once we come up with a better way to support listing accounts for the
-    // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
-    const isSuperAdmin = roleId === 1 // NOTE: 1 is the role ID for UDN Admins
-
-    const canListAccounts = role.getIn([ 'aaa', 'accounts', 'list', 'allowed'], false)
-    return isSuperAdmin && canListAccounts
-  }
+  (role) => role.getIn(['aaa', 'accounts', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
   (role) => role.getIn([ 'aaa', 'groups', 'list', 'allowed'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =

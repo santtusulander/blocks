@@ -3,7 +3,10 @@ import { Button, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, 
+         formValueSelector, 
+         propTypes as reduxFormPropTypes 
+       } from 'redux-form'
 
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
@@ -146,6 +149,7 @@ class Matcher extends React.Component {
                 name="val"
                 component={FieldFormGroup}
                 label={this.props.label}
+                placeholder={this.props.placeholder}
               />
             }
 
@@ -153,6 +157,7 @@ class Matcher extends React.Component {
               <InputConnector
                 show={hasContainingRule}
                 noLabel={true}
+                className='matcher-input-connector'
               />
               <Field
                 name="activeFilter"

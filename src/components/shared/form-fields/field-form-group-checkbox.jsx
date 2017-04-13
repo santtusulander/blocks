@@ -25,6 +25,7 @@ const FieldFormGroupCheckbox  = ({
         <Checkbox
           className={className}
           disabled={disabled}
+          checked={input.value}
           {...input}
         />
 
