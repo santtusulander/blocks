@@ -296,6 +296,8 @@ export class AccountManagement extends Component {
       return 'groups';
     } else if (router.isActive(`${baseUrl}/users`)) {
       return 'users';
+    } else if (router.isActive(`${baseUrl}/properties`)) {
+      return 'properties';
     }
 
     return '';
@@ -402,7 +404,7 @@ export class AccountManagement extends Component {
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               params={params}
-              levels={[ 'brand' ]}
+              levels={[ 'brand', 'account' ]}
               onItemClick={(entity) => {
 
                 const { nodeInfo, idKey = 'id' } = entity

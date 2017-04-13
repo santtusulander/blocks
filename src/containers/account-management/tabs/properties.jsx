@@ -9,7 +9,7 @@ import { withRouter } from 'react-router'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
-import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
@@ -88,13 +88,14 @@ class AccountManagementProperties extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.group !== this.props.params.group) {
-      const { brand, account, group, pagination: { getQueryParams } } = nextProps.params
+      const { params: { brand, account, group }, pagination: { getQueryParams } } = nextProps
       this.refreshData(brand, account, group, getQueryParams())
     }
   }
 
   refreshData(brand, account, group, pagingParams) {
     const { fetchProperties } = this.props
+
     fetchProperties({ brand, account, group, ...pagingParams })
     // UDNP-2410 - clean up the code
     // fetchGroups({ brand, account }).then(response => {
@@ -217,12 +218,13 @@ class AccountManagementProperties extends React.Component {
   getModifiedData(data) {
     return data.map(property => (
       property
+        // .set('group', this.getGroupName())
         .set('deploymentMode', this.getPropertyDeploymentMode(property))
         .set('originHostname', this.getPropertyOriginHostname(property))
     ))
   }
 
-  getGroupName(groupId) {
+  getGroupName() {
     const { groups } = this.props
     const groupIdNumber = Number(groupId)
     const group = groups.find(group => group.get('id') === groupIdNumber)
@@ -267,7 +269,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { deleteProperty, editProperty, intl, properties, fetching, params: { brand, account } } = this.props
+    const { deleteProperty, editProperty, group, intl, properties, fetching, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
@@ -284,6 +286,8 @@ class AccountManagementProperties extends React.Component {
     const propertyText = intl.formatMessage({id: 'portal.account.properties.counter.text' }, { numProperties: sortedProperties.size })
     const hiddenPropertyText = numHiddenProperties ? ` (${numHiddenProperties} ${intl.formatMessage({id: 'portal.account.properties.hidden.text'})})` : ''
     const headerText = propertyText + hiddenPropertyText
+
+    const groupName = group.get('name')
 
     return (
       !this.props.params.group
@@ -319,9 +323,9 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="published_host_id">
                     <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
                   </TableSorter>
-                  {/*<TableSorter {...sorterProps} column="group">
+                  <TableSorter {...sorterProps} column="group">
                     <FormattedMessage id="portal.account.groups.single.text"/>
-                  </TableSorter>*/}
+                  </TableSorter>
                   <TableSorter {...sorterProps} column="deploymentMode">
                     <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
                   </TableSorter>
@@ -340,7 +344,7 @@ class AccountManagementProperties extends React.Component {
                   return (
                     <tr key={i}>
                       <td>{propertyId}</td>
-                      {/*<td>{property.get('group')}</td>*/}
+                      <td>{groupName}</td>
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{property.get('originHostname')}</td>
                       <td>{formatUnixTimestamp(property.get('created'))}</td>
@@ -443,6 +447,7 @@ function mapStateToProps(state, ownProps) {
   return {
     fetching: getFetchingByTag(state, IS_FETCHING),
     // groups: getGroupsByAccount(state, account),
+    group: getGroupById(state, group),
     properties: getPropertiesByGroup(state, group)
   }
 }
@@ -450,7 +455,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    // fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
+    // fetchGroup: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
