@@ -96,6 +96,7 @@ class AccountManagementProperties extends React.Component {
   refreshData(brand, account, group, pagingParams) {
     const { fetchProperties } = this.props
     fetchProperties({ brand, account, group, ...pagingParams })
+    // UDNP-2410 - clean up the code
     // fetchGroups({ brand, account }).then(response => {
     //   const groupsData = response ? response.entities.groups : groups.toKeyedSeq().toJS()
     //   for (const group in groupsData) {
@@ -216,7 +217,6 @@ class AccountManagementProperties extends React.Component {
   getModifiedData(data) {
     return data.map(property => (
       property
-        .set('group', this.getGroupName(property.get('parentId')))
         .set('deploymentMode', this.getPropertyDeploymentMode(property))
         .set('originHostname', this.getPropertyOriginHostname(property))
     ))
@@ -319,9 +319,9 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="published_host_id">
                     <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
                   </TableSorter>
-                  <TableSorter {...sorterProps} column="group">
+                  {/*<TableSorter {...sorterProps} column="group">
                     <FormattedMessage id="portal.account.groups.single.text"/>
-                  </TableSorter>
+                  </TableSorter>*/}
                   <TableSorter {...sorterProps} column="deploymentMode">
                     <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
                   </TableSorter>
@@ -340,7 +340,7 @@ class AccountManagementProperties extends React.Component {
                   return (
                     <tr key={i}>
                       <td>{propertyId}</td>
-                      <td>{property.get('group')}</td>
+                      {/*<td>{property.get('group')}</td>*/}
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{property.get('originHostname')}</td>
                       <td>{formatUnixTimestamp(property.get('created'))}</td>
