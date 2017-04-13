@@ -27,7 +27,7 @@ import ModalWindow from '../../../components/shared/modal'
 import SidePanel from '../../../components/shared/side-panel'
 import AddHost from '../../../components/content/add-host'
 
-import { formatUnixTimestamp} from '../../../util/helpers'
+import { getSortData, formatUnixTimestamp} from '../../../util/helpers'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
@@ -145,23 +145,6 @@ class AccountManagementProperties extends React.Component {
     router.push(getContentUrl('propertyConfiguration', propId, params))
   }
 
-  getSortedData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if (typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if (aVal < bVal) {
-        return -1 * sortDir
-      } else if (aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
-  }
-
   changeSearch(e) {
     this.setState({
       search: e.target.value
@@ -238,7 +221,7 @@ class AccountManagementProperties extends React.Component {
 
     const filteredProperties = this.getFilteredData(properties, search)
     const modifiedProperties = this.getModifiedData(filteredProperties)
-    const sortedProperties = this.getSortedData(modifiedProperties, sortBy, sortDir)
+    const sortedProperties = getSortData(modifiedProperties, sortBy, sortDir)
     const numHiddenProperties = properties.size - sortedProperties.size;
 
     const propertyText = intl.formatMessage({id: 'portal.account.properties.counter.text' }, { numProperties: sortedProperties.size })
@@ -439,3 +422,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(withPagination(AccountManagementProperties, paginationConfig))))
+export { AccountManagementProperties as PureProperties }

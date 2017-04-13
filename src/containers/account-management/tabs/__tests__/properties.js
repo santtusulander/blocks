@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
 jest.unmock('../properties.jsx')
-import Properties from '../properties.jsx'
+import { PureProperties } from '../properties.jsx'
 
 jest.unmock('../../../../util/helpers.js')
 
@@ -73,19 +73,48 @@ const fakeProperties = Immutable.fromJS([
 const fakeParams = { brand: 'udn', account: 1, group: 1 }
 
 const renderProperties = (params) => (
-  shallow(<Properties
+  shallow(<PureProperties
     currentAccount={fakeAccount}
     currentGroup={fakeGroup}
     properties={fakeProperties}
     params={params}
     fetching={false}
     fetchProperties={jest.fn()}
-    intl={intlMaker()} />)
+    intl={intlMaker()}
+    pagination={{
+      filtering: {},
+      paging: {},
+      sorting: {},
+      getQueryParams: jest.fn(),
+      registerSubscriber: jest.fn()}} />)
 )
 
 describe('AccountManagementProperties', () => {
   it('should exist', () => {
     const properties = renderProperties({})
     expect(properties.length).toBe(1)
+  })
+
+  it('should show properties when group is selected', () => {
+    const properties = renderProperties(fakeParams)
+    expect(properties.find('tr').length).toBe(3)
+  })
+
+  it('should show group required text when no group is selected', () => {
+    const properties = renderProperties({})
+    expect(properties.find('tr').length).toBe(0)
+    expect(properties.find('.text-center').length).toBe(1)
+  })
+
+  it('should show all columns', () => {
+    const properties = renderProperties(fakeParams)
+    expect(properties.find('tbody tr').first().find('td').length).toBe(6)
+  })
+
+  it('should set sort values for table', () => {
+    const properties = renderProperties(fakeParams)
+    properties.instance().changeSort('name', -1)
+    expect(properties.state('sortBy')).toBe('name')
+    expect(properties.state('sortDir')).toBe(-1)
   })
 })
