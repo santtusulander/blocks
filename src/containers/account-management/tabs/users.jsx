@@ -20,6 +20,8 @@ import { getByAccount } from '../../../redux/modules/entities/users/selectors'
 import groupsActions from '../../../redux/modules/entities/groups/actions'
 import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
@@ -34,6 +36,8 @@ import TableSorter from '../../../components/shared/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/shared/modal'
+
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -300,6 +304,13 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   render() {
+    const {fetching} = this.props
+
+    if (fetching) {
+      return <LoadingSpinner />
+    }
+
+
     const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
@@ -524,6 +535,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     form: state.form,
+    fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByAccount(state, account),
     currentUser: state.user.get('currentUser').get('email'),
@@ -535,8 +547,6 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    //groupActions: bindActionCreators(groupActionCreators, dispatch),
-    //userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
 
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
