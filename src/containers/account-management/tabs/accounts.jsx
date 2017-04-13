@@ -13,8 +13,10 @@ import ArrayCell from '../../../components/shared/page-elements/array-td'
 import TableSorter from '../../../components/shared/table-sorter'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 
-import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
+
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import {getByBrand} from '../../../redux/modules/entities/accounts/selectors'
 
 import {getServicesInfo, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
@@ -41,14 +43,14 @@ class AccountList extends Component {
   }
 
   componentWillMount() {
-    const { accountActions, router, route, fetchServiceInfo } = this.props
-    router.setRouteLeaveHook(route, this.shouldLeave)
+    const { router, route, fetchAccounts, fetchServiceInfo } = this.props
+    const {brand} = this.props.params
 
-    //TODO: get brand from redux
-    accountActions.fetchAccounts(this.props.params.brand)
+    router.setRouteLeaveHook(route, this.shouldLeave)
 
     //fetch serviceInfo from API
     fetchServiceInfo()
+    fetchAccounts({brand})
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {
@@ -209,35 +211,37 @@ class AccountList extends Component {
 AccountList.displayName = "AccountList"
 
 AccountList.propTypes = {
-  accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
+  fetchAccounts: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
-  providerTypes: React.PropTypes.instanceOf(Map),
-  route: React.PropTypes.object,
-  router: React.PropTypes.object,
-  servicesInfo: React.PropTypes.instanceOf(Map),
-  uiActions: React.PropTypes.object
+  providerTypes: PropTypes.instanceOf(Map),
+  route: PropTypes.object,
+  router: PropTypes.object,
+  servicesInfo: PropTypes.instanceOf(Map),
+  uiActions: PropTypes.object
 }
 
 AccountList.defaultProps = {
   accounts: List()
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state, ownProps) => {
+  const {brand} = ownProps.params
+
   return {
-    accounts: state.account.get('allAccounts'),
+    accounts: getByBrand(state, brand),
     providerTypes: getProviderTypes(state),
     servicesInfo: getServicesInfo(state)
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
     fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
+    fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
