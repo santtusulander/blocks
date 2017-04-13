@@ -201,7 +201,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             }
           </div>
         </Col>
-        <Col xs={5}>
+        <Col xs={8}>
           <div className="condition-name">
             <TruncatedTitle content={getConditionFilterText(match)}/>
           </div>
@@ -264,8 +264,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             <div key={i}
               className={active ? 'condition clearfix active' : 'condition clearfix'}
               onClick={this.activateSet(set.path)}>
-              <Col xs={8}>
-                <p>{i + 1} {set.name}</p>
+              <Col xs={8} className="condition-name">
+                {i + 1}&nbsp;
+                <TruncatedTitle content={set.name}/>
               </Col>
               <Col xs={4} className="text-right">
                 <ActionButtons
@@ -276,6 +277,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     this.moveSet(set.path, i+1) : () => false}
                   arrowDownDisabled={i >= actions.length - 1 || disabled}
                   onDelete={this.deleteSet(set.path)}
+                  deleteDisabled={disabled}
                 />
               </Col>
             </div>
