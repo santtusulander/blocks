@@ -30,7 +30,7 @@ import AccountManagement from './containers/account-management/account-managemen
 import AccountManagementAccountDetails from './containers/account-management/tabs/details'
 import AccountManagementAccountUsers from './containers/account-management/tabs/users'
 import AccountManagementGroups from './containers/account-management/tabs/groups'
-import AccountManagementAccounts from './components/account-management/system/accounts'
+import AccountManagementAccounts from './containers/account-management/tabs/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
