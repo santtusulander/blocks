@@ -113,14 +113,21 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render() {
-    const { contribution } = this.props
+    const { contribution, filterOptions } = this.props
+    const isCP = this.props.accountType === ProviderTypes.CONTENT_PROVIDER
+
+    const providers = filterOptions.get(isCP ? 'serviceProviders' : 'contentProviders')
+    const contributionWithName = contribution.map(item => {
+      const service = providers.find(provider => provider.get('id') === item.get(isCP ? 'sp_account':'account'))
+      return service ? item.set('name', service.get('name')) : item
+    })
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
       sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
     }
 
-    if (contribution.size === 0) {
+    if (contributionWithName.size === 0) {
       return (
         <div>
           <SectionHeader sectionHeaderTitle={sectionHeaderTitle} />
@@ -134,7 +141,7 @@ class AnalyticsTabContribution extends React.Component {
         dateRangeLabel={this.props.filters.get('dateRangeLabel')}
         dateRange={this.props.filters.get('dateRange')}
         sectionHeaderTitle={sectionHeaderTitle}
-        stats={contribution}
+        stats={contributionWithName}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
       />
@@ -150,6 +157,7 @@ AnalyticsTabContribution.propTypes = {
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   filterActions: React.PropTypes.object,
+  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -159,6 +167,7 @@ AnalyticsTabContribution.propTypes = {
 AnalyticsTabContribution.defaultProps = {
   currentUser: Immutable.Map(),
   filters: Immutable.Map(),
+  filterOptions: Immutable.Map(),
   contribution: Immutable.List()
 }
 
@@ -169,7 +178,8 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    filterOptions: state.filters.get('filterOptions')
   }
 }
 

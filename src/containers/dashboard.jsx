@@ -92,7 +92,7 @@ export class Dashboard extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (this.props.activeAccount !== nextProps.activeAccount) {
+    if (this.props.activeAccount.get('id') !== nextProps.activeAccount.get('id')) {
       this.props.filterActions.resetContributionFilters()
     }
 

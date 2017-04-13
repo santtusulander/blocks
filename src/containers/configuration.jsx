@@ -414,7 +414,7 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
-            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
+            originalConfig: this.state.activeConfigOriginal || Immutable.Map(),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
@@ -554,7 +554,7 @@ function mapStateToProps(state) {
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {
