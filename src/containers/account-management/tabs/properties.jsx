@@ -74,7 +74,6 @@ class AccountManagementProperties extends React.Component {
     const {
       router,
       route,
-      // properties,
       params: {
         brand,
         account,
@@ -82,12 +81,11 @@ class AccountManagementProperties extends React.Component {
       }
     } = this.props
 
-    // if (properties.isEmpty()) {
     if (group) {
       const { pagination: { getQueryParams } } = this.props
       this.refreshData(brand, account, group, getQueryParams())
     }
-    // }
+
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
@@ -102,15 +100,6 @@ class AccountManagementProperties extends React.Component {
     const { fetchProperties } = this.props
 
     fetchProperties({ brand, account, group, ...pagingParams })
-    // UDNP-2410 - clean up the code
-    // fetchGroups({ brand, account }).then(response => {
-    //   const groupsData = response ? response.entities.groups : groups.toKeyedSeq().toJS()
-    //   for (const group in groupsData) {
-    //     if (groupsData.hasOwnProperty(group)) {
-    //       fetchProperties({ brand, account, group: groupsData[group].id, ...pagingParams })
-    //     }
-    //   }
-    // })
   }
 
   createProperty(id, deploymentMode, serviceType) {
@@ -232,12 +221,12 @@ class AccountManagementProperties extends React.Component {
   getModifiedData(data) {
     return data.map(property => (
       property
-        // .set('group', this.getGroupName())
         .set('deploymentMode', this.getPropertyDeploymentMode(property))
         .set('originHostname', this.getPropertyOriginHostname(property))
     ))
   }
 
+  // UDNP-2410 remove unused functions
   getGroupName() {
     const { groups } = this.props
     const groupIdNumber = Number(groupId)
