@@ -22,8 +22,8 @@ const createQueryStr = (brand, account, group) => {
   return query.join('&')
 }
 
-const userSchema = new schema.Entity('user', {}, {
-  id_attribute: 'email'
+const userSchema = new schema.Entity('users', {}, {
+  idAttribute: 'email'
 })
 
 export const fetchAll = ({ brand, account, group }) => {
