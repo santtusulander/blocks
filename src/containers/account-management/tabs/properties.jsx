@@ -68,8 +68,6 @@ class AccountManagementProperties extends React.Component {
 
   componentWillMount() {
     const {
-      router,
-      route,
       params: {
         brand,
         account,
@@ -81,8 +79,6 @@ class AccountManagementProperties extends React.Component {
       const { pagination: { getQueryParams } } = this.props
       this.refreshData(brand, account, group, getQueryParams())
     }
-
-    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -184,9 +180,8 @@ class AccountManagementProperties extends React.Component {
     const { adding } = this.state
     if (!this.isLeaving && adding) {
       uiActions.showInfoDialog({
-        // UDNP-2410 add translations for properties
         title: <FormattedMessage id="portal.common.error.warning.title"/>,
-        content: <FormattedMessage id="portal.account.groups.modal.unsaved.content"/>,
+        content: <FormattedMessage id="portal.account.properties.modal.unsaved.content"/>,
         stayButton: true,
         continueButton: true,
         cancel: () => uiActions.hideInfoDialog(),
@@ -290,8 +285,7 @@ class AccountManagementProperties extends React.Component {
         ?
           <PageContainer>
             <p className='text-center'>
-              {/*UDNP-2410 better text*/}
-              <FormattedMessage id="portal.account.properties.groupRequired.text" />
+              <FormattedMessage id="portal.account.properties.groupNotSelected.text" values={{br: <br />}}/>
             </p>
           </PageContainer>
         :
