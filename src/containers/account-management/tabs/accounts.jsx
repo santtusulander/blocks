@@ -237,6 +237,7 @@ AccountList.defaultProps = {
   accounts: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const {brand} = ownProps.params
 
@@ -248,6 +249,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
