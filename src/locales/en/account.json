@@ -45,6 +45,8 @@
   "portal.account.properties.table.noProperties.text": "No properties",
   "portal.account.properties.deploymentMode.trial": "Trial",
   "portal.account.properties.deploymentMode.production": "Production",
+  "portal.account.properties.delete.success.text": "Property deleted successfully.",
+  "portal.account.properties.create.success.text": "Property created successfully.",
 
   "portal.account.storage.tooltip.currentUsage": "Current usage",
   "portal.account.storage.tooltip.peakThisMonth": "Peak this month",

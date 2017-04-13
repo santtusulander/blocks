@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { SubmissionError } from 'redux-form'
 
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
@@ -51,6 +52,7 @@ class AccountManagementProperties extends React.Component {
       sortDir: 1
     }
 
+    this.createProperty = this.createProperty.bind(this)
     this.addProperty = this.addProperty.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.editProperty = this.editProperty.bind(this)
@@ -108,6 +110,33 @@ class AccountManagementProperties extends React.Component {
     //     }
     //   }
     // })
+  }
+
+  createProperty(id, deploymentMode, serviceType) {
+    const payload = {
+      services: [{
+        service_type: serviceType,
+        deployment_mode: deploymentMode,
+        configurations: [{
+          edge_configuration: {
+            published_name: id
+          }
+        }]
+      }]
+    }
+    return this.props.createProperty(
+      this.props.params.brand,
+      this.props.params.account,
+      this.props.params.group,
+      payload
+      ).then(({error}) => {
+        this.cancelAdding()
+        if (error) {
+          throw new SubmissionError({ _error: error.data.message })
+        } else {
+          this.showNotification(<FormattedMessage id="portal.account.properties.create.success.text" />)
+        }
+      })
   }
 
   cancelAdding() {
@@ -384,7 +413,7 @@ class AccountManagementProperties extends React.Component {
               >
                 <AddHost
                   activeGroup={currentGroup}
-                  createHost={this.onItemAdd}
+                  createHost={this.createProperty}
                   cancelChanges={this.cancelAdding}
                 />
               </SidePanel>
@@ -401,7 +430,7 @@ class AccountManagementProperties extends React.Component {
                     .then((result) => {
                       this.closeDeleteModal()
                       if (!result.error) {
-                        this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text" />)
+                        this.showNotification(<FormattedMessage id="portal.account.properties.delete.success.text" />)
                       }
                     })
                 }}
@@ -461,6 +490,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload})),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
