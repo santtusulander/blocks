@@ -15,8 +15,8 @@ function intlMaker() {
   }
 }
 
-const fakeAccount = Immutable.fromJS({id: 11, brand_id: 'udn'})
-const fakeGroups = Immutable.fromJS({id: 1, name: 'Group A'})
+const fakeAccount = Immutable.fromJS({id: 11, name: 'Account A'})
+const fakeGroup = Immutable.fromJS({id: 1, name: 'Group A'})
 const fakeProperties = Immutable.fromJS([
   {
     published_host_id: 'Property A',
@@ -59,7 +59,7 @@ const fakeProperties = Immutable.fromJS([
       updated: 1484651377,
       object_id: '9c16ce6074324e46b632e8a6e6d9e8e6',
       description: '',
-      deployment_mode: 'development',
+      deployment_mode: 'production',
       configurations: [{
         edge_configuration: {
           origin_type: 'cis',
@@ -70,18 +70,22 @@ const fakeProperties = Immutable.fromJS([
   }
 ])
 
-const propertiesComponent =
-  (<Properties
-    account={fakeAccount}
-    groups={fakeGroups}
+const fakeParams = { brand: 'udn', account: 1, group: 1 }
+
+const renderProperties = (params) => (
+  shallow(<Properties
+    currentAccount={fakeAccount}
+    currentGroup={fakeGroup}
     properties={fakeProperties}
-    params={{}}
+    params={params}
+    fetching={false}
     fetchProperties={jest.fn()}
     intl={intlMaker()} />)
+)
 
 describe('AccountManagementProperties', () => {
   it('should exist', () => {
-    const properties = shallow(propertiesComponent)
+    const properties = renderProperties({})
     expect(properties.length).toBe(1)
   })
 })
