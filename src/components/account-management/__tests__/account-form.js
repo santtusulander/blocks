@@ -22,13 +22,25 @@ describe('AccountForm', () => {
   const fetchServiceInfo = () => Immutable.Map()
   let subject, error, props = null
   let touched = false
+  const mockProviderTypes = [{
+    value: 1,
+    label: (<div id="testLabel">Test</div>)
+  }]
+  const mockAccount = Immutable.fromJS({
+    id: 1,
+    name: 'Test'
+  })
 
   beforeEach(() => {
-    subject = () => {
+    subject = (errorMsg, accountProp, accountType, providerTypes = mockProviderTypes) => {
       props = {
+        account: accountProp,
+        error: errorMsg,
         onCancel,
         onSave,
         fetchServiceInfo,
+        accountType,
+        providerTypes,
         handleSubmit: jest.fn(),
         intl: intlMaker(),
         initialValues: {
@@ -49,13 +61,36 @@ describe('AccountForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should render an error message', () => {
-    touched = true
-    expect(
-      subject()
-        .find('input .error-msg')
-        .at(0)
-    ).toBeTruthy()
+  it('should render form', () => {
+    expect(subject().find('form').length).toBe(1)
+  })
+
+  it('should render 2 Buttons', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should render 3 Fields', () => {
+    expect(subject("").find('Field').length).toBe(3)
+  })
+
+  it('should render 2 Fields if account is passed', () => {
+    expect(subject("", mockAccount).find('Field').length).toBe(2)
+  })
+
+  it('should render error messages', () => {
+    expect(subject("error").find('.submit-error').text()).toBe("error")
+  })
+
+  it('should not render error messages if empty', () => {
+    expect(subject("").find('.submit-error').text()).toBe("")
+  })
+
+  it('should show label if account type and provider type match', () => {
+    expect(subject("", mockAccount, 1, mockProviderTypes).find('#testLabel').length).toBe(1)
+  })
+
+  it('should not label if account type and provider type does not match', () => {
+    expect(subject("", mockAccount, 2, mockProviderTypes).find('#testLabel').length).toBe(0)
   })
 })
 
