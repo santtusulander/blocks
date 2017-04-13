@@ -141,7 +141,6 @@ class ConfigurationAdvanced extends React.Component {
             />
           }
         />
-        <hr />
 
         {isRequestEnabled &&
           <SectionContainer className="request-config">
@@ -168,7 +167,7 @@ class ConfigurationAdvanced extends React.Component {
             </Row>
           </SectionContainer>
         }
-
+        <hr />
 
         {/* Override Response Policies */}
         <SectionHeader
@@ -180,7 +179,6 @@ class ConfigurationAdvanced extends React.Component {
             />
           }
         />
-        <hr />
 
         {isResponseEnabled &&
           <SectionContainer className="response-config">
@@ -207,6 +205,7 @@ class ConfigurationAdvanced extends React.Component {
             </Row>
           </SectionContainer>
         }
+        <hr />
 
         {/* Override Final Request Policies */}
         <SectionHeader
@@ -218,7 +217,6 @@ class ConfigurationAdvanced extends React.Component {
             />
           }
         />
-        <hr />
 
         {isFinalRequestEnabled &&
           <SectionContainer className="final-request-config">
@@ -245,6 +243,7 @@ class ConfigurationAdvanced extends React.Component {
             </Row>
           </SectionContainer>
         }
+        <hr />
 
         {/* Override Final Response Policies */}
         <SectionHeader
@@ -256,7 +255,6 @@ class ConfigurationAdvanced extends React.Component {
             />
           }
         />
-        <hr />
 
         {isFinalResponseEnabled &&
           <SectionContainer className="final-response-config">
@@ -283,6 +281,7 @@ class ConfigurationAdvanced extends React.Component {
             </Row>
           </SectionContainer>
         }
+        <hr />
 
         <ButtonToolbar className="text-left">
           <Button
