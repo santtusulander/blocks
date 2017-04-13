@@ -246,6 +246,8 @@ class NetworkEditNodeForm extends React.Component {
       let helpMessage = null
       let fieldToggle = null
       let isExpanded = true
+      let className = ""
+
       const fieldLabelText = <FormattedMessage id={fieldData.labelId} />
       const hasMultipleNodeValues = nodeValues[fieldData.name] === MULTIPLE_VALUE_INDICATOR
 
@@ -284,11 +286,14 @@ class NetworkEditNodeForm extends React.Component {
         )
       }
 
+      className += (fieldData.name === "custom_grains") ? "can-copy-to-clipboard " : ""
+      className += isExpanded ? 'show' : 'hidden'
+
       return (
         <FormGroup key={idx}>
           <label>{fieldLabelText}</label>
           {fieldToggle}
-          <div className={isExpanded ? 'show' : 'hidden'}>
+          <div className={className}>
             <Field {...fieldData}
               addonAfter={fieldData.tooltipText &&
                 <HelpTooltip
