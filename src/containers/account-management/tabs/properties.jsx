@@ -32,6 +32,7 @@ import AddHost from '../../../components/content/add-host'
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
+import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
 
@@ -161,11 +162,9 @@ class AccountManagementProperties extends React.Component {
   }
 
   editProperty(property) {
-    return (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      this.setState({ editing: property })
-    }
+    const { params, router } = this.props
+    const propId = property.get('published_host_id')
+    router.push(getContentUrl('propertyConfiguration', propId, params))
   }
 
   getSortedData(data, sortBy, sortDir) {
@@ -284,7 +283,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { currentAccount, deleteProperty, editProperty, currentGroup, intl, properties, fetching, params: { brand, account } } = this.props
+    const { currentAccount, currentGroup, deleteProperty, fetching, intl, properties, params: { brand, account } } = this.props
     const { search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
@@ -374,7 +373,7 @@ class AccountManagementProperties extends React.Component {
                         <IsAllowed to={MODIFY_PROPERTY}>
                           <ActionButtons
                             onEdit={() => {
-                              editProperty(property)
+                              this.editProperty(property)
                             }}
                             onDelete={() => {
                               this.openDeleteModal(property.get('parentId'), propertyId)
