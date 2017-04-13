@@ -25,7 +25,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 
 import accountsActions from '../../redux/modules/entities/accounts/actions'
-import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 import groupActionCreators from '../../redux/modules/entities/groups/actions'
 
 import Content from '../../components/shared/layout/content'
@@ -86,39 +86,6 @@ export class AccountManagement extends Component {
     this.showGroupModal = this.showGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
-  }
-
-  componentWillMount() {
-    const { brand, account } = this.props.params
-    this.props.permissionsActions.fetchPermissions()
-    this.props.rolesActions.fetchRoles()
-
-    /*
-      TODO: UDNP-2172
-      Why Users are needed here?
-      Shouldn't they be loaded on 'Users' -tab?
-    */
-    if (account) {
-      this.props.fetchActiveAccount({brand, id: account})
-      this.props.userActions.fetchUsers(brand, account)
-    } else if (this.props.accounts.size) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    /*TODO: UDNP-2172
-      Why Users are needed here?
-      Shouldn't they be loaded on 'Users' -tab?
-    */
-    const { brand, account } = nextProps.params
-    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
-      this.props.userActions.fetchUsers(brand, account)
-    } else if (!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
-    }
   }
 
   editSOARecord() {
@@ -557,15 +524,12 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
-  fetchActiveAccount: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
-  permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
-  rolesActions: PropTypes.object,
   router: PropTypes.object,
   // soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
@@ -583,7 +547,7 @@ AccountManagement.defaultProps = {
 function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    accounts: state.account.get('allAccounts'),
+    accounts: getByBrand(state, ownProps.params.brand),
     activeAccount: getAccountById(state, ownProps.params.account),
     // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
