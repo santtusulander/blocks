@@ -255,5 +255,9 @@
   "portal.manage.tabs.users.title": "Users",
   "portal.manage.tabs.brands.title": "Brands",
   "portal.manage.tabs.dns.title": "DNS",
-  "portal.manage.tabs.roles.title": "Roles"
+  "portal.manage.tabs.roles.title": "Roles",
+
+  "portal.account.type.contentProvider": "Content Provider",
+  "portal.account.type.serviceProvider": "Service Provider",
+  "portal.account.type.cloudProvider": "Cloud Provider"
 }

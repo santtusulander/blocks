@@ -1,27 +1,29 @@
 import Immutable from 'immutable'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 export default [
   {
     value: 'traffic_high_to_low',
-    label: 'High to Low',
+    label: <FormattedMessage id="portal.content.sortOrder.traffic_high_to_low"/>,
     path: Immutable.List(['dailyTraffic', 'totals', 'bytes', 'total']),
     direction: -1
   },
   {
     value: 'traffic_low_to_high',
-    label: 'Low to High',
+    label: <FormattedMessage id="portal.content.sortOrder.traffic_low_to_high"/>,
     path: Immutable.List(['dailyTraffic', 'totals', 'bytes', 'total']),
     direction: 1
   },
   {
     value: 'name_a_to_z',
-    label: 'Name A to Z',
+    label: <FormattedMessage id="portal.content.sortOrder.name_a_to_z"/>,
     path: Immutable.List(['item', 'name']),
     direction: 1
   },
   {
     value: 'name_z_to_a',
-    label: 'Name Z to A',
+    label: <FormattedMessage id="portal.content.sortOrder.name_z_to_a"/>,
     path: Immutable.List(['item', 'name']),
     direction: -1
   }

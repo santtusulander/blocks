@@ -104,9 +104,15 @@
   "portal.content.tooltip.compDataMissing.text": "Comparison Data Missing",
   "portal.content.tooltip.badwith.text": "Bandwidth {date}",
 
+  "portal.content.sortOrder.traffic_high_to_low": "High to Low",
+  "portal.content.sortOrder.traffic_low_to_high": "Low to High",
+  "portal.content.sortOrder.name_a_to_z": "Name A to Z",
+  "portal.content.sortOrder.name_z_to_a": "Name Z to A",
+
   "portal.purge.purgeSubmitted.text": "Purge request successfully submitted",
 
   "portal.properties.propertyContentSummary.text": "PROPERTY SUMMARY",
 
   "portal.hosts.groupContentSummary.text": "GROUP CONTENT SUMMARY"
+
 }
