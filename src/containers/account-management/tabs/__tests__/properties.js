@@ -6,9 +6,6 @@ jest.unmock('../properties.jsx')
 import { PureProperties } from '../properties.jsx'
 
 jest.unmock('../../../../util/helpers.js')
-import { getSortData } from '../../../../util/helpers.js'
-
-jest.unmock('../../../../redux/modules/fetching/actions')
 
 function intlMaker() {
   return {
@@ -18,6 +15,7 @@ function intlMaker() {
 
 const fakeAccount = Immutable.fromJS({id: 11, name: 'Account A'})
 const fakeGroup = Immutable.fromJS({id: 1, name: 'Group A'})
+const fakeParams = { brand: 'udn', account: 1, group: 1 }
 const fakeProperties = Immutable.fromJS([
   {
     published_host_id: 'Property A',
@@ -70,8 +68,6 @@ const fakeProperties = Immutable.fromJS([
     }]
   }
 ])
-
-const fakeParams = { brand: 'udn', account: 1, group: 1 }
 
 const renderProperties = (params) => (
   shallow(<PureProperties
