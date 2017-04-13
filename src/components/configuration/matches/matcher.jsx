@@ -153,6 +153,7 @@ class Matcher extends React.Component {
               <InputConnector
                 show={hasContainingRule}
                 noLabel={true}
+                className='matcher-input-connector'
               />
               <Field
                 name="activeFilter"
