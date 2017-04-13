@@ -12,11 +12,13 @@ import ActionButtons from '../../../components/shared/action-buttons'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import TableSorter from '../../../components/shared/table-sorter'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import {getByBrand} from '../../../redux/modules/entities/accounts/selectors'
+import {getFetchingByTag} from '../../../redux/modules/fetching/selectors'
 
 import {getServicesInfo, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
@@ -116,8 +118,14 @@ class AccountList extends Component {
     const {
       accounts,
       deleteAccount,
+      fetching,
       params: { brand }
     } = this.props
+
+    if (fetching) {
+      return <LoadingSpinner />
+    }
+
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
       .map(account => {
@@ -216,6 +224,7 @@ AccountList.propTypes = {
   editAccount: PropTypes.func,
   fetchAccounts: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
+  fetching: PropTypes.bool,
   params: PropTypes.object,
   providerTypes: PropTypes.instanceOf(Map),
   route: PropTypes.object,
@@ -233,6 +242,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     accounts: getByBrand(state, brand),
+    fetching: getFetchingByTag(state, 'account'),
     providerTypes: getProviderTypes(state),
     servicesInfo: getServicesInfo(state)
   }
