@@ -111,6 +111,7 @@ class ConfigurationAdvanced extends React.Component {
     const {
       metadata,
       invalid,
+      dirty,
       submitting,
       intl,
       isRequestEnabled,
@@ -137,7 +138,6 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_REQUEST}
               component={FieldFormGroupCheckbox}
-              checked={isRequestEnabled}
             />
           }
         />
@@ -287,7 +287,7 @@ class ConfigurationAdvanced extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={!(isFinalRequestEnabled || isFinalResponseEnabled || isRequestEnabled || isResponseEnabled)}
+            disabled={invalid || submitting || (!dirty)}
           >
             <FormattedMessage id="portal.button.save"/>
           </Button>
