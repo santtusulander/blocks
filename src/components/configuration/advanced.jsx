@@ -111,6 +111,7 @@ class ConfigurationAdvanced extends React.Component {
     const {
       metadata,
       invalid,
+      dirty,
       submitting,
       intl,
       isRequestEnabled,
