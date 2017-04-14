@@ -33,6 +33,7 @@
   "portal.account.groups.modal.unsaved.content": "You have made changes to the Group(s), are you sure you want to exit without saving?",
 
   "portal.account.properties.title": "Properties",
+  "portal.account.properties.property.text": "Property",
   "portal.account.properties.groupNotSelected.text": "Please select a group from top left{br}to see its properties.",
   "portal.account.properties.counter.text": "{numProperties, plural, one {# property} other {# properties}}",
   "portal.account.properties.hidden.text": "hidden",

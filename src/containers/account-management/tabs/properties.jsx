@@ -346,7 +346,7 @@ class AccountManagementProperties extends React.Component {
 
             {this.state.deleting &&
               <ModalWindow
-                title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
+                title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: <FormattedMessage id="portal.account.properties.property.text" /> }}/>}
                 cancelButton={true}
                 deleteButton={true}
                 cancel={() => this.closeDeleteModal()}
@@ -362,7 +362,7 @@ class AccountManagementProperties extends React.Component {
                 invalid={true}
                 verifyDelete={true}>
                 <p>
-                  <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: "Property" }}/>
+                  <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: <FormattedMessage id="portal.account.properties.property.text" /> }}/>
                 </p>
               </ModalWindow>
             }
