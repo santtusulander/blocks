@@ -283,7 +283,7 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="created">
                     <FormattedMessage id="portal.account.properties.table.deployed.text"/>
                   </TableSorter>
-                  <th width="12%"/>
+                  <th width="1%"/>
                 </tr>
                 </thead>
                 <tbody>
