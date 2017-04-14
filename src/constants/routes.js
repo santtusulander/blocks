@@ -48,6 +48,7 @@ const ROUTES = {
 
   accountManagementTabAccountDetails: 'details',
   accountManagementTabAccountGroups: 'groups',
+  accountManagementTabAccountProperties: 'properties',
   accountManagementTabAccountUsers: 'users',
 
   accountManagementTabSystemAccounts: 'accounts',

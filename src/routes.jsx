@@ -30,6 +30,7 @@ import AccountManagement from './containers/account-management/account-managemen
 import AccountManagementAccountDetails from './containers/account-management/tabs/details'
 import AccountManagementAccountUsers from './containers/account-management/tabs/users'
 import AccountManagementGroups from './containers/account-management/tabs/groups'
+import AccountManagementProperties from './containers/account-management/tabs/properties'
 import AccountManagementAccounts from './containers/account-management/tabs/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
@@ -381,6 +382,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -388,6 +390,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -395,6 +398,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>

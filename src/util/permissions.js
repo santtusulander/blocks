@@ -144,6 +144,9 @@ permissionMapping[PERMISSIONS.CREATE_PROPERTY] =
 permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
   (role) => role.getIn([ 'north', 'published_hosts', 'modify', 'allowed'])
 
+permissionMapping[PERMISSIONS.LIST_PROPERTY] =
+  (role) => role.getIn([ 'north', 'published_hosts', 'list', 'allowed'])
+
 // Network permissions
 permissionMapping[PERMISSIONS.CREATE_NETWORK] =
   (role) => role.getIn([ 'north', 'networks', 'create', 'allowed'])
@@ -282,7 +285,6 @@ export const getStoragePermissions = (roles, user) => ({
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-
   const userRoles = user && user.size > 0 && user.get('roles')
   if (!userRoles) {
     return false

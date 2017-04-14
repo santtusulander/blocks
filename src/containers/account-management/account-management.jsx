@@ -263,6 +263,8 @@ export class AccountManagement extends Component {
       return 'groups';
     } else if (router.isActive(`${baseUrl}/users`)) {
       return 'users';
+    } else if (router.isActive(`${baseUrl}/properties`)) {
+      return 'properties';
     }
 
     return '';
@@ -369,7 +371,7 @@ export class AccountManagement extends Component {
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               params={params}
-              levels={[ 'brand' ]}
+              levels={[ 'brand', 'account' ]}
               onItemClick={(entity) => {
 
                 const { nodeInfo, idKey = 'id' } = entity
@@ -412,13 +414,20 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-         {accountIsContentProviderType(activeAccount) &&
+          {accountIsContentProviderType(activeAccount) &&
+            <IsAllowed to={PERMISSIONS.LIST_PROPERTY}>
+              <li data-eventKey="properties">
+                <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
+              </li>
+            </IsAllowed>
+          }
+          {accountIsContentProviderType(activeAccount) &&
            <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
              <li>
                <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
              </li>
            </IsAllowed>
-         }
+          }
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">
