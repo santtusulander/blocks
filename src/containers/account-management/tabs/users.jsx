@@ -1,5 +1,5 @@
-import React from 'react'
-import { List, Map } from 'immutable'
+import React, {Component, PropTypes} from 'react'
+import { List, Map, is } from 'immutable'
 import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -7,12 +7,20 @@ import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
 import { FormattedMessage } from 'react-intl'
 
-import * as userActionCreators from '../../../redux/modules/user'
-import * as groupActionCreators from '../../../redux/modules/group'
+// import * as userActionCreators from '../../../redux/modules/user'
+// import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
+
+import usersActions from '../../../redux/modules/entities/users/actions'
+import { getByAccount } from '../../../redux/modules/entities/users/selectors'
+
+import groupsActions from '../../../redux/modules/entities/groups/actions'
+import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
@@ -29,6 +37,8 @@ import UserEditModal from '../../../components/account-management/user-edit/moda
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/shared/modal'
 
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
 import { checkForErrors, getSortData } from '../../../util/helpers'
@@ -36,7 +46,7 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
-export class AccountManagementAccountUsers extends React.Component {
+export class AccountManagementAccountUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,19 +78,31 @@ export class AccountManagementAccountUsers extends React.Component {
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
     const {router, route, params: { brand, account }} = this.props
-    this.props.userActions.fetchUsers(brand, account)
-    if (!this.props.groups.toJS().length) {
-      this.props.groupActions.fetchGroups(brand, account);
-    }
-    router.setRouteLeaveHook(route, this.shouldLeave)
+
+    this.props.fetchUsers({brand, account})
+    this.props.fetchGroups({brand, account})
     this.props.fetchRoleNames()
+
+//    if (!this.props.groups.toJS().length) {
+//      this.props.groupActions.fetchGroups(brand, account);
+//    }
+//
+    router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.params.account !== nextProps.params.account) {
+    const {brand, account} = nextProps.params
+
+    if (!is(this.props.account, nextProps.account)) {
+
+      this.props.fetchUsers({brand, account})
+      this.props.fetchGroups({brand, account})
+
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
+
     }
+
   }
 
   componentWillUnmount() {
@@ -249,7 +271,7 @@ export class AccountManagementAccountUsers extends React.Component {
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
     } else {
-      this.props.deleteUser(user)
+      this.props.deleteUser({id: user})
     }
   }
 
@@ -290,6 +312,13 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   render() {
+    const {fetching} = this.props
+
+    if (fetching) {
+      return <LoadingSpinner />
+    }
+
+
     const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
@@ -368,6 +397,7 @@ export class AccountManagementAccountUsers extends React.Component {
             </Button>
           </IsAllowed>
         </SectionHeader>
+
         <Table striped={true}>
           <thead>
             <tr>
@@ -407,6 +437,7 @@ export class AccountManagementAccountUsers extends React.Component {
             })}
           </tbody>
         </Table>
+
         {sortedUsers.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
@@ -425,6 +456,7 @@ export class AccountManagementAccountUsers extends React.Component {
             }
           </div>
         }
+
         {this.state.showEditModal &&
           <UserEditModal
             show={this.state.showEditModal}
@@ -436,7 +468,8 @@ export class AccountManagementAccountUsers extends React.Component {
             roles={this.props.roles}
           />
         }
-        {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
+
+        { !!this.props.roles.size && !!this.props.permissions.size && this.state.showPermissionsModal &&
           <ModalWindow
             title="View Permissions"
             closeModal={true}
@@ -481,46 +514,55 @@ export class AccountManagementAccountUsers extends React.Component {
 
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
-  account: React.PropTypes.instanceOf(Map),
-  currentUser: React.PropTypes.string,
-  deleteUser: React.PropTypes.func,
-  fetchRoleNames: React.PropTypes.func,
-  groupActions: React.PropTypes.object,
-  groups: React.PropTypes.instanceOf(List),
-  params: React.PropTypes.object,
-  permissions: React.PropTypes.instanceOf(Map),
-  resetRoles: React.PropTypes.func,
-  roles: React.PropTypes.instanceOf(List),
-  route: React.PropTypes.object,
-  router: React.PropTypes.object,
-  showNotification: React.PropTypes.func,
-  uiActions: React.PropTypes.object,
-  userActions: React.PropTypes.object,
-  users: React.PropTypes.instanceOf(List)
+  account: PropTypes.instanceOf(Map),
+  currentUser: PropTypes.string,
+  deleteUser: PropTypes.func,
+  fetchGroups: PropTypes.func,
+  fetchRoleNames: PropTypes.func,
+  fetchUsers: PropTypes.func,
+  fetching: PropTypes.bool,
+  groups: PropTypes.instanceOf(List),
+  params: PropTypes.object,
+  permissions: PropTypes.instanceOf(Map),
+  resetRoles: PropTypes.func,
+  roles: PropTypes.instanceOf(List),
+  route: PropTypes.object,
+  router: PropTypes.object,
+  showNotification: PropTypes.func,
+  uiActions: PropTypes.object,
+  userActions: PropTypes.object,
+  users: PropTypes.instanceOf(List)
 }
 
 AccountManagementAccountUsers.defaultProps = {
   roles: List()
 }
 
-function mapStateToProps(state) {
+/* istanbul ignore next */
+const mapStateToProps = (state, ownProps) => {
+  const {account} = ownProps.params
+
   return {
     form: state.form,
+    fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
-    users: state.user.get('allUsers'),
+    users: getByAccount(state, account),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
-    groups: state.group.get('allGroups')
+    groups: getGroupsByAccount(state, account)
   }
 }
 
-function mapDispatchToProps(dispatch) {
+/* istanbul ignore next */
+const mapDispatchToProps = (dispatch) => {
   return {
-    resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchRoleNames: () => dispatch(roleNameActions.fetchAll({}))
+
+    resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
+
+    fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
+    fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
+    fetchUsers: (params) => dispatch(usersActions.fetchAll(params))
   };
 }
 
