@@ -44,6 +44,7 @@ const GroupForm = ({
   accountIsContentProviderType,
   canEditServices,
   canSeeLocations,
+  disableDelete,
   groupId,
   handleSubmit,
   hosts,
@@ -189,7 +190,7 @@ const GroupForm = ({
               <ButtonDisableTooltip
                 id="delete-btn"
                 className="btn-danger pull-left"
-                disabled={submitting || isFetchingEntities || hasNetworks}
+                disabled={submitting || isFetchingEntities || hasNetworks || disableDelete}
                 onClick={onDelete}
                 tooltipId="tooltip-help"
                 tooltipMessage={tooltipHintId && {text: intl.formatMessage({id: tooltipHintId})}}>

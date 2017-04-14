@@ -486,6 +486,7 @@ export class AccountManagement extends Component {
             type='group'
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            disableDelete={String(this.state.groupToUpdate.get('id')) === String(this.props.params.group)}
             locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
