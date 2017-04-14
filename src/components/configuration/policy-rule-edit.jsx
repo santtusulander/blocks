@@ -344,7 +344,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
 
-            <Col sm={5} className="text-right">
+            <Col sm={5} className="condition-actions-column text-right">
               <FormGroup>
                 <InputGroup>
                   {!!flattenedPolicy.matches.length &&
