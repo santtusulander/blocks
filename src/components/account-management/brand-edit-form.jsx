@@ -18,12 +18,8 @@ const colorThemeOptions = [
   return [ e.id, e.themeName]
 });
 
-let errors = {}
-
-const validate = (values) => {
-  errors = {}
-
-  const { brandName } = values
+const validate = ({ brandName }) => {
+  const errors = {}
 
   if (!brandName || brandName.length === 0) {
     errors.brandName = 'brandName is required'
@@ -50,6 +46,13 @@ const BrandEditForm = (props) => {
         }}>
 
         <form onSubmit={props.handleSubmit(onSubmit)}>
+
+          {
+            props.error &&
+            <p className='has-error'>
+              <span className='help-block'>{props.error}</span>
+            </p>
+          }
 
           <Field
             name="brandName"
