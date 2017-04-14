@@ -10,6 +10,7 @@ import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 import * as filterActionCreators from '../../../redux/modules/filters'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { buildAnalyticsOptsForContribution, changedParamsFiltersQS, userIsCloudProvider } from '../../../util/helpers.js'
+import { getById as getActiveAccount } from '../../../redux/modules/entities/accounts/selectors'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
@@ -171,10 +172,10 @@ AnalyticsTabContribution.defaultProps = {
   contribution: Immutable.List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: getActiveAccount(state, ownProps.params.account),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),

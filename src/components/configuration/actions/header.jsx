@@ -112,8 +112,11 @@ class Header extends React.Component {
 
           <div className="form-groups">
 
-            <InputConnector show={true}
-              hasTwoEnds={activeActivity !== 'unset'}/>
+            <InputConnector
+              show={true}
+              hasTwoEnds={activeActivity !== 'unset'}
+              className='action-input-connector'
+            />
 
             <FormGroup>
               <ControlLabel>
