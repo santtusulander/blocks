@@ -31,6 +31,7 @@ import { getSortData, formatUnixTimestamp} from '../../../util/helpers'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
+import { PAGINATION_CONFIG_FIELDS, PAGINATION_CONFIG_PAGE_SIZE } from '../../../constants/properties'
 
 const IS_FETCHING = 'PropertiesTabFetching'
 
@@ -398,8 +399,8 @@ AccountManagementProperties.defaultProps = {
 }
 
 const paginationConfig = {
-  fields: [],
-  page_size: 5
+  fields: PAGINATION_CONFIG_FIELDS,
+  page_size: PAGINATION_CONFIG_PAGE_SIZE
 }
 
 function mapStateToProps(state, ownProps) {
