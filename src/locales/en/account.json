@@ -176,6 +176,7 @@
   "portal.accountManagement.groupDeleted.text": "Group deleted.",
   "portal.accountManagement.userCreated.text": "User added.",
   "portal.accountManagement.userUpdated.text": "Updates to user saved.",
+  "portal.accountManagement.userRemoved.text": "User removed.",
   "portal.accountManagement.passwordUpdated.text": "User password updated.",
   "portal.accountManagement.propertyDeleted.text": "Property {propertyName} deleted.",
   "portal.accountManagement.dnsCreated.text": "Record added.",

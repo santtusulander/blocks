@@ -118,7 +118,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   newUser({ email, roles }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
+    const { userActions: { create: createUser }, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -126,7 +126,7 @@ export class AccountManagementAccountUsers extends Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    return createUser(requestBody).then(res => {
+    return createUser({payload: requestBody}).then(res => {
       if (res.error) {
         throw new SubmissionError({email: res.payload.message})
       } else {
@@ -271,7 +271,7 @@ export class AccountManagementAccountUsers extends Component {
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
     } else {
-      this.props.deleteUser({id: user})
+      this.props.deleteUser(user)
     }
   }
 
@@ -290,7 +290,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   saveUser(user) {
-    return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
+    return this.props.userActions.update({id: this.state.userToEdit.get('email'), payload: user})
       .then((response) => {
         if (!response.error) {
           this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
@@ -562,7 +562,8 @@ const mapDispatchToProps = (dispatch) => {
 
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
-    fetchUsers: (params) => dispatch(usersActions.fetchAll(params))
+    fetchUsers: (params) => dispatch(usersActions.fetchAll(params)),
+    userActions: bindActionCreators(usersActions, dispatch)
   };
 }
 
