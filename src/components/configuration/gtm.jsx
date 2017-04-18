@@ -14,6 +14,7 @@ import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
 import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
+import SaveBar from '../shared/page-elements/save-bar'
 
 import RuleModal from './traffic-rule-form/rule-modal'
 
@@ -90,7 +91,17 @@ class ConfigurationGlobalTrafficManager extends React.Component {
   }
 
   render() {
-    const { config, intl, isFormDisabled, initialValues, readOnly } = this.props
+    const {
+      config,
+      intl,
+      isFormDisabled,
+      initialValues,
+      readOnly,
+      reset,
+      invalid,
+      submitting,
+      dirty } = this.props
+
     if (!config || !config.size) {
       return (
         <LoadingSpinner />
@@ -247,6 +258,15 @@ class ConfigurationGlobalTrafficManager extends React.Component {
             deleteRule={this.deleteRule}
           />
         </SectionContainer>
+
+        <SaveBar
+          onCancel={reset}
+          invalid={invalid}
+          saving={submitting}
+          show={dirty}>
+          <FormattedMessage id="portal.user.edit.unsavedChanges.text"/>
+        </SaveBar>
+
       </form>
     )
   }
