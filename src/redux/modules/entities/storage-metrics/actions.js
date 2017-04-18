@@ -38,8 +38,8 @@ export const fetchComparisonMetrics = ({ requestTag = 'storageComparisonMetrics'
  * @param  {[object]} requestParams                    parameters for the request
  * @return {[object]}                                  action object
  */
-export const fetchGroupsMetrics = (groups, requestParams, requestTag = 'groupsStorageMetrics') =>  ({
+export const fetchGroupMetrics = (group, requestParams, requestTag = 'groupsStorageMetrics') =>  ({
   payload: getPayload(requestTag),
-  types: [actionTypes.REQUEST, metricsActionTypes.RECEIVE_GROUPS_METRICS, actionTypes.FAIL],
-  callApi: () => api.fetchByGroups(groups, requestParams)
+  types: [actionTypes.REQUEST, metricsActionTypes.RECEIVE_GROUP_METRICS, actionTypes.FAIL],
+  callApi: () => api.fetchByGroup(group, requestParams)
 })

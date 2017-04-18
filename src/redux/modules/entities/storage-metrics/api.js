@@ -12,15 +12,9 @@ export const fetch = (urlParams) =>
     return { storageMetrics: data.data }
   })
 
-export const fetchByGroups = (groups, urlParams) => {
-  const groupsMetrics = []
-  groups.forEach((group) => {
-    urlParams.group = group.get('id')
-    groupsMetrics.push(
-      axios.get(URL(urlParams)).then(({ data }) => {
-        return data.data
-      })
-    )
+export const fetchByGroup = (groupId, urlParams) => {
+  urlParams.group = groupId
+  return axios.get(URL(urlParams)).then(({ data }) => {
+    return data.data
   })
-  return Promise.all(groupsMetrics)
 }
