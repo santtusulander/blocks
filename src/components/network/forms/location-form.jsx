@@ -21,7 +21,8 @@ import {
   CLOUD_PROVIDER_REGION_MIN_LENGTH,
   CLOUD_PROVIDER_REGION_MAX_LENGTH,
   CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
-  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
+  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH,
+  CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS
 } from '../../../constants/network.js'
 
 
@@ -111,6 +112,7 @@ const NetworkLocationForm = (props) => {
     askForFetchLocation,
     cloudProvidersIdOptions,
     cloudProvidersOptions,
+    selectedCloudProvider,
     edit,
     error,
     handleSubmit,
@@ -216,21 +218,23 @@ const NetworkLocationForm = (props) => {
           />
         </Col>
       </Row>
-      <Row>
-        <Col md={7}>
-          <Field
-            name="cloudProvider"
-            className="input-select"
-            type="select"
-            options={cloudProvidersIdOptions}
-            disabled={edit || readOnly}
-            required={false}
-            unselectedValue={null}
-            component={FieldFormGroupSelect}
-            label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
-          />
-        </Col>
-      </Row>
+      {selectedCloudProvider !== CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS &&
+        <Row>
+          <Col md={7}>
+            <Field
+              name="cloudProvider"
+              className="input-select"
+              type="select"
+              options={cloudProvidersIdOptions}
+              disabled={edit || readOnly}
+              required={false}
+              unselectedValue={null}
+              component={FieldFormGroupSelect}
+              label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
+            />
+          </Col>
+        </Row>
+      }
       <Row>
         <Col md={7}>
           <Field
@@ -300,6 +304,7 @@ NetworkLocationForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   readOnly: PropTypes.bool,
+  selectedCloudProvider: PropTypes.string,
   ...reduxFormPropTypes
 };
 
