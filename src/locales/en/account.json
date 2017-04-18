@@ -243,6 +243,7 @@
   "portal.brand.edit.availability.text": "Availability",
   "portal.brand.edit.availability.private.label": "Keep private (only I can assign this brand to accounts)",
   "portal.brand.edit.availability.public.label": "Public",
+  "portal.brand.header.text": "{numBrand, plural, one {# Brand} other {# Brands}}",
 
   "portal.brand.list.brand.text": "Brand",
   "portal.brand.list.availability.text": "Availability",

@@ -13,6 +13,7 @@
   "portal.user.list.withinGroup.text": " within the group \"{name}\"",
   "portal.user.list.andWithSpace.text": "and ",
   "portal.user.list.withWithSpace.text": "with ",
+  "portal.user.list.title.text": "{numUsers, plural, one {# User} other {# Users}}",
 
   "portal.user.edit.contact.text": "Contact",
   "portal.user.edit.passwordDoNotMatch.text": "Passwords do not match",

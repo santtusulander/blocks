@@ -10,7 +10,7 @@ const UserList = props => {
   const { users, editUser, deleteUser, addUser } = props
   return (
     <div>
-      <AccountManagementHeader title={`${users.size} Users`} onAdd={addUser}/>
+      <AccountManagementHeader title={<FormattedMessage id="portal.user.list.title.text" values={{numUsers: users.size}}/>} onAdd={addUser}/>
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
