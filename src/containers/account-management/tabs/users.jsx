@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 // import * as userActionCreators from '../../../redux/modules/user'
 // import * as groupActionCreators from '../../../redux/modules/group'
@@ -181,7 +181,7 @@ export class AccountManagementAccountUsers extends Component {
             name="email"
             ref="emails"
             ErrorComponent={errorTooltip}
-            placeholder=" Email"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.form.email.placeholder'})}
             component={FieldFormGroup}/>
         }
       ],
@@ -349,12 +349,12 @@ export class AccountManagementAccountUsers extends Component {
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
-    roleOptions.unshift(['all', 'All Roles'])
+    roleOptions.unshift(['all', <FormattedMessage id="portal.user.list.allRoles" />])
 
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
-    ]).insert(0, ['all', 'All Groups']).toArray()
+    ]).insert(0, ['all', <FormattedMessage id="portal.user.list.allGroups" />]).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
 
     const usersSize = sortedUsers.size
@@ -368,7 +368,7 @@ export class AccountManagementAccountUsers extends Component {
           <FormGroup className="search-input-group inline">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={this.props.intl.formatMessage({id: 'portal.user.form.search.placeholder'})}
               value={this.state.search}
               onChange={this.changeSearch} />
           </FormGroup>
@@ -522,6 +522,7 @@ AccountManagementAccountUsers.propTypes = {
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   resetRoles: PropTypes.func,
@@ -566,4 +567,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagementAccountUsers)))

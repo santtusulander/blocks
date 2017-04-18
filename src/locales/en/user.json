@@ -14,6 +14,10 @@
   "portal.user.list.andWithSpace.text": "and ",
   "portal.user.list.withWithSpace.text": "with ",
   "portal.user.list.title.text": "{numUsers, plural, one {# User} other {# Users}}",
+  "portal.user.list.allRoles": "All Roles",
+  "portal.user.list.allGroups": "All Groups",
+  "portal.user.form.search.placeholder": "Search",
+  "portal.user.form.email.placeholder": "Email",
 
   "portal.user.edit.contact.text": "Contact",
   "portal.user.edit.passwordDoNotMatch.text": "Passwords do not match",
