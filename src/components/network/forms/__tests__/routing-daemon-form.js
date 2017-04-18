@@ -51,15 +51,35 @@ describe('RoutingDaemonForm', () => {
   it('should render an error message', () => {
     touched = true
     expect(subject().find('input .error-msg').at(0)).toBeTruthy()
+    touched = false
   })
 
-/*
-THIS IS NOT WORKING
-Should mock fetchASOverview and see that it has been called 
-  it('Should trigger fetch if AS Number field is set & blurred', () => {
-    const component = subject();
-    component.find('Field').at(0).simulate('blur')
+  it('should render 2 buttons', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
 
-    expect(component.find('LoadingSpinnerSmall').at(1).length).toBe(1)
-  })*/
+  it('should render 4 fields', () => {
+    expect(subject().find('Field').length).toBe(4)
+  })
+
+  it('should reflect BGPNumberIsEmpty state change', () => {
+    const wrapper = subject()
+    wrapper.setState({ BGPNumberIsEmpty: true })
+
+    expect(wrapper.find('input .error-msg').at(0)).toBeTruthy()
+  })
+
+  it('should reflect BGPNameNotFound state change', () => {
+    const wrapper = subject()
+    wrapper.setState({ BGPNameNotFound: true })
+
+    expect(wrapper.find('input .error-msg').at(0)).toBeTruthy()
+  })
+
+  it('should reflect BGPNumberInvalid state change', () => {
+    const wrapper = subject()
+    wrapper.setState({ BGPNumberInvalid: true })
+
+    expect(wrapper.find('input .error-msg').at(0)).toBeTruthy()
+  })
 })
