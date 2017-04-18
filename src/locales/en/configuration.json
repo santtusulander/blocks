@@ -235,6 +235,7 @@
   "portal.configuration.performance.text": "Performance",
   "portal.configuration.security.text": "Security",
   "portal.configuration.gtm.text": "Global Traffic Manager",
+  "portal.configuration.gtm.edit.unsavedChanges.text": "Global Traffic Manager has unsaved changes.",
   "portal.configuration.advanced.text": "Advanced",
 
   "portal.configuration.certificates.text": "Certificates",

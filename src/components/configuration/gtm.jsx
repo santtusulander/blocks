@@ -264,7 +264,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
           invalid={invalid}
           saving={submitting}
           show={dirty}>
-          <FormattedMessage id="portal.user.edit.unsavedChanges.text"/>
+          <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
         </SaveBar>
 
       </form>
