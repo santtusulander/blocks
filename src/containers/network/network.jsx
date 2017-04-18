@@ -908,7 +908,7 @@ class Network extends React.Component {
           />
         }
 
-        {networkModal === EDIT_NODE &&
+        {networkModal === EDIT_NODE && this.state.nodeId &&
           <EditNodeContainer
             id="edit-node-form"
             nodeIds={this.state.nodeId}
