@@ -101,6 +101,18 @@ $lt-tab-color: $lt-text-color;
       }
     }
 
+    & {
+      .dropdown-wide-menu {
+        > .disabled {
+          cursor: not-allowed;
+
+          > a {
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
     > a,
     .tabs-dropdown-toggle {
       padding: $nav-tab-vertical-padding $nav-tab-horizontal-padding;
