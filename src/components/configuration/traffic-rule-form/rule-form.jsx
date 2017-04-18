@@ -91,19 +91,19 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
           </Col>
           <Col sm={5}>
             <div className="condition-actions-column">
-              {hasMatches &&
+              {/* Not supported in 1.5 || hasMatches &&
               <Field
                 disabled={disabled}
                 name="condition"
                 options={conditionOptions}
-                component={FormGroupSelect}/>}
-              <Button
+                component={FormGroupSelect}/> */}
+              {!hasMatches && <Button
                 disabled={disabled}
                 bsStyle="success"
                 className="btn-icon btn-add-new"
                 onClick={chooseMatch}>
                 <IconAdd />
-              </Button>
+              </Button>}
             </div>
           </Col>
         </Row>

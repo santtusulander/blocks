@@ -65,6 +65,9 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     this.state = { ruleToEdit: {}, ruleModalOpen: false }
   }
+  componentWillMount() {
+    this.props.property && this.props.fetchGtm(this.props.property.getIn(['services', 0, 'service_type']))
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!is(this.props.property, nextProps.property)) {
@@ -82,6 +85,11 @@ class ConfigurationGlobalTrafficManager extends React.Component {
   }
 
   onSubmit(values) {
+
+
+    const propertyId = this.props.property.get('published_host_id')
+    const propertyServiceType = this.props.property.get('services').get(0).get('service_type')
+    const customerId = `${this.props.params.account}-${this.props.params.group}`
 
     const rules = values.rules.reduce((generatedRules, rule) => {
 
@@ -124,11 +132,9 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     const gtmConfig = {
       rules,
       title: values.cName,
-      //TODO replace with something
-      customer_cname: 'creativegames.com.large.238-339.gtm.geocity.cdx-dev.unifieddeliverynetwork.net',
-      //TODO replace with something
-      policy_name: 'creativegames.com',
-      customer_id: '238-339'
+      customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
+      policy_name: propertyId,
+      customer_id: customerId
     }
 
     console.log(gtmConfig, values);
