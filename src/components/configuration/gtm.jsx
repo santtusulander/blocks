@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, ControlLabel, FormGroup } from 'react-bootstrap'
-import { Map } from 'immutable'
+import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
@@ -19,6 +19,10 @@ import RuleModal from './traffic-rule-form/rule-modal'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+
+import { getById as getProperty } from '../../redux/modules/entities/properties/selectors'
+import { formatConfigToInitialValues } from '../../redux/modules/entities/property-GTMs/selectors'
+import gtmActions from '../../redux/modules/entities/property-GTMs/actions'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
@@ -57,10 +61,15 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     this.editRule = this.editRule.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
-    this.deleteRule = this.deleteRule.bind(this)
-    this.handleSave = this.handleSave.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
 
     this.state = { ruleToEdit: {}, ruleModalOpen: false }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!is(this.props.property, nextProps.property)) {
+      this.props.fetchGtm(nextProps.property.getIn(['services', 0, 'service_type']))
+    }
   }
 
   toggleModal() {
@@ -72,25 +81,61 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     this.setState({ ruleToEdit: { values: this.props.getRule(index), index } })
   }
 
-  deleteRule() {
-    /*
-      TODO: UDNP-3088 - Rules section
-    */
-  }
+  onSubmit(values) {
 
-  handleSave(e) {
-    /*
-      TODO: UDNP-3108 - Integrate Global Traffic form with Redux
+    const rules = values.rules.reduce((generatedRules, rule) => {
 
-      Please note - we should use existing approach of saving configuration
-                    like in other Configuragion tabs.
-    */
-    e.preventDefault()
-    this.props.saveChanges()
+      const traffic_split_targets = [
+        {
+          percent: String(100 - rule.policyWeight),
+          cname: values.cName
+        },
+        {
+          percent: String(rule.policyWeight),
+          cname: '{%customer_cname%}'
+        }
+      ]
+
+      const type = rule.matchArray[0].matchType
+      const rulesPerMatch = rule.matchArray[0].values[type].map(match => ({
+        request_match: {
+          type,
+          value: (match.id || match.value).toLowerCase()
+        },
+        traffic_split_targets,
+        rule_name: rule.name,
+        on_match: 'traffic_split_targets'
+      }))
+
+      generatedRules.push(...rulesPerMatch)
+      return generatedRules
+    },[])
+
+    //Add this rule with 3rd party cname or udn as value based on rest of world-toggle
+    rules.push({
+      "request_match": { "type": "no_filter" },
+      "on_match": "response_value",
+      "response_value": {
+        "type": "CNAME",
+        "value": values.ROWToggle ? values.cName : '{%customer_cname%}'
+      }
+    })
+
+    const gtmConfig = {
+      rules,
+      title: values.cName,
+      //TODO replace with something
+      customer_cname: 'creativegames.com.large.238-339.gtm.geocity.cdx-dev.unifieddeliverynetwork.net',
+      //TODO replace with something
+      policy_name: 'creativegames.com',
+      customer_id: '238-339'
+    }
+
+    console.log(gtmConfig, values);
   }
 
   render() {
-    const { config, intl, isFormDisabled, initialValues, readOnly } = this.props
+    const { config, intl, isFormDisabled, initialValues, readOnly, handleSubmit } = this.props
     if (!config || !config.size) {
       return (
         <LoadingSpinner />
@@ -98,7 +143,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     }
 
     return (
-      <form className="configuration-gtm" onSubmit={this.handleSave}>
+      <form className="configuration-gtm" onSubmit={handleSubmit(this.onSubmit)}>
         {this.state.ruleModalOpen && <RuleModal rule={this.state.ruleToEdit} onCancel={this.toggleModal}/>}
         {/* ENABLE GTM */}
         <SectionContainer>
@@ -226,6 +271,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
                 }
               </Col>
             </FormGroup>
+            <Button type="submit">asdasdads</Button>
           </Row>
         </SectionContainer>
 
@@ -267,10 +313,10 @@ ConfigurationGlobalTrafficManager.defaultProps = {
 }
 
 /* istanbul ignore next */
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { params: { property } }) => {
   const selector = formValueSelector('gtmForm')
   const GTMToggle = selector(state, 'GTMToggle')
-
+  const initialValues = formatConfigToInitialValues(state, property)
   /*
     TODO: UDNP-3108 - Integrate Global Traffic form with Redux
 
@@ -280,18 +326,20 @@ const mapStateToProps = (state) => {
   return {
     isFormDisabled: !GTMToggle,
     getRule: (index) => selector(state, 'rules')[index],
-    initialValues: {
-      GTMToggle: true,
-      cdnName: 'google.com',
-      cName: 'google',
-      ROWToggle: true
-    }
+    property: getProperty(state, property),
+    initialValues
   }
 }
 
-const form = reduxForm({
+const dispatchToProps = (dispatch, { params }) => {
+  return {
+    fetchGtm: service => dispatch(gtmActions.fetchOne({ ...params, service }))
+  }
+}
+
+const GTMForm = reduxForm({
   form: 'gtmForm',
   validate
 })(injectIntl(ConfigurationGlobalTrafficManager))
 
-export default connect(mapStateToProps)(form)
+export default connect(mapStateToProps, dispatchToProps)(GTMForm)
