@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -272,6 +273,8 @@ export class Configuration extends React.Component {
     const serviceTypeText = formatMessage({ id: serviceTypes[serviceType] || serviceTypes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
+    const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
+
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -367,14 +370,14 @@ export class Configuration extends React.Component {
             </li>
           }
 
-          <li data-eventKey='gtm'>
+          <li data-eventKey='gtm' className={classNames({ disabled: diff })}>
             <Link to={baseUrl + '/gtm'} activeClassName="active">
             <FormattedMessage id="portal.configuration.gtm.text" />
             </Link>
           </li>
 
           <IsAdmin>
-            <li data-eventKey='advanced'>
+            <li data-eventKey='advanced' className={classNames({ disabled: diff })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
