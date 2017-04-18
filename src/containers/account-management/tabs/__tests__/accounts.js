@@ -54,6 +54,7 @@ describe('AccountList', () => {
         accountActions,
         accounts,
         editAccount: jest.fn(),
+        fetchAccounts: jest.fn(),
         fetchServiceInfo: jest.fn(),
         params,
         providerTypes,

@@ -15,7 +15,7 @@ describe('ConfigurationAdvanced', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (config = Map()) => {
+    subject = (props) => {
       const initialValues = {
         request: '<html><html>',
         response: '<html><html>',
@@ -24,9 +24,13 @@ describe('ConfigurationAdvanced', () => {
       }
 
       return shallow(<ConfigurationAdvanced
-                      config={config}
+                      {...props}
+                      params={{}}
                       intl={intlMaker()}
-                      initialValues={initialValues} />)
+                      initialValues={initialValues}
+                      fetchMetadata={jest.fn()}
+                      handleSubmit={jest.fn()}
+                    />)
     }
   })
 
@@ -43,10 +47,10 @@ describe('ConfigurationAdvanced', () => {
   })
 
   it('should not display LoadingSpinner when data is loaded', () => {
-    expect(subject(new Map([{'key': 'value'}])).find('LoadingSpinner').length).toBe(0)
+    expect(subject({metadata: Map({a: 'b'})}).find('LoadingSpinner').length).toBe(0)
   })
 
   it('should display four SectionHeader components when data is loaded', () => {
-    expect(subject(new Map([{'key': 'value'}])).find('SectionHeader').length).toBe(4)
+    expect(subject({metadata: Map({a: 'b'})}).find('SectionHeader').length).toBe(4)
   })
 })

@@ -19,6 +19,7 @@ import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import HelpTooltip from '../../shared/tooltips/help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
+import classNames from 'classnames'
 
 import { MODIFY_NODE, DELETE_NODE } from '../../../constants/permissions'
 import {
@@ -246,6 +247,12 @@ class NetworkEditNodeForm extends React.Component {
       let helpMessage = null
       let fieldToggle = null
       let isExpanded = true
+      const fieldClassNames = classNames({
+        'show': isExpanded,
+        'hidden': !isExpanded,
+        'can-copy-to-clipboard': (fieldData.name === "custom_grains")
+      })
+
       const fieldLabelText = <FormattedMessage id={fieldData.labelId} />
       const hasMultipleNodeValues = nodeValues[fieldData.name] === MULTIPLE_VALUE_INDICATOR
 
@@ -288,7 +295,7 @@ class NetworkEditNodeForm extends React.Component {
         <FormGroup key={idx}>
           <label>{fieldLabelText}</label>
           {fieldToggle}
-          <div className={isExpanded ? 'show' : 'hidden'}>
+          <div className={fieldClassNames}>
             <Field {...fieldData}
               addonAfter={fieldData.tooltipText &&
                 <HelpTooltip

@@ -109,7 +109,7 @@ class EntityEdit extends React.Component {
   }
 
   render() {
-    const { currentUser, params, type, onSave, onCancel, onDelete } = this.props
+    const { currentUser, disableDelete, params, type, onSave, onCancel, onDelete } = this.props
 
     return (
       <div>
@@ -136,6 +136,7 @@ class EntityEdit extends React.Component {
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
+          disableDelete={disableDelete}
         />
       }
 
@@ -159,6 +160,7 @@ EntityEdit.defaultProps = {
 EntityEdit.displayName = 'EntityEdit'
 EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  disableDelete: PropTypes.bool,
   entityToUpdate: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

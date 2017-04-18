@@ -31,7 +31,6 @@ export const fetch = ({brand, account, id}) => {
 export const fetchAll = ({ brand, account }) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
     .then(({data}) => {
-
       const accountGroups = {
         id: account,
         groups: data.data

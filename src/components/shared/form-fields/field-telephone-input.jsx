@@ -1,30 +1,37 @@
 import React, { PropTypes } from 'react'
 import ReactTelephoneInput from 'react-telephone-input'
-import { FormGroup, ControlLabel } from 'react-bootstrap';
+import classNames from 'classnames'
+import { FormGroup, ControlLabel } from 'react-bootstrap'
 
 import DefaultErrorBlock from '../form-elements/default-error-block'
 
 import { stripCountryCode, stripNonNumeric } from '../../../util/user-helpers'
 
-const FieldTelephoneInput = ({ input, meta, label, required, disabled, ErrorComponent }) => {
+const FieldTelephoneInput = ({ full_phone_number, phone_number, phone_country_code, label, required, ErrorComponent, disabled}) => {
   return (
-    <FormGroup controlId={input.name} validationState={meta.error ? 'error' : null}>
+    <FormGroup controlId={full_phone_number.input.name} validationState={full_phone_number.meta.error ? 'error' : null}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
       <ReactTelephoneInput
-        value={`+${input.value.phone_country_code} ${input.value.phone_number}`}
+        value={full_phone_number.input.value}
         onChange={(val, {dialCode}) => {
+          const phoneNumber = stripNonNumeric(stripCountryCode(val, dialCode))
 
-          const countryCode = dialCode
-          const phoneNumber = stripNonNumeric(stripCountryCode(val, countryCode))
-
-          input.onChange({phone_number: phoneNumber, phone_country_code: countryCode})
+          full_phone_number.input.onChange(`${stripNonNumeric(val)}`)
+          stripNonNumeric(val) &&
+          stripNonNumeric(val).substring(0, dialCode.length) === dialCode
+            ? phone_country_code.input.onChange(dialCode)
+            : phone_country_code.input.onChange('')
+          phone_number.input.onChange(phoneNumber)
         }}
+        classNames={classNames(
+          {empty: !phone_country_code.input.value}
+        )}
         defaultCountry="us"
         disabled={disabled}
       />
 
-      {meta.error &&
-        <ErrorComponent {...meta}/>
+      {full_phone_number.meta.error &&
+        <ErrorComponent {...full_phone_number.meta}/>
       }
     </FormGroup>
   )
@@ -41,12 +48,10 @@ FieldTelephoneInput.defaultProps = {
 FieldTelephoneInput.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   disabled: PropTypes.bool,
-  input: PropTypes.shape({
-    onChange: PropTypes.func,
-    value: PropTypes.object
-  }),
+  full_phone_number: PropTypes.object,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  meta: PropTypes.object,
+  phone_country_code: PropTypes.object,
+  phone_number: PropTypes.object,
   required: PropTypes.bool
 }
 

@@ -211,6 +211,7 @@ class GroupFormContainer extends React.Component {
       allowModify,
       canEditServices,
       canSeeLocations,
+      disableDelete,
       groupId,
       hostActions,
       hosts,
@@ -270,6 +271,7 @@ class GroupFormContainer extends React.Component {
             accountIsContentProviderType={accountIsContentProviderType(account)}
             canEditServices={canEditServices}
             canSeeLocations={canSeeLocations}
+            disableDelete={disableDelete}
             locations={locations}
             groupId={groupId}
             hasNetworks={networks.size > 0}
@@ -335,6 +337,7 @@ GroupFormContainer.propTypes = {
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
+  disableDelete: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
