@@ -19,18 +19,10 @@ class ConfigurationGTMTrafficRules extends React.Component {
       activeIndex: undefined
     }
 
-    this.deleteRule = this.deleteRule.bind(this)
     this.renderRules = this.renderRules.bind(this)
     this.renderRule = this.renderRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
     this.toggleConfirmation = this.toggleConfirmation.bind(this)
-  }
-
-  deleteRule(index, remove) {
-    return () => {
-      remove(index)
-      this.toggleConfirmation()
-    }
   }
 
   showConfirmation(index) {
@@ -98,7 +90,10 @@ class ConfigurationGTMTrafficRules extends React.Component {
                   <Confirmation
                     cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
                     confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
-                    handleConfirm={this.deleteRule(index, fields.remove)}
+                    handleConfirm={() => {
+                      fields.remove(index)
+                      this.toggleConfirmation()
+                    }}
                     handleCancel={() => this.toggleConfirmation()}>
                     <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                   </Confirmation>

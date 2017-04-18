@@ -8,15 +8,15 @@ import { isValidIPv4Address } from '../../../util/validators'
 import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
-const validate = ({ ipv4CIDR }) => {
-  if (!ipv4CIDR.length) {
-    return { ipv4CIDR: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
+const validate = ({ ipv4_cidr_prefix }) => {
+  if (!ipv4_cidr_prefix.length) {
+    return { ipv4_cidr_prefix: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
   }
 
-  for (const value of ipv4CIDR) {
+  for (const value of ipv4_cidr_prefix) {
 
     if (!isValidIPv4Address(value.label, true)) {
-      return { ipv4CIDR: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.input.error" /> }
+      return { ipv4_cidr_prefix: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.input.error" /> }
     }
   }
 }
@@ -24,7 +24,7 @@ const validate = ({ ipv4CIDR }) => {
 const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const saveMatch = values => {
-    const labelText = values.ipv4CIDR.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+    const labelText = values.ipv4_cidr_prefix.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
     onSave({
       values,
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.items" values={{ items: labelText }} />,
@@ -36,7 +36,7 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
   return (
     <form onSubmit={handleSubmit(saveMatch)}>
       <Field
-        name="ipv4CIDR"
+        name="ipv4_cidr_prefix"
         component={Typeahead}
         placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.ipv4cidr.input.placeholder" })}
         multiple={true}
@@ -76,6 +76,6 @@ IPv4CIDRMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-const Form = reduxForm({ form: 'ipv4CIDR-traffic-match', validate })(injectIntl(IPv4CIDRMatchForm))
-Form.defaultProps = { initialValues: { ipv4CIDR: [] } }
+const Form = reduxForm({ form: 'ipv4_cidr_prefix-traffic-match', validate })(injectIntl(IPv4CIDRMatchForm))
+Form.defaultProps = { initialValues: { ipv4_cidr_prefix: [] } }
 export default Form
