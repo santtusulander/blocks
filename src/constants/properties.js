@@ -1,0 +1,2 @@
+export const PAGINATION_CONFIG_PAGE_SIZE = 5
+export const PAGINATION_CONFIG_FIELDS = []

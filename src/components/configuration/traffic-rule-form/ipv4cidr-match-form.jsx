@@ -47,7 +47,7 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

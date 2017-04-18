@@ -37,7 +37,7 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

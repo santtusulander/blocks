@@ -47,9 +47,7 @@ const AnalyticsFilters = (props) => {
     spFilterOptions = ['sp-group']
   } else if (userIsContentProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
-
-    // spFilterOptions = ['sp-account','sp-group'] // TODO: uncomment line as part of UDNP-1577
-    spFilterOptions = ['sp-account'] // TODO: delete line as part of UDNP-1577
+    spFilterOptions = ['sp-account', 'sp-group']
   } else if (userIsCloudProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
     spFilterOptions = ['sp-account','sp-group']

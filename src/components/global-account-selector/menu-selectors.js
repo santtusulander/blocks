@@ -14,13 +14,39 @@ import storageActions from '../../redux/modules/entities/CIS-ingest-points/actio
 import { getByGroup as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
 import groupActions from '../../redux/modules/entities/groups/actions'
-import { getByAccount } from '../../redux/modules/entities/groups/selectors'
+import { getByAccount, getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 
 import { getByBrand, getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 
 import { accountIsServiceProviderType } from '../../util/helpers'
 
 export const requestTag = 'GAS-REQUEST'
+
+/**
+ * For the account selector in property configuration; this won't include storages.
+ * Gets a single group from store and properties that belong to it.
+ * @param  {[type]} state  [description]
+ * @param  {[type]} params [URL params]
+ * @return {[type]}        group object, with a nodeInfo-object to drive the DrillableMenu.
+ */
+export const getGroupForPropertyConfig = (state, params) => {
+
+  const activeGroup = getGroupById(state, params.group).toJS()
+
+  const nodes = getProperties(state, params)
+  const headerSubtitle = <FormattedMessage id="portal.common.property.multiple" values={{numProperties: nodes.length}}/>
+
+  return {
+    ...activeGroup,
+    nodeInfo: {
+      headerSubtitle,
+      fetchChildren: (dispatch) => dispatch(propertyActions.fetchAll({ ...params, requestTag })),
+      entityType: 'group',
+      parents: params,
+      nodes
+    }
+  }
+}
 
 /**
  * get groups from state, set child nodes and define a function to fetch child nodes for each one.

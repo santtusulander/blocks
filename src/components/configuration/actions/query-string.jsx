@@ -46,8 +46,11 @@ class QueryString extends React.Component {
 
           <div className="form-groups">
 
-            <InputConnector show={true}
-              hasTwoEnds={this.state.activeActivity !== 'remove'} />
+            <InputConnector
+              show={true}
+              hasTwoEnds={this.state.activeActivity !== 'remove'}
+              className='action-input-connector'
+            />
 
             <FormGroup>
               <ControlLabel>

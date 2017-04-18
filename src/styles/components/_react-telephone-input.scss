@@ -1,14 +1,16 @@
 .react-tel-input {
   width: auto;
 
-  .flag {
-    background-image: url('../assets/img/flags.png') !important;
+  &:not(.empty) {
+    .flag {
+      background-image: url('../assets/img/flags.png') !important;
+    }
   }
 
   input[type=text],
   input[type=tel] {
     position: relative;
-    z-index: 0;
+    z-index: $zindex-default-zero;
     width: 100%;
     height: auto;
     max-width: 900px;
@@ -177,7 +179,7 @@
 
   .selected-flag {
     position: relative;
-    z-index: 13;
+    z-index: $zindex-country-list-flag;
     display: flex;
     width: 100%;
     height: 100%;
@@ -215,7 +217,7 @@
     position: absolute;
     top: 100%;
     left: 0;
-    z-index: 10;
+    z-index: $zindex-country-list;
     width: 100%;
     max-height: 250px;
     padding: 0;

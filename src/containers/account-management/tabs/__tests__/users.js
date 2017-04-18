@@ -22,6 +22,8 @@ describe('AccountManagementAccountUsers', () => {
         account={Immutable.Map()}
         currentUser= {'dummy' }
         deleteUser= { jest.fn() }
+        fetchUsers= { jest.fn() }
+        fetchGroups= { jest.fn() }
         formFieldFocus= { jest.fn() }
         groupActions={ {
           fetchGroups: genAsyncMock,

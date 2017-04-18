@@ -24,8 +24,8 @@ const getFormattedCountry = (item) => {
 }
 
 const ruleMatchTypeOptions = [
-  {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
-  {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
+  {value: 'and', label: <FormattedMessage id="portal.configuration.condition.and" />},
+  {value: 'or', label: <FormattedMessage id="portal.configuration.condition.or" />}
 ]
 
 class ConfigurationPolicyRuleEdit extends React.Component {
@@ -179,7 +179,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       return (
         <div className="condition-name">
           {filterType}&nbsp;
-          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}<FormattedMessage id="portal.colon" />&nbsp;
+          {<FormattedMessage id="portal.policy.edit.policies.contentTargeting.countries.items"/>}
+          <FormattedMessage id="portal.colonWithSpace" />&nbsp;
           <TruncatedTitle
             content={match.values.map(getFormattedCountry).join(', ')}
           />
@@ -188,30 +189,84 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     return (
-      <div className="condition-name">
-        {match.name}<FormattedMessage id="portal.colon" />&nbsp;
-        <TruncatedTitle
-          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
-        />
+      <Row>
+        <Col xs={4}>
+          <div>
+            {!match.fieldDetail && match.name}
+            {match.fieldDetail && 
+              <div className="condition-name">
+                {match.name} <FormattedMessage id="portal.colonWithSpace" />&nbsp;
+                <TruncatedTitle content={match.fieldDetail}/>
+              </div>
+            }
+          </div>
+        </Col>
+        <Col xs={8}>
+          <div className="condition-name">
+            <TruncatedTitle content={getConditionFilterText(match)}/>
+          </div>
+        </Col>
+      </Row>
+    )
+  }
+
+
+  renderConditions(conditions, ruleMatchType) {
+    const { disabled, activeMatchPath } = this.props
+    const { label } = ruleMatchTypeOptions.find(opt => opt.value === ruleMatchType)
+  
+    return (
+      <div className="conditions">
+        {conditions.map((match, i) => {
+          const active = Immutable.fromJS(match.path).equals(activeMatchPath)
+
+          return (
+            <div key={i}
+              className={active ? 'condition clearfix active' : 'condition clearfix'}
+              onClick={this.activateMatch(match.path)}>
+              <Col xs={9}>
+                {match.field
+                  ? this.renderConditionName(match)
+                  : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
+                }
+              </Col>
+
+              <Col xs={1} className="text-right">
+                {i < conditions.length - 1 &&
+                  <h4>{label}</h4>
+                }
+              </Col>
+              <Col xs={2} className="text-right">
+                <ActionButtons
+                  className="secondary"
+                  onDelete={this.deleteMatch(match.path)}
+                  deleteDisabled={disabled}
+                />
+              </Col>
+            </div>
+          )
+        })}
       </div>
     )
   }
 
   renderActions(actions) {
-    const { disabled } = this.props
+    const { disabled, activeSetPath } = this.props
+
     return (
       <div className="conditions">
         {actions.map((set, i) => {
           let active = false
-          if (Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
+          if (Immutable.fromJS(set.path).equals(activeSetPath)) {
             active = true
           }
           return (
             <div key={i}
               className={active ? 'condition clearfix active' : 'condition clearfix'}
               onClick={this.activateSet(set.path)}>
-              <Col xs={8}>
-                <p>{i + 1} {set.name}</p>
+              <Col xs={8} className="condition-name">
+                {i + 1}&nbsp;
+                <TruncatedTitle content={set.name}/>
               </Col>
               <Col xs={4} className="text-right">
                 <ActionButtons
@@ -222,7 +277,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     this.moveSet(set.path, i+1) : () => false}
                   arrowDownDisabled={i >= actions.length - 1 || disabled}
                   onDelete={this.deleteSet(set.path)}
-                  deleteDisabled={actions.length === 1 || disabled}
+                  deleteDisabled={disabled}
                 />
               </Col>
             </div>
@@ -256,7 +311,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <FormGroup controlId="configure__edge__add-cache-rule__rule-name">
             <InputGroup>
-              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.editRule.ruleName.text" />
+                <FormattedMessage id="portal.spaceWithAsterisk" />
+              </ControlLabel>
               <FormControl
                 value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']), '')}
                 onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}
@@ -267,7 +325,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <FormGroup>
             <InputGroup>
-              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.editRule.type.text"/>
+                <FormattedMessage id="portal.spaceWithAsterisk" />
+              </ControlLabel>
               <Select
                 className="input-select"
                 value={ruleType}
@@ -279,58 +340,37 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           </FormGroup>
 
           <Row className="header-btn-row">
-            <Col sm={8}>
+            <Col sm={7}>
               <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
             </Col>
-            <Col sm={4} className="text-right">
-              <Button
-                bsStyle="success"
-                className="btn-icon btn-add-new"
-                onClick={this.addCondition()}
-                disabled={disabled}
-              >
-                <IconAdd />
-              </Button>
+
+            <Col sm={5} className="condition-actions-column text-right">
+              <FormGroup>
+                <InputGroup>
+                  {!!flattenedPolicy.matches.length &&
+                    <Select
+                      onSelect={value => this.props.changeValue(this.props.rulePath.concat(['rule_body', 'match_type']), value)}
+                      value={ruleMatchType}
+                      options={ruleMatchTypeOptions}
+                    />
+                  }&nbsp;&nbsp;
+                  <Button
+                    bsStyle="success"
+                    className="btn-icon btn-add-new"
+                    onClick={this.addCondition()}
+                    disabled={disabled}
+                  >
+                    <IconAdd />
+                  </Button>
+                </InputGroup>
+              </FormGroup>
             </Col>
           </Row>
-
-          <div className="conditions">
-            {flattenedPolicy.matches.map((match, i) => {
-              let active = false
-              if (Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
-                active = true
-              }
-
-              return (
-                <div key={i}
-                  className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateMatch(match.path)}>
-                  <Col xs={7}>
-                    {match.field
-                      ? this.renderConditionName(match)
-                      : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
-                    }
-                  </Col>
-                  <Col xs={3}>
-                    <p>
-                      {getConditionFilterText(match)}
-                    </p>
-                  </Col>
-                  <Col xs={2} className="text-right">
-                    <ActionButtons
-                      className="secondary"
-                      onDelete={this.deleteMatch(match.path)}
-                      deleteDisabled={disabled}
-                    />
-                  </Col>
-                </div>
-              )
-            })}
-          </div>
+          {this.renderConditions(flattenedPolicy.matches, ruleMatchType)}
 
           <Row className="header-btn-row">
             <Col xs={8}>
-              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/><FormattedMessage id="portal.spaceWithAsterisk" /></h3>
             </Col>
             <Col xs={4} className="text-right">
               <Button
@@ -361,19 +401,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             </Col>
           </Row>
           {this.renderActions(flattenedPolicy.default_sets)}
-
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.editRule.applyActions.text"/>
-            </ControlLabel>
-            <Select
-              className="input-select"
-              onSelect={value => this.props.changeValue(this.props.rulePath.concat(['rule_body', 'match_type']), value)}
-              value={ruleMatchType}
-              disabled={flattenedPolicy.matches.length < 2 || disabled}
-              options={ruleMatchTypeOptions}
-            />
-          </FormGroup>
 
           <FormFooterButtons>
             <Button

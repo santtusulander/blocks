@@ -130,7 +130,7 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           disabled={disabled}
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />

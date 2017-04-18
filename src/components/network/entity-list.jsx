@@ -58,6 +58,7 @@ class EntityList extends React.Component {
    *
    * @method renderConnectorLine
    */
+   /* istanbul ignore next */
   renderConnectorLine() {
     // Check if this entity list has an active item
     if (this.hasActiveItems() && !this.props.fetching) {

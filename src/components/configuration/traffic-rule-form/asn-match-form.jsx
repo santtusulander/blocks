@@ -28,7 +28,7 @@ const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, i
         <FormFooterButtons>
           <Button
             id='cancel-button'
-            className="btn-outline"
+            className="btn-secondary"
             onClick={onCancel}>
             <FormattedMessage id='portal.common.button.cancel' />
           </Button>

@@ -12,6 +12,10 @@ import FieldFormGroup from '../../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
 
 import { CT_DEFAULT_STATUS_CODE } from '../../../constants/configuration'
+import { isValidTextField } from '../../../util/validators'
+
+const MIN_FIELD_LENGTH = 1
+const MAX_FIELD_LENGTH = 255
 
 const getTypeFromStatusCode = (status_code) => {
   if (status_code >= 200 && status_code <= 299) {
@@ -35,6 +39,23 @@ const getDefaultStatusCodeForType = (type) => {
     default:
       return 200
   }
+}
+
+const validate = ({ code, location }) => {
+  const errors = {}
+  const isRedirect= getTypeFromStatusCode(code) === 'redirect'
+
+  if (isRedirect) {
+    if (!isValidTextField(location, MIN_FIELD_LENGTH, MAX_FIELD_LENGTH)) {
+      errors.location = <FormattedMessage id="portal.policy.edit.matcher.invalid.error" />
+    }
+
+    if (!location) {
+      errors.location = <FormattedMessage id="portal.policy.edit.matcher.required.error" />
+    }
+  }
+
+  return errors
 }
 
 class ContentTargeting extends React.Component {
@@ -116,7 +137,7 @@ class ContentTargeting extends React.Component {
                 options={denyStatusCodeOptions}
                 label={<FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text" />}
               />
-            }
+             }
 
             <FormFooterButtons>
               <Button
@@ -153,7 +174,8 @@ ContentTargeting.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'content-targeting-form'
+  form: 'content-targeting-form',
+  validate
 })(ContentTargeting)
 
 const selector = formValueSelector('content-targeting-form')

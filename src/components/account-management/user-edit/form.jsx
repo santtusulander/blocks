@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { reduxForm, Field, Fields, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Row, Col } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -109,8 +109,8 @@ class AccountManagementUserEditForm extends React.Component {
         </div>
 
         <div className="user-form__telephone">
-          <Field
-            name="phone"
+          <Fields
+            names={['full_phone_number', 'phone_number', 'phone_country_code']}
             component={FieldTelephoneInput}
             disabled={true}
             label={<FormattedMessage id="portal.user.edit.phoneNumber.text"/>}

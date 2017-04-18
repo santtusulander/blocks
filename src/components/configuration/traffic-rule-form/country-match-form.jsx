@@ -35,7 +35,7 @@ const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmi
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

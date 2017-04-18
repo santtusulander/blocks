@@ -47,7 +47,7 @@ const IPv4AddressMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleS
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={onCancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>

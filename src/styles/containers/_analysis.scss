@@ -3,7 +3,7 @@
 
 .analysis-nav {
   position: fixed;
-  z-index: 5;
+  z-index: $zindex-analysis-nav;
   width: 100%;
 
   .dark-theme & {
