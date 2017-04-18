@@ -10,10 +10,12 @@ describe('EntityList', () => {
   const editEntity = jest.fn()
 
   beforeEach(() => {
-    subject = () => {
+    subject = (multiColumn = false, fetching = false) => {
       props = {
         addEntity,
-        editEntity
+        editEntity,
+        multiColumn: multiColumn,
+        fetching: fetching
       }
       return shallow(<EntityList {...props}/>)
     }
@@ -21,5 +23,25 @@ describe('EntityList', () => {
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
+  })
+
+  it('should render AccountManagementHeader', () => {
+    expect(subject().find('AccountManagementHeader').length).toBe(1)
+  })
+
+  it('should not render connector-divider by default', () => {
+    expect(subject().find('.connector-divider').length).toBe(0)
+  })
+
+  it('should not render multiColumn by default', () => {
+    expect(subject().find('.multi-column').length).toBe(0)
+  })
+
+  it('should render LoadingSpinner while fetching', () => {
+    expect(subject(true, true).find('LoadingSpinner').length).toBe(1)
+  })
+
+  it('should not render LoadingSpinner if not fetching', () => {
+    expect(subject(true, false).find('LoadingSpinner').length).toBe(0)
   })
 })
