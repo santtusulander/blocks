@@ -260,12 +260,13 @@ function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
           if (res.error) {
             dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
-              content: res.payload.data.message,
+              content: res.payload.response.data.message,
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))
+          } else {
+            showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           }
-          showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           stopFetchingDomains()
         })
     }

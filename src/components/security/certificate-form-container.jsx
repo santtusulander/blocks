@@ -86,7 +86,7 @@ class CertificateFormContainer extends Component {
       if (res.error) {
         showNotification(this.props.intl.formatMessage(
                               {id: 'portal.security.ssl.updateFailed.text'},
-                              {reason: res.payload.data.message}))
+                              {reason: res.payload.response.data.message}))
       } else {
         showNotification(<FormattedMessage id="portal.security.ssl.sslIsCreated.text" />)
       }

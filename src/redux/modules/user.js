@@ -482,6 +482,15 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
     .then(parseResponseData)
 })
 
+/**
+ * Get and throw error message from response
+ * @param {Error} error - response returned by axios
+ */
+const handleResponseError = (error) => {
+  const message = error.response ? error.response.data.message : error.message
+  throw { message }
+}
+
 export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
   return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
     headers: {
@@ -494,9 +503,8 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
         token: res.data.token
       }
     }
-  }, (res) => {
-    throw new Error(res.data.message)
   })
+  .catch(handleResponseError)
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
