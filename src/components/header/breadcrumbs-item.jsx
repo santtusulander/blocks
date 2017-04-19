@@ -150,7 +150,7 @@ class BreadcrumbsItem extends React.Component {
 
       links.push({
         label: <FormattedMessage id="portal.account.manage.accountManagement.title"/>,
-        url: links.length > 0 ? getAccountManagementUrlFromParams(params) : null
+        url: links.length > 0 ? getAccountManagementUrlFromParams({ brand: params.brand, account: params.account }) : null
       })
 
     } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {

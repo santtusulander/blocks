@@ -15,6 +15,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as userActionCreators from '../../redux/modules/user'
 
+import { parseResponseError } from '../../redux/util'
+
 import IconEmail from '../../components/shared/icons/icon-email'
 import CopyrightNotice from '../../components/shared/layout/copyright-notice'
 import ReCAPTCHA from '../../components/shared/form-elements/recaptcha'
@@ -48,7 +50,7 @@ export class ForgotPassword extends React.Component {
           this.setState({submitted: true})
         } else {
           this.setState({
-            formError: action.payload.data.message || action.payload.message,
+            formError: parseResponseError(action.payload),
             recaptcha: ''
           })
           this.refs.recaptcha.reset()

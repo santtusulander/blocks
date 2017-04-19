@@ -23,7 +23,7 @@ import { getById as getClusterById } from '../../redux/modules/entities/CIS-clus
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
-import { buildReduxId } from '../../redux/util'
+import { buildReduxId, parseResponseError } from '../../redux/util'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
 
@@ -90,7 +90,9 @@ class Storage extends Component {
 
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
-    this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
+    this.props.initStorageAccessKey(brand, account, group, storage)
+      .then(this.initFileUploader)
+      .catch(parseResponseError)
   }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
