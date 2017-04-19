@@ -17,7 +17,7 @@ export const actionTypes = {
 
 export const metricsActionTypes = {
   RECEIVE_METRICS: 'metrics/RECEIVE',
-  RECEIVE_GROUP_METRICS: 'metrics/RECEIVE_GROUPS',
+  RECEIVE_GROUP_METRICS: 'metrics/RECEIVE_GROUP',
   RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
