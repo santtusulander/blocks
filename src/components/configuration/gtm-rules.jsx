@@ -35,7 +35,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
     this.setState({ activeIndex })
   }
 
-  renderRule({ input, index, fields }) {
+  renderRule({ input, index, fields, readOnly }) {
     const conditionOptions = {
       'or': "portal.configuration.condition.or",
       'and': "portal.configuration.condition.and"
@@ -71,7 +71,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </div>
         </td>
         <td>{trafficSplit}</td>
-        {!this.props.readOnly &&
+        {!readOnly &&
           <td className="nowrap-column">
               <ActionButtons
                 permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -105,7 +105,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
     )
   }
 
-  renderRules({ fields }) {
+  renderRules({ fields, readOnly }) {
     return (
       <tbody>
         {fields.map((rule, i) => (
@@ -113,6 +113,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
             key={i}
             fields={fields}
             index={i}
+            props={{ readOnly }}
             name={rule}
             component={this.renderRule}/>
         ))}
@@ -140,6 +141,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </thead>
           <FieldArray
             name="rules"
+            props={{ readOnly: this.props.readOnly }}
             activeIndex={this.state.activeIndex}
             component={this.renderRules}/>
         </Table>
