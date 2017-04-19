@@ -398,7 +398,7 @@ export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brand
     headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
   })
 
-  if (!storageId && token && groupId) {
+  if (storageId && token && groupId) {
     return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`)
                         .then(parseResponseData)
   } else {
