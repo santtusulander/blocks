@@ -210,6 +210,7 @@
 
   "portal.errorModal.errorOccured.text": "An error occurred",
   "portal.errorModal.reloadNote.text": "Note: Reloading may lose all unsaved changes",
+  "portal.errorModal.error.text": "Error",
 
   "portal.exportEmail.oneTime.text": "One-time, send now",
   "portal.exportEmail.weekly.text": "Weekly",
@@ -277,6 +278,8 @@
 
   "portal.groups.accountSummary.text": "Account Summary",
   "portal.groups.accountContentSummary.text": "Account Content Summary",
+  "portal.common.input.search.placeholder": "Search",
+  "portal.commom.select.placeholder": "Please Select",
 
   "portal.common.copyToClipboard": "Copy to Clipboard",
   "portal.common.goToProfileSettings": "Go to profile settings ",

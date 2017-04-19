@@ -132,6 +132,8 @@
   "portal.account.editUser.roleNameRequired.text": "Role is required",
 
   "portal.account.editUser.userIsUpdated.text": "Updates to user saved.",
+  "portal.account.leaving.warning.text": "You have made changes to the User(s), are you sure you want to exit without saving?",
+  "portal.account.delete.current.user.warning": "You cannot delete the account you are logged in with.",
 
   "portal.account.roleEdit.roleNameRequired.text": "Role name is required",
   "portal.account.roleEdit.title": "Edit Role",
@@ -246,6 +248,7 @@
   "portal.account.list.services.title": "SERVICES",
   "portal.account.list.searchWithParams.empty.text": "No accounts found with the search term {searchTerm}",
   "portal.account.list.search.empty.text": "No accounts found",
+  "portal.account.list.search.placeholder.text": "Search",
 
   "portal.brand.edit.editBrand.title": "Edit Brand",
   "portal.brand.edit.newBrand.title": "New Brand",

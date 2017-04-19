@@ -401,7 +401,7 @@ class Network extends React.Component {
       this.props.router.push(url)
       response.error &&
         this.props.uiActions.showInfoDialog({
-          title: 'Error',
+          title: <FormattedMessage id="portal.errorModal.error.text"/>,
           content: response.payload.data.message,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
