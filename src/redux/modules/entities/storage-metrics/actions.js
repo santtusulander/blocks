@@ -32,8 +32,8 @@ export const fetchComparisonMetrics = ({ requestTag = 'storageComparisonMetrics'
 })
 
 /**
- * Action for fetching storages metrics for multiple groups
- * @param  {[array]} groups                           array of groups
+ * Action for fetching storages metrics for a sinle group
+ * @param  {String} group                               groupId
  * @param  {String} [requestTag='groupsStorageMetrics'] request tag for tracking the request
  * @param  {[object]} requestParams                    parameters for the request
  * @return {[object]}                                  action object
