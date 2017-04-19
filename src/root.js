@@ -1,23 +1,23 @@
 import React, { PropTypes } from 'react'
-
 import { Provider } from 'react-redux'
 import { Router, browserHistory, Route } from 'react-router'
-import { IntlProvider } from 'react-intl'
 
 import { LogPageView } from './util/google-analytics'
 import { getRoutes } from './routes'
 import Login from './containers/login'
-import TRANSLATED_MESSAGES from './locales/en/'
+import ConnectedIntlProvider from './containers/connectedIntlProvider'
+
 
 const Root = ({ store }) =>
-  <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
-    <Provider store={store}>
+  <Provider store={store}>
+    <ConnectedIntlProvider>
       <Router onUpdate={LogPageView} history={browserHistory}>
         {getRoutes(store)}
         <Route path="/login" component={Login}/>
       </Router>
-    </Provider>
-  </IntlProvider>
+    </ConnectedIntlProvider>
+  </Provider>
+
 
 Root.displayName = "Root"
 Root.propTypes = {

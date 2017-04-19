@@ -126,7 +126,8 @@ class UserEditForm extends React.Component {
       middle_name: values.middle_name,
       last_name: values.last_name,
       phone_country_code: values.phone_country_code,
-      phone_number: values.phone_number
+      phone_number: values.phone_number,
+      locale: values.language
     }
 
     //handle 2FA,  add method if ON
@@ -318,6 +319,22 @@ class UserEditForm extends React.Component {
             <Fields
               names={['full_phone_number', 'phone_number', 'phone_country_code']}
               component={FieldTelephoneInput}
+            />
+          </Col>
+        </Row>
+
+        <hr/>
+
+        {/* LANGUAGE */}
+        <Row>
+          <ControlLabel className="col-xs-2">
+            Language
+          </ControlLabel>
+          <Col xs={6}>
+            <Field
+              name="language"
+              component={FieldFormGroupSelect}
+              options={[{value: 'en-US', label: 'English'}, {value: 'zh-CN', label: 'Chinese'}]}
             />
           </Col>
         </Row>
