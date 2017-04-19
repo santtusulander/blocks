@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import { getById } from '../../../redux/modules/entities/accounts/selectors'
@@ -66,6 +67,12 @@ class TabTokenAuthentication extends Component {
     const tokenAuthRules = getTokenAuthRules(properties.toJS())
 
     return (
+      !this.props.params.group
+        ?
+          <p className='text-center'>
+            <FormattedMessage id='portal.security.tokenAuth.selectGroup.text' />
+          </p>
+        :
           <TokenAuthList rules={tokenAuthRules} editUrlBuilder={editUrlBuilder}/>
     )
 
