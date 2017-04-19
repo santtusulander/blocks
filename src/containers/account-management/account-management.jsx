@@ -139,7 +139,7 @@ export class AccountManagement extends Component {
         // Hide the delete modal.
         this.props.toggleModal(null)
         this.props.uiActions.showInfoDialog({
-          title: <FormattedMessage id="portal.common.statusCode.403" />,
+          title: <FormattedMessage id="portal.errorModal.error.text" />,
           content: response.data.message,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()

@@ -208,6 +208,7 @@
   "portal.deleteModal.warning.text": "Please confirm by writing \"delete\" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can't be undone",
   "portal.deleteModal.header.text": "Delete {itemToDelete}?",
 
+  "portal.errorModal.error.text": "Error",
   "portal.errorModal.errorOccured.text": "An error occurred",
   "portal.errorModal.reloadNote.text": "Note: Reloading may lose all unsaved changes",
 
