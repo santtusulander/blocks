@@ -10,6 +10,8 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
+import { parseResponseError } from '../../../redux/util'
+
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 
 class DnsDomainEditFormContainer  extends Component {
@@ -111,7 +113,7 @@ function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
           if (res.error) {
             dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
-              content: res.payload.data.message,
+              content: parseResponseError(res.payload),
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))

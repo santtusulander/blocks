@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import { changeTheme, IS_LOCAL_STORAGE_SUPPORTED } from '../redux/modules/ui'
+import { parseResponseError } from '../redux/util'
 
 import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
@@ -174,7 +175,7 @@ export class Login extends React.Component {
         codeInputs[0].focus()
 
         this.setState({
-          loginError: action.payload.message
+          loginError: parseResponseError(action.payload)
         })
       }
     })

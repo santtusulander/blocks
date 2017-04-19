@@ -8,6 +8,7 @@ import { getById as getLocationById } from '../../../redux/modules/entities/loca
 
 import { isValidLatitude, isValidLongitude } from '../../../util/validators'
 import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
+import { parseResponseError } from '../../../redux/util'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
@@ -178,7 +179,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({'_error': resp.data.message})
+        throw new SubmissionError({'_error': parseResponseError(resp)})
 
       })
   }
@@ -204,7 +205,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({_error: resp.data.message})
+        throw new SubmissionError({_error: parseResponseError(resp)})
 
       })
   }

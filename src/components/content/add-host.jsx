@@ -15,6 +15,8 @@ import FieldRadio from '../shared/form-fields/field-radio'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
+import { parseResponseError } from '../../redux/util'
+
 import { isValidHostName } from '../../util/validators'
 import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'
 import { DEFAULT_HOST_SERVICE_TYPE } from '../../constants/configuration'
@@ -60,7 +62,7 @@ class AddHost extends React.Component {
 
     return res.catch((error) => {
       if (error) {
-        throw new SubmissionError({ _error: error.data.message })
+        throw new SubmissionError({ _error: parseResponseError(error) })
       }
     })
   }
