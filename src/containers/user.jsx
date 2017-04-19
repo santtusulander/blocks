@@ -7,6 +7,8 @@ import { injectIntl } from 'react-intl';
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 
+import { parseResponseError } from '../redux/util'
+
 import roleNameActions from '../redux/modules/entities/role-names/actions'
 import { getById as getRoleNameById } from '../redux/modules/entities/role-names/selectors'
 
@@ -39,7 +41,7 @@ class User extends React.Component {
         } else {
           this.props.uiActions.showInfoDialog({
             title: 'Error',
-            content: response.payload.data.message,
+            content: parseResponseError(response.payload),
             okButton: true,
             cancel: () => this.props.uiActions.hideInfoDialog()
           })

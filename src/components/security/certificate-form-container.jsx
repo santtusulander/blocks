@@ -12,6 +12,7 @@ import {
 } from 'redux-form'
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { parseResponseError } from '../../redux/util'
 import SidePanel from '../shared/side-panel'
 
 import * as securityActionCreators from '../../redux/modules/security'
@@ -73,7 +74,7 @@ class CertificateFormContainer extends Component {
         if (res.error) {
           showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.security.ssl.updateFailed.text'},
-                                {reason: res.payload.data.message}))
+                                {reason: parseResponseError(res.payload)}))
         } else {
           showNotification(<FormattedMessage id="portal.security.ssl.sslIsUpdated.text" />)
         }
@@ -86,7 +87,7 @@ class CertificateFormContainer extends Component {
       if (res.error) {
         showNotification(this.props.intl.formatMessage(
                               {id: 'portal.security.ssl.updateFailed.text'},
-                              {reason: res.payload.data.message}))
+                              {reason: parseResponseError(res.payload)}))
       } else {
         showNotification(<FormattedMessage id="portal.security.ssl.sslIsCreated.text" />)
       }

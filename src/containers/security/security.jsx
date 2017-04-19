@@ -38,6 +38,20 @@ export class Security extends Component {
     }
   }
 
+  getTabName() {
+    const router = this.props.router,
+      baseUrl = getSecurityUrlFromParams(this.props.params)
+    if (router.isActive(`${baseUrl}/ssl-certificate`)) {
+      return 'ssl-certificate';
+    } else if (router.isActive(`${baseUrl}/content-targeting`)) {
+      return 'content-targeting';
+    } else if (router.isActive(`${baseUrl}/token-authentication`)) {
+      return 'token-authentication';
+    }
+
+    return '';
+  }
+
   render() {
     const {
       accounts,
@@ -49,7 +63,7 @@ export class Security extends Component {
 
     const itemSelectorFunc = (entity) => {
       const { nodeInfo, idKey = 'id' } = entity
-      this.props.router.push(getUrl('/security', nodeInfo.entityType, entity[idKey], nodeInfo.parents))
+      this.props.router.push(`${getUrl('/security', nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${this.getTabName()}`)
     }
 
     const securityBaseUrl = getSecurityUrlFromParams(params);

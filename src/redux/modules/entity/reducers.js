@@ -41,16 +41,14 @@ export const receiveMetrics = ({ key, comparison }) => (state, { response }) => 
 }
 
 /**
- * Reducer for receiving metrics data for muliple groups
+ * Reducer for receiving metrics data for a single group
  * @return {[Immutable Map]}      state fragment
  */
-export const receiveGroupsMetrics = () => (state, { response }) => {
-  const metricsObject = 'groupsData'
-  //Convert response from array of arrays to array of object + filter empty arrays
-  const flattenedResponse = [].concat.apply([],response.filter((resItem) => resItem.length))
+export const receiveGroupMetrics = () => (state, { response }) => {
+  const metricsObject = 'groupData'
 
   if (response) {
-    return state.merge(fromJS({ [metricsObject]: flattenedResponse }))
+    return state.merge(fromJS({ [metricsObject]: response }))
   }
 
   return state
