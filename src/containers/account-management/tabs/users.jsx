@@ -11,6 +11,8 @@ import { FormattedMessage } from 'react-intl'
 // import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { parseResponseError } from '../../../redux/util'
+
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
@@ -128,7 +130,7 @@ export class AccountManagementAccountUsers extends Component {
     }
     return createUser(requestBody).then(res => {
       if (res.error) {
-        throw new SubmissionError({email: res.payload.message})
+        throw new SubmissionError({email: parseResponseError(res.payload)})
       } else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()

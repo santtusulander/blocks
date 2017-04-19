@@ -15,7 +15,7 @@ import FieldPasswordFields from '../shared/form-fields/field-passwordfields'
 import SaveBar from '../shared/page-elements/save-bar'
 import ModalWindow from '../shared/modal'
 
-import { BASE_URL_AAA } from '../../redux/util'
+import { BASE_URL_AAA, parseResponseError } from '../../redux/util'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
@@ -152,7 +152,7 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          throw new SubmissionError({'current_password': response.payload.message})
+          throw new SubmissionError({'current_password': parseResponseError(response.payload)})
         } else {
           /* eslint-disable no-unused-vars */
           /* stip unneeded vars from values */

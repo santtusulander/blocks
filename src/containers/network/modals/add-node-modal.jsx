@@ -10,7 +10,7 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 
-import { buildReduxId } from '../../../redux/util'
+import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import { changeNotification } from '../../../redux/modules/ui'
@@ -182,7 +182,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
         setTimeout(showNotification, 10000)
         onCancel()
       }).catch(response => {
-        throw new SubmissionError({ '_error': response.data.message })
+        throw new SubmissionError({ '_error': parseResponseError(response) })
       })
   }
 })

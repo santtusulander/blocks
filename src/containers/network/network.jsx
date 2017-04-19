@@ -61,7 +61,7 @@ import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/sele
 
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
-import { buildReduxId } from '../../redux/util'
+import { buildReduxId, parseResponseError } from '../../redux/util'
 
 import Content from '../../components/shared/layout/content'
 import PageContainer from '../../components/shared/layout/page-container'
@@ -402,7 +402,7 @@ class Network extends React.Component {
       response.error &&
         this.props.uiActions.showInfoDialog({
           title: 'Error',
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
