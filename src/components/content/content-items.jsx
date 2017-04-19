@@ -12,7 +12,7 @@ import {
 } from '../../constants/account-management-options'
 
 import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID } from '../../constants/service-permissions'
-import sortOptions from '../../constants/content-item-sort-options'
+import sortOptions, {PAGE_SIZE, MAX_PAGINATION_ITEMS} from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
   getAnalyticsUrl
@@ -74,8 +74,6 @@ const sortContent = (path, direction) => (item1, item2) => {
   }
   return 0
 }
-
-const PAGE_SIZE = 9
 
 /**
  * Slice current page out of contentItems
@@ -410,7 +408,7 @@ class ContentItems extends React.Component {
       activePage: currentPage,
       items: Math.floor(contentItems.count() / PAGE_SIZE),
       onSelect: this.onActivePageChange,
-      maxButtons: 6,
+      maxButtons: MAX_PAGINATION_ITEMS,
       boundaryLinks: true,
       first: true,
       last: true,
