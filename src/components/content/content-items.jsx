@@ -175,7 +175,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: <FormattedMessage id="portal.errorModal.error.text"/>,
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
@@ -194,7 +194,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: <FormattedMessage id="portal.errorModal.error.text"/>,
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
@@ -213,7 +213,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: <FormattedMessage id="portal.errorModal.error.text"/>,
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })

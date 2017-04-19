@@ -140,7 +140,7 @@ export class Account extends React.Component {
         this.props.toggleDeleteConfirmationModal(null)
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.errorModal.error.text"/>,
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })

@@ -41,7 +41,7 @@ class User extends React.Component {
         } else {
           this.props.uiActions.showInfoDialog({
             title: this.props.intl.formatMessage({id: "portal.errorModal.error.text"}),
-            content: response.payload.data.message,
+            content: parseResponseError(response.payload),
             okButton: true,
             cancel: () => this.props.uiActions.hideInfoDialog()
           })
