@@ -223,6 +223,7 @@ AccountManagementSystemDNS.propTypes = {
   toggleModal: PropTypes.func
 }
 
+/* istanbul ignore next */
 function mapStateToProps({ dns, dnsRecords, ui }) {
   return {
     loadingDomains: dns.get('fetching'),
@@ -234,6 +235,7 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
   const { changeActiveDomain, deleteDomain, fetchDomains, fetchDomain, startFetchingDomains, stopFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
   const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)

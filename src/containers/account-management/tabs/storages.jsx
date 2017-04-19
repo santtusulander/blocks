@@ -344,7 +344,7 @@ AccountManagementStorages.defaultProps = {
   storages: List()
 }
 
-
+/* istanbul ignore next */
 function mapStateToProps(state, ownProps) {
   const account = getAccountById(state, ownProps.params.account)
 
@@ -360,6 +360,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 

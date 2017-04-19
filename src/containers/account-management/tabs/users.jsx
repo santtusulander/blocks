@@ -7,8 +7,6 @@ import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
 import { FormattedMessage } from 'react-intl'
 
-// import * as userActionCreators from '../../../redux/modules/user'
-// import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { parseResponseError } from '../../../redux/util'
@@ -27,7 +25,6 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
@@ -85,10 +82,6 @@ export class AccountManagementAccountUsers extends Component {
     this.props.fetchGroups({brand, account})
     this.props.fetchRoleNames()
 
-//    if (!this.props.groups.toJS().length) {
-//      this.props.groupActions.fetchGroups(brand, account);
-//    }
-//
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
@@ -203,19 +196,6 @@ export class AccountManagementAccountUsers extends Component {
             </Button>,
           positionClass: 'col-xs-2 text-right'
         }
-      ],
-      [
-        // Disable until API support allows listing groups for user with some assigned
-        // {
-        //   input: <FilterChecklistDropdown
-        //     className="inline-add-dropdown"
-        //     value={this.state.usersGroups}
-        //     handleCheck={newValues => {
-        //       this.setState({ usersGroups: newValues })
-        //     }}
-        //     options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-        //   positionClass: 'row col-xs-7'
-        // }
       ]
     ]
   }
