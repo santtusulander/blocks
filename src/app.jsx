@@ -185,5 +185,19 @@ if (useRaven) {
   })
 }
 
+// Check if Intl -polyfill required
+if (!window.Intl) {
+  require.ensure([
+    'intl',
+    'intl/locale-data/jsonp/en.js',
+    'intl/locale-data/jsonp/uk.js'
+  ], (require) => {
+    require('intl');
+    require('intl/locale-data/jsonp/en.js');
+    require('intl/locale-data/jsonp/uk.js');
 
-startApp(Root);
+    startApp(Root);
+  });
+} else {
+  startApp(Root);
+}
