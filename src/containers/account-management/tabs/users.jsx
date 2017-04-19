@@ -120,7 +120,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   newUser({ email, roles }) {
-    const { userActions: { create: createUser }, params: { brand, account } } = this.props
+    const { createUser, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -128,7 +128,7 @@ export class AccountManagementAccountUsers extends Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    return createUser({payload: requestBody}).then(res => {
+    return createUser(requestBody).then(res => {
       if (res.error) {
         throw new SubmissionError({email: parseResponseError(res.payload)})
       } else {
@@ -292,7 +292,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   saveUser(user) {
-    return this.props.userActions.update({id: this.state.userToEdit.get('email'), payload: user})
+    return this.props.updateUser({id: this.state.userToEdit.get('email'), payload: user})
       .then((response) => {
         if (!response.error) {
           this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
@@ -517,6 +517,7 @@ export class AccountManagementAccountUsers extends Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
+  createUser: PropTypes.func,
   currentUser: PropTypes.string,
   deleteUser: PropTypes.func,
   fetchGroups: PropTypes.func,
@@ -532,7 +533,7 @@ AccountManagementAccountUsers.propTypes = {
   router: PropTypes.object,
   showNotification: PropTypes.func,
   uiActions: PropTypes.object,
-  userActions: PropTypes.object,
+  updateUser: PropTypes.func,
   users: PropTypes.instanceOf(List)
 }
 
@@ -565,7 +566,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
     fetchUsers: (params) => dispatch(usersActions.fetchAll(params)),
-    userActions: bindActionCreators(usersActions, dispatch)
+    createUser: (payload) => dispatch(usersActions.create({payload})),
+    updateUser: (user) => dispatch(usersActions.update(user))
   };
 }
 
