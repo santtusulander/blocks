@@ -48,7 +48,8 @@ export class Main extends React.Component {
   getChildContext() {
     return {
       currentUser: this.props.currentUser,
-      roles: this.props.roles
+      roles: this.props.roles,
+      location: this.props.location
     }
   }
 
@@ -290,6 +291,7 @@ Main.defaultProps = {
 
 Main.childContextTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  location: PropTypes.object,
   roles: PropTypes.instanceOf(Map)
 }
 
