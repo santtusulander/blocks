@@ -24,25 +24,14 @@ const REQUEST_TAG = 'req-token-auth'
 
 class TabTokenAuthentication extends Component {
   componentWillMount() {
-    this.fetchData()
+    const { brand, account, group } = this.props.params
+    if (group) {
+      this.fetchData(brand, account, group)
+    }
   }
 
-  fetchData() {
-    const {brand,account, group} = this.props.params
-
-    if (group) {
-      this.props.fetchProperties({brand, account, group})
-    } else {
-      /* Fetch all groups and properties */
-      this.props.fetchGroups(this.props.params)
-        .then(() => {
-          this.props.groups.map((group) => {
-            this.props.fetchProperties({brand, account, group: group.get('id')})
-
-            return false
-          })
-        })
-    }
+  fetchData(brand, account, group) {
+    this.props.fetchProperties({ brand, account, group })
   }
 
   render() {
