@@ -72,8 +72,6 @@ export class AccountManagement extends Component {
 
     this.notificationTimeout = null
 
-    this.editSOARecord = this.editSOARecord.bind(this)
-    this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
@@ -88,20 +86,6 @@ export class AccountManagement extends Component {
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.deleteAccount = this.deleteAccount.bind(this)
-  }
-
-  editSOARecord() {
-    // TODO: to be deleted (or fixed) as part of UDNP-2204
-    // const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
-    // const activeDomain = dnsData.get('activeDomain')
-    // const data = getValues(soaFormData)
-    // dnsActions.editSOA({ id: activeDomain.get('id'), data })
-    // toggleModal(null)
-  }
-
-  dnsEditOnSave() {
-    // eslint-disable-next-line no-console
-    console.log('dnsEditOnSave()')
   }
 
   showDeleteGroupModal(group) {
@@ -321,13 +305,11 @@ export class AccountManagement extends Component {
       toggleModal,
       activeAccount,
       router
-      //dnsData
     } = this.props
 
     const subPage = this.getTabName(),
       isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
-      //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
@@ -457,9 +439,6 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li>
-            <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-          </li>*/}
           <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
            <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
@@ -468,11 +447,6 @@ export class AccountManagement extends Component {
           <li data-eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
-          {/*
-           <li data-eventKey="details">
-           <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
-           </li>
-           */}
         </Tabs>}
 
         {/* RENDER TAB CONTENT */}
@@ -548,13 +522,9 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  // activeRecordType: PropTypes.string,
   changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
-  // dnsActions: PropTypes.object,
-  // dnsData: PropTypes.instanceOf(Map),
-  //fetchAccountData: PropTypes.func,
   deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
@@ -562,7 +532,6 @@ AccountManagement.propTypes = {
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
   router: PropTypes.object,
-  // soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
   userActions: PropTypes.object,
@@ -580,7 +549,6 @@ function mapStateToProps(state, ownProps) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: getByBrand(state, ownProps.params.brand),
     activeAccount: getAccountById(state, ownProps.params.account),
-    // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     permissions: state.permissions,
     roles: state.roles.get('roles'),

@@ -22,8 +22,6 @@ export class Services extends React.Component {
         <ServicesPageHeader
           params={this.props.params}
           activeAccount={activeAccount.get ('name')}/>
-        {/*Not in 0.8.1*/}
-        {/*{this.renderContent(certificateFormProps, sslListProps)}*/}
         <p className='text-center'>
           <FormattedMessage tagName="tspan" id="portal.services.comingSoon.text"/>
         </p>
