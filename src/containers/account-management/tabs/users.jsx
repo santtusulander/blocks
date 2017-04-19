@@ -128,7 +128,7 @@ export class AccountManagementAccountUsers extends Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    return createUser(requestBody).then(res => {
+    return createUser({payload: requestBody}).then(res => {
       if (res.error) {
         throw new SubmissionError({email: parseResponseError(res.payload)})
       } else {
@@ -566,7 +566,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
     fetchUsers: (params) => dispatch(usersActions.fetchAll(params)),
-    createUser: (payload) => dispatch(usersActions.create({payload})),
+    createUser: (user) => dispatch(usersActions.create(user)),
     updateUser: (user) => dispatch(usersActions.update(user))
   };
 }
