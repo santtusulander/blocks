@@ -9,7 +9,7 @@ import { getById as getNodeById } from '../../../redux/modules/entities/nodes/se
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import { changeNotification } from '../../../redux/modules/ui'
 
-import { buildReduxId } from '../../../redux/util'
+import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 // Use this when the network container has the new entities groups
 // import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
@@ -245,7 +245,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
       })
 
       .catch(response => {
-        throw new SubmissionError({ _error: response.data.message })
+        throw new SubmissionError({_error: parseResponseError(response)})
       })
     },
 
@@ -260,7 +260,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         onCancel()
       })
       .catch(response => {
-        throw new SubmissionError({ _error: response.data.message })
+        throw new SubmissionError({_error: parseResponseError(response)})
       })
     }
   }

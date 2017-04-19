@@ -4,7 +4,7 @@ import { Map, List, fromJS } from 'immutable'
 
 import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          PAGINATION_MOCK, mapReducers,
-         parseResponseData } from '../util'
+         parseResponseData, parseResponseError } from '../util'
 import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
 import { setUserName as setUserNameToStorage, deleteUserName as deleteUserNameFromStorage } from '../../util/local-storage.js'
 
@@ -312,7 +312,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -333,7 +333,7 @@ export const twoFALogInWithCode = createAction(USER_LOGGED_IN, (username, code) 
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -355,7 +355,7 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -377,7 +377,7 @@ export const twoFALogInWithRecoveryKey = createAction(USER_LOGGED_IN, (username,
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -398,7 +398,7 @@ export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brand
     headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
   })
 
-  if (storageId && token && groupId) {
+  if (!storageId && token && groupId) {
     return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`)
                         .then(parseResponseData)
   } else {
@@ -469,7 +469,7 @@ export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${BASE_URL_AAA}/users`, user, { headers: { 'Content-Type': 'application/json' } })
     .then(parseResponseData)
     .catch(err => {
-      throw new Error(err.data.message)
+      throw new Error(parseResponseError(err))
     })
 )
 
@@ -481,15 +481,6 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
   })
     .then(parseResponseData)
 })
-
-/**
- * Get and throw error message from response
- * @param {Error} error - response returned by axios
- */
-const handleResponseError = (error) => {
-  const message = error.response ? error.response.data.message : error.message
-  throw { message }
-}
 
 export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
   return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
@@ -503,8 +494,9 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
         token: res.data.token
       }
     }
+  }, (res) => {
+    throw new Error(parseResponseError(res))
   })
-  .catch(handleResponseError)
 })
 
 export const saveName = createAction(USER_NAME_SAVED)

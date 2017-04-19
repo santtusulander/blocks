@@ -19,6 +19,7 @@ import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
+import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
 import { hasService } from '../util/helpers'
@@ -156,7 +157,7 @@ export class Configuration extends React.Component {
       if (action.error) {
         this.showNotification(this.props.intl.formatMessage(
                               {id: 'portal.configuration.updateFailed.text'},
-                              {reason: action.payload.data.message}))
+                              {reason: parseResponseError(action.payload)}))
       } else {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
@@ -225,7 +226,7 @@ export class Configuration extends React.Component {
         if (action.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.retireFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
@@ -235,7 +236,7 @@ export class Configuration extends React.Component {
           this.togglePublishModal()
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.publishFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.togglePublishModal()
           this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
@@ -446,7 +447,7 @@ export class Configuration extends React.Component {
                 if (action.error) {
                   this.showNotification(this.props.intl.formatMessage(
                                         {id: 'portal.configuration.deleteFailed.text'},
-                                        {reason: action.payload.data.message}))
+                                        {reason: parseResponseError(action.payload)}))
                 } else {
                   this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text"/>)
                   router.push(getContentUrl('group', group, { brand, account }))

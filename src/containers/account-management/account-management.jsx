@@ -23,6 +23,7 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import { parseResponseError } from '../../redux/util'
 
 import accountsActions from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
@@ -154,7 +155,7 @@ export class AccountManagement extends Component {
       if (response.error) {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
@@ -594,7 +595,7 @@ function mapDispatchToProps(dispatch) {
           toggleModal(null)
           uiActions.showInfoDialog({
             title: 'Error',
-            content: response.payload.data.message,
+            content: parseResponseError(response.payload),
             okButton: true,
             cancel: () => uiActions.hideInfoDialog()
           })

@@ -8,6 +8,8 @@ import * as dnsRecordActionCreators from '../../../redux/modules/dns-records/act
 import { hideInfoDialog, showInfoDialog, toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
+import { parseResponseError } from '../../../redux/util'
+
 import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -260,7 +262,7 @@ function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
           if (res.error) {
             dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
-              content: res.payload.response.data.message,
+              content: parseResponseError(res.payload),
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))
