@@ -11,6 +11,7 @@ import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
 import { changeNotification } from '../../../redux/modules/ui'
+import { parseResponseError } from '../../../redux/util'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -243,7 +244,7 @@ class PodFormContainer extends React.Component {
       }).catch((resp) => {
 
         // Throw error => will be shown inside form
-        throw new SubmissionError({ '_error': resp.data.message })
+        throw new SubmissionError({ '_error': parseResponseError(resp) })
 
       })
   }
@@ -275,7 +276,7 @@ class PodFormContainer extends React.Component {
       },
     )
     .catch(resp => {
-      throw new SubmissionError({ '_error': resp.data.message })
+      throw new SubmissionError({ '_error': parseResponseError(resp) })
     })
   }
 
@@ -473,7 +474,7 @@ const mapStateToProps = (state, ownProps) => {
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
   initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
   initialValues.UIIpList = edit && pod && pod.get('UIIpList').map(ip => {
-    return {id: ip, label: ip} 
+    return {id: ip, label: ip}
   }).toJS() || []
 
   return {
