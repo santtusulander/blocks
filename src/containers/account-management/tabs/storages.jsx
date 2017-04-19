@@ -71,9 +71,9 @@ class AccountManagementStorages extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    //Start fetching storage data when we receive new groups from redux
+    //Start fetching storage data when changing active group
     if (this.props.params.group !== nextProps.params.group) {
-      //Fetch storage data for storages in each group of new Groups
+      //Fetch storage data for storages in newly selected group
       this.fetchStorageData(nextProps.params.group)
     }
   }
