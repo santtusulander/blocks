@@ -8,7 +8,7 @@ const gtmSchema = new schema.Entity('gtm', {}, { idAttribute: (gtm, { property }
 const propertyGTM = new schema.Entity('wrapper', { gtm: gtmSchema })
 
 const URL = (brand, account, group, property, service) =>
-  `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/services/${service}/gtm`
+  `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/services/${service}/gtm?force=true`
 
 export const fetch = ({ brand, account, group, property, service }) =>
   axios.get(URL(brand, account, group, property, service))

@@ -19,6 +19,7 @@ import RuleModal from './traffic-rule-form/rule-modal'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupNumber from '../shared/form-fields/field-form-group-number'
 
 import { getById as getProperty } from '../../redux/modules/entities/properties/selectors'
 import { formatConfigToInitialValues } from '../../redux/modules/entities/property-GTMs/selectors'
@@ -71,7 +72,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!is(this.props.property, nextProps.property)) {
-      this.props.fetchGtm(nextProps.property.getIn(['services', 0, 'service_type']))
+      nextProps.fetchGtm(nextProps.property.getIn(['services', 0, 'service_type']))
     }
   }
 
@@ -91,6 +92,8 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     const propertyServiceType = this.props.property.get('services').get(0).get('service_type')
     const customerId = `${this.props.params.account}-${this.props.params.group}`
 
+    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
+
     const rules = values.rules.reduce((generatedRules, rule) => {
 
       const traffic_split_targets = [
@@ -100,7 +103,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
         },
         {
           percent: String(rule.policyWeight),
-          cname: '{%customer_cname%}'
+          cname: udnPlaceholder
         }
       ]
 
@@ -121,16 +124,17 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     //Add this rule with 3rd party cname or udn as value based on rest of world-toggle
     rules.push({
-      "request_match": { "type": "no_filter" },
+      "request_match": { "type": "no_filter", value: '' },
       "on_match": "response_value",
       "response_value": {
         "type": "CNAME",
-        "value": values.ROWToggle ? values.cName : '{%customer_cname%}'
+        "value": values.ROWToggle ? values.cName : udnPlaceholder
       }
     })
 
     const gtmConfig = {
       rules,
+      ttl: values.ttl,
       title: values.cName,
       customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
       policy_name: propertyId,
@@ -138,6 +142,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     }
 
     console.log(gtmConfig, values);
+    this.props.updateGtm(propertyServiceType, gtmConfig)
   }
 
   render() {
@@ -277,7 +282,26 @@ class ConfigurationGlobalTrafficManager extends React.Component {
                 }
               </Col>
             </FormGroup>
-            <Button type="submit">asdasdads</Button>
+          </Row>
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />
+                </ControlLabel>
+              </Col>
+              <Col xs={2}>
+                {readOnly
+                  ? initialValues.ROWToggle
+                  : <Field
+                    name="ttl"
+                    addonAfter={<FormattedMessage id="portal.units.seconds" />}
+                    component={FieldFormGroupNumber}
+                    readonly={isFormDisabled}
+                  />
+                }
+              </Col>
+            </FormGroup>
           </Row>
         </SectionContainer>
 
@@ -290,6 +314,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
               </Button>
             </IsAllowed>
           }
+          <Button type="submit">asdasdads</Button>
         </SectionHeader>
 
         <SectionContainer>
@@ -339,7 +364,8 @@ const mapStateToProps = (state, { params: { property } }) => {
 
 const dispatchToProps = (dispatch, { params }) => {
   return {
-    fetchGtm: service => dispatch(gtmActions.fetchOne({ ...params, service }))
+    fetchGtm: service => dispatch(gtmActions.fetchOne({ ...params, service })),
+    updateGtm: (service, payload) => dispatch(gtmActions.update({ ...params, service, payload }))
   }
 }
 

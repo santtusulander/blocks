@@ -103,6 +103,7 @@ export const formatConfigToInitialValues = (state, propertyId) => {
 
     return {
       GTMToggle: true,
+      ttl: gtmConfig.get('ttl'),
       cdnName: thirdPartyCDNName,
       cName: gtmConfig.get('title'),
       ROWToggle: rowServedByThirdParty,
