@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { SubmissionError, formValueSelector } from 'redux-form'
 import { Map } from 'immutable'
 
-import { buildReduxId } from '../../../redux/util'
+import { buildReduxId, parseResponseError } from '../../../redux/util'
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
@@ -98,7 +98,7 @@ class StorageFormContainer extends React.Component {
         this.showNotification(statusMessage)
         this.props.onCancel();
       }).catch(resp => {
-        throw new SubmissionError({ _error: resp.data.message })
+        throw new SubmissionError({ _error: parseResponseError(resp) })
       })
   }
 
@@ -117,7 +117,7 @@ class StorageFormContainer extends React.Component {
         this.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
         this.props.onCancel()
       }).catch(resp => {
-        throw new SubmissionError({ _error: resp.data.message })
+        throw new SubmissionError({ _error: parseResponseError(resp) })
       })
   }
 

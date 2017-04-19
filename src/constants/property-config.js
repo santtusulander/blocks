@@ -74,6 +74,11 @@ export const availableMatches = [
     compatibleWith: [POLICY_TYPES.REQUEST],
     servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
   },
+  {
+    key: 'response_code',
+    name: 'portal.policy.edit.matchesSelection.responseCode.text',
+    compatibleWith: [POLICY_TYPES.RESPONSE]
+  },
   { // File Name (not yet implemented on backend)
     key: 'File Name',
     name: 'portal.policy.edit.matchesSelection.fileName.text',
@@ -112,9 +117,14 @@ export const availableActions = [
   },
   {
     key: 'reply',
-    name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
+    name: 'portal.policy.edit.actionSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
+  },
+  {
+    key: 'negative_cache',
+    name: 'portal.policy.edit.actionSelection.negativeCache.text',
+    compatibleWith: [POLICY_TYPES.RESPONSE]
   },
   {
     key: null,

@@ -9,6 +9,8 @@ import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { parseResponseError } from '../../../redux/util'
+
 import ModalWindow from '../../../components/shared/modal'
 import CertificateFormContainer from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
@@ -64,7 +66,7 @@ class TabSslCertificate extends Component {
         if (res.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.security.ssl.updateFailed.text'},
-                                {reason: res.payload.data.message}))
+                                {reason: parseResponseError(res.payload)}))
         } else {
           this.showNotification(<FormattedMessage id="portal.security.ssl.sslIsRemoved.text" />)
         }

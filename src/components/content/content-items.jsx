@@ -2,6 +2,7 @@ import React from 'react'
 import d3 from 'd3'
 import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
+
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl';
 
@@ -11,13 +12,15 @@ import {
 } from '../../constants/account-management-options'
 
 import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID } from '../../constants/service-permissions'
-import sortOptions from '../../constants/content-item-sort-options'
+import sortOptions, {PAGE_SIZE, MAX_PAGINATION_ITEMS} from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
   getAnalyticsUrl
 } from '../../util/routes'
 
 import { userIsCloudProvider, hasService } from '../../util/helpers'
+
+import { parseResponseError } from '../../redux/util'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -27,7 +30,7 @@ import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
-import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
+import StorageListContainer from '../../containers/storage-item-containers/storage-list-container'
 
 import PropertyItemContainer from '../../containers/content/property-item-container'
 
@@ -52,6 +55,8 @@ import EntityEdit from '../../components/account-management/entity-edit'
 import SidePanel from '../shared/side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
+import Paginator from '../shared/paginator/paginator'
+
 const rangeMin = 400
 const rangeMax = 500
 
@@ -68,6 +73,19 @@ const sortContent = (path, direction) => (item1, item2) => {
     return -1 * direction
   }
   return 0
+}
+
+/**
+ * Slice current page out of contentItems
+ * @param  {List} items
+ * @param  {Number} page
+ * @param  {Number} limit
+ * @return {List} sliced list section
+ */
+const getPage = (items, page, limit) => {
+  const offset = (page - 1) * limit
+
+  return items.slice(offset, offset + limit)
 }
 
 class ContentItems extends React.Component {
@@ -93,6 +111,8 @@ class ContentItems extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
+    this.onActivePageChange = this.onActivePageChange.bind(this)
+
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
       handleClick: this.addItem
@@ -101,6 +121,18 @@ class ContentItems extends React.Component {
       handleClick: this.showStorageModal
     }]
   }
+
+  /**
+   * Pushes ?page= -param to url for pagination
+   */
+  onActivePageChange(nextPage) {
+    this.props.router.push({
+      query: {
+        page: nextPage
+      }
+    })
+  }
+
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
       null, Immutable.Map({ totalTraffic: 0 }))
@@ -343,6 +375,7 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
+
     const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
     const groupHasMediaDeliveryService = hasService(activeGroup, MEDIA_DELIVERY_SERVICE_ID)
@@ -367,6 +400,22 @@ class ContentItems extends React.Component {
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
+
+    const location = this.context.location
+    const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
+
+    const paginationProps = {
+      activePage: currentPage,
+      items: Math.floor(contentItems.count() / PAGE_SIZE),
+      onSelect: this.onActivePageChange,
+      maxButtons: MAX_PAGINATION_ITEMS,
+      boundaryLinks: true,
+      first: true,
+      last: true,
+      next: true,
+      prev: true
+    }
+
 
     if (!fetchingMetrics) {
       trafficMin = Math.min(...trafficTotals)
@@ -501,7 +550,7 @@ class ContentItems extends React.Component {
                 }
 
                 {/* OTHER ContentItems (brand / accouts / groups) */}
-                { properties.isEmpty() && storages.isEmpty() && contentItems.map(content => {
+                { properties.isEmpty() && storages.isEmpty() && getPage(contentItems, currentPage, PAGE_SIZE).map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
                   const isTrialHost = item.get('isTrialHost')
@@ -546,6 +595,12 @@ class ContentItems extends React.Component {
                       deleteItem={this.props.deleteItem}/>
                   )
                 })}
+
+
+                {/* Show Pagination if more items than fit on PAGE_SIZE */
+                  contentItems && contentItems.count() > PAGE_SIZE &&
+                  <Paginator {...paginationProps} />
+                }
               </div>
           )}
 
@@ -664,6 +719,10 @@ ContentItems.defaultProps = {
   properties: Immutable.List(),
   user: Immutable.Map(),
   storagePermission: {}
+}
+
+ContentItems.contextTypes = {
+  location: React.PropTypes.object
 }
 
 export default withRouter(ContentItems)

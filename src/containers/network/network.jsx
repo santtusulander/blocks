@@ -61,7 +61,7 @@ import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/sele
 
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
-import { buildReduxId } from '../../redux/util'
+import { buildReduxId, parseResponseError } from '../../redux/util'
 
 import Content from '../../components/shared/layout/content'
 import PageContainer from '../../components/shared/layout/page-container'
@@ -908,7 +908,7 @@ class Network extends React.Component {
           />
         }
 
-        {networkModal === EDIT_NODE &&
+        {networkModal === EDIT_NODE && this.state.nodeId &&
           <EditNodeContainer
             id="edit-node-form"
             nodeIds={this.state.nodeId}

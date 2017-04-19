@@ -28,3 +28,15 @@ export default [
     direction: -1
   }
 ]
+
+/**
+ * Number of Starbursts / page
+ * @type {Number}
+ */
+export const PAGE_SIZE = 9
+
+/**
+ * Number of pagination links / paginator
+ * @type {Number}
+ */
+export const MAX_PAGINATION_ITEMS = 6

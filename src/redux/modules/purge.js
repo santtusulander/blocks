@@ -3,7 +3,7 @@ import axios from 'axios'
 import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
-import { BASE_URL_NORTH, mapReducers } from '../util'
+import { BASE_URL_NORTH, mapReducers, parseResponseError } from '../util'
 
 const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'
@@ -121,7 +121,7 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
   })
   .then((res) => ({ ...newPurge, ...res.data }))
   .catch(res => {
-    return new Error(res.data.message)
+    return new Error(parseResponseError(res))
   })
 })
 

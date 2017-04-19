@@ -8,6 +8,8 @@ import { injectIntl } from 'react-intl'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { parseResponseError } from '../../../redux/util'
+
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
@@ -79,7 +81,7 @@ class FootprintFormContainer extends React.Component {
         return this.props.onCancel()
       }).catch(response => {
 
-        throw new SubmissionError({ '_error': response.data.message })
+        throw new SubmissionError({'_error': parseResponseError(response)})
 
       })
   }
@@ -103,7 +105,7 @@ class FootprintFormContainer extends React.Component {
 
         return this.props.onCancel()
       }).catch(response => {
-        throw new SubmissionError({ '_error': response.data.message })
+        throw new SubmissionError({'_error': parseResponseError(response)})
       })
   }
 
@@ -120,7 +122,7 @@ class FootprintFormContainer extends React.Component {
         //return this.props.handleFootprintSaveResponse(res)
       }).catch(res => {
 
-        throw new SubmissionError({ '_error': res.data.message })
+        throw new SubmissionError({'_error': parseResponseError(res)})
 
       })
   }

@@ -17,6 +17,10 @@
 
       .modal-body {
         overflow-x: hidden;
+
+        .form-control {
+          height: 36px;
+        }
       }
 
       .modal-footer {

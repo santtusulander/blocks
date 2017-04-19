@@ -17,6 +17,7 @@ import PurgeModal from '../../components/content/property/purge-modal'
 import ModalWindow from '../../components/shared/modal'
 
 import { getContentUrl } from '../../util/routes'
+import { parseResponseError } from '../../redux/util'
 
 export class Property extends React.Component {
   constructor(props) {
@@ -61,7 +62,7 @@ export class Property extends React.Component {
     .then(({ payload }) => {
       const getMessage = () => {
         return payload instanceof Error
-        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/>
+        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: parseResponseError(payload)}}/>
         : <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
       }
 

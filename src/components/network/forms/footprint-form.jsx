@@ -108,6 +108,7 @@ class FootprintForm extends React.Component {
     this.onShowFileUploadDialog = this.onShowFileUploadDialog.bind(this)
   }
 
+  /* istanbul ignore next */
   validateCSV(file, cb) {
     Papa.parse(file, {complete: ({data, errors}) => {
 

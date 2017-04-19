@@ -6,7 +6,8 @@ import {
   getAnalyticsUrl,
   getAnalyticsUrlFromParams,
   getNetworkUrl,
-  getContentUrl
+  getContentUrl,
+  getAccountManagementUrlFromParams
 } from '../../util/routes.js'
 import { getRoute } from '../../util/routes'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
@@ -138,7 +139,20 @@ class BreadcrumbsItem extends React.Component {
         url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
       })
     } else if (new RegExp(getRoute('accountManagement'), 'g').test(pathname)) {
-      links.push({label: <FormattedMessage id="portal.header.accountManagement.text"/>})
+      /*
+        Show group in breadcrumb in properties & storage tabs.
+      */
+      const baseAccUrl = getAccountManagementUrlFromParams(params)
+      if (router.isActive(`${baseAccUrl}/properties`) ||
+          router.isActive(`${baseAccUrl}/storage`)) {
+        this.addGroupLink(props, links, getContentUrl)
+      }
+
+      links.push({
+        label: <FormattedMessage id="portal.account.manage.accountManagement.title"/>,
+        url: links.length > 0 ? getAccountManagementUrlFromParams({ brand: params.brand, account: params.account }) : null
+      })
+
     } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
       links.push({label: <FormattedMessage id="portal.header.services.text"/>})
     } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {

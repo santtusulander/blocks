@@ -11,6 +11,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 // import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { parseResponseError } from '../../../redux/util'
+
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
@@ -118,7 +120,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   newUser({ email, roles }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
+    const { createUser, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -126,9 +128,9 @@ export class AccountManagementAccountUsers extends Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    return createUser(requestBody).then(res => {
+    return createUser({payload: requestBody}).then(res => {
       if (res.error) {
-        throw new SubmissionError({email: res.payload.message})
+        throw new SubmissionError({email: parseResponseError(res.payload)})
       } else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
@@ -271,7 +273,7 @@ export class AccountManagementAccountUsers extends Component {
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
     } else {
-      this.props.deleteUser({id: user})
+      this.props.deleteUser(user)
     }
   }
 
@@ -290,7 +292,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   saveUser(user) {
-    return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
+    return this.props.updateUser({id: this.state.userToEdit.get('email'), payload: user})
       .then((response) => {
         if (!response.error) {
           this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
@@ -515,6 +517,7 @@ export class AccountManagementAccountUsers extends Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
+  createUser: PropTypes.func,
   currentUser: PropTypes.string,
   deleteUser: PropTypes.func,
   fetchGroups: PropTypes.func,
@@ -531,7 +534,7 @@ AccountManagementAccountUsers.propTypes = {
   router: PropTypes.object,
   showNotification: PropTypes.func,
   uiActions: PropTypes.object,
-  userActions: PropTypes.object,
+  updateUser: PropTypes.func,
   users: PropTypes.instanceOf(List)
 }
 
@@ -563,7 +566,9 @@ const mapDispatchToProps = (dispatch) => {
 
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
-    fetchUsers: (params) => dispatch(usersActions.fetchAll(params))
+    fetchUsers: (params) => dispatch(usersActions.fetchAll(params)),
+    createUser: (user) => dispatch(usersActions.create(user)),
+    updateUser: (user) => dispatch(usersActions.update(user))
   };
 }
 

@@ -15,7 +15,6 @@ import {
 
 import { getLocationPermissions } from '../../util/permissions'
 
-import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as permissionsActionCreators from '../../redux/modules/permissions'
@@ -23,10 +22,12 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import { parseResponseError } from '../../redux/util'
 
-import accountsActions from '../../redux/modules/entities/accounts/actions'
+import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 import groupActionCreators from '../../redux/modules/entities/groups/actions'
+import usersActions from '../../redux/modules/entities/users/actions'
 
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
@@ -86,6 +87,7 @@ export class AccountManagement extends Component {
     this.showGroupModal = this.showGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
+    this.deleteAccount = this.deleteAccount.bind(this)
   }
 
   editSOARecord() {
@@ -119,9 +121,30 @@ export class AccountManagement extends Component {
   }
 
   deleteUser() {
-    const { userActions: { deleteUser } } = this.props
-    return deleteUser(this.userToDelete)
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteUser(this.userToDelete)
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+      })
+  }
+
+  deleteAccount(brandId, accountId, router) {
+    return this.props.accountActions.remove({brand: brandId, id: accountId})
+      .then(() => {
+        this.props.toggleModal(null)
+        router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      })
+      .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+      .catch(response => {
+        // Hide the delete modal.
+        this.props.toggleModal(null)
+        this.props.uiActions.showInfoDialog({
+          title: <FormattedMessage id="portal.errorModal.error.text" />,
+          content: response.data.message,
+          okButton: true,
+          cancel: () => this.props.uiActions.hideInfoDialog()
+        })
+      })
   }
 
   addGroupToActiveAccount({ data, usersToAdd }) {
@@ -218,13 +241,13 @@ export class AccountManagement extends Component {
 
   editAccount(brandId, accountId, data) {
     if (accountId) {
-      return this.props.accountActions.updateAccount(brandId, accountId, data)
+      return this.props.accountActions.update({brand: brandId, id: accountId, payload: data})
         .then(() => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.accountUpdated.text"/>)
         })
     } else {
-      return this.props.accountActions.createAccount(brandId, data)
+      return this.props.accountActions.create({brand: brandId, payload: data})
         .then(() => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.accountCreated.text"/>)
@@ -239,7 +262,7 @@ export class AccountManagement extends Component {
   }
 
   addAccount(brand, data) {
-    return this.props.accountActions.createAccount(brand, data).then(
+    return this.props.accountActions.create({ brand: brand, payload: data}).then(
       action => {
         this.props.router.push(`/account-management/${brand}/${action.payload.id}`)
         this.showNotification(`Account ${data.name} created.`)
@@ -296,7 +319,6 @@ export class AccountManagement extends Component {
       params,
       accountManagementModal,
       toggleModal,
-      onDelete,
       activeAccount,
       router
       //dnsData
@@ -319,8 +341,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           cancel: () => toggleModal(null),
           onSubmit: () => {
-            onDelete(brand, this.state.accountToDelete, router)
-              .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+            this.deleteAccount(brand, this.state.accountToDelete, router)
           }
         }
         break
@@ -534,10 +555,10 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
+  deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   intl: PropTypes.object,
-  onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
@@ -571,51 +592,27 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const permissionsActions = bindActionCreators(permissionsActionCreators, dispatch)
   const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const userActions = bindActionCreators(userActionCreators, dispatch)
-  const toggleModal = uiActions.toggleAccountManagementModal
-
-  function onDelete(brandId, accountId, router) {
-    // Delete the account.
-    return accountActions.deleteAccount(brandId, accountId)
-      .then((response) => {
-        if (!response.error) {
-          toggleModal(null)
-          // Clear active account and redirect user to brand level account management.
-          accountActions.clearActiveAccount()
-          router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
-        } else {
-          // Hide the delete modal.
-          toggleModal(null)
-          uiActions.showInfoDialog({
-            title: 'Error',
-            content: response.payload.data.message,
-            okButton: true,
-            cancel: () => uiActions.hideInfoDialog()
-          })
-        }
-      })
-  }
 
   return {
     accountActions: accountActions,
     changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
-    fetchActiveAccount: (params) => dispatch(accountsActions.fetchOne(params)),
     groupActions: groupActions,
     hostActions: hostActions,
     permissionsActions: permissionsActions,
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
-    onDelete
+    deleteUser: (id) => dispatch(usersActions.remove({id}))
   };
 }
 
