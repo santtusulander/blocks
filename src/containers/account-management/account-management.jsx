@@ -87,6 +87,7 @@ export class AccountManagement extends Component {
     this.showGroupModal = this.showGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
+    this.deleteAccount = this.deleteAccount.bind(this)
   }
 
   editSOARecord() {
@@ -124,6 +125,25 @@ export class AccountManagement extends Component {
       .then(() => {
         this.props.toggleModal(null)
         this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+      })
+  }
+
+  deleteAccount(brandId, accountId, router) {
+    return this.props.accountActions.remove({brand: brandId, id: accountId})
+      .then(() => {
+        this.props.toggleModal(null)
+        router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      })
+      .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+      .catch(response => {
+        // Hide the delete modal.
+        this.props.toggleModal(null)
+        this.props.uiActions.showInfoDialog({
+          title: <FormattedMessage id="portal.errorModal.error.text" />,
+          content: response.data.message,
+          okButton: true,
+          cancel: () => this.props.uiActions.hideInfoDialog()
+        })
       })
   }
 
@@ -299,7 +319,6 @@ export class AccountManagement extends Component {
       params,
       accountManagementModal,
       toggleModal,
-      onDelete,
       activeAccount,
       router
       //dnsData
@@ -322,8 +341,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           cancel: () => toggleModal(null),
           onSubmit: () => {
-            onDelete(brand, this.state.accountToDelete, router)
-              .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+            this.deleteAccount(brand, this.state.accountToDelete, router)
           }
         }
         break
@@ -540,7 +558,6 @@ AccountManagement.propTypes = {
   deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
-  onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
@@ -582,26 +599,6 @@ function mapDispatchToProps(dispatch) {
   const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const userActions = bindActionCreators(userActionCreators, dispatch)
-  const toggleModal = uiActions.toggleAccountManagementModal
-
-  function onDelete(brandId, accountId, router) {
-    // Delete the account.
-    return accountActions.remove({brand: brandId, id: accountId})
-      .then(() => {
-        toggleModal(null)
-        router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
-      })
-      .catch(response => {
-        // Hide the delete modal.
-        toggleModal(null)
-        uiActions.showInfoDialog({
-          title: 'Error',
-          content: response.data.message,
-          okButton: true,
-          cancel: () => uiActions.hideInfoDialog()
-        })
-      })
-  }
 
   return {
     accountActions: accountActions,
@@ -614,8 +611,7 @@ function mapDispatchToProps(dispatch) {
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
-    deleteUser: (id) => dispatch(usersActions.remove({id})),
-    onDelete
+    deleteUser: (id) => dispatch(usersActions.remove({id}))
   };
 }
 
