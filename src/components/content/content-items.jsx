@@ -20,6 +20,8 @@ import {
 
 import { userIsCloudProvider, hasService } from '../../util/helpers'
 
+import { parseResponseError } from '../../redux/util'
+
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
@@ -28,7 +30,7 @@ import PageContainer from '../shared/layout/page-container'
 import AccountSelector from '../global-account-selector/account-selector-container'
 
 import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
-import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
+import StorageListContainer from '../../containers/storage-item-containers/storage-list-container'
 
 import PropertyItemContainer from '../../containers/content/property-item-container'
 
@@ -175,7 +177,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
@@ -194,7 +196,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
@@ -213,7 +215,7 @@ class ContentItems extends React.Component {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
-            content: payload.data.message,
+            content: parseResponseError(payload),
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })

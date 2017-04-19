@@ -16,7 +16,7 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import { buildReduxId } from '../../../redux/util'
+import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
@@ -102,7 +102,7 @@ class NetworkFormContainer extends React.Component {
         this.props.onCancel();
       })
       .catch(response => {
-        throw new SubmissionError({ _error: response.data.message })
+        throw new SubmissionError({_error: parseResponseError(response)})
       })
   }
 
@@ -134,7 +134,7 @@ class NetworkFormContainer extends React.Component {
         this.props.onCancel()
       })
       .catch(resp => {
-        throw new SubmissionError({ _error: resp.data.message })
+        throw new SubmissionError({_error: parseResponseError(resp)})
       })
   }
 

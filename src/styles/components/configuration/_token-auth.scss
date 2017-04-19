@@ -40,7 +40,7 @@ $input-height: 36px;
   }
 
   .light-theme & {
-    background-color: $grey-20;
+    background-color: rgba($black, 0.04);
   }
 
   &--name {

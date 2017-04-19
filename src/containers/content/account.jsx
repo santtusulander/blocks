@@ -29,6 +29,8 @@ import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import { parseResponseError } from '../../redux/util'
+
 //TODO: UDNP-3177 Remove when fetchItem is not needed anymore
 import * as groupActionCreators from '../../redux/modules/group'
 
@@ -138,7 +140,7 @@ export class Account extends React.Component {
         this.props.toggleDeleteConfirmationModal(null)
         this.props.uiActions.showInfoDialog({
           title: 'Error',
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })

@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
@@ -19,6 +20,7 @@ import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
+import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
 import { hasService } from '../util/helpers'
@@ -156,7 +158,7 @@ export class Configuration extends React.Component {
       if (action.error) {
         this.showNotification(this.props.intl.formatMessage(
                               {id: 'portal.configuration.updateFailed.text'},
-                              {reason: action.payload.data.message}))
+                              {reason: parseResponseError(action.payload)}))
       } else {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
@@ -225,7 +227,7 @@ export class Configuration extends React.Component {
         if (action.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.retireFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
@@ -235,7 +237,7 @@ export class Configuration extends React.Component {
           this.togglePublishModal()
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.publishFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.togglePublishModal()
           this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
@@ -272,6 +274,8 @@ export class Configuration extends React.Component {
     const serviceTypeText = formatMessage({ id: serviceTypes[serviceType] || serviceTypes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
+    const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
+
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -367,14 +371,14 @@ export class Configuration extends React.Component {
             </li>
           }
 
-          <li data-eventKey='gtm'>
+          <li data-eventKey='gtm' className={classNames({ disabled: diff })}>
             <Link to={baseUrl + '/gtm'} activeClassName="active">
             <FormattedMessage id="portal.configuration.gtm.text" />
             </Link>
           </li>
 
           <IsAdmin>
-            <li data-eventKey='advanced'>
+            <li data-eventKey='advanced' className={classNames({ disabled: diff })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
@@ -446,7 +450,7 @@ export class Configuration extends React.Component {
                 if (action.error) {
                   this.showNotification(this.props.intl.formatMessage(
                                         {id: 'portal.configuration.deleteFailed.text'},
-                                        {reason: action.payload.data.message}))
+                                        {reason: parseResponseError(action.payload)}))
                 } else {
                   this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text"/>)
                   router.push(getContentUrl('group', group, { brand, account }))

@@ -30,6 +30,8 @@ import { isUdnAdmin } from '../../../redux/modules/user'
 
 import NetworkLocationFormContainer from '../../network/modals/location-modal'
 
+import { parseResponseError } from '../../../redux/util'
+
 import {
   accountIsContentProviderType,
   accountIsServiceProviderType
@@ -183,7 +185,7 @@ class GroupFormContainer extends React.Component {
             if (res.error) {
               uiActions.showInfoDialog({
                 title: 'Error',
-                content: res.payload.data.message,
+                content: parseResponseError(res.payload),
                 buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
                   id="portal.accountManagement.accoutnUpdated.text"/></Button>
               })
