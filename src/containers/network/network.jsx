@@ -372,7 +372,6 @@ class Network extends React.Component {
     } else {
       return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload.data)
         .then(action => {
-          // this.props.hostActions.clearFetchedHosts()
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupCreated.text"/>)
           return action.payload
@@ -990,8 +989,9 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account /*, group, network , pop, pod */} = ownProps.params
+  const { brand, account } = ownProps.params
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)

@@ -111,7 +111,6 @@ User.propTypes = {
   currentUserRoleName: PropTypes.string,
   fetchRoleNames: PropTypes.func,
   intl: PropTypes.object,
-  //roles: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
   userActions: PropTypes.object
 }

@@ -278,7 +278,6 @@ export class Configuration extends React.Component {
 
     return (
       <Content>
-        {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
@@ -330,21 +329,6 @@ export class Configuration extends React.Component {
               </IsAllowed>
               : null
             }
-            {/* Hide in 1.0 – UDNP-1406
-            <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-              <FormattedMessage id="portal.button.copy"/>
-            </Button>
-            {activeEnvironment === 2 || activeEnvironment === 3 ?
-              <Button bsStyle="primary"
-                onClick={() => this.changeActiveVersionEnvironment(1)}>
-                <FormattedMessage id="portal.button.retire"/>
-              </Button>
-              : null
-            }
-            <Button bsStyle="primary" onClick={this.toggleVersionModal}>
-              <FormattedMessage id="portal.button.versions"/>
-            </Button>
-            */}
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
@@ -384,21 +368,6 @@ export class Configuration extends React.Component {
               </Link>
             </li>
           </IsAdmin>
-
-          {/* Hide in 1.0 – UDNP-1406
-          <li data-eventKey={'performance'}>
-            <FormattedMessage id="portal.configuration.performance.text"/>
-          </li>
-          <li data-eventKey={'security'}>
-            <FormattedMessage id="portal.configuration.security.text"/>
-          </li>
-          <li data-eventKey={'certificates'}>
-            <FormattedMessage id="portal.configuration.certificates.text"/>
-          </li>
-          <li data-eventKey={'change-log'}>
-            <FormattedMessage id="portal.configuration.changeLog.text"/>
-          </li>
-          */}
         </Tabs>
 
         <PageContainer>

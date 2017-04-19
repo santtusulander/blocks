@@ -64,21 +64,6 @@ class Header extends React.Component {
             />
           </ul>
           <ul className="header__right nav navbar-nav navbar-right">
-            {/* Hide in 1.0 UDNP-1409
-            <li>
-              <Button className="btn-header btn-icon btn-round btn-alerts">
-                <IconAlerts />
-                <span className="btn-alerts-indicator" />
-              </Button>
-            </li>
-            <li>
-              <Button className="btn-header btn-icon btn-round btn-help"><IconQuestionMark /></Button>
-            </li>
-            <li>
-              <Input className="header-search-input"
-                type="text" placeholder="Search" />
-            </li>
-            */}
             <li>
               <UserMenu
                 handleThemeChange={this.handleThemeChange}

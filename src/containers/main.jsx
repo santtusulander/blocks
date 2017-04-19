@@ -300,7 +300,7 @@ Main.childContextTypes = {
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
-  const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params
+  const {brand = 'udn', account, group, property } = ownProps.params
   const {entities, ...rest} = state
 
   const stateMap = Map(rest)
