@@ -24,6 +24,14 @@ class TabTokenAuthentication extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { brand, account, group } = nextProps.params
+
+    if (group && group !== this.props.params.group) {
+      this.fetchData(brand, account, group)
+    }
+  }
+
   fetchData(brand, account, group) {
     this.props.fetchProperties({ brand, account, group })
   }
