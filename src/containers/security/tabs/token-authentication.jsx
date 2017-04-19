@@ -1,15 +1,10 @@
 import React, { PropTypes, Component } from 'react'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
-
-import accountActions from '../../../redux/modules/entities/accounts/actions'
-import { getById } from '../../../redux/modules/entities/accounts/selectors'
-
-import groupActions from '../../../redux/modules/entities/groups/actions'
-import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { FormattedMessage } from 'react-intl'
 
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import { getByGroup as getPropertiesByGroup, getByAccount as getPropetiesByAccount } from '../../../redux/modules/entities/properties/selectors'
+import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 
 import { getTokenAuthRules } from '../../../util/policy-config'
 import { getContentUrl, getRoute } from '../../../util/routes'
@@ -23,25 +18,22 @@ const REQUEST_TAG = 'req-token-auth'
 
 class TabTokenAuthentication extends Component {
   componentWillMount() {
-    this.fetchData()
+    const { brand, account, group } = this.props.params
+    if (group) {
+      this.fetchData(brand, account, group)
+    }
   }
 
-  fetchData() {
-    const {brand,account, group} = this.props.params
+  componentWillReceiveProps(nextProps) {
+    const { brand, account, group } = nextProps.params
 
-    if (group) {
-      this.props.fetchProperties({brand, account, group})
-    } else {
-      /* Fetch all groups and properties */
-      this.props.fetchGroups(this.props.params)
-        .then(() => {
-          this.props.groups.map((group) => {
-            this.props.fetchProperties({brand, account, group: group.get('id')})
-
-            return false
-          })
-        })
+    if (group && group !== this.props.params.group) {
+      this.fetchData(brand, account, group)
     }
+  }
+
+  fetchData(brand, account, group) {
+    this.props.fetchProperties({ brand, account, group })
   }
 
   render() {
@@ -66,6 +58,12 @@ class TabTokenAuthentication extends Component {
     const tokenAuthRules = getTokenAuthRules(properties.toJS())
 
     return (
+      !this.props.params.group
+        ?
+          <p className='text-center'>
+            <FormattedMessage id='portal.security.tokenAuth.selectGroup.text' />
+          </p>
+        :
           <TokenAuthList rules={tokenAuthRules} editUrlBuilder={editUrlBuilder}/>
     )
 
@@ -75,9 +73,7 @@ class TabTokenAuthentication extends Component {
 TabTokenAuthentication.displayName = 'TabTokenAuthentication'
 
 TabTokenAuthentication.propTypes = {
-  fetchGroups: PropTypes.func,
   fetchProperties: PropTypes.func,
-  groups: PropTypes.instanceOf(List),
   isFetching: PropTypes.bool,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List)
@@ -88,24 +84,18 @@ TabTokenAuthentication.defaultProps = {
 }
 
 /* istanbul ignore next */
-const mapStateToProps = (state, ownProps) => {
-  const {params: {account, group} } = ownProps
-
-  return {
-    account: getById(state, account),
-    groups: getGroupsByAccount(state, account),
-    properties: group ? getPropertiesByGroup(state, group) : getPropetiesByAccount(state, account),
+const mapStateToProps = (state, ownProps) => (
+  {
+    properties: getPropertiesByGroup(state, ownProps.params.group),
     isFetching: getFetchingByTag(state, REQUEST_TAG)
   }
-}
+)
 
 /* istanbul ignore next */
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, requestTag: REQUEST_TAG})),
-    fetchGroups: (params) => dispatch(groupActions.fetchAll({...params, requestTag: REQUEST_TAG})),
+const mapDispatchToProps = (dispatch) => (
+  {
     fetchProperties: (params) => dispatch(propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true}))
   }
-}
+)
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabTokenAuthentication)
