@@ -101,3 +101,14 @@ export const buildReduxId = (...ids) => {
     return reduxId.concat(parentId + '-')
   }, '')
 }
+
+/**
+ * Get error message form failed axios response
+ * @param {Error} error - axios error
+ * @return {*}
+ */
+export const parseResponseError = (error) => {
+  const { response, message } = error
+
+  return  response ? response.data.message : message
+}

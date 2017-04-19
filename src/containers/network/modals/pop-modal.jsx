@@ -27,7 +27,7 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import { buildReduxId } from '../../../redux/util'
+import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 import checkPermissions from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
@@ -131,7 +131,7 @@ class PopFormContainer extends Component {
         this.props.onCancel();
       }).catch(resp => {
 
-        throw new SubmissionError({'_error': resp.data.message})
+        throw new SubmissionError({'_error': parseResponseError(resp)})
 
       })
   }
@@ -160,7 +160,7 @@ class PopFormContainer extends Component {
         this.props.onCancel();
       }).catch(resp => {
         // Throw error => will be shown inside form
-        throw new SubmissionError({'_error': resp.data.message})
+        throw new SubmissionError({'_error': parseResponseError(resp)})
       })
   }
 

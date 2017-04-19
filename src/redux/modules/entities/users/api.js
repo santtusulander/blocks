@@ -41,9 +41,9 @@ export const create = ({payload}) => {
 }
 
 export const update = ({id, payload}) => {
-  return axios.post(`${baseURL()}/${id}`,  payload, { headers: { 'Content-Type': 'application/json' } })
+  return axios.put(`${baseURL()}/${id}`,  payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({data}) => {
-      return normalize(data.data, userSchema)
+      return normalize(data, userSchema)
     })
 }
 

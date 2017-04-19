@@ -22,10 +22,12 @@ import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import { parseResponseError } from '../../redux/util'
 
 import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 import groupActionCreators from '../../redux/modules/entities/groups/actions'
+import usersActions from '../../redux/modules/entities/users/actions'
 
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
@@ -118,9 +120,11 @@ export class AccountManagement extends Component {
   }
 
   deleteUser() {
-    const { userActions: { deleteUser } } = this.props
-    return deleteUser(this.userToDelete)
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteUser(this.userToDelete)
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+      })
   }
 
   addGroupToActiveAccount({ data, usersToAdd }) {
@@ -153,7 +157,7 @@ export class AccountManagement extends Component {
       if (response.error) {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
@@ -533,6 +537,7 @@ AccountManagement.propTypes = {
   // dnsActions: PropTypes.object,
   // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
+  deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   onDelete: PropTypes.func,
@@ -609,6 +614,7 @@ function mapDispatchToProps(dispatch) {
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
+    deleteUser: (id) => dispatch(usersActions.remove({id})),
     onDelete
   };
 }
