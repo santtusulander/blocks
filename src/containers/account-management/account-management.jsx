@@ -603,7 +603,6 @@ function mapDispatchToProps(dispatch) {
     changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
-    fetchActiveAccount: (params) => accountActions.fetch(params),
     groupActions: groupActions,
     hostActions: hostActions,
     permissionsActions: permissionsActions,
