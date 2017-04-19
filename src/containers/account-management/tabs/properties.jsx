@@ -82,7 +82,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.group !== this.props.params.group) {
+    if (nextProps.params.group && (nextProps.params.group !== this.props.params.group)) {
       const { params: { brand, account, group }, pagination: { getQueryParams } } = nextProps
       this.refreshData(brand, account, group, getQueryParams())
     }
