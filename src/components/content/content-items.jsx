@@ -403,10 +403,8 @@ class ContentItems extends React.Component {
     })
     .sort(sortContent(sortValuePath, sortDirection))
 
-    //const items = contentItems.
-
     const location = this.context.location
-    const currentPage = location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
+    const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
 
     const paginationProps = {
       activePage: currentPage,
