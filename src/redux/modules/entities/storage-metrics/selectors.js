@@ -39,6 +39,6 @@ export const getDataForStorageAnalysisChart = (state, { account, group, storage 
   return dataForChart
 }
 
-export const getByGroups = (state) => {
-  return state.entities['storageMetrics'].get('groupsData')
+export const getByGroup = (state) => {
+  return state.entities['storageMetrics'].get('groupData')
 }
