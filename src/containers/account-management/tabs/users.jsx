@@ -15,7 +15,7 @@ import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
 import usersActions from '../../../redux/modules/entities/users/actions'
-import { getByAccount } from '../../../redux/modules/entities/users/selectors'
+import { getByAccount, getByBrand } from '../../../redux/modules/entities/users/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
 import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
@@ -37,6 +37,7 @@ import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/shared/modal'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+//import Paginator from '../../../components/shared/paginator/paginator'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -78,8 +79,13 @@ export class AccountManagementAccountUsers extends Component {
     document.addEventListener('click', this.cancelAdding, false)
     const {router, route, params: { brand, account }} = this.props
 
-    this.props.fetchUsers({brand, account})
-    this.props.fetchGroups({brand, account})
+    if (account) {
+      this.props.fetchUsers({brand, account})
+      this.props.fetchGroups({brand, account})
+    } else {
+      this.props.fetchUsers({brand})
+    }
+
     this.props.fetchRoleNames()
 
     router.setRouteLeaveHook(route, this.shouldLeave)
@@ -523,13 +529,13 @@ AccountManagementAccountUsers.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const {account} = ownProps.params
+  const {brand, account} = ownProps.params
 
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
-    users: getByAccount(state, account),
+    users: account ? getByAccount(state, account) : getByBrand(state, brand),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
     groups: getGroupsByAccount(state, account)
