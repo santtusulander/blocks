@@ -272,6 +272,8 @@ export class AccountManagement extends Component {
       return 'users';
     } else if (router.isActive(`${baseUrl}/properties`)) {
       return 'properties';
+    } else if (router.isActive(`${baseUrl}/storage`)) {
+      return 'storage'
     }
 
     return '';
