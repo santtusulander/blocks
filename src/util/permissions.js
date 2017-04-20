@@ -84,8 +84,12 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn(['permissions', 'north', 'published_hosts', 'list', 'allowed'])
 
 // Account Permissions
-permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
+permissionMapping[PERMISSIONS.CREATE_ACCOUNT] =
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_ACCOUNT] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_ACCOUNT] =
+  (role) => role.getIn(['permissions', 'aaa', 'accounts', 'delete', 'allowed'])
 
 // Group Permissions
 permissionMapping[PERMISSIONS.CREATE_GROUP] =
@@ -135,6 +139,12 @@ permissionMapping[PERMISSIONS.DELETE_ZONE] =
 
 permissionMapping[PERMISSIONS.CREATE_RECORD] =
   (role) => role.getIn(['permissions', 'north', 'rr', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_RECORD] =
+  (role) => role.getIn(['permissions', 'north', 'rr', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_RECORD] =
+  (role) => role.getIn(['permissions', 'north', 'rr', 'delete', 'allowed'])
 
 //Security permissions
 permissionMapping[PERMISSIONS.DELETE_CERTIFICATE] =

@@ -392,7 +392,7 @@ export class AccountManagement extends Component {
             Edit activeAccount -button
             */
             account &&
-            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNTS}>
+            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNT}>
               <Button
                 bsStyle="primary"
                 className="btn-icon"

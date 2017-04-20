@@ -711,7 +711,7 @@ class Network extends React.Component {
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
             />
 
             <EntityList

@@ -12,7 +12,7 @@ import IsAllowed from '../is-allowed'
 
 import recordTypes, { recordFields } from '../../constants/dns-record-types'
 import { getRecordValueString } from '../../util/dns-records-helpers'
-import { CREATE_RECORD } from '../../constants/permissions'
+import { CREATE_RECORD, MODIFY_RECORD, DELETE_RECORD } from '../../constants/permissions'
 
 class DNSList extends Component {
 
@@ -58,6 +58,7 @@ class DNSList extends Component {
           {recordFields.prio.includes(record.type) && <td>{record.value.prio}</td>}
           <td className="nowrap-column">
             <ActionButtons
+              permissions={{ modify: MODIFY_RECORD, delete: DELETE_RECORD }}
               onEdit={() => onEditEntry(record.id)}
               onDelete={() => onDeleteEntry(record)}/>
           </td>

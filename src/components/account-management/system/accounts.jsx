@@ -8,6 +8,7 @@ import { withRouter } from 'react-router'
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../icons/icon-add'
+import IsAllowed from '../../../components/is-allowed'
 import ActionButtons from '../../../components/action-buttons'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
@@ -24,6 +25,7 @@ import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
 import {FormattedMessage} from 'react-intl';
+import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
 
 class AccountList extends Component {
   constructor(props) {
@@ -154,9 +156,11 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
-            <IconAdd/>
-          </Button>
+          <IsAllowed to={CREATE_ACCOUNT}>
+            <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
+              <IconAdd/>
+            </Button>
+          </IsAllowed>
         </SectionHeader>
         <table className="table table-striped cell-text-left">
           <thead >
@@ -183,6 +187,7 @@ class AccountList extends Component {
                 <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
                 <td className="nowrap-column">
                   <ActionButtons
+                    permissions={{ modify: MODIFY_ACCOUNT, delete: DELETE_ACCOUNT }}
                     onEdit={() => {this.props.editAccount(account)}}
                     onDelete={() => deleteAccount(account.get('id'))}/>
                 </td>

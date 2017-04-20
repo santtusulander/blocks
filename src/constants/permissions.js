@@ -46,7 +46,9 @@ export const VIEW_CONTENT_GROUPS = 'VIEW_CONTENT_GROUPS'
 export const VIEW_CONTENT_PROPERTIES = 'VIEW_CONTENT_PROPERTIES'
 
 // AAA Account Permissions
-export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
+export const CREATE_ACCOUNT = 'CREATE_ACCOUNT'
+export const MODIFY_ACCOUNT = 'MODIFY_ACCOUNT'
+export const DELETE_ACCOUNT = 'DELETE_ACCOUNT'
 
 // AAA Group Permissions
 export const CREATE_GROUP = 'CREATE_GROUP'
@@ -61,6 +63,8 @@ export const MODIFY_USER = 'MODIFY_USER'
 
 //DNS Permissions
 export const CREATE_RECORD = 'CREATE_RECORD'
+export const MODIFY_RECORD = 'MODIFY_RECORD'
+export const DELETE_RECORD = 'DELETE_RECORD'
 export const VIEW_DNS = 'VIEW_DNS'
 export const CREATE_ZONE = 'CREATE_ZONE'
 export const MODIFY_ZONE = 'MODIFY_ZONE'
