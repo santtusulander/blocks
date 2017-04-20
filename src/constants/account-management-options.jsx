@@ -7,6 +7,10 @@ export const ACCOUNT_TYPE_CONTENT_PROVIDER = 1;
 export const ACCOUNT_TYPE_SERVICE_PROVIDER = 2;
 export const ACCOUNT_TYPE_CLOUD_PROVIDER = 3;
 
+export const UDN_ADMIN_ACCOUNT_ID = 1;
+export const SUPER_ADMIN_ACCOUNT_ID = 9;
+export const UDN_USER_ACCOUNT_ID = 10;
+
 export const ACCOUNT_TYPES = [
   { value: ACCOUNT_TYPE_CONTENT_PROVIDER, label: 'Content Provider' },
   { value: ACCOUNT_TYPE_SERVICE_PROVIDER, label: 'Service Provider' },
@@ -37,7 +41,9 @@ export const ROLES_MAPPING = [
   { id: 2, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
   { id: 3, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
   { id: 4, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
-  { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
+  { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { id: 9, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
+  { id: 10, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] }
 ]
 
 export const FLOW_DIRECTION_TYPES = [
