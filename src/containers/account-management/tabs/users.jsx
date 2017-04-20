@@ -33,6 +33,7 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { UDN_ADMIN_ACCOUNT_ID, SUPER_ADMIN_ACCOUNT_ID } from '../../../constants/account-management-options'
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -131,12 +132,27 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   getRoleOptions(roleMapping, props) {
+    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => [
-        mapped_role.id,
-        props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+      .filter((roleToCheck) => {
+        // Don't allow UDN admin to create another UDN Admin or Super admin
+        // TODO: make dynamic check
+        if (String(currentUserRole) === String(UDN_ADMIN_ACCOUNT_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ACCOUNT_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ACCOUNT_ID))) {
+            return false
+          }
+        }
+
+        return true
+      })
+      .map((mapped_role) => {
+        return [
+          mapped_role.id,
+          props.roles.find(role => role.get('id') === mapped_role.id).get('name')
+        ]
+      })
   }
 
   getInlineAddFields() {
@@ -242,7 +258,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   deleteUser(user) {
-    if(user === this.props.currentUser) {
+    if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
@@ -474,7 +490,7 @@ export class AccountManagementAccountUsers extends React.Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
-  currentUser: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Map),
   deleteUser: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
@@ -495,7 +511,7 @@ function mapStateToProps(state) {
     form: state.form,
     roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
-    currentUser: state.user.get('currentUser').get('email'),
+    currentUser: state.user.get('currentUser'),
     permissions: state.permissions,
     groups: state.group.get('allGroups')
   }
