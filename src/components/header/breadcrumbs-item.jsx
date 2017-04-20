@@ -158,11 +158,10 @@ class BreadcrumbsItem extends React.Component {
     } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
       links.push({label: 'Services'})
     } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {
-      // links.push({label: 'Security'})
       this.addGroupLink(props, links, getSecurityUrl)
 
       links.push({
-        label: 'Security',
+        label: <FormattedMessage id="portal.header.security.text" />,
         url: links.length > 0 ? getSecurityUrlFromParams({ brand: params.brand, account: params.account }) : null
       })
 

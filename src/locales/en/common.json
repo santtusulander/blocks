@@ -264,6 +264,7 @@
   "portal.header.analytics.text": "Analytics",
   "portal.header.configuration.text": "Configuration",
   "portal.header.content.text": "Content",
+  "portal.header.security.text": "Security",
 
   "portal.header.menu.theme.title": "UI Theme",
   "portal.header.menu.theme.ericssonTitle.text": "Ericsson {themeTitle} theme",
