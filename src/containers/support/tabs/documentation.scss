@@ -1,0 +1,15 @@
+$base-margin: 12px;
+
+.account-support-documentation {
+
+  .section {
+    margin-bottom: $base-margin * 4;
+
+
+    .section-body {
+      margin-top: $base-margin;
+      margin-bottom: $base-margin * 2;
+    }
+  }
+
+}
