@@ -1,13 +1,13 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import PageContainer from '../../shared/layout/page-container'
 import LoadingSpinner from '../../loading-spinner/loading-spinner'
 import RolesList from '../role-edit/roles-list.jsx'
 
-import * as accountActionCreators from '../../../redux/modules/account'
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import roleNamesActions from '../../../redux/modules/entities/role-names/actions'
 
 class AccountManagementSystemRoles extends React.Component {
   constructor(props) {
@@ -25,10 +25,9 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   componentWillMount() {
-    const { accountActions } = this.props
 
-    accountActions.startFetching()
-    accountActions.fetchAccounts(this.props.params.brand)
+    this.props.fetchAccounts({ brand: this.props.params.brand})
+    this.props.fetchRoleNames()
   }
 
   showAddNewRoleDialog() {
@@ -72,7 +71,8 @@ class AccountManagementSystemRoles extends React.Component {
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
-  accountActions: React.PropTypes.object,
+  fetchAccounts: React.PropTypes.func,
+  fetchRoleNames: React.PropTypes.func,
   fetchingAccounts: React.PropTypes.bool,
   fetchingUsers: React.PropTypes.bool,
   params: React.PropTypes.object,
@@ -89,13 +89,15 @@ AccountManagementSystemRoles.defaultProps = {
 function mapStateToProps(state) {
   return {
     fetchingAccounts: state.account.get('fetching'),
-    fetchingUsers: state.user.get('fetching')
+    fetchingUsers: state.user.get('fetching'),
+    roles: state.entities.roleNames.toList()
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch)
+    fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
+    fetchRoleNames: () => dispatch(roleNamesActions.fetchAll({}))
   };
 }
 
