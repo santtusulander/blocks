@@ -1,6 +1,9 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
+import continentList from '../../../../constants/continents'
+import countryList from '../../../../constants/country-list'
+
 import * as entitySelectors from '../../entity/selectors'
 
 /*eslint-disable react/display-name*/
@@ -15,7 +18,7 @@ const labels = {
 
 export const getById = (state, propertyId) => entitySelectors.getEntityById(state, 'gtm', propertyId)
 
-export const formatConfigToInitialValues = (state, propertyId) => {
+export const formatConfigToInitialValues = (state, propertyId, formatMessage) => {
   const gtmConfig = getById(state, propertyId)
 
   if (gtmConfig) {
@@ -29,15 +32,16 @@ export const formatConfigToInitialValues = (state, propertyId) => {
 
       const hasNegativeMatch = rule.request_match.negative_match
 
-      if (!hasNegativeMatch) {
+      const matchType = rule.request_match.type
+      let matchValue = rule.request_match.value
+      let labelValue = matchValue
 
-        const matchType = rule.request_match.type
-        let matchValue = rule.request_match.value
-        let labelValue = matchValue
+      if (matchType === 'no_filter' && matchValue === '{%customer_cname%}') {
+        rowServedByThirdParty = true
+      }
 
-        if (matchType === 'no_filter' && matchValue === '{%customer_cname%}') {
-          rowServedByThirdParty = true
-        }
+      if (!hasNegativeMatch && rule.traffic_split_targets) {
+
         if (matchType === 'asn') {
 
           matchValue =
@@ -45,6 +49,15 @@ export const formatConfigToInitialValues = (state, propertyId) => {
             .find((asn) => asn.get('id') === rule.request_match.value).toJS()
 
           labelValue = matchValue.label
+
+        } else if (matchType === 'country') {
+
+          labelValue = countryList.find(({ id }) => id === matchValue).label
+
+        } else if (matchType === 'continent') {
+
+          labelValue = formatMessage({ id: continentList.find(({ id }) => id === matchValue).labelId })
+
         }
 
         if (aggregate.rules[rule.rule_name]) {

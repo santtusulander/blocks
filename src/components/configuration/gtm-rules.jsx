@@ -141,6 +141,11 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </thead>
           <FieldArray
             name="rules"
+            validate={value => {
+              if (!value || !value.length) {
+                return true
+              }
+            }}
             props={{ readOnly: this.props.readOnly }}
             activeIndex={this.state.activeIndex}
             component={this.renderRules}/>
