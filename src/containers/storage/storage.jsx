@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 
@@ -92,6 +92,7 @@ class Storage extends Component {
 
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
+
     if (checkPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
       this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
     }
@@ -226,6 +227,11 @@ Storage.propTypes = {
   storageMetrics: PropTypes.object,
   toggleModal: PropTypes.func,
   uploadHandlers: PropTypes.object
+}
+
+Storage.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
 }
 
 Storage.defaultProps = {
