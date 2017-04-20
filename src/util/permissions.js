@@ -114,6 +114,8 @@ permissionMapping[PERMISSIONS.MODIFY_STORAGE] =
   (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'modify', 'allowed'])
 permissionMapping[PERMISSIONS.DELETE_STORAGE] =
   (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'delete', 'allowed'])
+permissionMapping[PERMISSIONS.CREATE_ACCESS_KEY] =
+  (role) => role.getIn(['permissions', 'cis', 'access_keys', 'create', 'allowed'])
 
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
