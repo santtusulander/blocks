@@ -22,12 +22,6 @@ export const ACCOUNT_TYPE_OPTIONS = FILTERED_ACCOUNT_TYPES.map(e => {
 export const SERVICE_TYPES = [
   { value: 101, label: 'UDN Network Partner - On-Net', accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
   { value: 1, label: 'Media Delivery', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
-  /* Commented out as these cannot be set at the moment
-  add as part of UDNP-1713
-
-  { value: 2, label: 'Content Targeting', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
-  value: 3, label: 'Token Auth', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }*/
-  // Not in 0.7 { value: 'storage', label: 'Storage', accountType: ACCOUNT_TYPE_CLOUD_PROVIDER }
 ]
 
 export const BRANDS = [

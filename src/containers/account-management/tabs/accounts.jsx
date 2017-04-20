@@ -50,8 +50,8 @@ class AccountList extends Component {
 
     router.setRouteLeaveHook(route, this.shouldLeave)
 
-    //fetch serviceInfo from API
     fetchServiceInfo()
+
     fetchAccounts({brand})
   }
 
