@@ -4,7 +4,7 @@ import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -136,6 +136,11 @@ const users =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const entityPagination =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntityPagination
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
@@ -155,5 +160,6 @@ export default combineReducers({
   roles,
   roleNames,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
+  entityPagination
 })
