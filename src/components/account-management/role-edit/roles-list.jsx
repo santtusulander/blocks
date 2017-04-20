@@ -7,8 +7,10 @@ import SectionHeader from '../../layout/section-header'
 import RoleEditForm from './role-edit-form.jsx'
 import ActionButtons from '../../action-buttons.jsx'
 
+import IsAllowed from '../../is-allowed'
 import TableSorter from '../../table-sorter'
 import ArrayTd from '../../array-td/array-td'
+import { MODIFY_ROLE } from '../../../constants/permissions'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -102,7 +104,9 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="1%" />
+              <IsAllowed to={MODIFY_ROLE}>
+                <th width="1%" />
+              </IsAllowed>
             </tr>
           </thead>
 
@@ -137,10 +141,12 @@ class RolesList extends React.Component {
                   <td>
                     {userCount} User{userCount !== 1 && 's'}
                   </td>
-                  <td className="nowrap-column">
-                    <ActionButtons
-                      onEdit={() => this.props.onEdit(role.get('id'))}/>
-                  </td>
+                  <IsAllowed to={MODIFY_ROLE}>
+                    <td className="nowrap-column">
+                      <ActionButtons
+                        onEdit={() => this.props.onEdit(role.get('id'))}/>
+                    </td>
+                  </IsAllowed>
                 </tr>
               );
             }) :

@@ -121,6 +121,9 @@ permissionMapping[PERMISSIONS.CREATE_USER] =
 permissionMapping[PERMISSIONS.MODIFY_USER] =
   (role) => role.getIn(['permissions', 'aaa', 'users', 'modify', 'allowed'])
 
+// Users Roles
+permissionMapping[PERMISSIONS.MODIFY_ROLE] =
+  (role) => role.getIn(['permissions', 'aaa', 'roles', 'modify', 'allowed'])
 
 // DNS permissions
 // Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
