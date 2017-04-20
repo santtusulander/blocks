@@ -170,7 +170,9 @@ class AccountList extends Component {
             <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
             <TableSorter {...sorterProps} column="services" width="23%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
-            <th width="1%"/>
+            <IsAllowed to={MODIFY_ACCOUNT}>
+              <th width="1%"/>
+            </IsAllowed>
           </tr>
           </thead>
           <tbody>
@@ -185,12 +187,14 @@ class AccountList extends Component {
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
-                <td className="nowrap-column">
-                  <ActionButtons
-                    permissions={{ modify: MODIFY_ACCOUNT, delete: DELETE_ACCOUNT }}
-                    onEdit={() => {this.props.editAccount(account)}}
-                    onDelete={() => deleteAccount(account.get('id'))}/>
-                </td>
+                <IsAllowed to={MODIFY_ACCOUNT}>
+                  <td className="nowrap-column">
+                    <ActionButtons
+                      permissions={{ modify: MODIFY_ACCOUNT, delete: DELETE_ACCOUNT }}
+                      onEdit={() => {this.props.editAccount(account)}}
+                      onDelete={() => deleteAccount(account.get('id'))}/>
+                  </td>
+                </IsAllowed>
               </tr>
             )
           }) :
