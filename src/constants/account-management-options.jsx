@@ -5,6 +5,10 @@ export const ACCOUNT_TYPE_CONTENT_PROVIDER = 1;
 export const ACCOUNT_TYPE_SERVICE_PROVIDER = 2;
 export const ACCOUNT_TYPE_CLOUD_PROVIDER = 3;
 
+export const UDN_ADMIN_ACCOUNT_ID = 1;
+export const SUPER_ADMIN_ACCOUNT_ID = 9;
+export const UDN_USER_ACCOUNT_ID = 10;
+
 export const ACCOUNT_TYPES = [
   { value: ACCOUNT_TYPE_CONTENT_PROVIDER, label: 'Content Provider' },
   { value: ACCOUNT_TYPE_SERVICE_PROVIDER, label: 'Service Provider' },
