@@ -116,7 +116,7 @@ export class Accounts extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
-        isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
+        isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
