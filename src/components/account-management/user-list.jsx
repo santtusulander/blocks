@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
-import { List, injectIntl } from 'immutable'
+import { List } from 'immutable'
 
 import ActionButtons from '../../components/shared/action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const UserList = props => {
   const { users, editUser, deleteUser, addUser, intl } = props

@@ -19,7 +19,8 @@ describe('FilterDropdown', () => {
       props = {
         className: 'foo',
         parent: 'bar',
-        options
+        options,
+        intl: {formatMessage:jest.fn()},
       }
       return shallow(<FilterDropdown {...props}/>)
     }

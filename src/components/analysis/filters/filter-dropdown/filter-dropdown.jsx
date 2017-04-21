@@ -48,7 +48,7 @@ export class FilterDropdown extends React.Component {
 
     const { dropdownOpen, filteredResults, filterValue, selectedValue } = this.state
 
-    const label     = selectedValue ? selectedValue : this.props.intl({id: "portal.commom.select.placeholder"})
+    const label     = selectedValue ? selectedValue : this.props.intl.formatMessage({id: "portal.commom.select.placeholder"})
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if (this.props.className) {
