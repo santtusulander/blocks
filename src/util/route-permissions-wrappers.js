@@ -199,7 +199,7 @@ export const UserCanViewGTM = UserAuthWrapper({
     return activeGroup
   },
   authenticatingSelector: (state) => getFetchingByTag(state, 'group'),
-  wrapperDisplayName: 'AccountIsSP',
+  wrapperDisplayName: 'GroupHasGTMService',
   predicate: (group) => {
     if (!group) {
       return true
