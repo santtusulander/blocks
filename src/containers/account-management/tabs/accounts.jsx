@@ -149,10 +149,9 @@ class AccountList extends Component {
       return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
-    const accountsSize = sortedAccounts.size
-    const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
+    const accountsText = intl.formatMessage({id: 'portal.account.manage.counter.text' }, { numAccounts: sortedAccounts.size })
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
-    const finalAccountsText = accountsSize + accountsText + hiddenAccountsText
+    const finalAccountsText = accountsText + hiddenAccountsText
 
     return (
       <PageContainer>

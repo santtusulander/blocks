@@ -359,10 +359,9 @@ export class AccountManagementAccountUsers extends Component {
     ]).insert(0, ['all', <FormattedMessage id="portal.user.list.allGroups" />]).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
 
-    const usersSize = sortedUsers.size
-    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
+    const usersText = this.props.intl.formatMessage({id: 'portal.user.list.title.text' }, { numUsers: sortedUsers.size })
     const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
-    const finalUserText = usersSize + usersText + hiddenUserText
+    const finalUserText = usersText + hiddenUserText
 
     return (
       <PageContainer>
