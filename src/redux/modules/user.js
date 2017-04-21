@@ -7,8 +7,8 @@ import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          parseResponseData } from '../util'
 
 import {
-  UDN_ADMIN_ACCOUNT_ID,
-  SUPER_ADMIN_ACCOUNT_ID
+  UDN_ADMIN_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID
 } from '../../constants/account-management-options'
 
 import {
@@ -518,7 +518,7 @@ export const getUserRoles = ( state ) => {
  * @return {Boolean}
  */
 export const isUdnAdmin = ( state ) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ACCOUNT_ID, SUPER_ADMIN_ACCOUNT_ID)) {
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID)) {
     return true
   }
 

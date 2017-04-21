@@ -33,7 +33,7 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
-import { UDN_ADMIN_ACCOUNT_ID, SUPER_ADMIN_ACCOUNT_ID } from '../../../constants/account-management-options'
+import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
 
 export class AccountManagementAccountUsers extends React.Component {
   constructor(props) {
@@ -138,9 +138,9 @@ export class AccountManagementAccountUsers extends React.Component {
       .filter((roleToCheck) => {
         // Don't allow UDN admin to create another UDN Admin or Super admin
         // TODO: make dynamic check
-        if (String(currentUserRole) === String(UDN_ADMIN_ACCOUNT_ID)) {
-          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ACCOUNT_ID)) ||
-              (String(roleToCheck.id) === String(UDN_ADMIN_ACCOUNT_ID))) {
+        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
             return false
           }
         }
