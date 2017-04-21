@@ -5,7 +5,11 @@ import { Map, List, fromJS } from 'immutable'
 import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          PAGINATION_MOCK, mapReducers,
          parseResponseData } from '../util'
-import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
+
+import {
+  UDN_ADMIN_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID
+} from '../../constants/account-management-options'
 
 import {
   getUserToken,
@@ -514,7 +518,10 @@ export const getUserRoles = ( state ) => {
  * @return {Boolean}
  */
 export const isUdnAdmin = ( state ) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
+  const userRoles = state && state.get('roles')
+  if (userRoles && (userRoles.includes(SUPER_ADMIN_ROLE_ID) || userRoles.includes(UDN_ADMIN_ROLE_ID))) {
+    return true
+  }
 
   return false
 }
