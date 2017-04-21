@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { isDirty } from 'redux-form'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
@@ -258,7 +259,16 @@ export class Configuration extends React.Component {
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
+    const {
+      intl: { formatMessage },
+      activeHost,
+      deleteProperty ,
+      params: { brand, account, group, property },
+      router,
+      children,
+      isGTMFormDirty,
+      isAdvancedFormDirty } = this.props
+
     if (this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
@@ -331,37 +341,37 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
-          <li data-eventKey='details'>
+          <li data-eventKey='details' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/details'} activeClassName="active">
             <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li data-eventKey='defaults'>
+          <li data-eventKey='defaults' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
             <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li data-eventKey='policies'>
+          <li data-eventKey='policies' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/policies'} activeClassName="active">
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
           {this.hasSecurityServicePermission() &&
-            <li data-eventKey='security'>
+            <li data-eventKey='security' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
               <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
               </Link>
             </li>
           }
 
-          <li data-eventKey='gtm' className={classNames({ disabled: diff })}>
+          <li data-eventKey='gtm' className={classNames({ disabled: diff || isAdvancedFormDirty })}>
             <Link to={baseUrl + '/gtm'} activeClassName="active">
             <FormattedMessage id="portal.configuration.gtm.text" />
             </Link>
           </li>
 
           <IsAdmin>
-            <li data-eventKey='advanced' className={classNames({ disabled: diff })}>
+            <li data-eventKey='advanced' className={classNames({ disabled: diff || isGTMFormDirty })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
@@ -485,6 +495,8 @@ Configuration.propTypes = {
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
+  isAdvancedFormDirty: React.PropTypes.bool,
+  isGTMFormDirty: React.PropTypes.bool,
   notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -512,6 +524,8 @@ function mapStateToProps(state) {
 
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const isGTMFormDirty = isDirty('gtmForm')
+  const isAdvancedFormDirty = isDirty('advancedForm')
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -526,7 +540,9 @@ function mapStateToProps(state) {
     groupHasStorageService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
-    sslCertificates: state.security.get('sslCertificates')
+    sslCertificates: state.security.get('sslCertificates'),
+    isGTMFormDirty: isGTMFormDirty(state),
+    isAdvancedFormDirty: isAdvancedFormDirty(state)
   }
 }
 
