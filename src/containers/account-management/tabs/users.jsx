@@ -15,11 +15,11 @@ import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
 import usersActions from '../../../redux/modules/entities/users/actions'
-import { getByAccount, getByBrand, getByPage } from '../../../redux/modules/entities/users/selectors'
+import { getByPage } from '../../../redux/modules/entities/users/selectors'
 import { getPaginationMeta } from '../../../redux/modules/entity/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
-import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+//import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
@@ -42,7 +42,7 @@ import Paginator from '../../../components/shared/paginator/paginator'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors, getSortData } from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
@@ -57,7 +57,7 @@ export class AccountManagementAccountUsers extends Component {
     this.state = {
       sortBy: 'email',
       sortOrder: parseInt(props.location.query.sortOrder) || 1,
-      search: '',
+      search: props.location.query.filterValue || '',
       filteredGroups: 'all',
       filteredRoles: 'all',
       showEditModal: false,
@@ -76,7 +76,8 @@ export class AccountManagementAccountUsers extends Component {
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
-    this.changeSearch = this.changeSearch.bind(this)
+    this.onSearchChange = this.onSearchChange.bind(this)
+    this.onSearchSubmit = this.onSearchSubmit.bind(this)
     this.isLeaving = false;
 
     this.onActivePageChange = this.onActivePageChange.bind(this)
@@ -86,10 +87,10 @@ export class AccountManagementAccountUsers extends Component {
     document.addEventListener('click', this.cancelAdding, false)
     const {location, router, route, params: { brand, account }} = this.props
 
-    const {sortBy, sortOrder, filter} = location.query
+    const {sortBy, sortOrder, filterBy, filterValue} = location.query
     const page = location.query.page ? location.query.page : 1
 
-    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filter})
+    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue})
     this.props.fetchRoleNames()
 
     router.setRouteLeaveHook(route, this.shouldLeave)
@@ -97,16 +98,20 @@ export class AccountManagementAccountUsers extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
-    const {page, sortBy, sortOrder, filter} = nextProps.location.query
+    const {page, sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
 
     //if brand, account or sort has changed -> refetch
     if (brand !== this.props.params.brand
       || account !== this.props.params.account
       || page !== this.props.location.query.page
       || sortBy !== this.props.location.query.sortBy
-      || sortOrder !== this.props.location.query.sortOrder) {
+      || sortOrder !== this.props.location.query.sortOrder
+      || filterBy !== this.props.location.query.filterBy
+      || filterValue !== this.props.location.query.filterValue) {
 
-      this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filter, forceReload: true})
+
+      //TODO: Should reset pagination
+      this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     }
 
   }
@@ -126,7 +131,9 @@ export class AccountManagementAccountUsers extends Component {
       query: {
         page: nextPage,
         sortBy: this.state.sortBy,
-        sortOrder: this.state.sortOrder
+        sortOrder: this.state.sortOrder,
+        filterBy: 'email',
+        filterValue: this.state.search
       }
     })
   }
@@ -317,10 +324,16 @@ export class AccountManagementAccountUsers extends Component {
       })
   }
 
-  changeSearch(e) {
+  onSearchChange(e) {
     this.setState({
       search: e.target.value
     })
+  }
+
+  onSearchSubmit(e) {
+    if (e.key === 'Enter') {
+      this.onActivePageChange(1)
+    }
   }
 
   render() {
@@ -328,10 +341,6 @@ export class AccountManagementAccountUsers extends Component {
       fetching,
       users
     } = this.props
-
-    if (fetching) {
-      return <LoadingSpinner />
-    }
 
     const totalCount = this.props.paginationMeta && this.props.paginationMeta.get('total') ? this.props.paginationMeta.get('total') : 0
 
@@ -363,7 +372,9 @@ export class AccountManagementAccountUsers extends Component {
               className="search-input"
               placeholder="Search"
               value={this.state.search}
-              onChange={this.changeSearch} />
+              onChange={this.onSearchChange}
+              onKeyPress={this.onSearchSubmit}
+            />
           </FormGroup>
 
           {/* commented out until we can do server side filtering for roles / groups
@@ -395,14 +406,19 @@ export class AccountManagementAccountUsers extends Component {
           </IsAllowed>
         </SectionHeader>
 
-        <Table striped={true}>
+        { fetching
+          ? <LoadingSpinner />
+          : <Table striped={true}>
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="email" width="40%">
                 <FormattedMessage id="portal.user.list.email.text" />
               </TableSorter>
               <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-              <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+              {/* Removed until we have group_id in user
+                <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+              */}
+
               <th width="1%"/>
             </tr>
           </thead>
@@ -419,7 +435,9 @@ export class AccountManagementAccountUsers extends Component {
                     {this.getEmailForUser(user)}
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                  { /* removed until we have group data in user
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                  */ }
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_USER}>
                       <ActionButtons
@@ -434,6 +452,7 @@ export class AccountManagementAccountUsers extends Component {
             })}
           </tbody>
         </Table>
+        }
 
         {/* Show Pagination if more items than fit on PAGE_SIZE */
           totalCount > PAGE_SIZE &&
@@ -546,19 +565,16 @@ AccountManagementAccountUsers.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  //const {brand, account} = ownProps.params
-
   const page = ownProps.location.query.page ? ownProps.location.query.page : 1
 
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
-    users: getByPage(state, page), //account ? getByAccount(state, account) : getByBrand(state, brand),
+    users: getByPage(state, page),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
     paginationMeta: getPaginationMeta(state, 'user')
-    //groups: account && getGroupsByAccount(state, account)
   }
 }
 

@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, Map } from 'immutable'
 
 /*Reducers*/
 
@@ -102,6 +102,10 @@ export const receiveEntityPagination = (state, action) => {
     //     }
     //   }
     // }
+    //
+
+    //FIXME: UDNP-3513 mergeDeep causes bug when two pages with same page numbers are fetched (combines result, but should be updating)
+
     return state.mergeDeep(fromJS({
       [requestTag]: {
         meta: pagination,
