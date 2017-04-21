@@ -11,7 +11,6 @@ import moment from 'moment'
 import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -20,6 +19,7 @@ import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
@@ -30,7 +30,7 @@ import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
-import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
+import { STORAGE_SERVICE_ID, GTM_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
@@ -81,7 +81,6 @@ export class Configuration extends React.Component {
   componentWillMount() {
     const {brand, account, group, property} = this.props.params
     this.props.accountActions.fetchAccount(brand, account)
-    this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
@@ -267,6 +266,7 @@ export class Configuration extends React.Component {
       router,
       children,
       isGTMFormDirty,
+      groupHasGTMService,
       isAdvancedFormDirty } = this.props
 
     if (this.props.fetching && (!activeHost || !activeHost.size)
@@ -363,12 +363,13 @@ export class Configuration extends React.Component {
               </Link>
             </li>
           }
-
-          <li data-eventKey='gtm' className={classNames({ disabled: diff || isAdvancedFormDirty })}>
-            <Link to={baseUrl + '/gtm'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.gtm.text" />
-            </Link>
-          </li>
+          { groupHasGTMService &&
+            <li data-eventKey='gtm' className={classNames({ disabled: diff || isAdvancedFormDirty })}>
+              <Link to={baseUrl + '/gtm'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.gtm.text" />
+              </Link>
+            </li>
+          }
 
           <IsAdmin>
             <li data-eventKey='advanced' className={classNames({ disabled: diff || isGTMFormDirty })}>
@@ -491,7 +492,7 @@ Configuration.propTypes = {
   deleteProperty: React.PropTypes.func,
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
+  groupHasGTMService: React.PropTypes.bool,
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
@@ -517,11 +518,10 @@ Configuration.defaultProps = {
   sslCertificates: Immutable.List()
 }
 
-function mapStateToProps(state) {
-  const { group } = state
-  const activeGroup = group.get('activeGroup') || Immutable.Map()
+function mapStateToProps(state, ownProps) {
+  const activeGroup = getGroupById(state, ownProps.params.group) || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-
+  const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
   const isGTMFormDirty = isDirty('gtmForm')
@@ -538,6 +538,7 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: roles,
     groupHasStorageService,
+    groupHasGTMService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates'),
@@ -549,7 +550,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

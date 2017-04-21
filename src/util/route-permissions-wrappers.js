@@ -1,12 +1,17 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
-import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
+import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
-import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+import { getFetchingByTag } from '../redux/modules/fetching/selectors'
+
+import {
+  hasService
+} from '../util/helpers'
 
 import {
   accountIsContentProviderType,
@@ -192,6 +197,28 @@ export const CanViewStorageTab = (store) => {
     allowRedirectBack: false
   })
 }
+
+export const UserCanViewGTM = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const activeGroup =
+      getGroupById(state, ownProps.params.group)
+    return activeGroup
+  },
+  authenticatingSelector: (state) => getFetchingByTag(state, 'group'),
+  wrapperDisplayName: 'GroupHasGTMService',
+  predicate: (group) => {
+    if (!group) {
+      return true
+    } else {
+      return hasService(group, GTM_SERVICE_ID)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
 
 export const AccountCanViewProperties = UserAuthWrapper({
   authSelector: (state, ownProps) => {

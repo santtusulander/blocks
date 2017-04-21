@@ -18,6 +18,7 @@ import {
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
   CanViewStorageTab,
+  UserCanViewGTM,
   AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
@@ -189,6 +190,8 @@ const AccountIsSP = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+
+
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
@@ -286,7 +289,7 @@ export const getRoutes = store => {
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
-            <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
             <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
           </Route>
 
