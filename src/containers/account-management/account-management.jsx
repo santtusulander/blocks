@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter, Link } from 'react-router'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
@@ -124,7 +124,7 @@ export class AccountManagement extends Component {
         this.props.toggleModal(null)
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.errorModal.error.text" />,
-          content: response.data.message,
+          content: parseResponseError(response),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
@@ -160,7 +160,7 @@ export class AccountManagement extends Component {
       this.props.toggleModal(null)
       if (response.error) {
         this.props.uiActions.showInfoDialog({
-          title: 'Error',
+          title: <FormattedMessage id="portal.errorModal.error.text"/>,
           content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
@@ -272,6 +272,8 @@ export class AccountManagement extends Component {
       return 'users';
     } else if (router.isActive(`${baseUrl}/properties`)) {
       return 'properties';
+    } else if (router.isActive(`${baseUrl}/storage`)) {
+      return 'storage'
     }
 
     return '';
@@ -396,7 +398,7 @@ export class AccountManagement extends Component {
             Edit activeAccount -button
             */
             account &&
-            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNTS}>
+            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNT}>
               <Button
                 bsStyle="primary"
                 className="btn-icon"
@@ -439,8 +441,8 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
-           <li>
+          <IsAllowed to={PERMISSIONS.CONFIGURE_DNS}>
+           <li data-eventKey="dns">
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
@@ -471,7 +473,7 @@ export class AccountManagement extends Component {
         { /* Delete User */}
         {accountManagementModal === DELETE_USER &&
         <ModalWindow
-          title="Delete User?"
+          title={this.props.intl.formatMessage({id: "portal.user.delete.title.text"})}
           cancelButton={true}
           deleteButton={true}
           cancel={() => toggleModal(null)}
@@ -528,6 +530,7 @@ AccountManagement.propTypes = {
   deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
+  intl: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
@@ -583,4 +586,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagement))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagement)))

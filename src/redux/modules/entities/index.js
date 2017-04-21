@@ -83,7 +83,6 @@ const networks =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
-
 const CISIngestPoints =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPoints' }),
@@ -123,6 +122,13 @@ const roleNames =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const gtm =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'gtm', useMergeDeep: false }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 const propertyMetadata =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'propertyMetadata' }),
@@ -147,6 +153,7 @@ export default combineReducers({
   groups,
   iataCodes,
   CISIngestPoints,
+  gtm,
   CISClusters,
   CISWorkflowProfiles,
   properties,

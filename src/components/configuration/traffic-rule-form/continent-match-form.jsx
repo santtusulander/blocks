@@ -9,14 +9,14 @@ import { checkForErrors } from '../../../util/helpers'
 import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
-const validate = ({ continents }) => checkForErrors({ continents })
+const validate = ({ continent }) => checkForErrors({ continent })
 
 const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const options = continentsList.map(({ id, labelId }) => ({ id, label: intl.formatMessage({ id: labelId }) }))
 
   const saveMatch = values => {
-    const labelText = values.continents.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+    const labelText = values.continent.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
     onSave({
       values,
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.continent.items" values={{ items: labelText }} />,
@@ -28,10 +28,10 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
   return (
     <form onSubmit={handleSubmit(saveMatch)}>
       <Field
-        name="continents"
+        name="continent"
         component={Typeahead}
-        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.continent.input.placeholder" })}
         multiple={true}
+        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.continent.input.placeholder" })}
         options={options}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.continent" />}/>
       <FormFooterButtons>
@@ -66,6 +66,6 @@ ContinentMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-const Form = reduxForm({ form: 'continents-traffic-match', validate })(injectIntl(ContinentMatchForm))
-Form.defaultProps = { initialValues: { continents: [] } }
+const Form = reduxForm({ form: 'continent-traffic-match', validate })(injectIntl(ContinentMatchForm))
+Form.defaultProps = { initialValues: { continent: [] } }
 export default Form

@@ -17,7 +17,9 @@ import {
   UserCanViewHosts,
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
-  CanViewStorageTab
+  CanViewStorageTab,
+  UserCanViewGTM,
+  AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
 import {
@@ -188,6 +190,8 @@ const AccountIsSP = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+
+
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
@@ -285,7 +289,7 @@ export const getRoutes = store => {
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
-            <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
             <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
           </Route>
 
@@ -375,7 +379,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -383,7 +387,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -391,7 +395,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>

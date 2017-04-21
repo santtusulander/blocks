@@ -153,10 +153,9 @@ class AccountManagementAccountGroups extends Component {
 
     const sortedGroups = getSortData(filteredGroups, this.state.sortBy, this.state.sortDir)
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-    const groupSize = sortedGroups.size
-    const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
+    const groupText = this.props.intl.formatMessage({id: 'portal.account.groups.counter.text'}, {numGroups: sortedGroups.size})
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
-    const finalGroupText = groupSize + groupText + hiddenGroupText
+    const finalGroupText = groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
         <SectionHeader sectionHeaderTitle={finalGroupText}>

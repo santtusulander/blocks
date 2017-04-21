@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../../../../components/shared/icons/icon-select-caret.jsx'
+import {injectIntl} from 'react-intl';
 
 export class FilterDropdown extends React.Component {
   constructor(props) {
@@ -47,7 +48,7 @@ export class FilterDropdown extends React.Component {
 
     const { dropdownOpen, filteredResults, filterValue, selectedValue } = this.state
 
-    const label     = selectedValue ? selectedValue : 'Please Select'
+    const label     = selectedValue ? selectedValue : this.props.intl.formatMessage({id: "portal.commom.select.placeholder"})
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if (this.props.className) {
@@ -73,7 +74,7 @@ export class FilterDropdown extends React.Component {
             <input
               ref="filterInput"
               type="text"
-              placeholder="search"
+              placeholder={this.props.intl({id: "portal.common.input.search.placeholder"})}
               className="form-control"
               onChange={this.handleFilter}
               value={filterValue}
@@ -105,8 +106,9 @@ FilterDropdown.displayName = 'FilterDropdown'
 FilterDropdown.propTypes   = {
   className: React.PropTypes.string,
   handleSelect: React.PropTypes.func,
+  intl: React.PropTypes.object,
   options: React.PropTypes.instanceOf(Immutable.List),
   parent: React.PropTypes.string
 }
 
-module.exports = FilterDropdown
+module.exports = injectIntl(FilterDropdown)

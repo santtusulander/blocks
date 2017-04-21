@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 
@@ -39,6 +39,10 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+
+import checkPermissions from '../../util/permissions'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
+import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
 
 const FORMAT = '0,0.0'
 
@@ -90,9 +94,12 @@ class Storage extends Component {
 
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
-    this.props.initStorageAccessKey(brand, account, group, storage)
-      .then(this.initFileUploader)
-      .catch(parseResponseError)
+
+    if (checkPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
+      this.props.initStorageAccessKey(brand, account, group, storage)
+        .then(this.initFileUploader)
+        .catch(parseResponseError)
+    }
   }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
@@ -172,19 +179,20 @@ class Storage extends Component {
                 referenceValue={usage.estimated}
                 valuesUnit={usage.unit}
               />
-
-              <StorageContents
-                brandId={params.brand}
-                accountId={params.account}
-                storageId={params.storage}
-                groupId={params.group}
-                gatewayHostname={gatewayHostname}
-                asperaInstanse={asperaInstanse}
-                contents={storageContents}
-                asperaUpload={this.state.asperaUpload}
-                onMethodToggle={this.toggleUploadMehtod}
-                fileUploader={this.state.fileUploader}
-              />
+              <IsAllowed to={CREATE_ACCESS_KEY}>
+                <StorageContents
+                  brandId={params.brand}
+                  accountId={params.account}
+                  storageId={params.storage}
+                  groupId={params.group}
+                  gatewayHostname={gatewayHostname}
+                  asperaInstanse={asperaInstanse}
+                  contents={storageContents}
+                  asperaUpload={this.state.asperaUpload}
+                  onMethodToggle={this.toggleUploadMehtod}
+                  fileUploader={this.state.fileUploader}
+                />
+              </IsAllowed>
             </PageContainer>
 
             {(accountManagementModal === EDIT_STORAGE) &&
@@ -225,6 +233,11 @@ Storage.propTypes = {
   storageMetrics: PropTypes.object,
   toggleModal: PropTypes.func,
   uploadHandlers: PropTypes.object
+}
+
+Storage.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
 }
 
 Storage.defaultProps = {

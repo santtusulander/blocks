@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -46,6 +46,7 @@ import { checkForErrors } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
 
 const PAGE_SIZE = 20
 const MAX_PAGINATION_ITEMS = 6
@@ -178,12 +179,25 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   getRoleOptions(roleMapping, props) {
+    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => {
+      .filter((roleToCheck) => {
+        // Don't allow UDN admin to create another UDN Admin or Super admin
+        // TODO: make dynamic check
+        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
+            return false
+          }
+        }
+
+        return true
+      })
+      .map((mapped_role) => {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
         return matchedRole
-              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              ? [matchedRole.get('id'), matchedRole.get('name')]
               : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
       })
   }
@@ -210,7 +224,7 @@ export class AccountManagementAccountUsers extends Component {
             name="email"
             ref="emails"
             ErrorComponent={errorTooltip}
-            placeholder=" Email"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.form.email.placeholder'})}
             component={FieldFormGroup}/>
         }
       ],
@@ -265,8 +279,8 @@ export class AccountManagementAccountUsers extends Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.addingNew) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id="portal.common.error.warning.title" />,
+        content: <FormattedMessage id="portal.account.leaving.warning.text" />,
         stayButton: true,
         continueButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -282,10 +296,10 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   deleteUser(user) {
-    if (user === this.props.currentUser) {
+    if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
-        title: 'Error',
-        content: 'You cannot delete the account you are logged in with.',
+        title: <FormattedMessage id="portal.errorModal.error.text" />,
+        content: <FormattedMessage id="portal.account.delete.current.user.warning" />,
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
@@ -370,7 +384,7 @@ export class AccountManagementAccountUsers extends Component {
           <FormGroup className="search-input-group inline">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={this.props.intl.formatMessage({id: 'portal.user.form.search.placeholder'})}
               value={this.state.search}
               onChange={this.onSearchChange}
               onKeyPress={this.onSearchSubmit}
@@ -538,13 +552,14 @@ AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
   createUser: PropTypes.func,
-  currentUser: PropTypes.string,
+  currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
   //fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
   location: PropTypes.object,
   paginationMeta: PropTypes.instanceOf(Map),
   params: PropTypes.object,
@@ -572,7 +587,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
-    currentUser: state.user.get('currentUser').get('email'),
+    currentUser: state.user.get('currentUser'),
     permissions: state.permissions,
     paginationMeta: getPaginationMeta(state, 'user')
   }
@@ -594,4 +609,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagementAccountUsers)))

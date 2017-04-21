@@ -86,6 +86,7 @@
   "portal.analytics.demoPlayback.bandwidthBySegment.text": "Bandwidth by Segment",
 
   "portal.analytics.cacheHitRateByDay.text": "Daily Cache Hit Rate Report",
+  "portal.analytics.cacheHitRatio.text": "Cache Hit Ratio",
 
   "portal.analytics.serviceProviderContribution.onNetHttp.label": "On-Net HTTP",
   "portal.analytics.serviceProviderContribution.onNetHttps.label": "On-Net HTTPS",
