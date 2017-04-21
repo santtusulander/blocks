@@ -441,8 +441,8 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
-           <li>
+          <IsAllowed to={PERMISSIONS.CONFIGURE_DNS}>
+           <li data-eventKey="dns">
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
