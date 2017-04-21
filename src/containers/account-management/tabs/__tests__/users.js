@@ -43,6 +43,7 @@ describe('AccountManagementAccountUsers', () => {
         userActions={ {
           fetchUsers: genAsyncMock,
         }}
+        location={{query: {}}}
         users={ Immutable.List() }
       />
     )
