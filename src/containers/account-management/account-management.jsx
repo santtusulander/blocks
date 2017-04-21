@@ -124,7 +124,7 @@ export class AccountManagement extends Component {
         this.props.toggleModal(null)
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.errorModal.error.text" />,
-          content: response.data.message,
+          content: parseResponseError(response),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
