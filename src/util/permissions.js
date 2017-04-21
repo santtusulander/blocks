@@ -2,9 +2,9 @@ import * as PERMISSIONS from '../constants/permissions'
 import {
   ROLES_MAPPING,
   ACCOUNT_TYPE_CLOUD_PROVIDER,
-  UDN_ADMIN_ACCOUNT_ID,
-  SUPER_ADMIN_ACCOUNT_ID,
-  UDN_USER_ACCOUNT_ID
+  UDN_ADMIN_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID,
+  UDN_USER_ROLE_ID
 } from '../constants/account-management-options'
 
 const permissionMapping = {};
@@ -74,7 +74,7 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
     // do role checking in our permission mapping functions. This should be removed
     // once we come up with a better way to support listing accounts for the
     // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
-    const isSuperAdmin = (roleId === UDN_ADMIN_ACCOUNT_ID) || (roleId === SUPER_ADMIN_ACCOUNT_ID) || (roleId === UDN_USER_ACCOUNT_ID)
+    const isSuperAdmin = (roleId === UDN_ADMIN_ROLE_ID) || (roleId === SUPER_ADMIN_ROLE_ID) || (roleId === UDN_USER_ROLE_ID)
     const canListAccounts = role.getIn(['aaa', 'accounts', 'list', 'allowed'], false)
 
     return isSuperAdmin && canListAccounts
