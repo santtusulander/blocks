@@ -8,8 +8,12 @@ export const ACCOUNT_TYPE_SERVICE_PROVIDER = 2;
 export const ACCOUNT_TYPE_CLOUD_PROVIDER = 3;
 
 export const UDN_ADMIN_ACCOUNT_ID = 1;
-export const SUPER_ADMIN_ACCOUNT_ID = 9;
-export const UDN_USER_ACCOUNT_ID = 10;
+export const CP_ADMIN_ACCOUNT_ID = 2;
+export const SP_ADMIN_ACCOUNT_ID = 3;
+export const CP_USER_ACCOUNT_ID = 4;
+export const SP_USER_ACCOUNT_ID = 5;
+export const SUPER_ADMIN_ACCOUNT_ID = 8;
+export const UDN_USER_ACCOUNT_ID = 9;
 
 export const ACCOUNT_TYPES = [
   { value: ACCOUNT_TYPE_CONTENT_PROVIDER, label: 'Content Provider' },
@@ -37,13 +41,13 @@ export const BRAND_OPTIONS = BRANDS.map(e => {
 });
 
 export const ROLES_MAPPING = [
-  { id: 1, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
-  { id: 2, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
-  { id: 3, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
-  { id: 4, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
-  { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
-  { id: 9, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
-  { id: 10, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] }
+  { id: UDN_ADMIN_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
+  { id: CP_ADMIN_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
+  { id: SP_ADMIN_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { id: CP_USER_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
+  { id: SP_USER_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { id: SUPER_ADMIN_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] },
+  { id: UDN_USER_ACCOUNT_ID, accountTypes: [ACCOUNT_TYPE_CLOUD_PROVIDER] }
 ]
 
 export const FLOW_DIRECTION_TYPES = [
