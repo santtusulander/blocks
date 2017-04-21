@@ -3,6 +3,8 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
 import checkPermissions from './permissions'
+import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
+import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
@@ -11,6 +13,11 @@ import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import {
   hasService
 } from '../util/helpers'
+
+import {
+  accountIsContentProviderType,
+  accountIsCloudProviderType
+ } from '../util/helpers'
 
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
@@ -209,6 +216,28 @@ export const UserCanViewGTM = UserAuthWrapper({
   },
   failureRedirectPath: (state, ownProps) => {
     const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+
+export const AccountCanViewProperties = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const account =
+      getAccountById(state, ownProps.params.account)
+    return {
+      account,
+      accountId: ownProps.params.account
+    }
+
+  },
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
+  wrapperDisplayName: 'AccountCanViewProperties',
+  predicate: ({account}) => {
+    if (!account) {
+      return true
+    } else {
+      return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/properties/, 'i'), '')
     return redirectPath
   },
   allowRedirectBack: false
