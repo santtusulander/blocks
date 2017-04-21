@@ -290,7 +290,7 @@ class ConfigurationAdvanced extends React.Component {
           invalid={invalid}
           saving={submitting}
           show={dirty}>
-          <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
+          <FormattedMessage id="portal.configuration.advanced.edit.unsavedChanges.text"/>
         </SaveBar>
 
       </form>
