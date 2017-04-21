@@ -11,7 +11,7 @@ import SectionContainer from '../shared/layout/section-container'
 import FieldFormGroupNumber from '../shared/form-fields/field-form-group-number'
 import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
-import CacheKeyQueryStringForm from './actions/cache-key-query-string-form'
+import DefaultCacheKeyQueryString from './actions/defaults-cache-key-query-string'
 import { secondsToUnit, secondsFromUnit, unitFromSeconds } from './helpers'
 
 class ConfigurationDefaults extends React.Component {
@@ -205,9 +205,10 @@ class ConfigurationDefaults extends React.Component {
       <SectionHeader
         sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/>} />
       <SectionContainer>
-        <CacheKeyQueryStringForm
+        <DefaultCacheKeyQueryString
           disabled={readOnly}
           horizontal={true}
+          autoSave={true}
           intl={intl}
           set={Immutable.Map({name: config.getIn(['defaults','cache_key_query'])})}
           updateSet={this.updateCacheKeyQueryString}/>
