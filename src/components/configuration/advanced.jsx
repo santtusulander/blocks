@@ -5,13 +5,14 @@ import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupCheckbox from '../shared/form-fields/field-form-group-checkbox'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
+import SaveBar from '../shared/page-elements/save-bar'
 
 import metadataActions from '../../redux/modules/entities/metadata/actions'
 import { getById as getMetadata } from '../../redux/modules/entities/metadata/selectors'
@@ -119,7 +120,8 @@ class ConfigurationAdvanced extends React.Component {
       isFinalRequestEnabled,
       isFinalResponseEnabled,
       handleSubmit,
-      edit
+      edit,
+      reset
     } = this.props
 
     if (!metadata || metadata.isEmpty()) {
@@ -283,15 +285,14 @@ class ConfigurationAdvanced extends React.Component {
         }
         <hr />
 
-        <ButtonToolbar className="text-left">
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || (!dirty)}
-          >
-            <FormattedMessage id="portal.button.save"/>
-          </Button>
-        </ButtonToolbar>
+        <SaveBar
+          onCancel={reset}
+          invalid={invalid}
+          saving={submitting}
+          show={dirty}>
+          <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
+        </SaveBar>
+
       </form>
     )
   }
