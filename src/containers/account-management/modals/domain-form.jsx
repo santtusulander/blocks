@@ -89,7 +89,7 @@ function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
       const saveDomainMessage = edit
                                 ? <FormattedMessage id="portal.accountManagement.dns.domain.updated.text"/>
                                 : <FormattedMessage id="portal.accountManagement.dns.domain.created.text"/>
-      // TODO: Are these required params ok (refresh, retry, expiry)?
+
       const defaultData = {
         'class': 'IN',
         retry: 1,

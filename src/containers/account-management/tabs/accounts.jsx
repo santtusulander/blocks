@@ -8,6 +8,7 @@ import { withRouter } from 'react-router'
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import IconAdd from '../../../components/shared/icons/icon-add'
+import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import ActionButtons from '../../../components/shared/action-buttons'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import TableSorter from '../../../components/shared/table-sorter'
@@ -28,6 +29,7 @@ import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
+import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
 
 class AccountList extends Component {
   constructor(props) {
@@ -50,8 +52,8 @@ class AccountList extends Component {
 
     router.setRouteLeaveHook(route, this.shouldLeave)
 
-    //fetch serviceInfo from API
     fetchServiceInfo()
+
     fetchAccounts({brand})
   }
 
@@ -163,11 +165,13 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {
-            this.props.editAccount()
-          }}>
-            <IconAdd/>
-          </Button>
+          <IsAllowed to={CREATE_ACCOUNT}>
+            <Button bsStyle="success" className="btn-icon" onClick={() => {
+              this.props.editAccount()
+            }}>
+              <IconAdd/>
+            </Button>
+          </IsAllowed>
         </SectionHeader>
         <table className="table table-striped cell-text-left">
           <thead >
@@ -177,7 +181,9 @@ class AccountList extends Component {
             <TableSorter {...sorterProps} column="id" width="10%"><FormattedMessage id='portal.account.list.id.title'/></TableSorter>
             <TableSorter {...sorterProps} column="brand" width="15%"><FormattedMessage id='portal.account.list.brand.title'/></TableSorter>
             <TableSorter {...sorterProps} column="services" width="23%"><FormattedMessage id='portal.account.list.services.title'/></TableSorter>
-            <th width="1%"/>
+            <IsAllowed to={MODIFY_ACCOUNT}>
+              <th width="1%"/>
+            </IsAllowed>
           </tr>
           </thead>
           <tbody>
@@ -192,13 +198,16 @@ class AccountList extends Component {
                 <td>{id}</td>
                 <td>{brand}</td>
                 <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
-                <td className="nowrap-column">
-                  <ActionButtons
-                    onEdit={() => {
-                      this.props.editAccount(account)
-                    }}
-                    onDelete={() => deleteAccount(account.get('id'))}/>
-                </td>
+                <IsAllowed to={MODIFY_ACCOUNT}>
+                  <td className="nowrap-column">
+                    <ActionButtons
+                      permissions={{ modify: MODIFY_ACCOUNT, delete: DELETE_ACCOUNT }}
+                      onEdit={() => {
+                        this.props.editAccount(account)
+                      }}
+                      onDelete={() => deleteAccount(account.get('id'))}/>
+                  </td>
+                </IsAllowed>
               </tr>
             )
           }) :

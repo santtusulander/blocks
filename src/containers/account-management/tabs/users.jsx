@@ -7,8 +7,6 @@ import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-// import * as userActionCreators from '../../../redux/modules/user'
-// import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { parseResponseError } from '../../../redux/util'
@@ -27,7 +25,6 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
@@ -47,6 +44,7 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { UDN_ADMIN_ACCOUNT_ID, SUPER_ADMIN_ACCOUNT_ID } from '../../../constants/account-management-options'
 
 export class AccountManagementAccountUsers extends Component {
   constructor(props) {
@@ -85,10 +83,6 @@ export class AccountManagementAccountUsers extends Component {
     this.props.fetchGroups({brand, account})
     this.props.fetchRoleNames()
 
-//    if (!this.props.groups.toJS().length) {
-//      this.props.groupActions.fetchGroups(brand, account);
-//    }
-//
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
@@ -151,12 +145,25 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   getRoleOptions(roleMapping, props) {
+    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => {
+      .filter((roleToCheck) => {
+        // Don't allow UDN admin to create another UDN Admin or Super admin
+        // TODO: make dynamic check
+        if (String(currentUserRole) === String(UDN_ADMIN_ACCOUNT_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ACCOUNT_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ACCOUNT_ID))) {
+            return false
+          }
+        }
+
+        return true
+      })
+      .map((mapped_role) => {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
         return matchedRole
-              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              ? [matchedRole.get('id'), matchedRole.get('name')]
               : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
       })
   }
@@ -203,19 +210,6 @@ export class AccountManagementAccountUsers extends Component {
             </Button>,
           positionClass: 'col-xs-2 text-right'
         }
-      ],
-      [
-        // Disable until API support allows listing groups for user with some assigned
-        // {
-        //   input: <FilterChecklistDropdown
-        //     className="inline-add-dropdown"
-        //     value={this.state.usersGroups}
-        //     handleCheck={newValues => {
-        //       this.setState({ usersGroups: newValues })
-        //     }}
-        //     options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-        //   positionClass: 'row col-xs-7'
-        // }
       ]
     ]
   }
@@ -265,7 +259,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   deleteUser(user) {
-    if (user === this.props.currentUser) {
+    if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id="portal.errorModal.error.text" />,
         content: <FormattedMessage id="portal.account.delete.current.user.warning" />,
@@ -517,7 +511,7 @@ AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
   createUser: PropTypes.func,
-  currentUser: PropTypes.string,
+  currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
@@ -550,7 +544,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByAccount(state, account),
-    currentUser: state.user.get('currentUser').get('email'),
+    currentUser: state.user.get('currentUser'),
     permissions: state.permissions,
     groups: getGroupsByAccount(state, account)
   }

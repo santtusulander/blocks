@@ -7,7 +7,9 @@ import {
   getAnalyticsUrlFromParams,
   getNetworkUrl,
   getContentUrl,
-  getAccountManagementUrlFromParams
+  getAccountManagementUrlFromParams,
+  getSecurityUrl,
+  getSecurityUrlFromParams
 } from '../../util/routes.js'
 import { getRoute } from '../../util/routes'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
@@ -156,7 +158,12 @@ class BreadcrumbsItem extends React.Component {
     } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
       links.push({label: <FormattedMessage id="portal.header.services.text"/>})
     } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {
-      links.push({label: <FormattedMessage id="portal.header.security.text"/>})
+      this.addGroupLink(props, links, getSecurityUrl)
+
+      links.push({
+        label: <FormattedMessage id="portal.header.security.text" />,
+        url: links.length > 0 ? getSecurityUrlFromParams({ brand: params.brand, account: params.account }) : null
+      })
     } else if (new RegExp(getRoute('support'), 'g').test(pathname)) {
       links.push({label: <FormattedMessage id="portal.header.support.text"/>})
     } else if (new RegExp(getRoute('configuration'), 'g').test(pathname)) {

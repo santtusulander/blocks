@@ -9,6 +9,8 @@ import ActionButtons from '../../shared/action-buttons.jsx'
 
 import TableSorter from '../../shared/table-sorter'
 import ArrayTd from '../../shared/page-elements/array-td'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
+import { MODIFY_ROLE } from '../../../constants/permissions'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -100,7 +102,9 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="1%" />
+              <IsAllowed to={MODIFY_ROLE}>
+                <th width="1%" />
+              </IsAllowed>
             </tr>
           </thead>
 
@@ -116,16 +120,7 @@ class RolesList extends React.Component {
                     {role.get('name')}
                   </td>
                   {this.props.permissions.size ?
-                    <ArrayTd maxItemsShown={5} items={[/*
-                     TODO: Uncomment these when we support API permissions
-                     ...this.labelPermissions(
-                     role.get('permissions').get('aaa'),
-                     this.props.permissions.get('aaa')
-                     ).toArray(),
-                     ...this.labelPermissions(
-                     role.get('permissions').get('north'),
-                     this.props.permissions.get('north')
-                     ).toArray(),*/
+                    <ArrayTd maxItemsShown={5} items={[
                       ...this.labelPermissions(
                       role.getIn(['permissions', 'ui'], Immutable.List()).filter(permission => permission),
                       this.props.permissions.get('ui')
@@ -139,10 +134,12 @@ class RolesList extends React.Component {
                   <td>
                     {userCount} <FormattedMessage id="portal.role.list.search.userCount.text" values={{userCount: userCount}}/>
                   </td>
-                  <td className="nowrap-column">
-                    <ActionButtons
-                      onEdit={() => this.props.onEdit(role.get('id'))}/>
-                  </td>
+                  <IsAllowed to={MODIFY_ROLE}>
+                    <td className="nowrap-column">
+                      <ActionButtons
+                        onEdit={() => this.props.onEdit(role.get('id'))}/>
+                    </td>
+                  </IsAllowed>
                 </tr>
               );
             }) :

@@ -87,18 +87,6 @@ class GroupFormContainer extends React.Component {
   onSubmit(values) {
     const { groupId, invalid, onSave } = this.props
     if (!invalid) {
-      // TODO: enable this when API is ready
-      //const members = this.getMembers()
-      // if (groupId) {
-      //   return onSave(
-      //     groupId,
-      //     values,
-      //     this.state.usersToAdd,
-      //     this.state.usersToDelete
-      //   )
-      // } else {
-      //   return onSave(values, this.state.usersToAdd)
-      // }
       if (groupId) {
         return onSave({
           groupId,
@@ -124,31 +112,6 @@ class GroupFormContainer extends React.Component {
   hideLocationForm() {
     this.setState({ selectedLocationId: null, visibleLocationForm: false })
   }
-
-  // deleteMember(userEmail) {
-  //   // New members will be just removed from the new members list
-  //   if (this.state.usersToAdd.includes(userEmail)) {
-  //     this.setState({
-  //       usersToAdd: this.state.usersToAdd.delete(this.state.usersToAdd.keyOf(userEmail))
-  //     })
-  //   }
-  //   // Existing members will be added to the to be deleted list
-  //   else {
-  //     this.setState({
-  //       usersToDelete: this.state.usersToDelete.push(userEmail)
-  //     })
-  //   }
-  // }
-  //
-  // undoDelete(userEmail) {
-  //   this.setState({
-  //     usersToDelete: this.state.usersToDelete.delete(this.state.usersToDelete.keyOf(userEmail))
-  //   })
-  // }
-  //
-  // isEdited() {
-  //   return this.state.usersToAdd.size || this.state.usersToDelete.size
-  // }
 
   handleDeleteHost(host) {
     this.setState({hostToDelete: host})
@@ -233,31 +196,6 @@ class GroupFormContainer extends React.Component {
       showServiceItemForm
     } = this.props
 
-    /**
-     * This logic is for handling members of a group. Not yet supported in the API.
-     */
-
-    // const currentMembers = this.props.users.reduce((members, user) => {
-    //   if (this.state.usersToAdd.includes(user.get('email'))) {
-    //     return [user.set('toAdd', true), ...members]
-    //   }
-    //   if (this.state.usersToDelete.includes(user.get('email'))) {
-    //     return [...members, user.set('toDelete', true)]
-    //   }
-    //   if (user.get('group_id').includes(this.props.group.get('id'))) {
-    //     return [...members, user]
-    //   }
-    //   return members
-    // }, [])
-
-
-    // const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
-    //   const userEmail = user.get('email')
-    //   if(!user.get('group_id').includes(this.props.group.get('id'))) {
-    //     return [...arr, {label: userEmail, value: userEmail}]
-    //   }
-    //   return arr;
-    // }, []))
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name}` : account.get('name')
     return (
@@ -373,6 +311,7 @@ GroupFormContainer.defaultProps = {
   networks: List()
 }
 
+/* istanbul ignore next */
 const  mapStateToProps = (state, ownProps) => {
   const { user, host } = state
   const { groupId, params: { account } } = ownProps

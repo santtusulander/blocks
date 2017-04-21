@@ -77,8 +77,8 @@ axios.defaults.timeout = 300000
 axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  if (error) {
-    const status = error.status;
+  if (error.response) {
+    const { status } = error.response;
     if (status === 401) {
       if (!location.href.includes('/login')
         && !location.href.includes('/set-password')

@@ -405,6 +405,7 @@ const paginationConfig = {
   page_size: PAGINATION_CONFIG_PAGE_SIZE
 }
 
+/* istanbul ignore next */
 function mapStateToProps(state, ownProps) {
   const { account, group } = ownProps.params
   return {
@@ -415,6 +416,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
     createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload})),
