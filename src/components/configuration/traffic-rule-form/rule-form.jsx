@@ -11,7 +11,6 @@ import { checkForErrors } from '../../../util/helpers'
 
 import PolicyWeight from '../policy-weight'
 import Input from '../../shared/form-fields/field-form-group'
-import FormGroupSelect from '../../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import ActionButtons from '../../shared/action-buttons'
 import IconAdd from '../../shared/icons/icon-add'

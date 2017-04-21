@@ -23,10 +23,18 @@ const validate = ({ ipv4_address }) => {
 
 const IPv4AddressMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
-  const saveMatch = values => {
-    const labelText = values.ipv4_address.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+  const saveMatch = formValues => {
+
+    const { labelText, values } = formValues.ipv4_address.reduce((aggregate, { label }, index) => {
+
+      aggregate.labelText += `${index ? ',' : ''} ${label}`
+      aggregate.values.push({ label, id: label })
+      return aggregate
+
+    }, { labelText: '', values: [] })
+
     onSave({
-      values,
+      values: { ipv4_address: values },
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.items" values={{ items: labelText }} />,
       matchType
     }, matchIndex)

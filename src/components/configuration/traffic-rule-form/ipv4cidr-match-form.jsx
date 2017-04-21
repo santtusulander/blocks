@@ -23,10 +23,18 @@ const validate = ({ ipv4_cidr_prefix }) => {
 
 const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
-  const saveMatch = values => {
-    const labelText = values.ipv4_cidr_prefix.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+  const saveMatch = formValues => {
+
+    const { labelText, values } = formValues.ipv4_cidr_prefix.reduce((aggregate, { label }, index) => {
+
+      aggregate.labelText += `${index ? ',' : ''} ${label}`
+      aggregate.values.push({ label, id: label })
+      return aggregate
+
+    }, { labelText: '', values: [] })
+    console.log(labelText);
     onSave({
-      values,
+      values: { ipv4_cidr_prefix: values },
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.items" values={{ items: labelText }} />,
       matchType
     }, matchIndex)
