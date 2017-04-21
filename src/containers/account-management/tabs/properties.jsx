@@ -421,7 +421,7 @@ function mapDispatchToProps(dispatch) {
   return {
     createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload})),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING, filter_by: '..tokenauth', filter_value: '*' })),
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
