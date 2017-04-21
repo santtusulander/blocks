@@ -251,7 +251,7 @@ export class Configuration extends React.Component {
   toggleVersionModal() {
     this.setState({showVersionModal: !this.state.showVersionModal})
   }
-  showNotification(message) {
+  showNotification(message = <FormattedMessage id="portal.configuration.updateSuccessfull.text"/>) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(
@@ -302,8 +302,7 @@ export class Configuration extends React.Component {
                 this.props.router.push(`${url}/${children.props.route.path}`)
               })
 
-            }}
-            drillable={true}>
+            }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
@@ -422,6 +421,7 @@ export class Configuration extends React.Component {
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
+            showNotification: this.showNotification,
             storagePermission: this.props.storagePermission,
             serviceType: serviceType,
             serviceTypeText: serviceTypeText
