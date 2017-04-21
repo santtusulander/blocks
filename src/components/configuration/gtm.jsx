@@ -81,6 +81,57 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     }
   }
 
+  generateSubmittableRules(values) {
+
+    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
+    const rules = !values.rules
+      ? []
+      : values.rules.reduce((generatedRules, rule) => {
+
+        const traffic_split_targets = [
+          {
+            percent: String(100 - rule.policyWeight),
+            cname: values.cdnName,
+            ttl: String(values.ttl)
+          },
+          {
+            percent: String(rule.policyWeight),
+            cname: udnPlaceholder,
+            ttl: String(values.ttl)
+          }
+        ]
+
+        const type = rule.matchArray[0].matchType
+        const rulesPerMatch = rule.matchArray[0].values[type].map(({ id }) => {
+
+          return {
+            request_match: {
+              type,
+              value: String(id).toLowerCase()
+            },
+            traffic_split_targets,
+            rule_name: rule.name,
+            on_match: 'traffic_split_targets'
+          }
+        })
+
+        generatedRules.push(...rulesPerMatch)
+        return generatedRules
+      }, [])
+
+    //Add this rule with 3rd party cname or udn as value based on rest of world-toggle
+    rules.push({
+      "request_match": { "type": "no_filter", value: '' },
+      "on_match": "response_value",
+      "response_value": {
+        "type": "CNAME",
+        "value": values.ROWToggle ? values.cName : udnPlaceholder
+      }
+    })
+
+    return rules
+  }
+
   submissionError(response) {
     throw new SubmissionError({ _error: parseResponseError(response) })
   }
@@ -105,53 +156,8 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     const propertyId = this.props.property.get('published_host_id')
     const customerId = `${this.props.params.account}-${this.props.params.group}`
 
-    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
-
-    const rules = !values.rules ? [] : values.rules.reduce((generatedRules, rule) => {
-
-      const traffic_split_targets = [
-        {
-          percent: String(100 - rule.policyWeight),
-          cname: values.cdnName,
-          ttl: String(values.ttl)
-        },
-        {
-          percent: String(rule.policyWeight),
-          cname: udnPlaceholder,
-          ttl: String(values.ttl)
-        }
-      ]
-
-      const type = rule.matchArray[0].matchType
-      const rulesPerMatch = rule.matchArray[0].values[type].map(({ id }) => {
-
-        return {
-          request_match: {
-            type,
-            value: String(id).toLowerCase()
-          },
-          traffic_split_targets,
-          rule_name: rule.name,
-          on_match: 'traffic_split_targets'
-        }
-      })
-
-      generatedRules.push(...rulesPerMatch)
-      return generatedRules
-    },[])
-
-    //Add this rule with 3rd party cname or udn as value based on rest of world-toggle
-    rules.push({
-      "request_match": { "type": "no_filter", value: '' },
-      "on_match": "response_value",
-      "response_value": {
-        "type": "CNAME",
-        "value": values.ROWToggle ? values.cName : udnPlaceholder
-      }
-    })
-
     const gtmConfig = {
-      rules,
+      rules: this.generateSubmittableRules(values),
       title: values.cName,
       customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
       policy_name: propertyId,
