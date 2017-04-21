@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import continentList from '../../../../constants/continents'
@@ -16,53 +17,60 @@ const labels = {
   ipv4_cidr_prefix: labelText => <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.items" values={{ items: labelText }} />
 }
 
-export const getById = (state, propertyId) => entitySelectors.getEntityById(state, 'gtm', propertyId)
+export const getById = (state, propertyId) => entitySelectors.getEntityById(state, 'gtm', `${propertyId}-GTM`)
 
 export const formatConfigToInitialValues = (state, propertyId, formatMessage) => {
   const gtmConfig = getById(state, propertyId)
 
-  if (gtmConfig) {
+  if (gtmConfig && gtmConfig.size) {
 
     let thirdPartyCDNName = undefined
     let amountServedByUDN = '50'
-    const asnMatches = gtmConfig.get('asns')
+    const asnMatches = gtmConfig.get('asns') || List()
+    let ttl = 0
     let rowServedByThirdParty = false
+    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
 
     const aggregatedRules = gtmConfig.get('rules').toJS().reduce((aggregate, rule) => {
 
       const hasNegativeMatch = rule.request_match.negative_match
 
       const matchType = rule.request_match.type
-      let matchValue = rule.request_match.value
+      const matchValue = rule.request_match.value
       let labelValue = matchValue
 
-      if (matchType === 'no_filter' && matchValue === '{%customer_cname%}') {
+      if (matchType === 'no_filter' && rule.response_value.value !== udnPlaceholder) {
         rowServedByThirdParty = true
       }
 
-      if (!hasNegativeMatch && rule.traffic_split_targets) {
+      if (!hasNegativeMatch && matchType !== 'no_filter') {
 
         if (matchType === 'asn') {
 
-          matchValue =
-            asnMatches
-            .find((asn) => asn.get('id') === rule.request_match.value).toJS()
-
-          labelValue = matchValue.label
+          for (const asn of asnMatches.toJS()) {
+            if (asn.id === rule.request_match.value) {
+              labelValue = asn.label
+              break
+            }
+          }
 
         } else if (matchType === 'country') {
 
-          labelValue = countryList.find(({ id }) => id === matchValue).label
+          labelValue = countryList.find(({ id }) => id.toLowerCase() === matchValue.toLowerCase()).label
 
         } else if (matchType === 'continent') {
+          labelValue = formatMessage({
 
-          labelValue = formatMessage({ id: continentList.find(({ id }) => id === matchValue).labelId })
+            id: continentList.find(({ id }) => id.toLowerCase() === matchValue.toLowerCase()).labelId
+
+          })
 
         }
 
         if (aggregate.rules[rule.rule_name]) {
+
           aggregate.labels[rule.rule_name] = aggregate.labels[rule.rule_name].concat(', ' + labelValue)
-          aggregate.values[rule.rule_name].push(matchValue)
+          aggregate.values[rule.rule_name].push({ id: matchValue, label: labelValue })
           const aggregatedLabel = aggregate.labels[rule.rule_name]
           const aggregatedValue = aggregate.values[rule.rule_name]
 
@@ -78,14 +86,16 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
 
         } else {
           aggregate.labels[rule.rule_name] = labelValue
-          aggregate.values[rule.rule_name] = [ matchValue ]
+          aggregate.values[rule.rule_name] = [ { id: matchValue, label: labelValue } ]
 
           // get amount of traffic being served via UDN
           // and the name of third party CDN
           rule.traffic_split_targets.forEach(target => {
 
-            if (target.cname === '{%customer_cname%}') {
+            if (target.cname === udnPlaceholder) {
+              ttl = Number(target.ttl)
               amountServedByUDN = target.percent
+
             } else {
               thirdPartyCDNName = target.cname
             }
@@ -101,7 +111,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
                 label: labels[matchType](labelValue),
                 matchType,
                 values: {
-                  [matchType]: [matchValue]
+                  [matchType]: aggregate.values[rule.rule_name]
                 }
               }
             ]
@@ -116,7 +126,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
 
     return {
       GTMToggle: true,
-      ttl: gtmConfig.get('ttl'),
+      ttl,
       cdnName: thirdPartyCDNName,
       cName: gtmConfig.get('title'),
       ROWToggle: rowServedByThirdParty,

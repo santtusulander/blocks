@@ -124,7 +124,8 @@ const roleNames =
 
 const gtm =
   handleActions({
-    [actionTypes.RECEIVE]: receiveEntity({ key: 'gtm' }),
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'gtm', useMergeDeep: false }),
+    [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())
 
