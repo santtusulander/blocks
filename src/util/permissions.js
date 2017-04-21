@@ -75,7 +75,7 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
     // once we come up with a better way to support listing accounts for the
     // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
     const isSuperAdmin = (roleId === UDN_ADMIN_ACCOUNT_ID) || (roleId === SUPER_ADMIN_ACCOUNT_ID) || (roleId === UDN_USER_ACCOUNT_ID)
-    const canListAccounts = role.getIn(['permissions', 'aaa', 'accounts', 'list', 'allowed'], false)
+    const canListAccounts = role.getIn(['aaa', 'accounts', 'list', 'allowed'], false)
 
     return isSuperAdmin && canListAccounts
   }
