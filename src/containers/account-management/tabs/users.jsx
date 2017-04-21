@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
