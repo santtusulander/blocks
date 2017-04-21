@@ -15,8 +15,8 @@ import AddressMatchConditionForm from './ipv4address-match-form'
 const matches = [
   { matchType: 'continent', label: <FormattedMessage id="portal.configuration.traffic.rules.match.continent" /> },
   { matchType: 'country', label: <FormattedMessage id="portal.configuration.traffic.rules.match.country" /> },
-  { matchType: 'ipv4address', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address" /> },
-  { matchType: 'ipv4cidr', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr" /> },
+  { matchType: 'ipv4_address', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address" /> },
+  { matchType: 'ipv4_cidr_prefix', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr" /> },
   { matchType: 'asn', label: <FormattedMessage id="portal.configuration.traffic.rules.match.asn" /> }
 ]
 
@@ -80,14 +80,14 @@ class MatchesForm extends Component {
         Form = CountryMatchConditionForm
         break
 
-      case 'ipv4address':
+      case 'ipv4_address':
         title = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address"/>
         subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.modal.subtitle"/>
         matchType = chosenMatch.matchType
         Form = AddressMatchConditionForm
         break
 
-      case 'ipv4cidr':
+      case 'ipv4_cidr_prefix':
         title = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr"/>
         subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.modal.subtitle"/>
         matchType = chosenMatch.matchType

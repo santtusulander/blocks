@@ -19,18 +19,10 @@ class ConfigurationGTMTrafficRules extends React.Component {
       activeIndex: undefined
     }
 
-    this.deleteRule = this.deleteRule.bind(this)
     this.renderRules = this.renderRules.bind(this)
     this.renderRule = this.renderRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
     this.toggleConfirmation = this.toggleConfirmation.bind(this)
-  }
-
-  deleteRule(index, remove) {
-    return () => {
-      remove(index)
-      this.toggleConfirmation()
-    }
   }
 
   showConfirmation(index) {
@@ -43,7 +35,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
     this.setState({ activeIndex })
   }
 
-  renderRule({ input, index, fields }) {
+  renderRule({ input, index, fields, readOnly }) {
     const conditionOptions = {
       'or': "portal.configuration.condition.or",
       'and': "portal.configuration.condition.and"
@@ -79,7 +71,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </div>
         </td>
         <td>{trafficSplit}</td>
-        {!this.props.readOnly &&
+        {!readOnly &&
           <td className="nowrap-column">
               <ActionButtons
                 permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -98,7 +90,10 @@ class ConfigurationGTMTrafficRules extends React.Component {
                   <Confirmation
                     cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
                     confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
-                    handleConfirm={this.deleteRule(index, fields.remove)}
+                    handleConfirm={() => {
+                      fields.remove(index)
+                      this.toggleConfirmation()
+                    }}
                     handleCancel={() => this.toggleConfirmation()}>
                     <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                   </Confirmation>
@@ -110,7 +105,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
     )
   }
 
-  renderRules({ fields }) {
+  renderRules({ fields, readOnly }) {
     return (
       <tbody>
         {fields.map((rule, i) => (
@@ -118,6 +113,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
             key={i}
             fields={fields}
             index={i}
+            props={{ readOnly }}
             name={rule}
             component={this.renderRule}/>
         ))}
@@ -145,6 +141,12 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </thead>
           <FieldArray
             name="rules"
+            validate={value => {
+              if (!value || !value.length) {
+                return true
+              }
+            }}
+            props={{ readOnly: this.props.readOnly }}
             activeIndex={this.state.activeIndex}
             component={this.renderRules}/>
         </Table>
