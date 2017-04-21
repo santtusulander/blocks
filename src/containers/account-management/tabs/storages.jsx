@@ -226,9 +226,11 @@ class AccountManagementStorages extends Component {
                     value={this.state.search}
                     onChange={this.changeSearch}  />
                 </FormGroup>
-                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage}>
-                  <IconAdd />
-                </Button>
+                <IsAllowed to={PERMISSIONS.CREATE_STORAGE}>
+                  <Button bsStyle="success" className="btn-icon" onClick={this.addStorage}>
+                    <IconAdd />
+                  </Button>
+                </IsAllowed>
               </SectionHeader>
 
               <Table striped={true}>
@@ -260,7 +262,7 @@ class AccountManagementStorages extends Component {
                         <FormattedMessage id="portal.account.storage.table.noStorages.text" />
                       </td>
                     </tr>}
-                    
+
                   {sortedStorages.map((storage, i) => {
                     const storageId = storage.get('ingest_point_id')
                     const origins = storage.get('origins')
