@@ -31,7 +31,7 @@ import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-cl
 import { getByGroup as getPropetiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getByGroup as getMetricsByGroup } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
-import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
@@ -64,7 +64,10 @@ class AccountManagementStorages extends Component {
     const {params: {account, brand, group}} = this.props
 
     if (brand && account && group) {
-      this.fetchStorageData(group)
+      this.props.fetchGroups(this.props.params)
+      if (group) {
+        this.fetchStorageData(group)
+      }
     }
 
     this.props.fetchClusters({})
@@ -144,7 +147,7 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, groups, storages, clusters, properties, metrics, params,
+    const { account, groups, storages, clusters, properties, metrics, params,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
     const sorterProps  = {
@@ -158,7 +161,6 @@ class AccountManagementStorages extends Component {
       // eslint-disable-next-line eqeqeq
       const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
-
       const origins = []
       const storageGatewayHost = storage.getIn(['gateway','hostname'])
       const originsData = properties.filter(property => {
@@ -305,7 +307,7 @@ class AccountManagementStorages extends Component {
                   brand={account.get('brand_id')}
                   accountId={account.get('id')}
                   storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
-                  groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+                  groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : params.group}
                   fetching={false}
                   onCancel={() => this.props.toggleModal()}
                 />
@@ -331,9 +333,9 @@ AccountManagementStorages.propTypes = {
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
   fetchGroupMetrics: PropTypes.func,
+  fetchGroups: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
-  group: PropTypes.instanceOf(Map),
   groups: PropTypes.instanceOf(List),
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
@@ -358,7 +360,7 @@ function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     account: account,
-    group: getGroupById(state, ownProps.params.group),
+    groups: getByAccount(state, ownProps.params.account),
     storages: getStoragesByGroup(state, ownProps.params.group),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroup(state, ownProps.params.group),
@@ -378,7 +380,6 @@ function mapDispatchToProps(dispatch) {
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
     fetchGroupMetrics: (group, params) => dispatch(fetchGroupMetrics(group, params)),
-    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
     fetchGroups: (params) => dispatch(groupActions.fetchAll(params))
   };
 }
