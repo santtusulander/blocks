@@ -5,7 +5,7 @@ import { Router, browserHistory, Route } from 'react-router'
 import { LogPageView } from './util/google-analytics'
 import { getRoutes } from './routes'
 import Login from './containers/login'
-import ConnectedIntlProvider from './containers/connectedIntlProvider'
+import ConnectedIntlProvider from './decorators/connected-intl-provider'
 
 
 const Root = ({ store }) =>
