@@ -15,7 +15,7 @@ describe('ConfigurationGlobalTrafficManager', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (config = Map(), readOnly = false) => {
+    subject = (readOnly, isFetching) => {
       const initialValues = {
         GTMToggle: true,
         cdnName: 'google.com',
@@ -23,7 +23,8 @@ describe('ConfigurationGlobalTrafficManager', () => {
         ROWToggle: true
       }
       return shallow(<ConfigurationGlobalTrafficManager
-                      config={config}
+                      isFetching={isFetching}
+                      handleSubmit={() => {}}
                       readOnly={readOnly}
                       intl={intlMaker()}
                       initialValues={initialValues} />
@@ -36,7 +37,7 @@ describe('ConfigurationGlobalTrafficManager', () => {
   })
 
   it('should display LoadingSpinner when data is loading', () => {
-    expect(subject().find('LoadingSpinner').length).toBe(1)
+    expect(subject(false, true).find('LoadingSpinner').length).toBe(1)
   })
 
   it('should not display Toggle when data is loading', () => {
@@ -44,22 +45,22 @@ describe('ConfigurationGlobalTrafficManager', () => {
   })
 
   it('should not display LoadingSpinner when data is loaded', () => {
-    expect(subject(new Map([{'key': 'value'}])).find('LoadingSpinner').length).toBe(0)
+    expect(subject().find('LoadingSpinner').length).toBe(0)
   })
 
-  it('should display four Field components when data is loaded', () => {
-    expect(subject(new Map([{'key': 'value'}])).find('Field').length).toBe(4)
+  it('should display five Field components when data is loaded', () => {
+    expect(subject().find('Field').length).toBe(5)
   })
 
   it('should display Add button', () => {
-    expect(subject(new Map([{'key': 'value'}])).find('Button').length).toBe(1)
+    expect(subject().find('Button').length).toBe(1)
   })
 
   it('should not display Field components when readOnly prop is passed', () => {
-    expect(subject(new Map([{'key': 'value'}]), true).find('Field').length).toBe(0)
+    expect(subject(true).find('Field').length).toBe(0)
   })
 
   it('should not display Add button when readOnly prop is passed', () => {
-    expect(subject(new Map([{'key': 'value'}]), true).find('Button').length).toBe(0)
+    expect(subject(true).find('Button').length).toBe(0)
   })
 })
