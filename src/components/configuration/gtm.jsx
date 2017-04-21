@@ -347,7 +347,6 @@ class ConfigurationGlobalTrafficManager extends React.Component {
               </Button>
             </IsAllowed>
           }
-          {/* <Button type="submit">asdasdads</Button> */}
         </SectionHeader>
 
         <SectionContainer>

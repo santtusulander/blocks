@@ -32,7 +32,7 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
       return aggregate
 
     }, { labelText: '', values: [] })
-    console.log(labelText);
+
     onSave({
       values: { ipv4_cidr_prefix: values },
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.items" values={{ items: labelText }} />,
