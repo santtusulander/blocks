@@ -198,9 +198,11 @@ class AccountManagementStorages extends Component {
                     value={this.state.search}
                     onChange={this.changeSearch}  />
                 </FormGroup>
-                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!params.group}>
-                  <IconAdd />
-                </Button>
+                <IsAllowed to={PERMISSIONS.CREATE_STORAGE}>
+                  <Button bsStyle="success" className="btn-icon" onClick={this.addStorage}>
+                    <IconAdd />
+                  </Button>
+                </IsAllowed>
               </SectionHeader>
 
               <Table striped={true}>
