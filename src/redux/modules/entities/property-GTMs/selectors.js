@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import continentList from '../../../../constants/continents'
-import countryList from '../../../../constants/country-list'
+import countryList from '../../../../constants/three-digit-countries'
 
 import * as entitySelectors from '../../entity/selectors'
 
@@ -56,7 +56,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
 
         } else if (matchType === 'country') {
 
-          labelValue = countryList.find(({ id }) => id.toLowerCase() === matchValue.toLowerCase()).label
+          labelValue = countryList.find(({ id }) => id === matchValue).label
 
         } else if (matchType === 'continent') {
           labelValue = formatMessage({

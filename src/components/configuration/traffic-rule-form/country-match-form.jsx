@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
-import countriesList from '../../../constants/country-list'
+import countriesList from '../../../constants/three-digit-countries'
 import { checkForErrors } from '../../../util/helpers'
 
 import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
