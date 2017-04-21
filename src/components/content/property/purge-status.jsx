@@ -99,7 +99,7 @@ const PurgeHistoryReport = (props) => {
               <FormControl
                 style={{marginLeft: 0}}
                 className="search-input"
-                placeholder="Search"
+                placeholder={intl.formatMessage({ id: 'portal.content.property.purgeStatus.search.placeholder' })}
                 onChange={({ target: { value }}) => onFilterChange(filter_by, value)}
                 value={filter_value}
               />

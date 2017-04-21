@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -190,7 +190,7 @@ export class AccountManagementAccountUsers extends Component {
             name="email"
             ref="emails"
             ErrorComponent={errorTooltip}
-            placeholder=" Email"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.form.email.placeholder'})}
             component={FieldFormGroup}/>
         }
       ],
@@ -242,8 +242,8 @@ export class AccountManagementAccountUsers extends Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.addingNew) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id="portal.common.error.warning.title" />,
+        content: <FormattedMessage id="portal.account.leaving.warning.text" />,
         stayButton: true,
         continueButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -261,8 +261,8 @@ export class AccountManagementAccountUsers extends Component {
   deleteUser(user) {
     if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
-        title: 'Error',
-        content: 'You cannot delete the account you are logged in with.',
+        title: <FormattedMessage id="portal.errorModal.error.text" />,
+        content: <FormattedMessage id="portal.account.delete.current.user.warning" />,
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
@@ -345,18 +345,17 @@ export class AccountManagementAccountUsers extends Component {
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
-    roleOptions.unshift(['all', 'All Roles'])
+    roleOptions.unshift(['all', <FormattedMessage id="portal.user.list.allRoles" />])
 
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
-    ]).insert(0, ['all', 'All Groups']).toArray()
+    ]).insert(0, ['all', <FormattedMessage id="portal.user.list.allGroups" />]).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
 
-    const usersSize = sortedUsers.size
-    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
+    const usersText = this.props.intl.formatMessage({id: 'portal.user.list.title.text' }, { numUsers: sortedUsers.size })
     const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
-    const finalUserText = usersSize + usersText + hiddenUserText
+    const finalUserText = usersText + hiddenUserText
 
     return (
       <PageContainer>
@@ -364,7 +363,7 @@ export class AccountManagementAccountUsers extends Component {
           <FormGroup className="search-input-group inline">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={this.props.intl.formatMessage({id: 'portal.user.form.search.placeholder'})}
               value={this.state.search}
               onChange={this.changeSearch} />
           </FormGroup>
@@ -519,6 +518,7 @@ AccountManagementAccountUsers.propTypes = {
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   resetRoles: PropTypes.func,
@@ -565,4 +565,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagementAccountUsers)))

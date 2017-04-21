@@ -28,7 +28,7 @@ import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
 
 class AccountList extends Component {
@@ -121,7 +121,8 @@ class AccountList extends Component {
       accounts,
       deleteAccount,
       fetching,
-      params: { brand }
+      params: { brand },
+      intl
     } = this.props
 
     if (fetching) {
@@ -150,10 +151,9 @@ class AccountList extends Component {
       return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
-    const accountsSize = sortedAccounts.size
-    const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
+    const accountsText = intl.formatMessage({id: 'portal.account.manage.counter.text' }, { numAccounts: sortedAccounts.size })
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
-    const finalAccountsText = accountsSize + accountsText + hiddenAccountsText
+    const finalAccountsText = accountsText + hiddenAccountsText
 
     return (
       <PageContainer>
@@ -161,7 +161,7 @@ class AccountList extends Component {
           <FormGroup className="search-input-group">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={intl.formatMessage({id: "portal.account.list.search.placeholder.text"})}
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
@@ -234,6 +234,7 @@ AccountList.propTypes = {
   fetchAccounts: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   fetching: PropTypes.bool,
+  intl: PropTypes.object,
   params: PropTypes.object,
   providerTypes: PropTypes.instanceOf(Map),
   route: PropTypes.object,
@@ -267,4 +268,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountList))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountList)))

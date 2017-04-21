@@ -4,13 +4,13 @@ import { List } from 'immutable'
 import ActionButtons from '../../components/shared/action-buttons.jsx'
 import { AccountManagementHeader } from './account-management-header.jsx'
 
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const UserList = props => {
-  const { users, editUser, deleteUser, addUser } = props
+  const { users, editUser, deleteUser, addUser, intl } = props
   return (
     <div>
-      <AccountManagementHeader title={`${users.size} Users`} onAdd={addUser}/>
+      <AccountManagementHeader title={intl.formatMessage({id: 'portal.user.list.title.text'}, {numUsers: users.size})} onAdd={addUser}/>
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
@@ -47,10 +47,11 @@ UserList.propTypes = {
   addUser: PropTypes.func,
   deleteUser: PropTypes.func,
   editUser: PropTypes.func,
+  intl: PropTypes.object,
   users: PropTypes.instanceOf(List)
 }
 UserList.defaultProps = {
   users: List()
 }
 
-export default UserList
+export default injectIntl(UserList)

@@ -80,10 +80,9 @@ class RolesList extends React.Component {
 
     const hiddenRoles = this.props.roles.size - sortedRoles.size
 
-    const rolesSize = sortedRoles.size
-    const rolesText = ` Role${sortedRoles.size === 1 ? '' : 's'}`
+    const rolesText = this.props.intl.formatMessage({id: 'portal.role.list.counter.text' }, { numRoles: sortedRoles.size })
     const hiddenRolesText = hiddenRoles ? ` (${hiddenRoles} hidden)` : ''
-    const finalRolesText = rolesSize + rolesText + hiddenRolesText
+    const finalRolesText = rolesText + hiddenRolesText
 
     return (
       <div className='roles-list'>

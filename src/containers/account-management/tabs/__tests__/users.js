@@ -39,6 +39,7 @@ describe('AccountManagementAccountUsers', () => {
         roles={ Immutable.List() }
         fetchRoleNames={jest.fn()}
         route={ {} }
+        intl={{formatMessage: jest.fn()}}
         router={ routerMock }
         uiActions= {{}}
         userActions={ {

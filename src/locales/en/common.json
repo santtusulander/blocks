@@ -211,6 +211,7 @@
   "portal.errorModal.error.text": "Error",
   "portal.errorModal.errorOccured.text": "An error occurred",
   "portal.errorModal.reloadNote.text": "Note: Reloading may lose all unsaved changes",
+  "portal.errorModal.error.text": "Error",
 
   "portal.exportEmail.oneTime.text": "One-time, send now",
   "portal.exportEmail.weekly.text": "Weekly",
@@ -264,7 +265,13 @@
   "portal.header.analytics.text": "Analytics",
   "portal.header.configuration.text": "Configuration",
   "portal.header.content.text": "Content",
+
+  "portal.header.accountManagement.text": "Account Management",
+  "portal.header.services.text": "Services",
   "portal.header.security.text": "Security",
+  "portal.header.support.text": "Support",
+  "portal.header.configuration.text": "Configuration",
+  "portal.header.dashboard.text": "Dashboard",
 
   "portal.header.menu.theme.title": "UI Theme",
   "portal.header.menu.theme.ericssonTitle.text": "Ericsson {themeTitle} theme",
@@ -273,6 +280,8 @@
 
   "portal.groups.accountSummary.text": "Account Summary",
   "portal.groups.accountContentSummary.text": "Account Content Summary",
+  "portal.common.input.search.placeholder": "Search",
+  "portal.commom.select.placeholder": "Please Select",
 
   "portal.common.copyToClipboard": "Copy to Clipboard",
   "portal.common.goToProfileSettings": "Go to profile settings ",
@@ -302,5 +311,6 @@
   "portal.dashWithSpaces": "- ",
   "portal.slashWithSpace": "/ ",
   "portal.spaceWithPercentage": " %",
-  "portal.spaceWithAsterisk": " *"
+  "portal.spaceWithAsterisk": " *",
+  "portal.select.emptyLabel": "Please Select"
 }

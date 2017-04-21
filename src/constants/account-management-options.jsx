@@ -16,9 +16,9 @@ export const SUPER_ADMIN_ROLE_ID = 8;
 export const UDN_USER_ROLE_ID = 9;
 
 export const ACCOUNT_TYPES = [
-  { value: ACCOUNT_TYPE_CONTENT_PROVIDER, label: 'Content Provider' },
-  { value: ACCOUNT_TYPE_SERVICE_PROVIDER, label: 'Service Provider' },
-  { value: ACCOUNT_TYPE_CLOUD_PROVIDER,   label: 'Cloud Provider' }
+  { value: ACCOUNT_TYPE_CONTENT_PROVIDER, label: <FormattedMessage id="portal.account.type.contentProvider"/> },
+  { value: ACCOUNT_TYPE_SERVICE_PROVIDER, label: <FormattedMessage id="portal.account.type.serviceProvider"/> },
+  { value: ACCOUNT_TYPE_CLOUD_PROVIDER,   label: <FormattedMessage id="portal.account.type.cloudProvider"/> }
 ]
 
 export const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)

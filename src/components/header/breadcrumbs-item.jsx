@@ -156,7 +156,7 @@ class BreadcrumbsItem extends React.Component {
       })
 
     } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
-      links.push({label: 'Services'})
+      links.push({label: <FormattedMessage id="portal.header.services.text"/>})
     } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {
       this.addGroupLink(props, links, getSecurityUrl)
 
@@ -164,11 +164,10 @@ class BreadcrumbsItem extends React.Component {
         label: <FormattedMessage id="portal.header.security.text" />,
         url: links.length > 0 ? getSecurityUrlFromParams({ brand: params.brand, account: params.account }) : null
       })
-
     } else if (new RegExp(getRoute('support'), 'g').test(pathname)) {
-      links.push({label: 'Support'})
+      links.push({label: <FormattedMessage id="portal.header.support.text"/>})
     } else if (new RegExp(getRoute('configuration'), 'g').test(pathname)) {
-      links.push({label: 'Configuration'})
+      links.push({label: <FormattedMessage id="portal.header.configuration.text"/>})
     } else if (new RegExp(getRoute('network'), 'g').test(pathname)) {
       // Link to POD
       if (params.pod) {
@@ -210,7 +209,7 @@ class BreadcrumbsItem extends React.Component {
       })
 
     } else if (new RegExp(getRoute('dashboard'), 'g').test(pathname)) {
-      links.push({label: 'Dashboard'})
+      links.push({label: <FormattedMessage id="portal.header.dashboard.text"/>})
     }
 
     this.setState({ links: links.reverse() })
