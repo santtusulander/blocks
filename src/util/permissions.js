@@ -134,6 +134,9 @@ permissionMapping[PERMISSIONS.MODIFY_ROLE] =
 permissionMapping[PERMISSIONS.VIEW_DNS] =
   (role) => role.getIn([ 'north', 'zones', 'list', 'allowed']) && role.getIn([ 'north', 'rr', 'list', 'allowed'])
 
+permissionMapping[PERMISSIONS.CONFIGURE_DNS] =
+  (role) => role.getIn([ 'north', 'zones', 'create', 'allowed']) && role.getIn([ 'north', 'rr', 'create', 'allowed'])
+
 permissionMapping[PERMISSIONS.CREATE_ZONE] =
   (role) => role.getIn([ 'north', 'zones', 'create', 'allowed'])
 
