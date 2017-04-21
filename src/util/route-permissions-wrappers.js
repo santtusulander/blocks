@@ -4,7 +4,6 @@ import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
-import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
@@ -216,6 +215,10 @@ export const UserCanViewGTM = UserAuthWrapper({
   },
   failureRedirectPath: (state, ownProps) => {
     const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
 
 export const AccountCanViewProperties = UserAuthWrapper({
   authSelector: (state, ownProps) => {
