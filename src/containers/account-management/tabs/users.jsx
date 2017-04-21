@@ -15,7 +15,8 @@ import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
 import usersActions from '../../../redux/modules/entities/users/actions'
-import { getByAccount, getByBrand } from '../../../redux/modules/entities/users/selectors'
+import { getByAccount, getByBrand, getByPage } from '../../../redux/modules/entities/users/selectors'
+import { getPaginationMeta } from '../../../redux/modules/entity/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
 import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
@@ -24,7 +25,7 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
+//import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
@@ -37,7 +38,7 @@ import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/shared/modal'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-//import Paginator from '../../../components/shared/paginator/paginator'
+import Paginator from '../../../components/shared/paginator/paginator'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -46,12 +47,16 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 
+const PAGE_SIZE = 20
+const MAX_PAGINATION_ITEMS = 6
+
 export class AccountManagementAccountUsers extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       sortBy: 'email',
-      sortDir: 1,
+      sortOrder: parseInt(props.location.query.sortOrder) || 1,
       search: '',
       filteredGroups: 'all',
       filteredRoles: 'all',
@@ -73,19 +78,18 @@ export class AccountManagementAccountUsers extends Component {
     this.shouldLeave = this.shouldLeave.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
     this.isLeaving = false;
+
+    this.onActivePageChange = this.onActivePageChange.bind(this)
   }
 
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
-    const {router, route, params: { brand, account }} = this.props
+    const {location, router, route, params: { brand, account }} = this.props
 
-    if (account) {
-      this.props.fetchUsers({brand, account})
-      this.props.fetchGroups({brand, account})
-    } else {
-      this.props.fetchUsers({brand})
-    }
+    const {sortBy, sortOrder, filter} = location.query
+    const page = location.query.page ? location.query.page : 1
 
+    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filter})
     this.props.fetchRoleNames()
 
     router.setRouteLeaveHook(route, this.shouldLeave)
@@ -93,15 +97,16 @@ export class AccountManagementAccountUsers extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
+    const {page, sortBy, sortOrder, filter} = nextProps.location.query
 
-    if (!is(this.props.account, nextProps.account)) {
+    //if brand, account or sort has changed -> refetch
+    if (brand !== this.props.params.brand
+      || account !== this.props.params.account
+      || page !== this.props.location.query.page
+      || sortBy !== this.props.location.query.sortBy
+      || sortOrder !== this.props.location.query.sortOrder) {
 
-      this.props.fetchUsers({brand, account})
-      this.props.fetchGroups({brand, account})
-
-      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
-      this.props.resetRoles()
-
+      this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filter, forceReload: true})
     }
 
   }
@@ -110,12 +115,28 @@ export class AccountManagementAccountUsers extends Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
+  /**
+   * Pushes ?sort/page/filter -params to url for pagination
+   */
+  onActivePageChange(nextPage) {
+    const pathname = this.props.location.pathname
+
+    this.props.router.push({
+      pathname,
+      query: {
+        page: nextPage,
+        sortBy: this.state.sortBy,
+        sortOrder: this.state.sortOrder
+      }
+    })
+  }
 
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
-      sortDir: direction
-    })
+      sortOrder: direction
+    }, () => this.onActivePageChange(1)
+    )
   }
 
   newUser({ email, roles }) {
@@ -214,13 +235,16 @@ export class AccountManagementAccountUsers extends Component {
     this.setState({ showPermissionsModal: !this.state.showPermissionsModal })
   }
 
-  getGroupsForUser(user) {
-    const groups = user.get('group_id')
-      .map(groupId => this.props.groups
-        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
-        .get('name'))
-      .toJS()
-    return groups.length > 0 ? groups : ['User has no groups']
+  getGroupsForUser(/*user*/) {
+    return []
+
+    //Removed until we have group id in users
+    // const groups = user.get('group_id')
+    //   .map(groupId => this.props.groups
+    //     .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+    //     .get('name'))
+    //   .toJS()
+    // return groups.length > 0 ? groups : ['User has no groups']
   }
 
   getRolesForUser(user) {
@@ -300,55 +324,36 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   render() {
-    const {fetching} = this.props
+    const {
+      fetching,
+      users
+    } = this.props
 
     if (fetching) {
       return <LoadingSpinner />
     }
 
+    const totalCount = this.props.paginationMeta && this.props.paginationMeta.get('total') ? this.props.paginationMeta.get('total') : 0
 
-    const users = this.props.users;
+    const paginationProps = {
+      activePage: parseInt(this.props.location.query.page)|| 1,
+      items: Math.floor(totalCount / PAGE_SIZE),
+      onSelect: this.onActivePageChange,
+      maxButtons: MAX_PAGINATION_ITEMS,
+      boundaryLinks: true,
+      first: true,
+      last: true,
+      next: true,
+      prev: true
+    }
+
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
-      activeDirection: this.state.sortDir
+      activeDirection: this.state.sortOrder
     }
-    const filteredUsersByRole = users.filter((user) => {
-      if (this.state.filteredRoles === 'all') {
-        return true
-      } else {
-        return user.get('roles').find(role => {
-          return this.state.filteredRoles === role
-        })
-      }
-    })
-    const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if (this.state.filteredGroups === 'all') {
-        return true
-      } else {
-        return user.get('group_id').find(group => {
-          return this.state.filteredGroups === group
-        })
-      }
-    })
-    const searchedUsers = filteredUsersByGroup.filter((user) => {
-      return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
-    })
-    const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
-    roleOptions.unshift(['all', 'All Roles'])
-
-    const groupOptions = this.props.groups.map(group => [
-      group.get('id'),
-      group.get('name')
-    ]).insert(0, ['all', 'All Groups']).toArray()
-    const numHiddenUsers = users.size - sortedUsers.size;
-
-    const usersSize = sortedUsers.size
-    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
-    const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
-    const finalUserText = usersSize + usersText + hiddenUserText
+    const finalUserText = <FormattedMessage id='portal.role.list.search.userCount.text' values={{userCount: totalCount}} />
 
     return (
       <PageContainer>
@@ -360,6 +365,8 @@ export class AccountManagementAccountUsers extends Component {
               value={this.state.search}
               onChange={this.changeSearch} />
           </FormGroup>
+
+          {/* commented out until we can do server side filtering for roles / groups
           <FormGroup className="inline">
             <SelectWrapper
               id='filtered-roles'
@@ -378,6 +385,8 @@ export class AccountManagementAccountUsers extends Component {
               }}
               options={groupOptions}/>
           </div>
+          */}
+
           <IsAllowed to={CREATE_USER}>
             <Button bsStyle="success" className="btn-icon"
               onClick={this.toggleInlineAdd}>
@@ -403,7 +412,7 @@ export class AccountManagementAccountUsers extends Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {sortedUsers.map((user, i) => {
+            {users && users.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
@@ -426,7 +435,13 @@ export class AccountManagementAccountUsers extends Component {
           </tbody>
         </Table>
 
-        {sortedUsers.size === 0 &&
+        {/* Show Pagination if more items than fit on PAGE_SIZE */
+          totalCount > PAGE_SIZE &&
+          <Paginator {...paginationProps} />
+        }
+
+
+        {users && users.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
               <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: this.state.search}} /></span>
@@ -506,14 +521,16 @@ AccountManagementAccountUsers.propTypes = {
   createUser: PropTypes.func,
   currentUser: PropTypes.string,
   deleteUser: PropTypes.func,
-  fetchGroups: PropTypes.func,
+  //fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  location: PropTypes.object,
+  paginationMeta: PropTypes.instanceOf(Map),
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
-  resetRoles: PropTypes.func,
+  //resetRoles: PropTypes.func,
   roles: PropTypes.instanceOf(List),
   route: PropTypes.object,
   router: PropTypes.object,
@@ -529,16 +546,19 @@ AccountManagementAccountUsers.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const {brand, account} = ownProps.params
+  //const {brand, account} = ownProps.params
+
+  const page = ownProps.location.query.page ? ownProps.location.query.page : 1
 
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
-    users: account ? getByAccount(state, account) : getByBrand(state, brand),
+    users: getByPage(state, page), //account ? getByAccount(state, account) : getByBrand(state, brand),
     currentUser: state.user.get('currentUser').get('email'),
     permissions: state.permissions,
-    groups: getGroupsByAccount(state, account)
+    paginationMeta: getPaginationMeta(state, 'user')
+    //groups: account && getGroupsByAccount(state, account)
   }
 }
 
@@ -551,7 +571,8 @@ const mapDispatchToProps = (dispatch) => {
 
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
-    fetchUsers: (params) => dispatch(usersActions.fetchAll(params)),
+    fetchUsers: (params) => dispatch(usersActions.fetchAll({...params, offset: (params.page - 1) * PAGE_SIZE, limit: PAGE_SIZE})),
+
     createUser: (user) => dispatch(usersActions.create(user)),
     updateUser: (user) => dispatch(usersActions.update(user))
   };
