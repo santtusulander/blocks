@@ -522,7 +522,6 @@ function mapStateToProps(state, ownProps) {
   const activeGroup = getGroupById(state, ownProps.params.group) || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
-  console.log(groupHasGTMService);
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
   const isGTMFormDirty = isDirty('gtmForm')
