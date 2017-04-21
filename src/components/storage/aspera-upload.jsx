@@ -12,6 +12,8 @@ import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as userActionCreators from '../../redux/modules/user'
 
+import { parseResponseError } from '../../redux/util'
+
 import { ASPERA_STATUS_TRANSFER_ERROR,
          ASPERA_STATUS_ACCESS_CODE_ERROR
        } from './aspera-notification'
@@ -61,7 +63,7 @@ class AsperaUpload extends Component {
     this.props.userActions.getStorageAccessKey(brandId, accountId, groupId, storageId).then((res) => {
       if (res.error) {
         this.setState({
-          asperaError: res.payload.data.message,
+          asperaError: parseResponseError(res.payload),
           accessKey: null
         })
 
@@ -75,7 +77,7 @@ class AsperaUpload extends Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
     }

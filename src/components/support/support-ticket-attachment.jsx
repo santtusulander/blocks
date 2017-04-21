@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 import { Map } from 'immutable'
 import { formatFileSize } from '../../util/helpers'
-import IconClose from '../icons/icon-close'
+import IconClose from '../shared/icons/icon-close'
 
 class SupportTicketAttachment extends React.Component {
   constructor(props) {
@@ -36,7 +36,9 @@ SupportTicketAttachment.propTypes = {
 
 SupportTicketAttachment.defaultProps = {
   attachment: Map(),
-  onDelete: () => {}
+  onDelete: () => {
+    // no-op
+  }
 }
 
 export default SupportTicketAttachment

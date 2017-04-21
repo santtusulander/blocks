@@ -45,7 +45,7 @@ export const fetch = ({id, ...params}) => {
 * @param  {[type]} account [description]
 * @return {[type]}         [description]
 */
-export const fetchIds = ( params ) => {
+export const fetchIds = (params) => {
   return axios.get(baseUrl(params), PAGINATION_MOCK)
    .then(({data}) => {
      return data
@@ -58,7 +58,7 @@ export const fetchIds = ( params ) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = ( params ) => {
+export const fetchAll = (params) => {
   return axios.get(baseUrl(params), PAGINATION_MOCK)
     .then(({data}) => {
       return normalize({ id: params.group, networks: data.data }, groupNetworks)

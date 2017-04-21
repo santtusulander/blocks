@@ -1,23 +1,37 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
-import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
+import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
 import checkPermissions from './permissions'
+import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
+
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+import { getFetchingByTag } from '../redux/modules/fetching/selectors'
+
+import {
+  hasService
+} from '../util/helpers'
+
+import {
+  accountIsContentProviderType,
+  accountIsCloudProviderType
+ } from '../util/helpers'
 
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
-  if(!permission) {
+  if (!permission) {
     return true
   }
   return checkPermissions(
-    store.getState().roles.get('roles'),
+    getRoles(store.getState()),
     user,
     permission
   )
 }
 
 const servicePermissionChecker = (permission) => permissions => {
-  if(!permission || !permissions || !permissions.size) {
+  if (!permission || !permissions || !permissions.size) {
     return true
   }
 
@@ -82,19 +96,18 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     failureRedirectPath: (state, ownProps) => {
       const fallback = allTabs.find(([perm]) => {
         return checkPermissions(
-          store.getState().roles.get('roles'),
+          getRoles(state),
           state.user.get('currentUser'),
           perm
         )
       })
-      if(fallback) {
+      if (fallback) {
         let path = ownProps.location.pathname.replace(/\/$/, '')
         path = path.substr(0, path.lastIndexOf('/'))
         return `${path}/${fallback[1]}`
-      }
-      else {
+      } else {
         // TODO: Where should we send them? Wrap these checks to 404 on error?
-        throw("User doesn't have permission to see any analytics tabs.")
+        throw ("User doesn't have permission to see any analytics tabs.")
       }
     },
     wrapperDisplayName: 'UserCanViewAnalyticsTab',
@@ -121,7 +134,7 @@ export const UserCanViewHosts = (store) => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
-      let path = ownProps.location.pathname.replace(/\/$/, '')
+      const path = ownProps.location.pathname.replace(/\/$/, '')
       return path.substr(0, path.lastIndexOf('/'))
     },
     wrapperDisplayName: 'UserCanViewHosts',
@@ -184,3 +197,51 @@ export const CanViewStorageTab = (store) => {
     allowRedirectBack: false
   })
 }
+
+export const UserCanViewGTM = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const activeGroup =
+      getGroupById(state, ownProps.params.group)
+    return activeGroup
+  },
+  authenticatingSelector: (state) => getFetchingByTag(state, 'group'),
+  wrapperDisplayName: 'GroupHasGTMService',
+  predicate: (group) => {
+    if (!group) {
+      return true
+    } else {
+      return hasService(group, GTM_SERVICE_ID)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
+
+export const AccountCanViewProperties = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const account =
+      getAccountById(state, ownProps.params.account)
+    return {
+      account,
+      accountId: ownProps.params.account
+    }
+
+  },
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
+  wrapperDisplayName: 'AccountCanViewProperties',
+  predicate: ({account}) => {
+    if (!account) {
+      return true
+    } else {
+      return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/properties/, 'i'), '')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})

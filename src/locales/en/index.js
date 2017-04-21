@@ -12,11 +12,10 @@ import security from './security.json'
 import services from './services.json'
 import storage from './storage.json'
 import support from './support.json'
+import shared from './shared.json'
 import user from './user.json'
+import dns from './dns.json'
 import validators from './validators.json';
-
-//TODO: Should be removed when all strings have been moved to separate files
-import en from './en.js'
 
 export default Object.assign({},
   account,
@@ -33,7 +32,8 @@ export default Object.assign({},
   services,
   storage,
   support,
+  shared,
   user,
-  validators,
-  en
+  dns,
+  validators
 )

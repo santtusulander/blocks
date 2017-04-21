@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import CacheKeyQueryStringForm from './cache-key-query-string-form'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
@@ -18,11 +19,7 @@ class CacheKeyQueryString extends React.Component {
     this.updateSet = this.updateSet.bind(this)
   }
   saveChanges() {
-    this.props.changeValue(
-      this.props.path,
-      this.state.updatedSet
-    )
-    this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, this.state.updatedSet)
   }
   updateSet(set) {
     this.setState({ updatedSet: set })
@@ -31,7 +28,7 @@ class CacheKeyQueryString extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Cache Key - Query String</h1>
+          <h1><FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/></h1>
         </Modal.Header>
         <Modal.Body>
 
@@ -40,14 +37,14 @@ class CacheKeyQueryString extends React.Component {
             set={this.state.updatedSet}
             updateSet={this.updateSet}/>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" id="save-button" onClick={this.saveChanges}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
@@ -57,11 +54,12 @@ class CacheKeyQueryString extends React.Component {
 
 CacheKeyQueryString.displayName = 'CacheKeyQueryString'
 CacheKeyQueryString.propTypes = {
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: React.PropTypes.object,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  saveAction: React.PropTypes.func,
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.string
 }
 
 export default injectIntl(CacheKeyQueryString)

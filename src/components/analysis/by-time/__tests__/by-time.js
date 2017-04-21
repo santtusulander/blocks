@@ -83,8 +83,8 @@ describe('AnalysisByTime', () => {
     expect(
       emptyAnalysis
         .find('div')
-        .text()
-    ).toContain(LOADING_TEXT)
+        .contains(<FormattedMessage id="portal.loading.text"/>)
+    )
   })
 
   it('can be passed a custom css class', () => {

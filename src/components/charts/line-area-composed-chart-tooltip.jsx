@@ -1,25 +1,26 @@
 import React, { PropTypes } from 'react'
 import { formatUnixTimestamp, formatBytes} from '../../util/helpers'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
-import './line-area-composed-chart-tooltip.scss'
+import '../../styles/components/charts/_line-area-composed-chart-tooltip.scss'
 
 const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatBytes, iconClassNamePicker, ignoreValues=[] }) => {
-  const timestamp = payload && payload[0] && payload[0].payload && payload[0].payload.timestamp
-  const comparisonTimestamp = payload && payload[0] && payload[0].payload && payload[0].payload.historical_timestamp
+  const timestamp = payload[0] && payload[0].payload && payload[0].payload.timestamp
+  const comparisonTimestamp = payload[0] && payload[0].payload && payload[0].payload.historical_timestamp
 
   return (
     <div className="line-area-composed-chart-tooltip">
       {payload.map(({ name, value, dataKey, payload }, i) =>
         !ignoreValues.includes(dataKey) && <div key={i} className="tooltip-item">
           <div className="tooltip-item-date">
-            {i === 0
-              ? formatUnixTimestamp( timestamp, "MMM DD HH:mm")
-              : formatUnixTimestamp( comparisonTimestamp, "MMM DD HH:mm") }
+            {dataKey && dataKey.includes('historical')
+              ? formatUnixTimestamp(comparisonTimestamp, "MMM DD HH:mm")
+              : formatUnixTimestamp(timestamp, "MMM DD HH:mm")}
           </div>
           <div className="legend">
             <span className="legend-label">
-              <span className={classNames("legend-icon", iconClassNamePicker(dataKey))}>&mdash; </span>
+              <span className={classNames("legend-icon", iconClassNamePicker(dataKey))}><FormattedMessage id="portal.mdashWithSpace"/></span>
               {name}
             </span>
             <span className="legend-value">
@@ -27,7 +28,7 @@ const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatByt
             </span>
           </div>
         </div>
-      )}
+      ).reverse()}
     </div>
   )
 }

@@ -19,12 +19,13 @@ export const CLOUD_PROVIDER_REGION_MAX_LENGTH = 40
 export const CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH = 2
 export const CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH = 40
 
+export const CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS = 'Bare Metal'
+
 export const MIN_LATITUDE = -90
 export const MAX_LATITUDE = 90
 export const MIN_LONGTITUDE = -180
 export const MAX_LONGTITUDE = 180
 
-export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
 
 export const LOCATION_CLOUD_PROVIDER_OPTIONS = [
   { value: 'Bare Metal', label: 'Bare Metal' }
@@ -133,6 +134,9 @@ export const ASN_MAX = 4199999999
 export const ASN_RESERVED = 23456
 export const ASN_RESERVED_RANGE_START = 64496
 export const ASN_RESERVED_RANGE_END = 131071
+export const ASN_ITEMS_COUNT_TO_SEARCH = 5
+export const ASN_STARTING_SEARCH_COUNT = 1
+export const ASN_SEARCH_DELAY = 400
 
 export const ROUTING_DEAMON_BGP_NAME_MIN_LEN = 1
 export const ROUTING_DEAMON_BGP_NAME_MAX_LEN = 255

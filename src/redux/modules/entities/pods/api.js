@@ -11,7 +11,9 @@ export const pod = new schema.Entity('pods', {
   //footprints: [ footprint ]
 }, {
   //Add POP-id tomake unique POD IDs
-  idAttribute: (value, { group_id, network_id, id }) => { return buildReduxId(group_id, network_id, id, value.pod_name) },
+  idAttribute: (value, { group_id, network_id, id }) => {
+    return buildReduxId(group_id, network_id, id, value.pod_name) 
+  },
   processStrategy: (value, parent) => {
 
     const {footprints, services: [ { ip_list, lb_method, local_as, request_fwd_type, provider_weight, sp_bgp_router_ip, sp_bgp_router_as, sp_bgp_router_password, salt_roles } ] } = value
@@ -50,7 +52,7 @@ const pop = new schema.Entity('podsWrapper', {
  */
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
-    .then( ({data}) => {
+    .then(({data}) => {
       const wrappedWithparent = {
         group_id: params.group,
         network_id: params.network,
@@ -67,9 +69,9 @@ export const fetch = ({id, ...params}) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = ( params ) => {
+export const fetchAll = (params) => {
   return axios.get(baseUrl(params))
-    .then( ({data}) => {
+    .then(({data}) => {
       const wrappedWithparent = {
         group_id: params.group,
         network_id: params.network,
@@ -132,5 +134,5 @@ export const update = ({ id, payload, ...params }) => {
  */
 export const remove = ({ id, ...params }) => {
   return axios.delete(`${baseUrl(params)}/${id}`)
-    .then(() => ( { id: buildReduxId(params.group, params.network, params.pop, id) } ))
+    .then(() => ({ id: buildReduxId(params.group, params.network, params.pop, id) }))
 }

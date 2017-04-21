@@ -4,17 +4,13 @@ import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import Confirmation from '../confirmation.jsx'
-import ActionButtons from '../../components/action-buttons.jsx'
+import Confirmation from '../shared/page-elements/confirmation.jsx'
+import ActionButtons from '../shared/action-buttons.jsx'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import {
-  getScriptLua,
-  matchIsContentTargeting,
-  parsePolicy,
-  parseCountriesByResponseCodes,
-  ALLOW_RESPONSE_CODES,
-  DENY_RESPONSE_CODES,
-  REDIRECT_RESPONSE_CODES
+  parsePolicy
 } from '../../util/policy-config'
+import { policyRuleTypeOptions } from '../../constants/property-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
@@ -23,7 +19,7 @@ class ConfigurationPolicyRules extends React.Component {
     super(props);
 
     this.state = {
-      default_policy: null,
+      defaults: null,
       request_policy: null,
       final_request_policy: null,
       response_policy: null,
@@ -34,19 +30,24 @@ class ConfigurationPolicyRules extends React.Component {
     this.deleteRule = this.deleteRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
     this.closeConfirmation = this.closeConfirmation.bind(this)
+    this.getListOfConditionActionNames = this.getListOfConditionActionNames.bind(this)
+    this.getRuleTypeName = this.getRuleTypeName.bind(this)
   }
+
   componentWillMount() {
     const { editOrDelete, policyId, policyType } = this.props.params
     if (editOrDelete === 'delete') {
       this.showConfirmation(policyType, Number(policyId))()
     }
   }
+
   activateRule(rulePath) {
     return e => {
       e.preventDefault()
       this.props.activateRule(rulePath)
     }
   }
+
   deleteRule(policyType, index) {
     return e => {
       e.preventDefault()
@@ -57,6 +58,7 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
   showConfirmation(policyType, index) {
     return () => {
       this.setState({
@@ -64,6 +66,7 @@ class ConfigurationPolicyRules extends React.Component {
       })
     }
   }
+
   closeConfirmation(policyType) {
     return () => {
       this.setState({
@@ -72,38 +75,26 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
+  getListOfConditionActionNames(items = []) {
+    return items.map((item, j) => <span key={j}>{item.name}</span>)
+                .reduce((prev, curr) => {
+                  return prev === null ? [curr] : [prev, ', ', curr]
+                }, null)
+  }
+
+  getRuleTypeName(type) {
+    const ruleType = policyRuleTypeOptions.find(item => item.value === `${type}_policy`)
+
+    return ruleType ? ruleType.label : type
+  }
+
   render() {
-    const policyMapper = type => (policy, i) => {
-      if(!policy.has('match')) {
-        return null
-      }
-
-      const {matches, sets} = parsePolicy(policy, [])
-
-      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
-      let matchLabel = ''
-      let actionsLabel = ''
-      if ( matchIsContentTargeting(policy.get('match') )) {
-        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
-        actionsLabel = ''
-
-        const scriptLua = getScriptLua( policy )
-
-        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
-        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
-        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
-
-        let ctActionLabels = []
-        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
-
-        actionsLabel = ctActionLabels.join(' | ')
-
-      } else {
-        matchLabel = matches.map(match => match.field).join(', ')
-        actionsLabel = sets.map(set => set.setkey).join(', ')
-      }
+    const policyMapper = type => (rule, i) => {
+      const { matches, sets, default_sets } = parsePolicy(rule, [])
+      const matchLabel = this.getListOfConditionActionNames(matches)
+      const actionsLabel = this.getListOfConditionActionNames(sets)
+      const defaultActionsLabel = this.getListOfConditionActionNames(default_sets)
 
       const actionButtons = (
         <ActionButtons
@@ -113,11 +104,12 @@ class ConfigurationPolicyRules extends React.Component {
       )
 
       return (
-        <tr key={policy + i}>
-          <td>{policy.get('rule_name')}</td>
-          <td className="text-right">{type}</td>
+        <tr key={rule + i}>
+          <td><TruncatedTitle content={rule.get('rule_name')} /></td>
+          <td className="text-right">{this.getRuleTypeName(type)}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
+          <td>{defaultActionsLabel}</td>
           <td className="nowrap-column">
             {actionButtons}
             {this.state[`${type}_policy`] !== false &&
@@ -146,7 +138,6 @@ class ConfigurationPolicyRules extends React.Component {
     }
 
     const rows = [
-      ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
       ...this.props.finalRequestPolicies.map(policyMapper('final_request')),
       ...this.props.responsePolicies.map(policyMapper('response')),
@@ -154,7 +145,7 @@ class ConfigurationPolicyRules extends React.Component {
     ]
     const isEmpty = !rows.filter(Boolean).length
     return (
-      <div className="configuration-cache-rules">
+      <div className="configuration-policies">
         <Table striped={true}>
           <thead>
             <tr>
@@ -162,13 +153,14 @@ class ConfigurationPolicyRules extends React.Component {
               <th className="text-right"><FormattedMessage id="portal.policy.edit.rules.type.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.fallbackActions.text"/></th>
               <th width="1%" />
             </tr>
           </thead>
           <tbody>
             {rows}
             {isEmpty ? <tr>
-              <td colSpan={5}>
+              <td colSpan={6}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
               </td>
             </tr>
@@ -184,7 +176,6 @@ ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
   cancelDeletePolicyRoute: React.PropTypes.func,
-  defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
   finalRequestPolicies: React.PropTypes.instanceOf(Immutable.List),
   finalResponsePolicies: React.PropTypes.instanceOf(Immutable.List),

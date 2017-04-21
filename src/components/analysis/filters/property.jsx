@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import Select from '../../../components/select'
+import Select from '../../../components/shared/form-elements/select'
 
 export class FilterProperty extends React.Component {
   render() {

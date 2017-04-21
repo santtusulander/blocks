@@ -3,13 +3,14 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
-import SectionHeader from '../../../components/layout/section-header'
+import SectionHeader from '../../../components/shared/layout/section-header'
 
 import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
 import * as filterActionCreators from '../../../redux/modules/filters'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { buildAnalyticsOptsForContribution, changedParamsFiltersQS, userIsCloudProvider } from '../../../util/helpers.js'
+import { getById as getActiveAccount } from '../../../redux/modules/entities/accounts/selectors'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
@@ -25,16 +26,16 @@ class AnalyticsTabContribution extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if (this.props.activeAccount !== nextProps.activeAccount) {
+  componentWillReceiveProps(nextProps) {
+    const prevParams = JSON.stringify(this.props.params)
+    const params = JSON.stringify(nextProps.params)
+
+    if (prevParams !== params) {
       this.props.filterActions.resetContributionFilters()
     }
 
     if (changedParamsFiltersQS(this.props, nextProps) ||
-      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
-      this.props.filters !== nextProps.filters ||
-      this.props.accountType !== nextProps.accountType ||
-      this.props.activeAccount !== nextProps.activeAccount
+      this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName
     ) {
       this.fetchData(
         nextProps.params,
@@ -50,8 +51,8 @@ class AnalyticsTabContribution extends React.Component {
     this.props.filterActions.resetContributionFilters()
   }
 
-  fetchData(params, filters, location, hostConfiguredName, accountType){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, location, hostConfiguredName, accountType) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })
@@ -69,19 +70,16 @@ class AnalyticsTabContribution extends React.Component {
         fetchOpts
       )
 
-      // TODO: this outer check is TEMPORARY and should be removed as part of UDNP-1577
-      if (userIsCloudProvider(this.props.currentUser)) {
-        if (filters.get('serviceProviders').size === 1) {
-          const spAccount = filters.getIn(['serviceProviders', 0])
-          const filterFetchOpts = Object.assign({}, fetchOpts)
-          delete filterFetchOpts.sp_account_ids
+      if (filters.get('serviceProviders').size === 1) {
+        const spAccount = filters.getIn(['serviceProviders', 0])
+        const filterFetchOpts = Object.assign({}, fetchOpts)
+        delete filterFetchOpts.sp_account_ids
 
-          this.props.filterActions.fetchServiceProviderGroupsWithTrafficForCP(
-            params.brand,
-            spAccount,
-            filterFetchOpts
-          )
-        }
+        this.props.filterActions.fetchServiceProviderGroupsWithTrafficForCP(
+          params.brand,
+          spAccount,
+          filterFetchOpts
+        )
       }
 
       fetchDataAction = this.props.trafficActions.fetchServiceProviders
@@ -115,15 +113,22 @@ class AnalyticsTabContribution extends React.Component {
     }
   }
 
-  render(){
-    const { contribution } = this.props
+  render() {
+    const { contribution, filterOptions } = this.props
+    const isCP = this.props.accountType === ProviderTypes.CONTENT_PROVIDER
+
+    const providers = filterOptions.get(isCP ? 'serviceProviders' : 'contentProviders')
+    const contributionWithName = contribution.map(item => {
+      const service = providers.find(provider => provider.get('id') === item.get(isCP ? 'sp_account':'account'))
+      return service ? item.set('name', service.get('name')) : item
+    })
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
       sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
     }
 
-    if (contribution.size === 0) {
+    if (contributionWithName.size === 0) {
       return (
         <div>
           <SectionHeader sectionHeaderTitle={sectionHeaderTitle} />
@@ -137,7 +142,7 @@ class AnalyticsTabContribution extends React.Component {
         dateRangeLabel={this.props.filters.get('dateRangeLabel')}
         dateRange={this.props.filters.get('dateRange')}
         sectionHeaderTitle={sectionHeaderTitle}
-        stats={contribution}
+        stats={contributionWithName}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
       />
@@ -148,11 +153,11 @@ class AnalyticsTabContribution extends React.Component {
 AnalyticsTabContribution.displayName = "AnalyticsTabContribution"
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   filterActions: React.PropTypes.object,
+  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -162,17 +167,20 @@ AnalyticsTabContribution.propTypes = {
 AnalyticsTabContribution.defaultProps = {
   currentUser: Immutable.Map(),
   filters: Immutable.Map(),
+  filterOptions: Immutable.Map(),
   contribution: Immutable.List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const activeAccount = getActiveAccount(state, ownProps.params.account)
+
   return {
-    accountType: state.account.getIn(['activeAccount', 'provider_type']),
-    activeAccount: state.account.get('activeAccount'),
+    accountType: activeAccount && activeAccount.get('provider_type'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    filterOptions: state.filters.get('filterOptions')
   }
 }
 

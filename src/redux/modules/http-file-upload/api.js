@@ -26,10 +26,17 @@ export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
 
   return axios.post(url, data, config)
     .then(response => {
+      // eslint-disable-next-line no-shadow
       const { fileName } = response.config
-      if (fileName) uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+
+      if (fileName) {
+        uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+      }
     })
-    .catch(fileName => {
-      if (typeof fileName === 'string') uploadHandlers[actionTypes.UPLOAD_FAILURE](fileName)
+    // eslint-disable-next-line no-shadow
+    .catch((fileName) => {
+      if (typeof fileName === 'string') {
+        uploadHandlers[actionTypes.UPLOAD_FAILURE](fileName)
+      }
     })
 }

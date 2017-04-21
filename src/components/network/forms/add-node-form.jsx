@@ -3,13 +3,13 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 import { change, Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import DefaultErrorBlock from '../../form/default-error-block'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupNumber from '../../form/field-form-group-number'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
-import IsAllowed from '../../is-allowed'
-import HelpTooltip from '../../help-tooltip'
+import DefaultErrorBlock from '../../shared/form-elements/default-error-block'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupNumber from '../../shared/form-fields/field-form-group-number'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
+import HelpTooltip from '../../shared/tooltips/help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt, isValidFQDN } from '../../../util/validators'
@@ -42,7 +42,7 @@ const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_d
       },
       {
         condition: isInt(numNodes) === false || numNodes < 1,
-        errorText: <FormattedMessage id="portal.validators.type.number" values={{field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
+        errorText: <FormattedMessage id="portal.validators.type.number" values={{field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
       }
     ],
     node_role: [
@@ -92,8 +92,8 @@ class NetworkAddNodeForm extends React.Component {
 
     // This will autogenerate the value of the node_name field if the nodeName prop changed
     // See mapStateToProps in src/containers/network/modals/add-node-modal.jsx
-    if ( nodeName !== this.props.nodeName ) {
-      this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
+    if (nodeName !== this.props.nodeName) {
+      this.props.dispatch(change(ADD_NODE_FORM_NAME, 'node_name', nodeName))
     }
 
   }

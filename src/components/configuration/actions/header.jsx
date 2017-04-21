@@ -1,10 +1,11 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
+import { Button, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Select from '../../select'
-import InputConnector from '../../input-connector'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import Select from '../../shared/form-elements/select'
+import InputConnector from '../../shared/page-elements/input-connector'
 
 class Header extends React.Component {
   constructor(props) {
@@ -69,17 +70,16 @@ class Header extends React.Component {
 
   saveChanges() {
     let newSet
-    if(this.state.activeActivity === 'unset') {
+    if (this.state.activeActivity === 'unset') {
       newSet = this.props.set.merge({
         action: "unset",
         header: this.state.to_header
       })
       // If there was perviously a value, be sure to delete it
-      if(newSet.has('value')) {
+      if (newSet.has('value')) {
         newSet = newSet.delete('value')
       }
-    }
-    else if(this.state.activeActivity === 'set') {
+    } else if (this.state.activeActivity === 'set') {
       newSet = this.props.set.merge({
         action: "set",
         header: this.state.to_header,
@@ -89,11 +89,7 @@ class Header extends React.Component {
         }])
       })
     }
-    this.props.changeValue(
-      this.props.path,
-      newSet
-    )
-    this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, newSet)
   }
   render() {
 
@@ -116,8 +112,11 @@ class Header extends React.Component {
 
           <div className="form-groups">
 
-            <InputConnector show={true}
-              hasTwoEnds={activeActivity !== 'unset'}/>
+            <InputConnector
+              show={true}
+              hasTwoEnds={activeActivity !== 'unset'}
+              className='action-input-connector'
+            />
 
             <FormGroup>
               <ControlLabel>
@@ -141,9 +140,11 @@ class Header extends React.Component {
                 <FormControl
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
                   value={to_header}
-                  onChange={(e) => {this.setState({
-                    to_header: e.target.value
-                  })}}/>
+                  onChange={(e) => {
+                    this.setState({
+                      to_header: e.target.value
+                    })
+                  }}/>
               </FormGroup>
             </Panel>
 
@@ -156,9 +157,11 @@ class Header extends React.Component {
                 <FormControl
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
                   value={to_value}
-                  onChange={(e) => {this.setState({
-                    to_value: e.target.value
-                  })}}/>
+                  onChange={(e) => {
+                    this.setState({
+                      to_value: e.target.value
+                    })
+                  }}/>
               </FormGroup>
             </Panel>
 
@@ -173,9 +176,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
                       value={from_header}
-                      onChange={(e) => {this.setState({
-                        from_header: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          from_header: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -186,9 +191,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
                       value={to_header}
-                      onChange={(e) => {this.setState({
-                        to_header: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          to_header: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -199,9 +206,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
                       value={from_value}
-                      onChange={(e) => {this.setState({
-                        from_value: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          from_value: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
                 <Col xs={6}>
@@ -212,9 +221,11 @@ class Header extends React.Component {
                     <FormControl
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
                       value={to_value}
-                      onChange={(e) => {this.setState({
-                        to_value: e.target.value
-                      })}}/>
+                      onChange={(e) => {
+                        this.setState({
+                          to_value: e.target.value
+                        })
+                      }}/>
                   </FormGroup>
                 </Col>
               </Row>
@@ -222,14 +233,14 @@ class Header extends React.Component {
 
           </div>
 
-          <ButtonToolbar className="text-right">
+          <FormFooterButtons>
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
-          </ButtonToolbar>
+          </FormFooterButtons>
 
         </Modal.Body>
       </div>
@@ -239,11 +250,12 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  saveAction: React.PropTypes.func,
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.string
 }
 
 export default injectIntl(Header)

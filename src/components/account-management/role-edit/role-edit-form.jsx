@@ -7,12 +7,10 @@ import { Button, Table } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import SidePanel from '../../side-panel'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupToggle from '../../form/field-form-group-toggle'
-import FormFooterButtons from '../../form/form-footer-buttons'
-
-import './role-edit-form.scss'
+import SidePanel from '../../shared/side-panel'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ roleName }) => {
   const conditions = {}
@@ -51,14 +49,6 @@ class RoleEditForm extends React.Component {
       }
     } = this.props
 
-    // TODO: Enable in the future when roles are editable, after 0.8
-    // const rolesArray = roles.map((role) => {
-    //   return {
-    //     value: role.get('id'),
-    //     label: role.get('name')
-    //   }
-    // }).toArray()
-
     const getPermissionName = (permissionKey, section) => {
       return permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
     }
@@ -81,17 +71,6 @@ class RoleEditForm extends React.Component {
             <FormattedMessage id="portal.account.roleEdit.name.text"/>
           </Field>
 
-          {/* TODO: Enable in the future when roles are editable, after 0.8 */}
-          {/*<label><FormattedMessage id="portal.account.roleEdit.roleAvailableTo.title"/></label>*/}
-
-          {/*<CheckboxArray*/}
-          {/*iterable={rolesArray}*/}
-          {/*field={null}*/}
-          {/*inline={true}*/}
-          {/*disabled={true}/>*/}
-
-          {/*<hr/>*/}
-
           <label><FormattedMessage id="portal.account.roleEdit.permissions.label"/></label>
 
           <Table className="table-striped">
@@ -108,7 +87,6 @@ class RoleEditForm extends React.Component {
                     {getPermissionName(key, 'ui')}
                   </td>
                   <td>
-                    {/*TODO: Remove readonly prop in the future when roles are editable*/}
                     <Field
                       readonly={true}
                       name={key}
@@ -144,7 +122,6 @@ class RoleEditForm extends React.Component {
 
 RoleEditForm.displayName = 'RoleEditForm'
 RoleEditForm.propTypes = {
-  // roles: PropTypes.object,
   dirty: PropTypes.bool,
   editPermsUI: PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
@@ -158,6 +135,7 @@ RoleEditForm.propTypes = {
   submitting: PropTypes.bool
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
   const editPermsUI = Immutable.Map([
@@ -176,6 +154,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

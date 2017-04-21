@@ -5,10 +5,10 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import { getUserUrlFromParams } from '../../util/routes'
-import Select from '../select'
-import IconUser from '../icons/icon-user'
-import IconArrowRight from '../icons/icon-arrow-right'
-import TruncatedTitle from '../truncated-title'
+import Select from '../shared/form-elements/select'
+import IconUser from '../shared/icons/icon-user'
+import IconArrowRight from '../shared/icons/icon-arrow-right'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import { AVAILABLE_THEMES } from '../../constants/themes'
 
@@ -66,14 +66,14 @@ class UserMenu extends React.Component {
                   className="btn-block"
                   onSelect={handleThemeChange}
                   value={theme}
-                  options={AVAILABLE_THEMES.map((theme) =>
-                    [theme,
+                  options={AVAILABLE_THEMES.map((singleTheme) =>
+                    [singleTheme,
                       <div>
                         <span className="helper-header helper-ui-theme text-sm">
                           <FormattedMessage id="portal.header.menu.theme.title"/>
                         </span>
                         <span className="theme-title">
-                          <FormattedMessage id="portal.header.menu.theme.ericssonTitle.text" values={{themeTitle: theme}}/>
+                          <FormattedMessage id="portal.header.menu.theme.ericssonTitle.text" values={{themeTitle: singleTheme}}/>
                         </span>
                       </div>
                     ])

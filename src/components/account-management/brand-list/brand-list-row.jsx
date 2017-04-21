@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 
-import ActionButtons from '../../action-buttons.jsx'
+import ActionButtons from '../../shared/action-buttons.jsx'
 import BrandlistUsedBy from './brand-list-used-by'
 
 const BrandListRow = (props) => {

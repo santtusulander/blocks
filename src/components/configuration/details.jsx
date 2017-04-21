@@ -4,10 +4,10 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Col, ControlLabel, FormControl, FormGroup, InputGroup, Panel, Row } from 'react-bootstrap'
 import classNames from 'classnames'
 
-import HelpTooltip from '../../components/help-tooltip'
-import InputConnector from '../../components/input-connector'
-import Select from '../../components/select'
-import Toggle from '../toggle'
+import HelpTooltip from '../../components/shared/tooltips/help-tooltip'
+import InputConnector from '../shared/page-elements/input-connector'
+import Select from '../shared/form-elements/select'
+import Toggle from '../shared/form-elements/toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 import { CIS_ORIGIN_HOST_PORT } from '../../constants/configuration'
@@ -31,7 +31,7 @@ class ConfigurationDetails extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!Immutable.is(this.props.storages, nextProps.storages)) {
+    if (!Immutable.is(this.props.storages, nextProps.storages)) {
       this.storageListOptions = this.generateStorageListOptions(nextProps.storages)
     }
   }
@@ -48,10 +48,9 @@ class ConfigurationDetails extends React.Component {
   }
 
   handleUDNOriginSelection(value) {
-    if(value === 'option_new_storage') {
+    if (value === 'option_new_storage') {
       this.toggleAddStorageModal()
-    }
-    else {
+    } else {
       this.props.changeValues([
         [['edge_configuration', 'origin_host_name'], value],
         [['edge_configuration', 'origin_host_port'], CIS_ORIGIN_HOST_PORT]
@@ -66,26 +65,25 @@ class ConfigurationDetails extends React.Component {
 
   toggleAddStorageModal() {
     this.setState({
-      showStorageModal : !this.state.showStorageModal
+      showStorageModal: !this.state.showStorageModal
     })
   }
 
   toggleUDNOrigin(val) {
-    if(val) {
+    if (val) {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
-    }
-    else {
+    } else {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'custom')
     }
   }
 
   generateStorageListOptions(storages) {
-    const {storagePermission: { createAllowed : storageCreationIsAllowed } } = this.props
+    const {storagePermission: { createAllowed: storageCreationIsAllowed } } = this.props
     let options = storageCreationIsAllowed
                   ? [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
                   : []
 
-    if(!storages.isEmpty()) {
+    if (!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
         value: storage.getIn(['origin', 'hostname']),
         label: storage.get('ingest_point_id')
@@ -95,7 +93,7 @@ class ConfigurationDetails extends React.Component {
   }
 
   render() {
-    if(!this.props.edgeConfiguration) {
+    if (!this.props.edgeConfiguration) {
       return (
         <LoadingSpinner/>
       )
@@ -174,7 +172,7 @@ class ConfigurationDetails extends React.Component {
                 </ControlLabel>
               </Col>
               <Col xs={9}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <Select
                     className="input-select"
                     disabled={readOnly}
@@ -257,7 +255,7 @@ class ConfigurationDetails extends React.Component {
                 <FormattedMessage id="portal.configuration.details.hostHeaderValue.text"/>
               </ControlLabel>
             </Col>
-            <Col xs={9} xsOffset={3}>
+            <Col xs={9}>
               <InputGroup>
                 <Select
                   className="input-select"
@@ -288,7 +286,7 @@ class ConfigurationDetails extends React.Component {
           <Panel collapsible={true} expanded={isOtherHostHeader}>
             <FormGroup>
               <Col xs={9} xsOffset={3}>
-                <InputGroup>
+                <InputGroup className="input-without-tooltip">
                   <FormControl
                     type="text"
                     placeholder={this.props.intl.formatMessage({ id: 'portal.configuration.details.enterHostnameValue.text' })}
@@ -339,7 +337,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={readOnly}
@@ -389,7 +387,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
+              <InputGroup className="input-without-tooltip can-copy-to-clipboard">
                 <FormControl
                   type="text"
                   disabled={true}
@@ -407,8 +405,6 @@ class ConfigurationDetails extends React.Component {
     )
   }
 }
-
-// TODO: UDNP-2945 | Add missing help text for new configuration details field
 
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {

@@ -4,13 +4,13 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
-import IsAllowed from '../../is-allowed'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
 import { isValidLatitude, isValidLongitude, isValidTextField } from '../../../util/validators.js'
@@ -21,7 +21,8 @@ import {
   CLOUD_PROVIDER_REGION_MIN_LENGTH,
   CLOUD_PROVIDER_REGION_MAX_LENGTH,
   CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
-  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
+  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH,
+  CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS
 } from '../../../constants/network.js'
 
 
@@ -38,7 +39,7 @@ const validate = ({
         condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
+            fieldLabel='portal.network.locationForm.name.label'
             minValue={LOCATION_NAME_MIN_LENGTH}
             maxValue={LOCATION_NAME_MAX_LENGTH}/>
         )
@@ -69,7 +70,7 @@ const validate = ({
         condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.cloudProviderLocationId.label'}
+            fieldLabel='portal.network.locationForm.cloudProviderLocationId.label'
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
         )
@@ -95,7 +96,7 @@ const validate = ({
   if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
     errors.cloudProviderRegion = (
       <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.cloudProviderRegion.text'}
+        fieldLabel='portal.network.locationForm.cloudProviderRegion.text'
         minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
         maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
     )
@@ -111,6 +112,7 @@ const NetworkLocationForm = (props) => {
     askForFetchLocation,
     cloudProvidersIdOptions,
     cloudProvidersOptions,
+    selectedCloudProvider,
     edit,
     error,
     handleSubmit,
@@ -120,7 +122,8 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting
+    submitting,
+    readOnly
   } = props;
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
@@ -141,7 +144,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="name"
-            disabled={edit}
+            disabled={edit || readOnly}
             type="text"
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
@@ -156,10 +159,11 @@ const NetworkLocationForm = (props) => {
             options={iataCodes}
             emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
-            labelKey={'iata'}
+            labelKey='iata'
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
             component={FieldFormGroupTypeahead}
             label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -172,8 +176,8 @@ const NetworkLocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
             onBlur={askForFetchLocation}
-
-        />
+            disabled={readOnly}
+          />
         </Col>
         <Col md={5}>
           <Field
@@ -183,6 +187,7 @@ const NetworkLocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
             onBlur={askForFetchLocation}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -209,24 +214,27 @@ const NetworkLocationForm = (props) => {
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProvider.label'})}
+            disabled={readOnly}
           />
         </Col>
       </Row>
-      <Row>
-        <Col md={7}>
-          <Field
-            name="cloudProvider"
-            className="input-select"
-            type="select"
-            options={cloudProvidersIdOptions}
-            disabled={edit}
-            required={false}
-            unselectedValue={null}
-            component={FieldFormGroupSelect}
-            label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
-          />
-        </Col>
-      </Row>
+      {selectedCloudProvider !== CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS &&
+        <Row>
+          <Col md={7}>
+            <Field
+              name="cloudProvider"
+              className="input-select"
+              type="select"
+              options={cloudProvidersIdOptions}
+              disabled={edit || readOnly}
+              required={false}
+              unselectedValue={null}
+              component={FieldFormGroupSelect}
+              label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
+            />
+          </Col>
+        </Row>
+      }
       <Row>
         <Col md={7}>
           <Field
@@ -236,6 +244,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderRegion.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.cloudProviderRegion.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -247,6 +256,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderLocationId.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.cloudProviderLocationId.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -280,7 +290,8 @@ const NetworkLocationForm = (props) => {
         </IsAllowed>
       </FormFooterButtons>
     </form>
-  )};
+  )
+};
 
 NetworkLocationForm.displayName = 'NetworkLocationEditForm';
 NetworkLocationForm.propTypes = {
@@ -292,6 +303,8 @@ NetworkLocationForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
+  readOnly: PropTypes.bool,
+  selectedCloudProvider: PropTypes.string,
   ...reduxFormPropTypes
 };
 

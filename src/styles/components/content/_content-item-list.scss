@@ -57,7 +57,15 @@
     }
 
     .dark-theme & {
-      background-color: rgba($black, 0.2);
+      background-color: $dark-blue;
+
+      & b {
+        color: $white;
+      }
+
+      & h1 {
+        color: $white;
+      }
     }
 
     &.section-lg {
@@ -121,6 +129,10 @@
     word-wrap: break-word;
     white-space: nowrap;
 
+    .dark-theme & {
+      color: $white;
+    }
+
     @include md {
       font-size: 24px;
     }
@@ -167,6 +179,14 @@
     margin: 0 700px 0 450px;
     align-items: center;
     justify-content: center;
+
+    &.dark-theme {
+      background-color: rgba($dark-blue, 0.8);
+    }
+
+    &.light-theme {
+      background-color: $white;
+    }
 
     //needed to make mini-chart responsive
     .line-area-composed-chart-container,

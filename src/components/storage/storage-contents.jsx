@@ -3,16 +3,16 @@ import { FormattedMessage } from 'react-intl'
 import { Col, FormGroup } from 'react-bootstrap'
 import { Map } from 'immutable'
 
-import SectionContainer from '../layout/section-container'
-import SectionHeader from '../layout/section-header'
+import SectionContainer from '../shared/layout/section-container'
+import SectionHeader from '../shared/layout/section-header'
 import AsperaUpload from './aspera-upload'
 import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
-import ButtonDropdown from '../button-dropdown'
-import Button from '../button'
-import IconAdd from '../icons/icon-add'
+import ButtonDropdown from '../shared/form-elements/button-dropdown'
+import Button from '../shared/form-elements/button'
+import IconAdd from '../shared/icons/icon-add'
 
-import Toggle from '../toggle'
+import Toggle from '../shared/form-elements/toggle'
 
 const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
@@ -27,11 +27,11 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
                         <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
 
   const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
-  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
-  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
-  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
-  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
-  const processFiles = fileUploader ? fileUploader.processFiles : (()=>{})
+  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
+  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => { /* no-op */ })
+  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+  const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
 
   return (
     <SectionContainer>
@@ -81,7 +81,14 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
       { hasContents
         ? <StorageContentBrowser contents={contents} />
         : asperaUpload
-        ? <AsperaUpload multiple={true} brandId={brandId} accountId={accountId} groupId={groupId} storageId={storageId} asperaGetaway={gatewayHostname} />
+        ? <AsperaUpload
+            multiple={true}
+            brandId={brandId}
+            accountId={accountId}
+            groupId={groupId}
+            storageId={storageId}
+            asperaGetaway={gatewayHostname}
+          />
         : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
       }
     </SectionContainer>

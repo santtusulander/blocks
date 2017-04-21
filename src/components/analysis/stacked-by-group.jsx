@@ -2,7 +2,7 @@ import React from 'react'
 import d3 from 'd3'
 import Immutable from 'immutable'
 
-import Tooltip from '../tooltip'
+import Tooltip from '../shared/tooltips/tooltip'
 import { formatBytes } from '../../util/helpers'
 import {FormattedMessage} from 'react-intl'
 
@@ -22,7 +22,7 @@ class AnalysisStackedByGroup extends React.Component {
 
   }
   render() {
-    if(!this.props.width || !this.props.datasets) {
+    if (!this.props.width || !this.props.datasets) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
@@ -56,10 +56,10 @@ class AnalysisStackedByGroup extends React.Component {
       .range([xMinPx, xMaxPx])
 
     let className = 'analysis-by-time analysis-stacked'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
-    let columnHeights = []
+    const columnHeights = []
 
     let strokeWidth = (xMaxPx - xMinPx) / this.props.datasets.size - this.props.padding
     strokeWidth = Math.max(strokeWidth, minStrokeWidth)
@@ -68,7 +68,7 @@ class AnalysisStackedByGroup extends React.Component {
     // If last bar isn't at edge of chart, add padding to center bars
     let centerPad = 0
     const lastBarEdge = xScale(this.props.datasets.size - 1) + strokeWidth / 2
-    if(lastBarEdge < xMaxPx) {
+    if (lastBarEdge < xMaxPx) {
       centerPad = (xMaxPx - lastBarEdge) / 2 - this.props.padding
     }
     const xOffset = strokeWidth / 2 + this.props.padding / 2 + centerPad

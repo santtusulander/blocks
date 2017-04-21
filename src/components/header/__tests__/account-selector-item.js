@@ -22,7 +22,7 @@ describe('AccountSelectorItem', function() {
   })
 
   it('should exist', () => {
-    const component = subject()
+    const component = subject({ params: { account: 1 } })
     expect(component).toBeDefined()
   })
 })

@@ -5,13 +5,14 @@ import { Button } from 'react-bootstrap'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import HelpTooltip from '../../../help-tooltip'
-import FieldFormGroupNumber from '../../../form/field-form-group-number'
-import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
-import FormFooterButtons from '../../../form/form-footer-buttons'
-import FieldFormGroupSelect from '../../../form/field-form-group-select'
+import HelpTooltip from '../../../shared/tooltips/help-tooltip'
+import FieldFormGroupNumber from '../../../shared/form-fields/field-form-group-number'
+import FieldFormGroupToggle from '../../../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupSelect from '../../../shared/form-fields/field-form-group-select'
 
-import { 
+import FormFooterButtons from '../../../shared/form-elements/form-footer-buttons'
+
+import {
   TOKEN_AUTH_STATIC,
   TOKEN_AUTH_STREAMING,
   TTL_DEFAULT,
@@ -22,7 +23,7 @@ import {
 } from '../../../../constants/configuration'
 
 const validate = ({ streamingEnabled, streaming_ttl }) => {
-  let errors = {}
+  const errors = {}
 
   if (streamingEnabled && (!streaming_ttl && streaming_ttl !== null)) {
     errors.streaming_ttl = <FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.required.error" />
@@ -55,7 +56,7 @@ export class TokenStreaming extends React.Component {
     const { isStreamingEnabled } = nextProps
 
     if ((typeof this.props.isStreamingEnabled !== 'undefined') && (this.props.isStreamingEnabled !== isStreamingEnabled)) {
-      if ( !isStreamingEnabled ) {
+      if (!isStreamingEnabled) {
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
         this.props.change('streaming_encryption', null)

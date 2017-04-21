@@ -2,6 +2,7 @@
   "portal.storage.uploadContent.uploading.text": "Uploading {number, plural, one {# item} other {# items}}",
   "portal.storage.uploadContent.cancel.text": "Cancel All",
 
+  "portal.storage.report.title": "Storage Volume Reporting",
   "portal.storage.kpi.gain.title": "Gain",
   "portal.storage.kpi.peak.title": "Peak",
   "portal.storage.kpi.current.title": "Current",
@@ -10,6 +11,11 @@
 
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
+
+  "portal.storage.storageForm.add.success.status": "Storage created successfully",
+  "portal.storage.storageForm.update.success.status": "Storage updated successfully",
+  "portal.storage.storageForm.delete.success.status": "Storage deleted successfully",
+  "portal.storage.storageForm.delete.failed.status": "Deleting storage failed",
 
   "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
   "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",

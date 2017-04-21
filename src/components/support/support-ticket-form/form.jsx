@@ -12,10 +12,10 @@ import {
   getTicketPriorityOptions
 } from '../../../util/support-helper'
 
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FieldFormGroupToggle from '../../form/field-form-group-toggle'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-select'
+import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
+import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 let errors = {}
 const maxSubjectLength = 150
@@ -82,7 +82,7 @@ class SupportTicketForm extends React.Component {
       onSave
     } = this.props
 
-    let data = {
+    const data = {
       subject: values.subject,
       description: values.description,
       status: values.status,
@@ -216,6 +216,7 @@ SupportTicketForm.propTypes = {
   ticket: PropTypes.instanceOf(Map)
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const hasTicket = !!ownProps.ticket
 
@@ -231,6 +232,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = () => {
   return {}
 }

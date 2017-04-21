@@ -6,13 +6,13 @@ import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../constants/permissions'
 
-import PageHeader from '../layout/page-header'
-import AccountSelector from '../global-account-selector/global-account-selector.jsx'
+import PageHeader from '../shared/layout/page-header'
+import AccountSelector from '../global-account-selector/account-selector-container'
 import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
-import IconCaretDown from '../icons/icon-caret-down'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const AnalyticsViewControl = (props) => {
 
@@ -123,22 +123,18 @@ const AnalyticsViewControl = (props) => {
 
   let title = "Analytics"
   let active
-  if(props.activeTab) {
+  if (props.activeTab) {
     active = tabs.find(tab => tab.key === props.activeTab)
-    if(active) {
-      if(active.hideHierarchy) {
+    if (active) {
+      if (active.hideHierarchy) {
         title = active.label
-      }
-      else if(storage) {
+      } else if (storage) {
         title = active.titles.storage
-      }
-      else if(property) {
+      } else if (property) {
         title = active.titles.property
-      }
-      else if(group) {
+      } else if (group) {
         title = active.titles.group
-      }
-      else {
+      } else {
         title = active.titles.account
       }
     }
@@ -147,33 +143,10 @@ const AnalyticsViewControl = (props) => {
   let activeItem;
   if (property) {
     activeItem = property
-  }
-  else if(group && props.activeGroup) {
+  } else if (group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
-  }
-  else if(account && props.activeAccount) {
+  } else if (account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
-  }
-  const topBarTexts = {
-    property: 'Back to Groups',
-    group: 'Back to Accounts',
-    account: 'UDN Admin',
-    brand: 'UDN Admin'
-  }
-  const topBarFunc = (tier, fetchItems, IDs) => {
-    const { account, brand } = IDs
-    switch(tier) {
-      case 'property':
-        fetchItems('group', brand, account)
-        break
-      case 'group':
-        fetchItems('account', brand)
-        break
-      case 'brand':
-      case 'account':
-        props.router.push(getAnalyticsUrl('brand', 'udn', {}))
-        break
-    }
   }
 
   return (
@@ -181,16 +154,15 @@ const AnalyticsViewControl = (props) => {
     {/* Hide the dropdown until we get the storage included in it */}
       {!props.params.storage ?
         <AccountSelector
-          as="analytics"
           params={props.params}
-          topBarTexts={topBarTexts}
-          topBarAction={topBarFunc}
-          onSelect={(...params) => {
-            let url = getAnalyticsUrl(...params)
-            if (active) {
+          onItemClick={(entity) => {
+
+            const { nodeInfo: { parents, entityType }, idKey = 'id' } = entity
+            let url = getAnalyticsUrl(entityType, entity[idKey], parents)
+            if (active && entityType !== 'storage') {
               let tab = active.key
-              if((active.propertyOnly && params[0] !== 'property') ||
-              (active.hideForProperty && params[0] === 'property')) {
+              if ((active.propertyOnly && entityType !== 'property') ||
+              (active.hideForProperty && entityType === 'property')) {
                 tab = ''
               }
               url = `${url}/${tab}`

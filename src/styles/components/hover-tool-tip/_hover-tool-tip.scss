@@ -1,0 +1,41 @@
+@import './src/styles/base/colors';
+@import './src/styles/base/variables';
+@import './src/styles/base/tooltip';
+
+.hover-tool-tip {
+
+  .hover-tool-tip-content {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    z-index: $zindex-tooltip;
+    padding: 10px 15px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 500ms;
+
+    .dark-theme &,
+    .light-theme & {
+      color: $dt-text-color;
+      background-color: rgba($black, 0.8);
+    }
+
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .hover-tool-tip-link {
+    position: relative;
+    margin: 0 10px;
+    cursor: pointer;
+
+    &:hover {
+      .hover-tool-tip-content {
+        opacity: 1;
+      }
+    }
+  }
+
+}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import { Router } from 'react-router'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
@@ -17,11 +18,13 @@ import { Router as routerMock } from '../../../__mocks__/router'
 
 describe('AccountManagementAccountUsers', () => {
   it('should exist', () => {
-    const users = TestUtils.renderIntoDocument(
+    const users = shallow(
       <Users
         account={Immutable.Map()}
-        currentUser= {'dummy' }
+        currentUser= { Immutable.Map({'roles': {toJS: () => { return []} }}) }
         deleteUser= { jest.fn() }
+        fetchUsers= { jest.fn() }
+        fetchGroups= { jest.fn() }
         formFieldFocus= { jest.fn() }
         groupActions={ {
           fetchGroups: genAsyncMock,
@@ -34,9 +37,7 @@ describe('AccountManagementAccountUsers', () => {
         }}
         resetRoles={ jest.fn() }
         roles={ Immutable.List() }
-        rolesActions={ {
-          fetchRoles: genAsyncMock,
-        }}
+        fetchRoleNames={jest.fn()}
         route={ {} }
         router={ routerMock }
         uiActions= {{}}
@@ -46,6 +47,6 @@ describe('AccountManagementAccountUsers', () => {
         users={ Immutable.List() }
       />
     )
-    expect(TestUtils.isCompositeComponent(users)).toBeTruthy()
+    expect(users).toBeTruthy()
   })
 })

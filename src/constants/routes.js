@@ -35,6 +35,8 @@ const ROUTES = {
   configurationTabDefaults: 'defaults',
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
+  configurationTabGlobalTrafficManager: 'gtm',
+  configurationTabAdvanced: 'advanced',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 
@@ -46,6 +48,7 @@ const ROUTES = {
 
   accountManagementTabAccountDetails: 'details',
   accountManagementTabAccountGroups: 'groups',
+  accountManagementTabAccountProperties: 'properties',
   accountManagementTabAccountUsers: 'users',
 
   accountManagementTabSystemAccounts: 'accounts',
@@ -104,8 +107,6 @@ const ROUTES = {
   networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }
 
-export const ENTRY_ROUTE_SERVICE_PROVIDER = ROUTES.network
-export const ENTRY_ROUTE_DEFAULT = ROUTES.content
 export const ENTRY_ROUTE_ROOT = ROUTES.root
 
 export default ROUTES

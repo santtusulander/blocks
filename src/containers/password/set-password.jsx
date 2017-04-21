@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 
 import * as userActionCreators from '../../redux/modules/user'
 
-import PasswordFields from '../../components/password-fields'
+import PasswordFields from '../../components/shared/form-elements/password-fields'
 
 
 export class SetPassword extends React.Component {
@@ -71,10 +71,9 @@ export class SetPassword extends React.Component {
         this.state.password,
         this.props.params.token
       ).then(action => {
-        if(!action.error) {
+        if (!action.error) {
           this.goToLoginPage()
-        }
-        else {
+        } else {
           this.goToResetTokenExpiredPage()
         }
       })

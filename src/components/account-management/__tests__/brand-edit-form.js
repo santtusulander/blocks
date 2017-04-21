@@ -1,57 +1,84 @@
-// import React from 'react'
-// import { mount, shallow, render } from 'enzyme'
-//
-// import { createStore, combineReducers } from 'redux'
-// import { reducer as formReducer } from 'redux-form'
-//
-// jest.unmock('../../../components/account-management/brand-edit-form');
-// jest.unmock('../../../components/udn-file-input');
-// jest.unmock('../../../components/select-wrapper');
-// import BrandEditForm from '../../../components/account-management/brand-edit-form'
+import React from 'react'
+import Immutable from 'immutable'
+import { mount, shallow, render } from 'enzyme'
+
+jest.genMockFromModule('react-bootstrap')
+jest.unmock('../brand-edit-form');
+import BrandEditForm from '../brand-edit-form'
 
 
-describe("BrandEditForm", () => {
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
-  // let store = null
-  // let subject = null
-  //
-  // beforeEach(() => {
-  //   store = createStore(combineReducers({form: formReducer}))
-  //   const props = {
-  //     store,
-  //   }
-  //
-  //   subject = mount(<BrandEditForm {...props} />)
-  // })
-
-  // Jest requires test suites to have at least one test
-  it("should satisfy Jest until Modals can be tested", () => { expect(true).toBeTruthy() })
-
-  /* Commented out because Modals cannot be tested ATM
-  it("should exist", () => {
-    const modal = subject.find('.brands-edit-sidebar');
-    expect(modal.length).toBe(1);
+describe('BrandEditForm', () => {
+  const onCancel = jest.fn()
+  const onSave = jest.fn()
+  let subject, error, props = null
+  let touched = false
+  const mockProviderTypes = [{
+    value: 1,
+    label: (<div id="testLabel">Test</div>)
+  }]
+  const mockAccount = Immutable.fromJS({
+    id: 1,
+    name: 'Test'
   })
 
-  it("should have 'form", () => {
-
-    const form = subject.find('form')
-    expect( form.length ).toBe(1);
+  beforeEach(() => {
+    subject = (errorMsg, edit = false, accountProp, accountType, providerTypes = mockProviderTypes) => {
+      props = {
+        account: accountProp,
+        error: errorMsg,
+        edit: edit,
+        onCancel,
+        onSave,
+        accountType,
+        providerTypes,
+        handleSubmit: jest.fn(),
+        intl: intlMaker(),
+        values: {
+          brandName: 'udn'
+        },
+        fields: {
+          brandName: { touched, error: !!errorMsg, value: '' },
+          brandLogo: { touched, error, value: '' },
+          favicon: { touched, error, value: '' },
+          colorTheme: { touched, error, value: [] },
+          availability: { touched, error, value: [] }
+        }
+      }
+      return shallow(<BrandEditForm {...props}/>)
+    }
   })
 
-  it("should have 3 inputs", () => {
-
-    const inputs = subject.find('FormControl')
-    expect( inputs.length ).toBe(3)
+  it('should exist', () => {
+    expect(subject().length).toBe(1)
   })
 
-  it("shows error if recordName set to blank", () => {
-    const input = subject.find(".recordNameInput")
-
-    input.simulate('change', { target: { value: '' } })
-    input.simulate('click')
-    const errMsg = subject.find('.errorRecordName')
-    expect(errMsg).to.exist()
+  it('should exist when edit equals true', () => {
+    expect(subject("", true).length).toBe(1)
   })
-  */
-});
+
+  it('should render form', () => {
+    expect(subject().find('form').length).toBe(1)
+  })
+
+  it('should render 2 Buttons', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should render 6 Fields', () => {
+    expect(subject("").find('Field').length).toBe(6)
+  })
+
+  it('should render error messages', () => {
+    expect(subject("error").find('.help-block').text()).toBe("error")
+  })
+
+  it('should not render error messages if empty', () => {
+    expect(subject("").find('.help-block').length).toBe(0)
+  })
+})

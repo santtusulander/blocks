@@ -36,7 +36,7 @@
 }
 
 .sortable-helper {
-  z-index: 10000 !important; //TODO: UDNP-2181 Abstract z-index values to variables
+  z-index: $zindex-sortable-helper !important;
 }
 
 .sortable-handle {

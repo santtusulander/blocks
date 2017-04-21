@@ -98,17 +98,18 @@ class EntityEdit extends React.Component {
     this.onServiceChange && this.onServiceChange(entity.get('services'))
   }
 
-  showServiceItemForm(serviceId, optionId, onChange) {
+  showServiceItemForm(serviceId, optionId, onChange, isEnabled) {
     this.setState({
       activeServiceItem: this.getActiveServiceItem(serviceId, optionId),
-      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId)
+      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId),
+      isEnabled
     })
     // callback to update ServiceOptionSelector field from AccountForm
     this.onServiceChange = onChange
   }
 
   render() {
-    const { currentUser, params, type, onSave, onCancel, onDelete } = this.props
+    const { currentUser, disableDelete, params, type, onSave, onCancel, onDelete } = this.props
 
     return (
       <div>
@@ -135,11 +136,13 @@ class EntityEdit extends React.Component {
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
+          disableDelete={disableDelete}
         />
       }
 
         <AddChargeNumbersModal
           activeServiceItem={this.state.activeServiceItem}
+          isEnabled={this.state.isEnabled}
           onCancel={() => this.setState({ activeServiceItem: Map(), activeServiceItemPath: null })}
           onDisable={this.onDisableServiceItem}
           onSubmit={this.onChangeServiceItem}
@@ -157,6 +160,7 @@ EntityEdit.defaultProps = {
 EntityEdit.displayName = 'EntityEdit'
 EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  disableDelete: PropTypes.bool,
   entityToUpdate: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

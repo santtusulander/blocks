@@ -5,7 +5,11 @@ import { FormattedMessage } from 'react-intl'
 import {
   getAnalyticsUrl,
   getAnalyticsUrlFromParams,
-  getContentUrl
+  getNetworkUrl,
+  getContentUrl,
+  getAccountManagementUrlFromParams,
+  getSecurityUrl,
+  getSecurityUrlFromParams
 } from '../../util/routes.js'
 import { getRoute } from '../../util/routes'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
@@ -51,7 +55,7 @@ class BreadcrumbsItem extends React.Component {
     if (params.group === activeGroup) {
       links.push({
         url: (params.property || params.storage) ? urlMethod('group', params.group, params) : null,
-        label:  params.group === activeGroup ? props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
+        label: params.group === activeGroup ? props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
       })
     }
   }
@@ -62,7 +66,7 @@ class BreadcrumbsItem extends React.Component {
     if (property) {
       links.push({
         url: !isLastLink ? urlMethod('property', property, params) : null,
-        label:  property
+        label: property
       })
     }
   }
@@ -73,14 +77,14 @@ class BreadcrumbsItem extends React.Component {
     if (storage) {
       links.push({
         url: !isLastLink ? urlMethod('storage', storage, params) : null,
-        label:  storage
+        label: storage
       })
     }
   }
 
   updateLinks(props) {
-    let links = []
-    const { pathname, params } = props
+    const links = []
+    const { pathname, params, activeGroup } = props
     const { roles, user, router } = this.props
 
     if (router.isActive(getRoute('content'))) {
@@ -88,7 +92,7 @@ class BreadcrumbsItem extends React.Component {
       let storageLinkIsLast = true
       if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.analytics.text"/>
+          label: <FormattedMessage id="portal.header.analytics.text"/>
         })
 
         propertyLinkIsLast = false
@@ -96,7 +100,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.configuration.text"/>
+          label: <FormattedMessage id="portal.header.configuration.text"/>
         })
 
         propertyLinkIsLast = false
@@ -104,7 +108,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('analyticsStorage', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.analytics.text"/>
+          label: <FormattedMessage id="portal.header.analytics.text"/>
         })
 
         storageLinkIsLast = false
@@ -112,7 +116,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('contentStorageConfiguration', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.configuration.text"/>
+          label: <FormattedMessage id="portal.header.configuration.text"/>
         })
 
         storageLinkIsLast = false
@@ -123,7 +127,7 @@ class BreadcrumbsItem extends React.Component {
       this.addGroupLink(props, links, getContentUrl)
 
       links.push({
-        label:  <FormattedMessage id="portal.header.content.text"/>,
+        label: <FormattedMessage id="portal.header.content.text"/>,
         url: params.account && links.length > 0 ? getContentUrl('groups', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
@@ -136,20 +140,77 @@ class BreadcrumbsItem extends React.Component {
         label: <FormattedMessage id="portal.header.analytics.text"/>,
         url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
       })
-    } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
-      links.push( {label:  'Account Management'} )
-    } else if (new RegExp( getRoute('services'), 'g' ).test(pathname)) {
-      links.push( {label:  'Services'} )
-    } else if (new RegExp( getRoute('security'), 'g' ).test(pathname)) {
-      links.push( {label:  'Security'} )
-    } else if (new RegExp( getRoute('support'), 'g' ).test(pathname)) {
-      links.push( {label:  'Support'} )
-    } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
-      links.push( {label:  'Configuration'} )
-    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
-      links.push( {label:  'Network'} )
-    } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
-      links.push( {label:  'Dashboard'} )
+    } else if (new RegExp(getRoute('accountManagement'), 'g').test(pathname)) {
+      /*
+        Show group in breadcrumb in properties & storage tabs.
+      */
+      const baseAccUrl = getAccountManagementUrlFromParams(params)
+      if (router.isActive(`${baseAccUrl}/properties`) ||
+          router.isActive(`${baseAccUrl}/storage`)) {
+        this.addGroupLink(props, links, getContentUrl)
+      }
+
+      links.push({
+        label: <FormattedMessage id="portal.account.manage.accountManagement.title"/>,
+        url: links.length > 0 ? getAccountManagementUrlFromParams({ brand: params.brand, account: params.account }) : null
+      })
+
+    } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
+      links.push({label: 'Services'})
+    } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {
+      this.addGroupLink(props, links, getSecurityUrl)
+
+      links.push({
+        label: <FormattedMessage id="portal.header.security.text" />,
+        url: links.length > 0 ? getSecurityUrlFromParams({ brand: params.brand, account: params.account }) : null
+      })
+
+    } else if (new RegExp(getRoute('support'), 'g').test(pathname)) {
+      links.push({label: 'Support'})
+    } else if (new RegExp(getRoute('configuration'), 'g').test(pathname)) {
+      links.push({label: 'Configuration'})
+    } else if (new RegExp(getRoute('network'), 'g').test(pathname)) {
+      // Link to POD
+      if (params.pod) {
+        links.push({
+          label: params.pod,
+          url: getNetworkUrl('pod', params.pod, params)
+        })
+      }
+
+      // Link to POP
+      if (params.pop) {
+        links.push({
+          label: params.pop,
+          url: getNetworkUrl('pop', params.pop, params)
+        })
+      }
+
+      // Link to Network
+      if (params.network) {
+        links.push({
+          label: params.network,
+          url: getNetworkUrl('network', params.network, params)
+        })
+      }
+
+      // Link to Group
+      // eslint-disable-next-line eqeqeq
+      if (params.group && (activeGroup && (activeGroup.get('id') == params.group))) {
+        links.push({
+          label: activeGroup.get('name'),
+          url: getNetworkUrl('group', params.group, params)
+        })
+      }
+
+      // Label with the page name
+      links.push({
+        label: <FormattedMessage id="portal.network.network.title"/>,
+        url: params.group && getNetworkUrl('account', params.account, params)
+      })
+
+    } else if (new RegExp(getRoute('dashboard'), 'g').test(pathname)) {
+      links.push({label: 'Dashboard'})
     }
 
     this.setState({ links: links.reverse() })
@@ -172,7 +233,7 @@ BreadcrumbsItem.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   params: PropTypes.object,
   pathname: PropTypes.string,
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   user: PropTypes.instanceOf(Immutable.Map)
 }

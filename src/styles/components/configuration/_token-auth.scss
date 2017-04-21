@@ -1,8 +1,32 @@
 $input-width: 324px;
 $input-height: 36px;
 
+.token-auth-no-side-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.token-auth-sample-dialog {
+  .modal-footer {
+    background: none !important;
+  }
+}
+
+.token-auth-sample-code-textarea {
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  resize: none;
+}
+
+.sample-token-output-table-row {
+  .truncated-title {
+    white-space: nowrap;
+  }
+}
+
 .options-item {
-  min-height: $bar-height;
+  height: $bar-height;
   padding-left: 15px;
   margin-bottom: 10px;
 
@@ -16,22 +40,7 @@ $input-height: 36px;
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.1);
-  }
-
-  //TODO: UDNP-3028 - Side panel uses old styles
-  .btn-icon {
-    .icon {
-      .light-theme & {
-        fill: $dt-text-color;
-
-        &:hover,
-        &:focus,
-        &:hover:active {
-          fill: $white;
-        }
-      }
-    }
+    background-color: rgba($black, 0.04);
   }
 
   &--name {

@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import { fromJS } from 'immutable'
 
-jest.unmock('../../../components/action-buttons.jsx')
+jest.unmock('../../../components/shared/action-buttons.jsx')
 jest.unmock('../../account-management/account-management-header.jsx')
 jest.unmock('../ssl-list.jsx')
 import SSLList from '../ssl-list.jsx'

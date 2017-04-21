@@ -8,6 +8,8 @@ import * as dnsRecordActionCreators from '../../../redux/modules/dns-records/act
 import { hideInfoDialog, showInfoDialog, toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
+import { parseResponseError } from '../../../redux/util'
+
 import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -15,7 +17,7 @@ import DomainToolbar from '../../../components/account-management/domain-toolbar
 import DNSList from '../../../components/account-management/dns-list'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
-import ModalWindow from '../../../components/modal'
+import ModalWindow from '../../../components/shared/modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -67,7 +69,14 @@ class AccountManagementSystemDNS extends Component {
 
   deleteDnsRecord() {
     const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
-    deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
+    deleteRecord(activeDomain, recordToDelete)
+      .then(() => {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.dnsDeleted.text"/>)
+        this.setState({ recordToDelete: null })
+      })
+      .catch(() => {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.dnsDeleted.failed.text"/>)
+      })
   }
 
   closeDeleteDnsRecordModal() {
@@ -84,27 +93,28 @@ class AccountManagementSystemDNS extends Component {
       loadingRecords,
       loadingDomains,
       activeModal,
+      showNotification,
       toggleModal } = this.props
 
     const { domainSearch, recordSearch, recordToDelete } = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
-    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase()))
 
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,
       changeActiveDomain: value => changeActiveDomain(value),
-      onEditDomain: (activeDomain) => {
+      onEditDomain: (activeDomainToEdit) => {
         this.editingDomain = true
-        fetchDomain('udn', activeDomain)
+        fetchDomain('udn', activeDomainToEdit)
           .then(() => toggleModal(DNS_DOMAIN_EDIT))
       },
       onAddDomain: () => {
         this.editingDomain = false
         toggleModal(DNS_DOMAIN_EDIT)
       },
-      onDeleteDomain: (activeDomain) => {
-        this.showDeleteModal(activeDomain)
+      onDeleteDomain: (activeDomainToDelete) => {
+        this.showDeleteModal(activeDomainToDelete)
       },
       domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       emptyDomainsTxt: loadingDomains ? 'portal.loading.text' : 'portal.account.manage.system.empty.domain',
@@ -149,11 +159,13 @@ class AccountManagementSystemDNS extends Component {
         {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
+          showNotification={showNotification}
           closeModal={() => toggleModal(null)}/>
         }
         {activeModal === DNS_DOMAIN_EDIT &&
         <DomainForm
           edit={this.editingDomain}
+          showNotification={showNotification}
           closeModal={() => toggleModal(null)}/>
         }
         {this.state.recordToDelete &&
@@ -176,7 +188,9 @@ class AccountManagementSystemDNS extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={this.hideDeleteModal}
-          onSubmit={() => {this.deleteDomain()}}
+          onSubmit={() => {
+            this.deleteDomain()
+          }}
           invalid={true}
           verifyDelete={true}>
           <p>
@@ -192,7 +206,7 @@ class AccountManagementSystemDNS extends Component {
 AccountManagementSystemDNS.displayName = "AccountManagementSystemDNS"
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
-  activeModal:PropTypes.string,
+  activeModal: PropTypes.string,
   changeActiveDomain: PropTypes.func,
   deleteDomain: PropTypes.func,
   deleteRecord: PropTypes.func,
@@ -205,9 +219,11 @@ AccountManagementSystemDNS.propTypes = {
   params: PropTypes.object,
   records: PropTypes.array,
   setActiveRecord: PropTypes.func,
+  showNotification: PropTypes.func,
   toggleModal: PropTypes.func
 }
 
+/* istanbul ignore next */
 function mapStateToProps({ dns, dnsRecords, ui }) {
   return {
     loadingDomains: dns.get('fetching'),
@@ -219,7 +235,8 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
-function mapDispatchToProps(dispatch, { params: { brand } }) {
+/* istanbul ignore next */
+function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
   const { changeActiveDomain, deleteDomain, fetchDomains, fetchDomain, startFetchingDomains, stopFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
   const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)
   return {
@@ -232,9 +249,9 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       startFetchingDomains()
       return fetchDomains(brand)
     },
-    deleteRecord: (domain, record, onResponse) => {
+    deleteRecord: (domain, record) => {
       startFetching()
-      return removeResource(domain, record.name, record).then(onResponse)
+      return removeResource(domain, record.name, record)
     },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
@@ -245,12 +262,14 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
-            dispatch( showInfoDialog({
+            dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
-              content: res.payload.data.message,
+              content: parseResponseError(res.payload),
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))
+          } else {
+            showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           }
           stopFetchingDomains()
         })

@@ -32,10 +32,10 @@ export const fetchRoles = createAction(ROLES_FETCHED, () => {
       return axios.get(`${BASE_URL_AAA}/roles/${role.id}/services`, PAGINATION_MOCK)
         .then(resp => resp.data.data)
         .then(roleServices => {
-          const permissions = roleServices.reduce((permissions, roleService) => {
+          const permissions = roleServices.reduce((roleServicePermissions, roleService) => {
             const service = roleService.service.toLowerCase()
-            permissions[service] = roleService.permissions.resources
-            return permissions
+            roleServicePermissions[service] = roleService.permissions.resources
+            return roleServicePermissions
           }, {})
           return { ...role, permissions }
         })

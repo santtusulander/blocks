@@ -1,0 +1,99 @@
+@import '../modal-form-panel';
+
+.group-form-sidebar {
+
+  .btn-icon {
+    border: 0 !important;
+  }
+
+  .add-members {
+    margin-bottom: 30px;
+
+    .dropdown-menu {
+      // Prevent checklist dropdown to hide behind the footer
+      z-index: $zindex-group-form;
+    }
+  }
+
+  .members-list {
+    padding: 0;
+    list-style: none;
+
+    &__member {
+      display: flex;
+      width: 100%;
+      padding: 10px 0 10px 20px;
+      margin: 0 0 8px;
+      background: #12577a;
+      align-items: center;
+      justify-content: space-between;
+
+      .light-theme & {
+        background: $pale-blue;
+      }
+
+      &__label {
+        flex-grow: 1;
+      }
+
+      &__actions {
+        margin-top: -8px;
+        order: 2;
+
+        button,
+        &__new {
+          display: inline;
+          height: 30px;
+
+          &.delete-button {
+            height: 24px;
+
+            .icon {
+              vertical-align: initial;
+              stroke: $pale-blue;
+
+              .light-theme & {
+                stroke: $silver-60;
+              }
+
+              &:hover {
+                stroke: $white;
+              }
+            }
+          }
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        &__new {
+          position: relative;
+          top: 5px;
+        }
+
+      }
+
+      &--new {
+        background: #097ba1;
+      }
+
+      &--delete {
+        background: #18466a;
+
+        .members-list__member__label {
+          color: #70889b;
+          text-decoration: line-through;
+        }
+      }
+    }
+
+    .light-theme & {
+      color: #fff;
+
+      .icon {
+        stroke: #fff;
+      }
+    }
+  }
+}

@@ -21,12 +21,8 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
-    '/v2/service_info': {
-      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
-      secure: false
-    },
     '/v2': {
-      target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
+      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
       secure: false
     },
     '/VCDN': {
@@ -48,14 +44,14 @@ var server = new WebpackDevServer(compiler, {
       }
     },
     '/analytics-legacy': {
-      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://mapi.sjc.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics-legacy([^?]*)\\??(.*)$' : '/legacy$1/?$2'
       }
     },
 
     '/analytics': {
-      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://mapi.sjc.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics([^-][^?]*)\\??(.*)$' : '/analytics/$1/?$2'
       }

@@ -2,8 +2,9 @@ import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import { List } from 'immutable'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
-import IconComments from '../icons/icon-comments'
+import IconComments from '../shared/icons/icon-comments'
 
 import {
   getTicketPriorities,
@@ -11,8 +12,6 @@ import {
   getClosedTicketStatuses,
   getTicketTypeIcon
 } from '../../util/support-helper'
-
-import './support-ticket-panel.scss'
 
 class SupportTicketPanel extends React.Component {
   constructor(props) {
@@ -28,7 +27,9 @@ class SupportTicketPanel extends React.Component {
     const statusClassNames = classNames({ 'support-ticket-panel': true, 'closed': isClosed });
 
     return (
-      <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
+      <div className={statusClassNames} onClick={() => {
+        this.props.openTicket()
+      }}>
         <div className={priorityClassNames} />
         <Grid componentClass="header" fluid={true}>
           <Row>
@@ -54,7 +55,7 @@ class SupportTicketPanel extends React.Component {
             <Row>
               <Col xs={6}>
                 <div className="support-ticket-panel-assignee">
-                  Assignee: <span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
+                  <FormattedMessage id="portal.support.tickets.label.assigneeWithColon.text" /><span className="support-ticket-panel-assignee-value">{this.props.assignee}</span>
                 </div>
               </Col>
               <Col xs={6} className="text-right">
@@ -75,7 +76,9 @@ SupportTicketPanel.defaultProps = {
   assignee: 'Pending',
   priority: 'normal',
   status: 'open',
-  openTicket: () => {}
+  openTicket: () => {
+    // no-op
+  }
 }
 
 SupportTicketPanel.propTypes = {

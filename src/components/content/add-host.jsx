@@ -11,9 +11,11 @@ import {
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 
-import FieldRadio from '../form/field-radio'
-import FieldFormGroup from '../form/field-form-group'
-import FormFooterButtons from '../form/form-footer-buttons'
+import FieldRadio from '../shared/form-fields/field-radio'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+
+import { parseResponseError } from '../../redux/util'
 
 import { isValidHostName } from '../../util/validators'
 import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'
@@ -28,11 +30,11 @@ const validate = (values) => {
     serviceType
   } = values
 
-  if(!hostName) {
+  if (!hostName) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.required" />
   }
 
-  if( hostName && !isValidHostName(hostName)) {
+  if (hostName && !isValidHostName(hostName)) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.invalid" />
   }
 
@@ -55,17 +57,17 @@ class AddHost extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }){
+  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }) {
     const res = this.props.createHost(hostName, deploymentMode, serviceType)
 
     return res.catch((error) => {
       if (error) {
-        throw new SubmissionError({ _error: error.data.message })
+        throw new SubmissionError({ _error: parseResponseError(error) })
       }
     })
   }
 
-  onCancel(){
+  onCancel() {
     return this.props.cancelChanges()
   }
 
@@ -103,7 +105,7 @@ class AddHost extends React.Component {
         />
 
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /> *</ControlLabel>
+          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
             <Field
               name="deploymentMode"
               type="radio"
@@ -123,7 +125,7 @@ class AddHost extends React.Component {
 
         {(hasMDSupport || hasVODSupport) &&
           <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /> *</ControlLabel>
+            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /><FormattedMessage id="portal.spaceWithAsterisk" /></ControlLabel>
               {hasMDSupport &&
                 <Field
                   name="serviceType"
@@ -183,7 +185,7 @@ function mapStateToProps(state, ownProps) {
   let hasMDSupport = false
 
   enabledServices.forEach((service) => {
-    let serviceId = service.get('service_id')
+    const serviceId = service.get('service_id')
     if (serviceId === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     } else if (serviceId === MEDIA_DELIVERY_SERVICE_ID) {

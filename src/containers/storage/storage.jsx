@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { withRouter } from 'react-router'
 import moment from 'moment'
 
@@ -23,12 +23,12 @@ import { getById as getClusterById } from '../../redux/modules/entities/CIS-clus
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
-import { buildReduxId } from '../../redux/util'
+import { buildReduxId, parseResponseError } from '../../redux/util'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
 
-import Content from '../../components/layout/content'
-import PageContainer from '../../components/layout/page-container'
+import Content from '../../components/shared/layout/content'
+import PageContainer from '../../components/shared/layout/page-container'
 
 import StorageHeader from '../../components/storage/storage-header'
 import StorageKPI from '../../components/storage/storage-kpi'
@@ -39,6 +39,10 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+
+import checkPermissions from '../../util/permissions'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
+import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
 
 const FORMAT = '0,0.0'
 
@@ -69,7 +73,7 @@ class Storage extends Component {
       })
 
       const metricsOpts = {
-        brand : brand,
+        brand: brand,
         account: account,
         group: group,
         ingest_point: storage,
@@ -83,12 +87,19 @@ class Storage extends Component {
       this.props.fetchClusters({})
     }
     //fetch Active group if there is none in redux
-    if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
+    if (!this.props.group && this.props.params) {
+      this.props.fetchGroupData(this.props.params)
+    }
   }
 
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
-    this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
+
+    if (checkPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
+      this.props.initStorageAccessKey(brand, account, group, storage)
+        .then(this.initFileUploader)
+        .catch(parseResponseError)
+    }
   }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
@@ -152,7 +163,9 @@ class Storage extends Component {
             <StorageHeader
               currentUser={currentUser}
               params={params}
-              toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
+              toggleConfigModal={() => {
+                this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))
+              }}
             />
 
             <PageContainer>
@@ -166,19 +179,20 @@ class Storage extends Component {
                 referenceValue={usage.estimated}
                 valuesUnit={usage.unit}
               />
-
-              <StorageContents
-                brandId={params.brand}
-                accountId={params.account}
-                storageId={params.storage}
-                groupId={params.group}
-                gatewayHostname={gatewayHostname}
-                asperaInstanse={asperaInstanse}
-                contents={storageContents}
-                asperaUpload={this.state.asperaUpload}
-                onMethodToggle={this.toggleUploadMehtod}
-                fileUploader={this.state.fileUploader}
-              />
+              <IsAllowed to={CREATE_ACCESS_KEY}>
+                <StorageContents
+                  brandId={params.brand}
+                  accountId={params.account}
+                  storageId={params.storage}
+                  groupId={params.group}
+                  gatewayHostname={gatewayHostname}
+                  asperaInstanse={asperaInstanse}
+                  contents={storageContents}
+                  asperaUpload={this.state.asperaUpload}
+                  onMethodToggle={this.toggleUploadMehtod}
+                  fileUploader={this.state.fileUploader}
+                />
+              </IsAllowed>
             </PageContainer>
 
             {(accountManagementModal === EDIT_STORAGE) &&
@@ -221,6 +235,11 @@ Storage.propTypes = {
   uploadHandlers: PropTypes.object
 }
 
+Storage.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
+}
+
 Storage.defaultProps = {
   filters: Map(),
   storageMetrics: {
@@ -239,10 +258,8 @@ Storage.defaultProps = {
   }
 }
 
-const getMockContents = (storage) => (
-  storage === 'with-contents'
-  ?
-  [
+const getMockContents = (storage) => {
+  return storage === 'with-contents' ? [
     {
       type: 'file',
       lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
@@ -265,10 +282,8 @@ const getMockContents = (storage) => (
       status: 'Failed',
       noOfFiles: 800
     }
-  ]
-  :
-    []
-  )
+  ] : []
+}
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
@@ -298,8 +313,10 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     },
     gain,
     locations
-  }}
+  }
+}
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storageId = null
@@ -335,13 +352,14 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
-    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
-    fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),

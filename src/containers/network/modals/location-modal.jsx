@@ -8,15 +8,20 @@ import { getById as getLocationById } from '../../../redux/modules/entities/loca
 
 import { isValidLatitude, isValidLongitude } from '../../../util/validators'
 import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
+import { parseResponseError } from '../../../redux/util'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
-import SidePanel from '../../../components/side-panel'
-import ModalWindow from '../../../components/modal'
+import SidePanel from '../../../components/shared/side-panel'
+import ModalWindow from '../../../components/shared/modal'
 import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
+
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
 
 const LOCATION_ADDRESS_HELP_TEXT_ID = 'portal.network.locationForm.latLongFields.helperTextHint.address'
 
@@ -55,7 +60,7 @@ class NetworkLocationFormContainer extends Component {
         latitude: null,
         longitude: null
       },
-      showDeleteModal : false
+      showDeleteModal: false
     }
 
     this.fetchLocation = this.fetchLocation.bind(this)
@@ -148,7 +153,9 @@ class NetworkLocationFormContainer extends Component {
       lat: parseFloat(values.latitude),
       lon: parseFloat(values.longitude)
     }
-    if (values.cloudProvider) data.cloud_provider = values.cloudProvider
+    if (values.cloudProvider) {
+      data.cloud_provider = values.cloudProvider
+    }
 
     const params = {
       brand: brand,
@@ -172,7 +179,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({'_error': resp.data.message})
+        throw new SubmissionError({'_error': parseResponseError(resp)})
 
       })
   }
@@ -198,7 +205,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({_error: resp.data.message})
+        throw new SubmissionError({_error: parseResponseError(resp)})
 
       })
   }
@@ -225,12 +232,13 @@ class NetworkLocationFormContainer extends Component {
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
+      selectedCloudProvider,
       onCancel,
       iataCodes,
       invalid,
       initialValues,
       show,
-      locationPermissions
+      allowModify
     } = this.props;
 
     const { isFetchingLocation, addressLine, showDeleteModal } = this.state
@@ -262,7 +270,8 @@ class NetworkLocationFormContainer extends Component {
             onCancel={this.onCancel}
             onDelete={() => this.onToggleDeleteModal(true)}
             onSubmit={(values) => this.onSubmit(edit, values)}
-            locationPermissions={locationPermissions}
+            readOnly={!allowModify}
+            selectedCloudProvider={selectedCloudProvider}
           />
         </SidePanel>
         {edit && showDeleteModal &&
@@ -285,6 +294,7 @@ class NetworkLocationFormContainer extends Component {
 
 NetworkLocationFormContainer.displayName = 'NetworkLocationEditForm';
 NetworkLocationFormContainer.propTypes = {
+  allowModify: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
   fetchIataCodes: PropTypes.func,
@@ -294,16 +304,19 @@ NetworkLocationFormContainer.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   latLng: PropTypes.object,
-  locationPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   params: PropTypes.object,
+  selectedCloudProvider: PropTypes.string,
   show: PropTypes.bool
 };
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
+  const roles = getRoles(state)
+  const currentUser = state.user.get('currentUser')
 
   const selector = formValueSelector('networkLocationForm')
   let values = {}
@@ -317,10 +330,12 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE),
     latLng: selector(state, 'latitude', 'longitude'),
     cloudProvidersOptions: LOCATION_CLOUD_PROVIDER_OPTIONS,
     cloudProvidersIdOptions: LOCATION_CLOUD_PROVIDER_ID_OPTIONS,
     iataCodes: getIataCodes(state),
+    selectedCloudProvider: selector(state, 'cloudName'),
     initialValues: {
       ...values,
       iataCode: [
@@ -334,11 +349,12 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
-  onCreate: (params) => dispatch( locationActions.create( {...params } ) ),
-  onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
-  onUpdate: (params) => dispatch( locationActions.update( {...params } ) )
+  onCreate: (params) => dispatch(locationActions.create({...params })),
+  onDelete: (params) => dispatch(locationActions.remove({...params })),
+  onUpdate: (params) => dispatch(locationActions.update({...params }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))

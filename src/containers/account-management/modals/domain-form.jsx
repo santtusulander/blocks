@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 
 import { bindActionCreators } from 'redux'
 
-import SidePanel from '../../../components/side-panel'
+import SidePanel from '../../../components/shared/side-panel'
 import { FormattedMessage } from 'react-intl'
 
 import * as dnsActionCreators from '../../../redux/modules/dns'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
+
+import { parseResponseError } from '../../../redux/util'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 
@@ -68,7 +70,7 @@ function mapStateToProps({ dns }, { edit }) {
 
     const initialValues = currentDomain && currentDomain.get('details')
 
-    if ( initialValues ) {
+    if (initialValues) {
       props.initialValues = initialValues.toJS()
       props.initialValues.name = currentDomain.get('id')
     }
@@ -77,15 +79,17 @@ function mapStateToProps({ dns }, { edit }) {
   return props
 }
 
-function mapDispatchToProps(dispatch, { closeModal }) {
+function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
 
   return {
     dnsActions: dnsActions,
     saveDomain: (edit, values) => {
       const method = edit ? 'editDomain' : 'createDomain'
+      const saveDomainMessage = edit
+                                ? <FormattedMessage id="portal.accountManagement.dns.domain.updated.text"/>
+                                : <FormattedMessage id="portal.accountManagement.dns.domain.created.text"/>
 
-      // TODO: Are these required params ok (refresh, retry, expiry)?
       const defaultData = {
         'class': 'IN',
         retry: 1,
@@ -106,15 +110,16 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       dnsActions.startFetchingDomains()
       return dnsActions[method]('udn', domain, data)
         .then(res => {
-          if (res.error) {          
-            dispatch( showInfoDialog({
+          if (res.error) {
+            dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
-              content: res.payload.data.message,
+              content: parseResponseError(res.payload),
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()
+          showNotification(saveDomainMessage)
           closeModal();
         })
     }

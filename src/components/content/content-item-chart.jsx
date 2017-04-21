@@ -8,9 +8,9 @@ import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
-import IconChart from '../icons/icon-chart'
-import IconConfiguration from '../icons/icon-configuration'
-import IconQuestionMark from '../icons/icon-question-mark'
+import IconChart from '../shared/icons/icon-chart'
+import IconConfiguration from '../shared/icons/icon-configuration'
+import IconQuestionMark from '../shared/icons/icon-question-mark'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import DifferenceTooltip from './difference-tooltip'
@@ -23,7 +23,7 @@ const dayHours = 24
 const rayHours = 3
 
 function groupData(rawData, groupSize, key) {
-  return rawData.reduce( (points, data, i) => {
+  return rawData.reduce((points, data, i) => {
 
     let val
 
@@ -108,7 +108,7 @@ class ContentItemChart extends React.Component {
         /* If the value is 'center', set the X point to the center of the chart,
         otherwise the X is calculated with Cos using the known angle, radius
         (radius of the inner circle + bar height) and X of the circle's center */
-        let x = d === 'center' ? outerRadius : isNaN(d) ? 0 :
+        const x = d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.cos(primaryAngle * radians)
           * (innerRadius + Number(normalize(d))) + outerRadius
         return x
@@ -117,7 +117,7 @@ class ContentItemChart extends React.Component {
         /* If the value is 'center', set the Y point to the center of the chart,
         otherwise the Y is calculated with Sin using the known angle, radius
         (radius of the inner circle + bar height) and Y of the circle's center */
-        let y = d === 'center' ? outerRadius : isNaN(d) ? 0 :
+        const y = d === 'center' ? outerRadius : isNaN(d) ? 0 :
           Math.sin(primaryAngle * radians)
           * (innerRadius + Number(normalize(d))) + outerRadius
         // Increment the angle for the next point
@@ -129,14 +129,14 @@ class ContentItemChart extends React.Component {
       .x(function(d) {
         /* Calculate the X point with Cos using the known angle, radius (radius
         of the inner circle + bar height) and X of the circle's center */
-        let x = isNaN(d) ? 0 : Math.cos(secondaryAngle * radians)
+        const x = isNaN(d) ? 0 : Math.cos(secondaryAngle * radians)
           * (innerRadius + Number(normalize(d))) + outerRadius
         return x
       })
       .y(function(d) {
         /* Calculate the Y point with Sin using the known angle, radius (radius
         of the inner circle + bar height) and Y of the circle's center */
-        let y = isNaN(d) ? 0 : Math.sin(secondaryAngle * radians)
+        const y = isNaN(d) ? 0 : Math.sin(secondaryAngle * radians)
           * (innerRadius + Number(normalize(d))) + outerRadius
         // Increment the angle for the next point
         secondaryAngle = secondaryAngle + increment
@@ -150,19 +150,20 @@ class ContentItemChart extends React.Component {
     const dayArc = d3.svg.arc()
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
-    let { avgTransfer, maxTransfer, minTransfer, tagText } = this.props
+    let { avgTransfer, maxTransfer, minTransfer } = this.props
+    const { tagText } = this.props
     const endDate = moment.utc().format('MMM D')
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
     const activeSlice = this.state.activeSlice
-    if(activeSlice) {
+    if (activeSlice) {
       avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
       maxTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('peak'), true)
       minTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('low'), true)
       const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
       tooltipDate = sliceStart.format('MMM D')
-      if(this.props.showSlices) {
+      if (this.props.showSlices) {
         link = `${this.props.linkTo}?startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
       }
     }
@@ -247,9 +248,9 @@ class ContentItemChart extends React.Component {
                 viewBox={differenceArcViewBox}>
                 <g className={this.props.showSlices ? 'hover-info' : 'hidden-slices'}>
                   {pie(daySlices).reduce((slices, arc, i) => {
-                    if(!(i % 2)) {
+                    if (!(i % 2)) {
                       const data = this.props.dailyTraffic.get(Math.floor(i / 2))
-                      if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
+                      if (data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
                         slices.push(
                           <path key={i} className="day-arc" d={dayArc(arc)}
                             onMouseEnter={this.sliceHover(data)}
@@ -265,8 +266,8 @@ class ContentItemChart extends React.Component {
                     onMouseLeave={this.differenceHover(false)}>
                     {
                       pie(Array(differenceData.length).fill(1)).map((arcs, i) => {
-                        let data = differenceData[i]
-                        let style = data < 0 ? 'below-avg' :
+                        const data = differenceData[i]
+                        const style = data < 0 ? 'below-avg' :
                           data === 0 ? 'avg' :
                           data > 0 ? 'above-avg' : ''
                         return (
@@ -296,9 +297,9 @@ class ContentItemChart extends React.Component {
                   {this.props.name}
                 </div>
                 <div className="content-item-text-sm">
-                  <p>{this.props.cacheHitRate}% Avg. Cache Hitrate</p>
+                  <p>{this.props.cacheHitRate}<FormattedMessage id="portal.content.avgHitRateWithPercentage.text"/></p>
                   <p>
-                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'} TTFB
+                    {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[0] : 0} {this.props.timeToFirstByte ? this.props.timeToFirstByte.split(' ')[1] : 'ms'}<FormattedMessage id="portal.content.TTFB.text"/>
                   </p>
                 </div>
               </div>

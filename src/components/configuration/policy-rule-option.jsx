@@ -2,9 +2,9 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
 
-import IconCaretRight from '../icons/icon-caret-right'
-import IsAdmin from '../is-admin'
-import HasServicePermission from '../has-service-permission'
+import IconCaretRight from '../shared/icons/icon-caret-right'
+import IsAdmin from '../shared/permission-wrappers/is-admin'
+import HasServicePermission from '../shared/permission-wrappers/has-service-permission'
 
 /**
  * A component designed for displaying possible match/action options when creating
@@ -24,7 +24,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     return null
   }
 
-  const isEnabled = checkIfEnabled(key) && !notYetImplemented
+  const isEnabled = checkIfEnabled ? (checkIfEnabled(key) && !notYetImplemented) : !notYetImplemented
   const className = classNames({
     inactive: !isEnabled
   })
@@ -55,7 +55,7 @@ PolicyRuleOption.propTypes = {
    * component. If this function returns `false`, the component will appear to be
    * disabled and will not deploy the `onClick` handler as part of the component.
    */
-  checkIfEnabled: React.PropTypes.func.isRequired,
+  checkIfEnabled: React.PropTypes.func,
   /**
    * A click handler for the option. Will only be used by the component if `checkIfEnabled`
    * passes AND `option.notYetEnabled` is `false`.

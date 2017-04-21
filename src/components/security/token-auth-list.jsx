@@ -3,25 +3,25 @@ import {Link} from 'react-router'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
 
-import IsAllowed from '../is-allowed'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 
-import IconEdit from '../icons/icon-edit.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
+import IconEdit from '../shared/icons/icon-edit.jsx'
+import IconTrash from '../shared/icons/icon-trash.jsx'
 
 import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuration'
 
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
   const getSchemaLabel = (schema) => {
-    return schema.reduce((acc, schema) => {
-      return acc.concat([schemaOptions.find(option => option.value === schema).label])
+    return schema.reduce((acc, singleSchema) => {
+      return acc.concat([schemaOptions.find(option => option.value === singleSchema).label])
     }, []).join(' + ')
   }
 
   const getEncryptionLabel = ({encryption, streaming_encryption}) => {
     if (streaming_encryption) {
-      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label} 
+      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label}
               ${intl.formatMessage({id: 'portal.security.tokenAuth.chunk.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
     } else {
       return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label
@@ -44,7 +44,7 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
 
         </thead>
         <tbody>
-          { rules.map( (rule, index) => {
+          { rules.map((rule, index) => {
 
             const routeTo = editUrlBuilder(rule.propertyName, { policyId: rule.ruleId, policyType: 'request_policy' })
 

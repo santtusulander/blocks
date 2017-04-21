@@ -11,8 +11,10 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import SupportToolModal from './support-tool-modal'
 import LoadingSpinner from '../../../../components/loading-spinner/loading-spinner'
 
-import IconServerValidation from '../../../../components/icons/icon-server-validation'
-import IconServerError from '../../../../components/icons/icon-server-error'
+import IconServerValidation from '../../../../components/shared/icons/icon-server-validation'
+import IconServerError from '../../../../components/shared/icons/icon-server-error'
+
+const MOCK_IP_ADDRESS = "123.123.123.12"
 
 class ModalServerValidation extends React.Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class ModalServerValidation extends React.Component {
   }
   componentWillReceiveProps(newProps) {
     clearTimeout(this.loadingTimeout)
-    if(newProps.showDetails) {
+    if (newProps.showDetails) {
       this.setState({
         showLoading: true
       })
@@ -48,7 +50,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.notUdnServer.text"/></h3>
         </td>
       </tr>)
@@ -60,7 +62,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnPartnerServer.text"/></h3>
         </td>
       </tr>
@@ -72,7 +74,7 @@ class ModalServerValidation extends React.Component {
             width={100} height={100} />
         </td>
         <td>
-          <h2>123.123.123.12</h2>
+          <h2>{MOCK_IP_ADDRESS}</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.udnServer.text"/></h3>
         </td>
       </tr>

@@ -8,15 +8,16 @@ import { FormattedMessage } from 'react-intl'
 
 import LinkWrapper from '../link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
-import IconConfiguration from '../../icons/icon-configuration'
-import IconChart from '../../icons/icon-chart'
+import IconConfiguration from '../../shared/icons/icon-configuration'
+import IconChart from '../../shared/icons/icon-chart'
 import { formatBytes, separateUnit } from '../../../util/helpers'
 
 const FORMAT = '0,0.0'
 const defaultDiameter = 240
 
-const StorageItemChart = (
-  { analyticsLink,
+const StorageItemChart = ({
+    isFetching,
+    analyticsLink,
     onConfigurationClick,
     storageContentLink,
     diameter,
@@ -28,7 +29,6 @@ const StorageItemChart = (
     lastMonthEstimate,
     lastMonthUsage,
     lastMonthPeak }) => {
-
   /* The following data sets represent the pie charts, there are two overlapping
   charts for each month one of them shows the usage and the other shows the peak,
   the peaks occupy one-degree sectors */
@@ -110,10 +110,11 @@ const StorageItemChart = (
           className="storage-item-chart-link"
           disableLinkTo={!storageContentLink}
           linkTo={storageContentLink}>
-          <PieChart width={minDiameter} height={minDiameter} >
-            {pies}
-          </PieChart>
-
+          {!isFetching &&
+            <PieChart width={minDiameter} height={minDiameter} >
+              {pies}
+            </PieChart>
+          }
 
           <div className="storage-item-chart-location">
             {storageLocations}
@@ -171,6 +172,7 @@ StorageItemChart.propTypes = {
   currentUsage: PropTypes.number,
   diameter: PropTypes.number,
   estimate: PropTypes.number,
+  isFetching: PropTypes.bool,
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
@@ -179,6 +181,6 @@ StorageItemChart.propTypes = {
   onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   peak: PropTypes.number,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
-};
+}
 
 export default StorageItemChart

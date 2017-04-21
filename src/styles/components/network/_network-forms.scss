@@ -75,10 +75,8 @@ $typeahead-input-left-padding: 40px;
 
 // SP POD Form
 //============
-
-// TODO: UDNP-2181 - Abstract z-index values to variables
 #tooltip-help {
-  z-index: 1070;
+  z-index: $zindex-tooltip-help;
 }
 
 .sp-pod-form {

@@ -7,6 +7,8 @@ import CustomXAxisTick from './custom-xaxis-tick'
 
 import { formatBytes } from '../../util/helpers'
 
+import '../../styles/components/charts/_bar-chart.scss'
+
 export default class BarChart extends Component {
   constructor(props) {
     super(props)

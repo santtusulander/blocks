@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.unmock('../visitors.jsx')
-jest.unmock('../../table-sorter.jsx')
+jest.unmock('../../shared/table-sorter.jsx')
 
 import AnalysisVisitors from '../visitors.jsx'
 

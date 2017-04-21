@@ -3,12 +3,10 @@ import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { connect } from 'react-redux'
 
-import SidePanel from '../side-panel'
-import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
-import Radio from '../../components/radio'
-
-import './brand-edit-form.scss'
+import SidePanel from '../shared/side-panel'
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
+import Radio from '../shared/form-elements/radio'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -16,18 +14,16 @@ const colorThemeOptions = [
   { id: '1', themeName: 'Theme Name 1' },
   { id: '2', themeName: 'Theme Name 2' },
   { id: '3', themeName: 'Theme Name 3' }
-].map( (e) => {
+].map((e) => {
   return [ e.id, e.themeName]
 });
 
-let errors = {}
+const validate = ({ brandName }) => {
+  const errors = {}
 
-const validate = (values) => {
-  errors = {}
-
-  const { brandName } = values
-
-  if (!brandName || brandName.length === 0) errors.brandName = 'brandName is required'
+  if (!brandName || brandName.length === 0) {
+    errors.brandName = 'brandName is required'
+  }
 
   return errors;
 }
@@ -45,9 +41,18 @@ const BrandEditForm = (props) => {
         title={title}
         className="brand-edit-form-sidebar"
         subTitle="PLACEHOLDER"
-        cancel={() => {}}>
+        cancel={() => {
+          // no-op
+        }}>
 
         <form onSubmit={props.handleSubmit(onSubmit)}>
+
+          {
+            props.error &&
+            <p className='has-error'>
+              <span className='help-block'>{props.error}</span>
+            </p>
+          }
 
           <Field
             name="brandName"
@@ -117,7 +122,9 @@ const BrandEditForm = (props) => {
 
           </FormGroup>
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>
+            <FormattedMessage id='portal.common.button.cancel' />
+          </Button>
           <Button disabled={props.submitting || props.invalid} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
         </ButtonToolbar>
       </form>

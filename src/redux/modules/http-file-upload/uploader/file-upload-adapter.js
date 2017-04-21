@@ -1,13 +1,12 @@
 import utils from 'axios/lib/utils'
 import parseHeaders from 'axios/lib/helpers/parseHeaders'
-import transformData from 'axios/lib/helpers/transformData'
-import settle from 'axios/lib/helpers/settle'
+import settle from 'axios/lib/core/settle'
 import cookies from 'axios/lib/helpers/cookies'
 import isURLSameOrigin from 'axios/lib/helpers/isURLSameOrigin'
 
 import * as actionTypes from '../actionTypes'
 
-const fileUploadAdapter = (resolve, reject, config) => {
+const fileUploadAdapter = (config) => new Promise((resolve, reject) => {
   const {url, uploadHandlers, fileName, data, headers, method, timeout, responseType} = config
 
   /* PROPERTIES FOR BINDING EVENT LISTENERS */
@@ -30,12 +29,14 @@ const fileUploadAdapter = (resolve, reject, config) => {
 
   /* EVENT HANDLERS */
   xhr[loadEvent] = () => {
-    if (!xhr || xhr.readyState !== 4 || xhr.status === 0) return
+    if (!xhr || xhr.readyState !== 4 || xhr.status === 0) {
+      return
+    }
 
     const respHeaders = 'getAllResponseHeaders' in xhr ? parseHeaders(xhr.getAllResponseHeaders()) : null
     const responseData = !config.responseType || config.responseType === 'text' ? xhr.responseText : xhr.response
     const response = {
-      data: transformData(responseData, respHeaders, config.transformResponse),
+      data: responseData,
       status: xhr.status === ie204 ? 204 : xhr.status,
       statusText: xhr.status === ie204 ? noContent : xhr.statusText,
       headers: respHeaders,
@@ -94,12 +95,14 @@ const fileUploadAdapter = (resolve, reject, config) => {
     try {
       xhr.responseType = responseType
     } catch (e) {
-      if (xhr.responseType !== 'json') throw e
+      if (xhr.responseType !== 'json') {
+        throw e
+      }
     }
   }
 
   /* SEND REQUEST */
   xhr.send(data)
-}
+})
 
 export default fileUploadAdapter

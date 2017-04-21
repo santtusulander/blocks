@@ -1,6 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
 import { Route, IndexRedirect, IndexRoute } from 'react-router'
+import { getById as getAccountById } from './redux/modules/entities/accounts/selectors'
+import { getFetchingByTag } from './redux/modules/fetching/selectors'
 
 import * as PERMISSIONS from './constants/permissions'
 import routes, { ENTRY_ROUTE_ROOT } from './constants/routes'
@@ -15,7 +17,9 @@ import {
   UserCanViewHosts,
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
-  CanViewStorageTab
+  CanViewStorageTab,
+  UserCanViewGTM,
+  AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
 import {
@@ -28,7 +32,8 @@ import AccountManagement from './containers/account-management/account-managemen
 import AccountManagementAccountDetails from './containers/account-management/tabs/details'
 import AccountManagementAccountUsers from './containers/account-management/tabs/users'
 import AccountManagementGroups from './containers/account-management/tabs/groups'
-import AccountManagementAccounts from './components/account-management/system/accounts'
+import AccountManagementProperties from './containers/account-management/tabs/properties'
+import AccountManagementAccounts from './containers/account-management/tabs/accounts'
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
@@ -49,15 +54,18 @@ import ConfigurationDetails from './components/configuration/details'
 import ConfigurationDefaults from './components/configuration/defaults'
 import ConfigurationPolicies from './components/configuration/policies'
 import ConfigurationSecurity from './components/configuration/security'
+import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
+import ConfigurationAdvanced from './components/configuration/advanced'
 
-import Accounts from './containers/accounts'
+import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
-// UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
-// import HavingTrouble from './containers/having-trouble'
-import Groups from './containers/groups'
+import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
+import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
-import Hosts from './containers/hosts'
+
+import GroupContainer from './containers/content/group'
+
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
@@ -78,7 +86,7 @@ import SupportTabTickets from './containers/support/tabs/tickets'
 import SupportTabTools from './containers/support/tabs/tools'
 import SupportTabDocumentation from './containers/support/tabs/documentation'
 import StarburstHelp from './containers/starburst-help'
-import Styleguide from './containers/styleguide'
+import Styleguide from './containers/styleguide/styleguide'
 import User from './containers/user'
 
 import ContentTransition from './transitions/content'
@@ -138,11 +146,11 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 const UserIsLoggedIn = UserAuthWrapper({
   authSelector: state => state.user,
-  authenticatingSelector: state => state.user.get('fetching') && ( state.user.get('loggedIn') === false ),
+  authenticatingSelector: state => state.user.get('fetching') && (state.user.get('loggedIn') === false),
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserIsLoggedIn',
   predicate: (user) => {
-    return ( user && user.get('loggedIn') === true )
+    return (user && user.get('loggedIn') === true)
   },
   allowRedirectBack: true
 })
@@ -163,14 +171,13 @@ const UserIsNotLoggedIn = UserAuthWrapper({
 const AccountIsSP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
-      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
-      state.account.get('activeAccount')
+      getAccountById(state, ownProps.params.account)
     return account
   },
-  authenticatingSelector: (state) => state.account.get('fetching'),
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsSP',
   predicate: (account) => {
-    if(!account) {
+    if (!account) {
       return true
     } else {
       return accountIsServiceProviderType(account)
@@ -183,28 +190,29 @@ const AccountIsSP = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+
+
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
-      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
-      state.account.get('activeAccount')
+      getAccountById(state, ownProps.params.account)
     return {
       account,
       accountId: ownProps.params.account
     }
 
   },
-  authenticatingSelector: (state) => state.account.get('fetching'),
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsCP',
   predicate: ({account}) => {
-    if(!account) {
+    if (!account) {
       return true
     } else {
       return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
     return redirectPath
   },
   allowRedirectBack: false
@@ -215,18 +223,17 @@ export const getRoutes = store => {
     <Route path={routes.root}>
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
-      {/*
-        UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
-        Should be used by 2FA components to allow user changing 2FA methods on demand.
-        <Route path="/having-trouble" component={UserIsNotLoggedIn(HavingTrouble)}/>
-      */}
+      <Route path="/recovery-key" component={UserIsNotLoggedIn(RecoveryKey)}/>
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
-      { /* Routes below are protected by login*/}
+      { /* Routes below are protected by login
       <IndexRoute component={UserIsLoggedIn(Main)} />
+      */}
       <Route component={UserIsLoggedIn(Main)}>
+        {/* redirect to /content if in root*/ }
+        <IndexRedirect to={routes.content} />
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
@@ -260,10 +267,10 @@ export const getRoutes = store => {
         <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-            <Route path={routes.contentGroups} component={Groups}/>
-            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
+            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(BrandContainer)}/>
+            <Route path={routes.contentGroups} component={AccountContainer}/>
+            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(GroupContainer)}/>
           </Route>
 
           {/* Properties - routes */}
@@ -282,6 +289,8 @@ export const getRoutes = store => {
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
+            <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
           </Route>
 
           {/* Storage - routes */}
@@ -293,7 +302,7 @@ export const getRoutes = store => {
         <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
           <Route path={routes.networkGroups} component={Network}/>
@@ -370,6 +379,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -377,6 +387,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -384,6 +395,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>

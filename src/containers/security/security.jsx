@@ -1,36 +1,69 @@
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 import { Link } from 'react-router'
 
 import { getSecurityUrlFromParams } from '../../util/routes'
-import * as accountActionCreators from '../../redux/modules/account'
 
-import PageContainer from '../../components/layout/page-container'
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import groupActions from '../../redux/modules/entities/groups/actions'
+
+import {getById as getAccountById, getByBrand} from '../../redux/modules/entities/accounts/selectors'
+import {getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
+
+import PageContainer from '../../components/shared/layout/page-container'
 import SecurityPageHeader from '../../components/security/security-page-header'
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 
 import { getUrl } from '../../util/routes.js'
 
-export class Security extends React.Component {
+export class Security extends Component {
+  componentWillMount() {
+    const {brand, account, group} = this.props.params
+
+    if (account) {
+      this.props.fetchAccount({brand, id: account})
+    } else {
+      this.props.fetchAccounts({brand})
+    }
+
+    if (group) {
+      this.props.fetchGroup({brand, account, id: group})
+    } else {
+      this.props.fetchGroups({brand, account})
+    }
+  }
+
+  getTabName() {
+    const router = this.props.router,
+      baseUrl = getSecurityUrlFromParams(this.props.params)
+    if (router.isActive(`${baseUrl}/ssl-certificate`)) {
+      return 'ssl-certificate';
+    } else if (router.isActive(`${baseUrl}/content-targeting`)) {
+      return 'content-targeting';
+    } else if (router.isActive(`${baseUrl}/token-authentication`)) {
+      return 'token-authentication';
+    }
+
+    return '';
+  }
+
   render() {
     const {
       accounts,
       activeAccount,
       fetchAccount,
-      groups,
+      activeGroup,
       params
     } = this.props
 
-    const activeGroup = groups.find(obj => obj.get('id') === Number(params.group))
-
-    const itemSelectorFunc = (linkType, val, params) => {
-      this.props.router.push(getUrl('/security', linkType, val, params))
+    const itemSelectorFunc = (entity) => {
+      const { nodeInfo, idKey = 'id' } = entity
+      this.props.router.push(`${getUrl('/security', nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${this.getTabName()}`)
     }
 
     const securityBaseUrl = getSecurityUrlFromParams(params);
@@ -85,25 +118,39 @@ Security.displayName = 'Security'
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
   children: PropTypes.object,
   fetchAccount: PropTypes.func,
-  groups: PropTypes.instanceOf(List),
+  fetchAccounts: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchGroups: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object
 }
 
+Security.defaultProps = {
+  activeAccount: Map(),
+  activeGroup: Map()
+}
+
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
-  const fetchAccount = bindActionCreators(accountActionCreators, dispatch).fetchAccount
   return {
-    fetchAccount
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll(params))
   }
 }
 
-const mapStateToProps = (state) => {
+/* istanbul ignore next */
+const mapStateToProps = (state, ownProps) => {
+  const {brand, account, group} = ownProps.params
+
   return {
-    accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
-    groups: state.group.get('allGroups')
+    accounts: getByBrand(state, brand),
+    activeAccount: getAccountById(state, account),
+    activeGroup: getGroupById(state, group)
   }
 }
 

@@ -11,6 +11,7 @@ $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
 $number-input-btn-width: $btn-height / 2;
+$checkbox-width: 30px;
 
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
@@ -22,10 +23,11 @@ label {
 }
 
 .dark-theme {
-  input[disabled], textarea[disabled] {
+  input[disabled],
+  textarea[disabled] {
     background-color: rgba($black, 0.1);
-    user-select: none;
     opacity: 0.6;
+    user-select: none;
 
     &:active {
       color: $dt-text-color;
@@ -35,10 +37,11 @@ label {
 }
 
 .light-theme {
-  input[disabled], textarea[disabled] {
-    color: rgba($lt-text-color, 0.2);
-    user-select: none;
+  input[disabled],
+  textarea[disabled] {
+    color: rgba($lt-text-color, 0.4);
     opacity: 0.6;
+    user-select: none;
 
     &:active {
       box-shadow: 0 0 0 1px rgba($black, 0.1);
@@ -349,6 +352,11 @@ textarea {
 .radio-inline {
   margin: 0;
 
+  .menu-item-label {
+    display: inline-block;
+    width: calc(100% - $checkbox-width);
+  }
+
   input {
     display: none;
 
@@ -459,9 +467,17 @@ textarea {
     color: $form-error-color;
   }
 
+  &.error-msg {
+    color: $form-error-color;
+  }
+
   .multiline-tex-field-error {
     margin-top: 0.5em;
   }
+}
+
+.no-margin-top.help-block {
+  margin-top: 0 !important;
 }
 
 .search-input {

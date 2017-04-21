@@ -6,10 +6,10 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import LineAreaComposedChart from '../../charts/line-area-composed-chart'
-import IconChart from '../../icons/icon-chart.jsx'
-import IconConfiguration from '../../icons/icon-configuration.jsx'
+import IconChart from '../../shared/icons/icon-chart.jsx'
+import IconConfiguration from '../../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond } from '../../../util/helpers'
-import TruncatedTitle from '../../truncated-title'
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 import LinkWrapper from '../link-wrapper'
 
 class StorageItemList extends React.Component {
@@ -73,7 +73,7 @@ class StorageItemList extends React.Component {
 
             <div className="content-item-list-section section-lg">
               <Row>
-                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix">/ {formatBitsPerSecond(estimate)}</span></h1>
+                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix"><FormattedMessage id="portal.slashWithSpace" />{formatBitsPerSecond(estimate)}</span></h1>
                 <p className="text-sm"><FormattedMessage id="portal.common.current" /></p>
               </Row>
             </div>
@@ -88,7 +88,7 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
 
               {!fetchingMetrics &&
-                ( chartData.length > 0
+                (chartData.length > 0
                   ? <LineAreaComposedChart
                     isMiniChart={true}
                     data={chartData}
@@ -114,18 +114,18 @@ StorageItemList.propTypes = {
   average: PropTypes.number,
   chartData: PropTypes.array,
   configurationLink: PropTypes.string,
-  currentUsage:  PropTypes.number,
+  currentUsage: PropTypes.number,
 
   estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
 
   locations: PropTypes.instanceOf(List),
-  low:PropTypes.number,
+  low: PropTypes.number,
 
   name: PropTypes.string,
 
   onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  peak:PropTypes.number,
+  peak: PropTypes.number,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 
 }

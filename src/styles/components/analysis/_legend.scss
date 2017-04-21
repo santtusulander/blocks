@@ -1,0 +1,14 @@
+@import '../../base/chart-legend';
+
+.transfer-by-time {
+  position: relative;
+}
+
+.by-time-legend {
+  @extend %chart-legend;
+  min-width: 400px;
+
+  .by-time-legend-item {
+    @extend %legend-item;
+  }
+}

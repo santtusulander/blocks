@@ -4,6 +4,7 @@
 $token-background: $gradient-teal;
 $token-vertical-padding: em(4px, $form-font-size);
 $token-horizontal-padding: em(12px, $form-font-size);
+$hint-input-left-padding: 40px;
 
 .bootstrap-typeahead {
 
@@ -22,8 +23,12 @@ $token-horizontal-padding: em(12px, $form-font-size);
   }
 
   .bootstrap-tokenizer-input div {
-    // This fixes the input width calculations
+    // This fixes the input width calculations 
     font-size: rem($form-font-size) !important;
+  }
+
+  .bootstrap-typeahead-input-hint {
+    padding-left: $hint-input-left-padding;
   }
 
   .token {
@@ -60,9 +65,11 @@ $token-horizontal-padding: em(12px, $form-font-size);
     }
   }
 
-  .token-removeable {
-    padding-right: em(26px, $form-font-size);
-    cursor: pointer;
+  &:not(.disabled) {
+    .token-removeable {
+      padding-right: em(26px, $form-font-size);
+      cursor: pointer;
+    }
   }
 
   .token-selected {
@@ -76,5 +83,36 @@ $token-horizontal-padding: em(12px, $form-font-size);
     .light-theme & {
       box-shadow: 0 0 0 2px rgba($black, 0.4);
     }
+  }
+
+  &.disabled {
+    cursor: not-allowed !important;
+    opacity: 0.3;
+
+    .form-control {
+      pointer-events: none;
+    }
+
+    .token-removeable {
+      .close-button {
+        display: none;
+      }
+    }
+  }
+}
+
+// UDNP-3199: Fix Safari issue with unneeded autofill icon in asn typeahead input
+.asn-lookup {
+  input::-webkit-contacts-auto-fill-button {
+    position: absolute;
+    right: 0;
+    display: none !important;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .bootstrap-typeahead-menu > li > a > span {
+    display: block;
+    pointer-events: none;
   }
 }

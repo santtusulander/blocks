@@ -15,32 +15,38 @@ import {
 
 import { getLocationPermissions } from '../../util/permissions'
 
-import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
-import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as permissionsActionCreators from '../../redux/modules/permissions'
 import * as rolesActionCreators from '../../redux/modules/roles'
 import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-import Content from '../../components/layout/content'
-import PageHeader from '../../components/layout/page-header'
-import ModalWindow from '../../components/modal'
-import AccountSelector from '../../components/global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
-import TruncatedTitle from '../../components/truncated-title'
-import IconCaretDown from '../../components/icons/icon-caret-down'
-import IconEdit from '../../components/icons/icon-edit'
-import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+import { parseResponseError } from '../../redux/util'
+
+import accountActionCreators from '../../redux/modules/entities/accounts/actions'
+import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+import groupActionCreators from '../../redux/modules/entities/groups/actions'
+import usersActions from '../../redux/modules/entities/users/actions'
+
+import Content from '../../components/shared/layout/content'
+import PageHeader from '../../components/shared/layout/page-header'
+import ModalWindow from '../../components/shared/modal'
+import AccountSelector from '../../components/global-account-selector/account-selector-container'
+import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
+import IconCaretDown from '../../components/shared/icons/icon-caret-down'
+import IconEdit from '../../components/shared/icons/icon-edit'
+import MultilineTextFieldError from '../../components/shared/form-elements/multiline-text-field-error'
 
 import EntityEdit from '../../components/account-management/entity-edit'
 
-import Tabs from '../../components/tabs'
+import Tabs from '../../components/shared/page-elements/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
   ADD_ACCOUNT,
+  ADD_GROUP,
   DELETE_ACCOUNT,
   DELETE_GROUP,
   EDIT_GROUP,
@@ -66,8 +72,6 @@ export class AccountManagement extends Component {
 
     this.notificationTimeout = null
 
-    this.editSOARecord = this.editSOARecord.bind(this)
-    this.dnsEditOnSave = this.dnsEditOnSave.bind(this)
     this.addGroupToActiveAccount = this.addGroupToActiveAccount.bind(this)
     this.deleteGroupFromActiveAccount = this.deleteGroupFromActiveAccount.bind(this)
     this.editGroupInActiveAccount = this.editGroupInActiveAccount.bind(this)
@@ -78,59 +82,10 @@ export class AccountManagement extends Component {
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
-    this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
+    this.showGroupModal = this.showGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
-  }
-
-  componentWillMount() {
-    const { brand, account } = this.props.params
-    this.props.permissionsActions.fetchPermissions()
-    this.props.rolesActions.fetchRoles()
-
-    /*
-      TODO: UDNP-2172
-      Why Users are needed here?
-      Shouldn't they be loaded on 'Users' -tab?
-    */
-    if (account) {
-      this.props.userActions.fetchUsers(brand, account)
-    }
-
-    else if(this.props.accounts.size) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    /*TODO: UDNP-2172
-      Why Users are needed here?
-      Shouldn't they be loaded on 'Users' -tab?
-    */
-    const { brand, account } = nextProps.params
-    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
-      this.props.userActions.fetchUsers(brand, account)
-    }
-
-    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
-    }
-  }
-
-  editSOARecord() {
-    // TODO: to be deleted (or fixed) as part of UDNP-2204
-    // const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
-    // const activeDomain = dnsData.get('activeDomain')
-    // const data = getValues(soaFormData)
-    // dnsActions.editSOA({ id: activeDomain.get('id'), data })
-    // toggleModal(null)
-  }
-
-  dnsEditOnSave() {
-    // eslint-disable-next-line no-console
-    console.log('dnsEditOnSave()')
+    this.deleteAccount = this.deleteAccount.bind(this)
   }
 
   showDeleteGroupModal(group) {
@@ -150,33 +105,70 @@ export class AccountManagement extends Component {
   }
 
   deleteUser() {
-    const { userActions: { deleteUser } } = this.props
-    return deleteUser(this.userToDelete)
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteUser(this.userToDelete)
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+      })
   }
 
-  addGroupToActiveAccount(data) {
-    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
-      .then(action => {
-        this.props.hostActions.clearFetchedHosts()
-        return action.payload
+  deleteAccount(brandId, accountId, router) {
+    return this.props.accountActions.remove({brand: brandId, id: accountId})
+      .then(() => {
+        this.props.toggleModal(null)
+        router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
+      })
+      .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+      .catch(response => {
+        // Hide the delete modal.
+        this.props.toggleModal(null)
+        this.props.uiActions.showInfoDialog({
+          title: <FormattedMessage id="portal.errorModal.error.text" />,
+          content: parseResponseError(response),
+          okButton: true,
+          cancel: () => this.props.uiActions.hideInfoDialog()
+        })
+      })
+  }
+
+  addGroupToActiveAccount({ data, usersToAdd }) {
+    const {activeAccount, groupActions, hostActions, users, userActions, toggleModal } = this.props
+    return groupActions.create({brand: 'udn', account: activeAccount.get('id'), payload: data})
+      .then(({ payload }) => {
+        hostActions.clearFetchedHosts()
+        return Promise.all(usersToAdd.map(email => {
+          const foundUser = users
+            .find(user => user.get('email') === email)
+          const newUser = {
+            group_id: foundUser.get('group_id').push(payload.id).toJS()
+          }
+          return userActions.updateUser(email, newUser)
+        }))
+      })
+      .then(() => {
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groups.created"/>)
+        toggleModal()
       })
   }
 
   deleteGroupFromActiveAccount(group) {
-    return this.props.groupActions.deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      group.get('id')
-    ).then(response => {
+    return this.props.groupActions.remove({
+      brand: 'udn',
+      account: this.props.activeAccount.get('id'),
+      id: group.get('id')
+    }).then(response => {
       this.props.toggleModal(null)
-      response.error &&
+      if (response.error) {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
-          content: response.payload.data.message,
+          content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
+      } else {
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groups.delete"/>)
+      }
+
     })
   }
 
@@ -195,11 +187,13 @@ export class AccountManagement extends Component {
       })
     })
     return Promise.all([
-      this.props.groupActions.updateGroup(
-        'udn',
-        this.props.activeAccount.get('id'),
-        groupId,
-        data
+      this.props.groupActions.update(
+        {
+          brand: 'udn',
+          account: this.props.activeAccount.get('id'),
+          id: groupId,
+          payload: data
+        }
       ),
       ...addUserActions,
       ...deleteUserActions
@@ -210,28 +204,34 @@ export class AccountManagement extends Component {
       })
   }
 
-  toggleEditGroupModal(group) {
-    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+  showGroupModal(group) {
+    const { toggleModal, groupActions, params: { account, brand } } = this.props
     if (!group) {
-      this.setState({ groupToUpdate: null })
-      toggleModal()
+      toggleModal(ADD_GROUP)
     } else {
-      fetchGroup(brand, account, group.get('id')).then(() => {
+      groupActions.fetchOne({brand, account, id: group.get('id')}).then(() => {
         this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
     }
   }
 
+  hideGroupModal() {
+    if (this.state.groupToUpdate) {
+      this.setState({ groupToUpdate: null })
+    }
+    this.props.toggleModal()
+  }
+
   editAccount(brandId, accountId, data) {
     if (accountId) {
-      return this.props.accountActions.updateAccount(brandId, accountId, data)
+      return this.props.accountActions.update({brand: brandId, id: accountId, payload: data})
         .then(() => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.accountUpdated.text"/>)
         })
     } else {
-      return this.props.accountActions.createAccount(brandId, data)
+      return this.props.accountActions.create({brand: brandId, payload: data})
         .then(() => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.accountCreated.text"/>)
@@ -246,7 +246,7 @@ export class AccountManagement extends Component {
   }
 
   addAccount(brand, data) {
-    return this.props.accountActions.createAccount(brand, data).then(
+    return this.props.accountActions.create({ brand: brand, payload: data}).then(
       action => {
         this.props.router.push(`/account-management/${brand}/${action.payload.id}`)
         this.showNotification(`Account ${data.name} created.`)
@@ -270,6 +270,10 @@ export class AccountManagement extends Component {
       return 'groups';
     } else if (router.isActive(`${baseUrl}/users`)) {
       return 'users';
+    } else if (router.isActive(`${baseUrl}/properties`)) {
+      return 'properties';
+    } else if (router.isActive(`${baseUrl}/storage`)) {
+      return 'storage'
     }
 
     return '';
@@ -301,16 +305,13 @@ export class AccountManagement extends Component {
       params,
       accountManagementModal,
       toggleModal,
-      onDelete,
       activeAccount,
       router
-      //dnsData
     } = this.props
 
     const subPage = this.getTabName(),
       isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
-      //activeDomain = dnsData && dnsData.get('activeDomain'),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
@@ -323,7 +324,9 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancelButton: true,
           cancel: () => toggleModal(null),
-          onSubmit: () => onDelete(brand, this.state.accountToDelete, router)
+          onSubmit: () => {
+            this.deleteAccount(brand, this.state.accountToDelete, router)
+          }
         }
         break
       case DELETE_GROUP:
@@ -341,10 +344,11 @@ export class AccountManagement extends Component {
 
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
+      showNotification: this.showNotification,
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
-      editGroup: this.toggleEditGroupModal,
+      showGroupModal: this.showGroupModal,
       account: activeAccount,
       toggleModal,
       params,
@@ -371,12 +375,14 @@ export class AccountManagement extends Component {
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
-              as="accountManagement"
-              params={{ brand, account }}
-              topBarTexts={{ brand: 'UDN Admin' }}
-              topBarAction={() => router.push(`${getRoute('accountManagement')}/${brand}`)}
-              onSelect={(...params) => router.push(`${getUrl(getRoute('accountManagement'), ...params)}/${subPage}`)}
-              restrictedTo="account">
+              params={params}
+              levels={[ 'brand', 'account' ]}
+              onItemClick={(entity) => {
+
+                const { nodeInfo, idKey = 'id' } = entity
+                router.push(`${getUrl(getRoute('accountManagement'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+
+              }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
@@ -392,7 +398,7 @@ export class AccountManagement extends Component {
             Edit activeAccount -button
             */
             account &&
-            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNTS}>
+            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNT}>
               <Button
                 bsStyle="primary"
                 className="btn-icon"
@@ -413,13 +419,20 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-         {accountIsContentProviderType(activeAccount) &&
+          {accountIsContentProviderType(activeAccount) &&
+            <IsAllowed to={PERMISSIONS.LIST_PROPERTY}>
+              <li data-eventKey="properties">
+                <Link to={baseUrl + '/properties'} activeClassName="active"><FormattedMessage id="portal.account.properties.title"/></Link>
+              </li>
+            </IsAllowed>
+          }
+          {accountIsContentProviderType(activeAccount) &&
            <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
              <li>
                <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
              </li>
            </IsAllowed>
-         }
+          }
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">
@@ -428,22 +441,14 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li>
-            <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
-          </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
-           <li>
+          <IsAllowed to={PERMISSIONS.CONFIGURE_DNS}>
+           <li data-eventKey="dns">
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
           <li data-eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
-          {/*
-           <li data-eventKey="details">
-           <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
-           </li>
-           */}
         </Tabs>}
 
         {/* RENDER TAB CONTENT */}
@@ -487,12 +492,25 @@ export class AccountManagement extends Component {
             type='group'
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            disableDelete={String(this.state.groupToUpdate.get('id')) === String(this.props.params.group)}
             locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
-            onCancel={() => this.toggleEditGroupModal()}
+            onCancel={() => this.hideGroupModal()}
             onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.editGroupInActiveAccount}
+          />
+        }
+
+        {accountManagementModal === ADD_GROUP &&
+          <EntityEdit
+            type='group'
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            currentUser={this.props.currentUser}
+            params={this.props.params}
+            onCancel={() => this.hideGroupModal()}
+            onSave={this.addGroupToActiveAccount}
           />
         }
       </Content>
@@ -506,22 +524,16 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  // activeRecordType: PropTypes.string,
+  changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
-  // dnsActions: PropTypes.object,
-  // dnsData: PropTypes.instanceOf(Map),
-  //fetchAccountData: PropTypes.func,
+  deleteUser: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
-  onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
-  permissionsActions: PropTypes.object,
   roles: PropTypes.instanceOf(List),
-  rolesActions: PropTypes.object,
   router: PropTypes.object,
-  // soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
   userActions: PropTypes.object,
@@ -534,12 +546,11 @@ AccountManagement.defaultProps = {
   users: List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount') || Map({}),
-    // activeRecordType: state.dns.get('activeRecordType'),
+    accounts: getByBrand(state, ownProps.params.brand),
+    activeAccount: getAccountById(state, ownProps.params.account),
     dnsData: state.dns,
     permissions: state.permissions,
     roles: state.roles.get('roles'),
@@ -550,40 +561,18 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const permissionsActions = bindActionCreators(permissionsActionCreators, dispatch)
   const rolesActions = bindActionCreators(rolesActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const userActions = bindActionCreators(userActionCreators, dispatch)
-  const toggleModal = uiActions.toggleAccountManagementModal
-
-  function onDelete(brandId, accountId, router) {
-    // Delete the account.
-    return accountActions.deleteAccount(brandId, accountId)
-      .then((response) => {
-        if (!response.error) {
-          toggleModal(null)
-          // Clear active account and redirect user to brand level account management.
-          accountActions.clearActiveAccount()
-          router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
-        } else {
-          // Hide the delete modal.
-          toggleModal(null)
-          uiActions.showInfoDialog({
-            title: 'Error',
-            content: response.payload.data.message,
-            okButton: true,
-            cancel: () => uiActions.hideInfoDialog()
-          })
-        }
-      })
-  }
 
   return {
     accountActions: accountActions,
+    changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     groupActions: groupActions,
@@ -592,7 +581,7 @@ function mapDispatchToProps(dispatch) {
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
-    onDelete
+    deleteUser: (id) => dispatch(usersActions.remove({id}))
   };
 }
 

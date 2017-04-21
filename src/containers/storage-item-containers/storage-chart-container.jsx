@@ -9,17 +9,18 @@ import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
 import { getStorageById, getStorageMetricsById } from './selectors'
 
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
 import AggregatedStorageChart from './aggregated-storage-chart'
 import StorageItemChart from '../../components/content/storage/storage-item-chart'
 
 const StorageChartContainer = props => {
-
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
   const { totals: { bytes = {}, historical_bytes = {}} } = props.storageMetrics.toJS()
-
+  const isFetching = props.isFetchingMetrics
   //Estimated usage 0 means 0 storage available, show no-data text for dashboard in that case
   const aggregatedStorageChart = estimated_usage ?
-    <AggregatedStorageChart bytes={bytes} historicalBytes={historical_bytes} estimate={estimated_usage} />
+    <AggregatedStorageChart bytes={bytes} historicalBytes={historical_bytes} estimate={estimated_usage} isFetching={isFetching} />
     : (
       <div className="no-data">
         <FormattedMessage id="portal.common.no-data.text"/>
@@ -30,6 +31,7 @@ const StorageChartContainer = props => {
   return props.showingAggregate ? aggregatedStorageChart
     : (
       <StorageItemChart
+        isFetching={isFetching}
         analyticsLink={props.analyticsLink}
         onConfigurationClick={props.onConfigurationClick && (() => props.onConfigurationClick(ingest_point_id))}
         storageContentLink={props.storageContentLink}
@@ -49,6 +51,7 @@ StorageChartContainer.displayName = 'StorageChartContainer'
 StorageChartContainer.propTypes = {
   analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   // clusters: PropTypes.instanceOf(List),
+  isFetchingMetrics: PropTypes.bool,
   onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   showingAggregate: PropTypes.bool,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
@@ -81,7 +84,8 @@ const makeStateToProps = () => {
 
     return {
       storageEntity: getStorageEntity(state, {storageReduxId, ...ownProps}, entitySelector),
-      storageMetrics: getMetrics(state, ownProps, metricsSelector)
+      storageMetrics: getMetrics(state, ownProps, metricsSelector),
+      isFetchingMetrics: getFetchingByTag(state, 'storageMetrics')
     }
   }
 

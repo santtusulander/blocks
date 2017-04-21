@@ -17,12 +17,12 @@ export const getByAccountId = (state, accountId, comparison) => {
 export const getDataForStorageAnalysisChart = (state, { account, group, storage }, storageType, comparison) => {
   let getStorageByParent, getAggregatedEstimates, dataForChart
 
-  if(storage) {
+  if (storage) {
     getStorageByParent = getByStorageId(state, storage, comparison)
     getAggregatedEstimates = getById(state, buildReduxId(group, storage))
       ? getById(state, buildReduxId(group, storage)).get('estimated_usage')
       : null
-  } else if(group) {
+  } else if (group) {
     getStorageByParent = getByGroupId(state, group, comparison)
     getAggregatedEstimates = getAggregatedEstimatesByGroup(state, group).get('estimated_usage')
   } else {
@@ -32,13 +32,13 @@ export const getDataForStorageAnalysisChart = (state, { account, group, storage 
 
   dataForChart =  getStorageByParent && getStorageByParent.get('detail')
 
-  if(dataForChart && storageType === 'bytes') {
+  if (dataForChart && storageType === 'bytes') {
     dataForChart = dataForChart.map((storageDetails) => storageDetails.set('estimate', getAggregatedEstimates))
   }
 
   return dataForChart
 }
 
-export const getByGroups = (state) => {
-  return state.entities['storageMetrics'].get('groupsData')
+export const getByGroup = (state) => {
+  return state.entities['storageMetrics'].get('groupData')
 }

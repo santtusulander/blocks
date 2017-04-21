@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react'
+import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
-import classNames from 'classnames'
-import './area-tooltip.scss'
+
+import '../../styles/components/charts/_area-tooltip.scss'
 
 /* eslint-disable react/no-multi-comp  */
 const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
-  const currentPayload = payload.filter( ({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
-  const comparisonPayload = payload.filter( ({dataKey}) => dataKey.includes('comparison_'))
+  const currentPayload = payload.filter(({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
+  const comparisonPayload = payload.filter(({dataKey}) => dataKey.includes('comparison_'))
 
   const normalPayload = comparisonPayload.length === 1 ? [...comparisonPayload, ...currentPayload] : currentPayload;   // combine payload if they're 1:1 comparison
   return (
@@ -46,14 +48,17 @@ AreaTooltip.propTypes = {
 export default AreaTooltip
 
 const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
-  const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0), true)
+  const total = valueFormatter(payload.reduce((sum, { value }) => {
+    const result = sum + value
+    return result
+  }, 0), true)
   const ts = payload && payload[0] && payload[0].payload && payload[0].payload.timestamp
   return (
     <div>
       <div className="tooltip-item">
         <span className="legend-label">
           <span className="legend-line">
-            {formatUnixTimestamp( ts, "MMM D H:mm A") }
+            {formatUnixTimestamp(ts, "MMM D H:mm A") }
           </span>
         </span>
       </div>
@@ -62,7 +67,7 @@ const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
         {payload.map(({ name, value, dataKey }, i) =>
           <div key={i} className="tooltip-item">
             <span className="legend-label">
-              <span className={`legend-icon ${dataKey} ${iconClass}`}>&mdash; </span>
+              <span className={`legend-icon ${dataKey} ${iconClass}`}><FormattedMessage id="portal.mdashWithSpace"/></span>
               {name}
             </span>
             <span className='legend-value'>{valueFormatter(value, true)}</span>
@@ -76,7 +81,7 @@ const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
           <div className="tooltip-item">
             <span className="legend-label">
               <span className="legend-line">
-                Total
+                <FormattedMessage id="portal.common.total.text"/>
               </span>
             </span>
             <span id="tooltip-total" className="legend-value">{total}</span>

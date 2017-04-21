@@ -32,7 +32,7 @@ describe('Host Module', () => {
           configurations: [{
             config_id: 1,
             edge_configuration: { trial_name: 'aa' },
-            default_policy: {policy_rules:[]},
+            defaults: {},
             request_policy: {policy_rules:[]},
             response_policy: {policy_rules:[]}
           }],
@@ -52,11 +52,11 @@ describe('Host Module', () => {
 
   it('should handle delete host success', () => {
     const state = fromJS({
-      allHosts: [1],
+      allHosts: [{published_host_id: 1}],
       configuredHostNames: [1]
     });
     const newState = deleteSuccess(state, {payload: Map({published_host_id: 1})});
-    expect(newState.get('allHosts').toJS()).not.toContain(1);
+    expect(newState.get('allHosts').toJS()).not.toContain([{published_host_id: 1}]);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
@@ -81,7 +81,7 @@ describe('Host Module', () => {
           {
             configurations: [{
               config_id: 1,
-              default_policy: {policy_rules:[]},
+              defaults: {},
               request_policy: {policy_rules:[]},
               response_policy: {policy_rules:[]}
             }],

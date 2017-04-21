@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { BASE_URL_NORTH, PAGINATION_MOCK }  from '../../../util.js'
+import { BASE_URL_NORTH, PAGINATION_MOCK, qsBuilder }  from '../../../util.js'
 import { normalize, schema } from 'normalizr'
 
-const baseURL = (brand, account, group) => `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`
+const baseURL = (brand, account, group, filterParams) =>
+  `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts${filterParams ? qsBuilder(filterParams) : ''}`
 
 const publishedName = ({ services }) => services[0].configurations[0].edge_configuration.published_name
 
@@ -20,12 +21,12 @@ const groupPropertiesSchema = new schema.Entity('grpProperties', { properties: [
 export const fetch = ({ brand, account, group, id }) => {
   return axios.get(`${baseURL(brand, account, group)}/${id}`)
     .then(({ data }) => {
-      return normalize({ id: group, properties: [ data.data ] }, groupPropertiesSchema)
+      return normalize({ id: group, properties: [ data ] }, groupPropertiesSchema)
     })
 }
 
-export const fetchAll = ({ brand, account, group }) => {
-  return axios.get(baseURL(brand, account, group), PAGINATION_MOCK)
+export const fetchAll = ({ brand, account, group, filterParams }) => {
+  return axios.get(baseURL(brand, account, group, filterParams), PAGINATION_MOCK)
     .then(({data}) => {
       return normalize({ id: group, properties: data.data }, groupPropertiesSchema)
     })
