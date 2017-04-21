@@ -252,6 +252,13 @@ class AccountManagementStorages extends Component {
                   </tr>
                 </thead>
                 <tbody>
+                  {!sortedStorages.size && !this.state.search.length &&
+                    <tr>
+                      <td colSpan="7">
+                        <FormattedMessage id="portal.account.storage.table.noStorages.text" />
+                      </td>
+                    </tr>}
+                    
                   {sortedStorages.map((storage, i) => {
                     const storageId = storage.get('ingest_point_id')
                     const origins = storage.get('origins')

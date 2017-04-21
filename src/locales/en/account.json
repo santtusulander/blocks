@@ -62,6 +62,7 @@
   "portal.account.storage.table.location.text": "Location",
   "portal.account.storage.table.usage.text": "Usage",
   "portal.account.storage.table.files.text": "Files",
+  "portal.account.storage.table.noStorages.text": "No storage",
   "portal.account.storage.table.noStoragesFound.text": "No storage found with the search term {searchTerm}",
   "portal.account.storage.deleteConfirmation.text": "Please confirm by writing \"delete\" below, and pressing the delete button. This storage will be removed from UDN immediately.",
   "portal.account.storage.groupNotSelected.text": "Please select a group from top left{br}to see storage",
