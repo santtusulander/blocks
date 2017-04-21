@@ -9,7 +9,7 @@ import { formatBytes, separateUnit } from '../../util/helpers'
 const FORMAT = '0'
 const emptyList = List()
 
-const AggregatedStorageChart = ({ bytes, estimate, historicalBytes }) => {
+const AggregatedStorageChart = ({ bytes, estimate, historicalBytes, isFetching }) => {
   return (
     <div className="aggregate-storage-starburst-wrapper">
       <div id="storage-item-peak-info">
@@ -24,6 +24,7 @@ const AggregatedStorageChart = ({ bytes, estimate, historicalBytes }) => {
         </div>
       </div>
       <StorageItemChart
+        isFetching={isFetching}
         locations={emptyList}
         name={<FormattedMessage id="portal.account.storage.table.usage.text" />}
         currentUsage={bytes.ending}
@@ -41,7 +42,8 @@ AggregatedStorageChart.displayName = "AggregatedStorageChart"
 AggregatedStorageChart.propTypes = {
   bytes: PropTypes.object,
   estimate: PropTypes.number,
-  historicalBytes: PropTypes.object
+  historicalBytes: PropTypes.object,
+  isFetching: PropTypes.bool
 }
 
 export default AggregatedStorageChart
