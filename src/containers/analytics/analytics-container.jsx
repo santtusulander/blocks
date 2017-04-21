@@ -103,7 +103,6 @@ class AnalyticsContainer extends React.Component {
       this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
-      this.props.filtersActions.fetchServiceProviders(params.brand)
     }
 
     if ((brandChanged || accountChanged || refresh) && params.account) {
