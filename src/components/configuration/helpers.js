@@ -14,7 +14,7 @@ import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionNegativeCache from './actions/negative-cache'
-import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationActionCacheKeyQueryStringForm from './actions/cache-key-query-string-form'
 import ConfigurationTokenAuth from './actions/token-authentication'
 // import ConfigurationActionRedirection from './actions/redirection'
 // import ConfigurationActionOriginHostname from './actions/origin-hostname'
@@ -183,7 +183,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
     switch (setKey) {
       case 'cache_name':
         activeEditForm = (
-          <ConfigurationActionCacheKeyQueryString {...setterProps}/>
+          <ConfigurationActionCacheKeyQueryStringForm {...setterProps}/>
         )
         break
       case 'cache_control':

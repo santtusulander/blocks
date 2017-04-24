@@ -9,8 +9,6 @@ import { Button, Table } from 'react-bootstrap'
 import IconAdd from '../shared/icons/icon-add'
 import IconEdit from '../shared/icons/icon-edit'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import ActionButtons from '../../components/shared/action-buttons'
-import TruncatedTitle from '../../components/shared/page-elements/truncated-title'
 import ButtonDisableTooltip from '../shared/tooltips/button-disable-tooltip'
 import MultilineTextFieldError from '../shared/form-elements/multiline-text-field-error'
 import ServiceOptionSelector from './service-option-selector'
@@ -40,24 +38,20 @@ const validate = ({ name }) => {
 }
 
 const GroupForm = ({
-  accountIsServiceProviderType,
   accountIsContentProviderType,
   canEditServices,
   canSeeLocations,
   disableDelete,
   groupId,
   handleSubmit,
-  hosts,
   intl,
   invalid,
-  isFetchingHosts,
   isFetchingEntities,
   locations,
   hasNetworks,
   onCancel,
   onChangeServiceItem,
   onDelete,
-  onDeleteHost,
   onShowLocation,
   onSubmit,
   readOnly,
@@ -98,7 +92,6 @@ const GroupForm = ({
               options={serviceOptions}
               label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
             />
-            <hr/>
           </div>
         }
 
@@ -152,38 +145,6 @@ const GroupForm = ({
             </SectionContainer>
           }
 
-          {(!accountIsServiceProviderType && groupId) &&
-            <div>
-              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-              {isFetchingHosts ? <LoadingSpinner/> :
-                !hosts.isEmpty() ?
-                  <Table striped={true} className="fixed-layout">
-                    <thead>
-                    <tr>
-                      <th>
-                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                      </th>
-                      <th className="one-button-cell" />
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {hosts.map((host, i) => {
-                      return (
-                        <tr key={i}>
-                              <td><TruncatedTitle content={host.get('published_host_id')} /></td>
-                          <td>
-                            <ActionButtons
-                              onDelete={() => onDeleteHost(host.get('published_host_id'))}/>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                    </tbody>
-                  </Table>
-                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
-              }
-            </div>
-          }
         <FormFooterButtons>
           {(groupId && onDelete) &&
             <IsAllowed to={DELETE_GROUP}>
@@ -223,22 +184,18 @@ GroupForm.displayName = "GroupForm"
 
 GroupForm.propTypes = {
   accountIsContentProviderType: PropTypes.bool.isRequired,
-  accountIsServiceProviderType: PropTypes.bool.isRequired,
   canEditServices: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
   hasNetworks: PropTypes.bool,
-  hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
-  isFetchingHosts: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onChangeServiceItem: PropTypes.func,
   onDelete: PropTypes.func,
-  onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
   readOnly: PropTypes.bool,
