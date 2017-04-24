@@ -373,7 +373,6 @@ export class AccountManagement extends Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
-          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               params={params}
               levels={[ 'brand', 'account' ]}
@@ -389,11 +388,6 @@ export class AccountManagement extends Component {
                 <IconCaretDown />
               </div>
             </AccountSelector>
-          </IsAllowed>
-          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-          </IsAllowed>
-
           { /*
             Edit activeAccount -button
             */
