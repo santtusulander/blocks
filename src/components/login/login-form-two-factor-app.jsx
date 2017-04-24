@@ -35,7 +35,7 @@ export class LoginFormTwoFactorApp extends Component {
   }
 
   startPulling() {
-    var pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
+    const pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
     this.setState({ pollingIntervalId });
   }
 
@@ -72,9 +72,16 @@ export class LoginFormTwoFactorApp extends Component {
               <LoadingSpinnerSmall />
             </div>
 
-            <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
-              <FormattedMessage id="portal.login.2fa.goBack.text"/>
-            </Link>
+            <div className="having-trouble-link">
+              <FormattedMessage id="portal.login.2fa.havingTrouble.text"/>
+              <Link to={`/`} className="btn btn-link">
+                <FormattedMessage id="portal.login.2fa.tryAgain.text"/>
+              </Link>
+              <FormattedMessage id="portal.login.2fa.orUseYour.text"/>
+              <Link to={`/recovery-key`} className="btn btn-link">
+                <FormattedMessage id="portal.login.2fa.recoveryKey.text"/>
+              </Link>
+            </div>
           </div>
         </Modal.Body>
       </Modal.Dialog>
@@ -86,7 +93,7 @@ LoginFormTwoFactorApp.displayName = "LoginFormTwoFactorApp"
 LoginFormTwoFactorApp.propTypes = {
   // loginError prop is used in componentWillReceiveProps
   // eslint-disable-next-line react/no-unused-prop-types
-  loginError: React.PropTypes.string,
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   router: React.PropTypes.object,
   startAppPulling: React.PropTypes.func,
   userName: React.PropTypes.string

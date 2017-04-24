@@ -4,6 +4,20 @@
   "portal.user.list.role.column.title": "ROLE",
   "portal.user.list.email.column.title": "EMAIL",
   "portal.user.list.noUsers.text": "No users",
+  "portal.user.list.email.text": "Email",
+  "portal.user.list.role.text": "Role",
+  "portal.user.list.groups.text": "Groups",
+  "portal.user.list.noUsersFound.text": "No users found",
+  "portal.user.list.noUsersFoundWithTerm.text": "No users found with the search term \"{term}\"",
+  "portal.user.list.aRoleOf.text": "a role of \"{name}\"",
+  "portal.user.list.withinGroup.text": " within the group \"{name}\"",
+  "portal.user.list.andWithSpace.text": "and ",
+  "portal.user.list.withWithSpace.text": "with ",
+  "portal.user.list.title.text": "{numUsers, plural, =0 {# User} one {# User} other {# Users}}",
+  "portal.user.list.allRoles": "All Roles",
+  "portal.user.list.allGroups": "All Groups",
+  "portal.user.form.search.placeholder": "Search",
+  "portal.user.form.email.placeholder": "Email",
 
   "portal.user.edit.contact.text": "Contact",
   "portal.user.edit.passwordDoNotMatch.text": "Passwords do not match",
@@ -47,5 +61,10 @@
   "portal.user.edit.timezone.text": "Timezone",
   "portal.user.edit.addMiddleName.text": "Add Middle Name",
   "portal.user.edit.unsavedChanges.text": "Profile has unsaved changes.",
-  "portal.user.delete.disclaimer.text": "Will lose access to UDN immediately and will not be able to log in anymore."
+  "portal.user.delete.title.text": "Delete User?",
+  "portal.user.delete.disclaimer.text": "Will lose access to UDN immediately and will not be able to log in anymore.",
+  "portal.user.edit.recoveryKey.button.showRecoveryKey": "Show Recovery Key",
+  "portal.user.edit.recoveryKey.helpText": "You can use one-time recovery key to access your account if you lose your phone or otherwise have problems with accessing your account.",
+  "portal.user.edit.recoveryKey.modal.title": "Recovery Key",
+  "portal.user.edit.recoveryKey.modal.helpText": "This is one-time recovery key. Store it somewhere safe."
 }

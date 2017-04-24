@@ -18,9 +18,9 @@ export class LoginFormTwoFactorCode extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.fetching != nextProps.fetching) {
+    if (this.props.fetching !== nextProps.fetching) {
       return true
-    } else if (this.props.loginError != nextProps.loginError){
+    } else if (this.props.loginError !== nextProps.loginError) {
       return true
     } else {
       return false
@@ -35,23 +35,23 @@ export class LoginFormTwoFactorCode extends Component {
 
     // Verify current input
     if (currentLength >= TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
-      let next = target.nextElementSibling;
+      const next = target.nextElementSibling;
 
       // Verify all inputs
       for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
-        let inputValue = codeInputs[inputIndex].value
-        if (inputValue.length == TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
+        const inputValue = codeInputs[inputIndex].value
+        if (inputValue.length === TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
           code += inputValue
         }
       }
 
       // If all inputs has a value, parse those value and submit token
-      if (code.length == codeInputs.length) {
+      if (code.length === codeInputs.length) {
         this.props.onSubmit(code, codeInputs)
         return
       }
 
-      if (next != null) {
+      if (next !== null) {
         // Focuse on next input, and select text
         next.focus();
         next.select();
@@ -84,7 +84,7 @@ export class LoginFormTwoFactorCode extends Component {
 
     // Focus previos element when backspace or delete key is pressed
     // but only when current is empty
-    if (((charCode == 46) || (charCode == 8)) && (prevElem != null)) {
+    if (((charCode === 46) || (charCode === 8)) && (prevElem !== null)) {
       if (!e.target.value) {
         prevElem.value = ''
         prevElem.focus()
@@ -137,7 +137,7 @@ export class LoginFormTwoFactorCode extends Component {
                   <p><FormattedMessage id="portal.login.2fa.verificationByCodeHint.text"/></p>
                 }
                 { this.props.loginError &&
-                  <p>{this.props.loginError} | <FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
+                  <p>{this.props.loginError}<FormattedMessage id="portal.pipeWithSpaces"/><FormattedMessage id="portal.login.2fa.verificationHintReEnter.text"/></p>
                 }
               </div>
               <InputGroup className={codeInputsClass}>
@@ -151,9 +151,16 @@ export class LoginFormTwoFactorCode extends Component {
                 <div className='token-input-info loading'><LoadingSpinnerSmall /></div>
               }
               { !this.props.fetching &&
-                <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
-                  <FormattedMessage id="portal.login.2fa.goBack.text"/>
-                </Link>
+                <div className="having-trouble-link">
+                  <FormattedMessage id="portal.login.2fa.havingTrouble.text"/>
+                  <Link to={`/`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.tryAgain.text"/>
+                  </Link>
+                  <FormattedMessage id="portal.login.2fa.orUseYour.text"/>
+                  <Link to={`/recovery-key`} className="btn btn-link">
+                    <FormattedMessage id="portal.login.2fa.recoveryKey.text"/>
+                  </Link>
+                </div>
               }
             </div>
           </form>
@@ -166,7 +173,7 @@ export class LoginFormTwoFactorCode extends Component {
 LoginFormTwoFactorCode.displayName = "LoginFormTwoFactorCode"
 LoginFormTwoFactorCode.propTypes = {
   fetching: React.PropTypes.bool,
-  loginError: React.PropTypes.string,
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   onCodeChange: React.PropTypes.func,
   onSubmit: React.PropTypes.func
 }

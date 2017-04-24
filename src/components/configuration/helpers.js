@@ -1,4 +1,5 @@
 import React from 'react'
+import { fromJS } from 'immutable'
 
 import MatchesSelection from './matches-selection'
 import ActionsSelection from './actions-selection'
@@ -8,11 +9,13 @@ import ConfigurationMatchFileExtension from './matches/file-extension'
 // import ConfigurationMatchFileName from './matches/file-name'
 // import ConfigurationMatchIpAddress from './matches/ip-address'
 import ConfigurationContentTargetingMatch from './matches/content-targeting'
+import ConfigurationResponseCodeMatch from './matches/response-code'
 import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
-import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
-import ConfigurationTokenAuthentication from './actions/token-authentication'
+import ConfigurationActionNegativeCache from './actions/negative-cache'
+import ConfigurationActionCacheKeyQueryStringForm from './actions/cache-key-query-string-form'
+import ConfigurationTokenAuth from './actions/token-authentication'
 // import ConfigurationActionRedirection from './actions/redirection'
 // import ConfigurationActionOriginHostname from './actions/origin-hostname'
 // import ConfigurationActionCompression from './actions/compression'
@@ -25,37 +28,44 @@ import ConfigurationActionHeader from './actions/header'
 // import ConfigurationActionCors from './actions/cors'
 import ConfigurationContentTargetingAction from './actions/content-targeting'
 
-import {
-  matchIsContentTargeting,
-  matchIsFileExtension
-} from '../../util/policy-config'
+import { matchIsFileExtension } from '../../util/policy-config'
 
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
-  const {changeValue, formatMessage, activateSet} = actions
-  const clearActiveMatchSet = () => activateSet(null)
+  const { changeValue, formatMessage, activateSet, activateMatch, cancelActiveEditForm } = actions
+
+  const saveAction = (path, key, data) => {
+    if (path) {
+      changeValue(path, fromJS({[key]: data}))
+      activateSet(null)
+    }
+  }
+
   let activeEditForm = null
-  if(matchPath) {
+  if (matchPath) {
     const activeMatch = config.getIn(matchPath)
     const matcherProps = {
       changeValue: changeValue,
-      close: clearActiveMatchSet,
+      close: cancelActiveEditForm,
       match: activeMatch,
-      path: matchPath
+      path: matchPath,
+      activateMatch
     }
 
     let matchType = activeMatch.get('field')
 
     if (matchIsFileExtension(activeMatch)) {
       matchType = 'file_extension'
-    } else if (matchIsContentTargeting(activeMatch)) {
-      matchType = 'content_targeting'
     }
 
-    switch(matchType) {
+    switch (matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasExists={true}
+            hasContains={true}
+            hasEquals={true}
+            hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.header.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -66,6 +76,10 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_path':
         activeEditForm = (
           <ConfigurationMatcher
+            hasExists={true}
+            hasContains={true}
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -76,6 +90,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_host':
         activeEditForm = (
           <ConfigurationMatcher
+            hasEquals={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -86,18 +102,23 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_url':
         activeEditForm = (
           <ConfigurationMatcher
+            hasEquals={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             placeholder={formatMessage({id: 'portal.policy.edit.policies.url.placeholder'})}
-            disableRuleSelector={true}
             {...matcherProps}/>
         )
         break
       case 'request_cookie':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasExists={true}
+            hasContains={true}
+            hasEquals={true}
+            hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -108,7 +129,11 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasExists={true}
+            hasEquals={true}
+            hasContains={true}
+            hasEmpty={true}
+            hasFieldDetail={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -123,8 +148,11 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
           />
         )
         break
-      case 'content_targeting':
+      case 'content_targeting_country_code':
         activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
+        break
+      case 'response_code':
+        activeEditForm = <ConfigurationResponseCodeMatch {...matcherProps} />
         break
       default:
         activeEditForm = (
@@ -139,24 +167,23 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       // <ConfigurationMatchIpAddress {...matcherProps}/>
     }
   }
-  if(setPath) {
+  if (setPath) {
     const activeSet = config.getIn(setPath)
+    const setKey = activeSet.keySeq().first()
+
     const setterProps = {
       changeValue: changeValue,
-      close: clearActiveMatchSet,
+      close: cancelActiveEditForm,
       path: setPath,
-      set: activeSet
+      saveAction,
+      set: activeSet.get(setKey),
+      setKey
     }
 
-    let setType = setPath.last()
-    if (setPath.contains('script_lua')) {
-      setType = 'content_targeting'
-    }
-
-    switch(setType) {
+    switch (setKey) {
       case 'cache_name':
         activeEditForm = (
-          <ConfigurationActionCacheKeyQueryString {...setterProps}/>
+          <ConfigurationActionCacheKeyQueryStringForm {...setterProps}/>
         )
         break
       case 'cache_control':
@@ -171,12 +198,17 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         break
       case 'tokenauth':
         activeEditForm = (
-          <ConfigurationTokenAuthentication {...setterProps}/>
+          <ConfigurationTokenAuth {...setterProps}/>
         )
         break
-      case 'content_targeting':
+      case 'reply':
         activeEditForm = (
           <ConfigurationContentTargetingAction {...setterProps}/>
+        )
+        break
+      case 'negative_cache':
+        activeEditForm = (
+          <ConfigurationActionNegativeCache {...setterProps}/>
         )
         break
       default:
@@ -205,7 +237,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
 
 export function secondsToUnit(value, unit) {
   value = Number(value || 0)
-  switch(unit) {
+  switch (unit) {
     case 'minutes':
       value = value / 60
       break
@@ -219,9 +251,9 @@ export function secondsToUnit(value, unit) {
   return value
 }
 
-export function secondsFromUnit(value, unit) {
-  value = Number(value || 0)
-  switch(unit) {
+export function secondsFromUnit(value = 0, unit) {
+  value = Number(value)
+  switch (unit) {
     case 'minutes':
       value = value * 60
       break
@@ -233,4 +265,17 @@ export function secondsFromUnit(value, unit) {
       break
   }
   return value
+}
+
+export function unitFromSeconds(value = 0) {
+  value = Number(value)
+  switch (0) {
+    case (value % 86400):
+      return 'days'
+    case (value % 3600):
+      return 'hours'
+    case (value % 60):
+      return 'minutes'
+  }
+  return 'seconds'
 }

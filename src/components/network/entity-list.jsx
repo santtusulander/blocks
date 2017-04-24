@@ -7,9 +7,9 @@ import { AccountManagementHeader } from '../account-management/account-managemen
 import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
 
-const numericStatusToStringStatus = n => (
-  n === 1 ? 'provisioning' : n === 2 ? 'disabled' : n === 3 ? 'enabled' : n === 4 ? 'destroying' : null
-)
+const numericStatusToStringStatus = (n) => {
+  return n === 1 ? 'provisioning' : n === 2 ? 'disabled' : n === 3 ? 'enabled' : n === 4 ? 'destroying' : null
+}
 
 class EntityList extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class EntityList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if(this.props.disableButtons !== nextProps.disableButtons){
+    if (this.props.disableButtons !== nextProps.disableButtons) {
       return true
     }
     if (!Immutable.is(nextProps.entities, this.props.entities)) {
@@ -58,6 +58,7 @@ class EntityList extends React.Component {
    *
    * @method renderConnectorLine
    */
+   /* istanbul ignore next */
   renderConnectorLine() {
     // Check if this entity list has an active item
     if (this.hasActiveItems() && !this.props.fetching) {
@@ -136,7 +137,6 @@ class EntityList extends React.Component {
     const {
       editEntity,
       selectEntity,
-      deleteEntity,
       selectedEntityId,
       multiColumn,
       numOfColumns,
@@ -149,7 +149,8 @@ class EntityList extends React.Component {
       entities,
       contentTextGenerator,
       titleGenerator,
-      isAllowedToConfigure
+      isAllowedToConfigure,
+      viewPermission
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
@@ -167,10 +168,9 @@ class EntityList extends React.Component {
             active={isActive}
             content={contentText}
             onSelect={() => selectEntity(entityId)}
-            onDelet={() => deleteEntity(entityId)}
             status={status}
             extraClassName="entity-list-item"
-            isAllowedToConfigure={isAllowedToConfigure}
+            viewPermission={viewPermission}
             />
         )
 
@@ -226,6 +226,8 @@ class EntityList extends React.Component {
         // First we chunk our list of elements into segments based on how many
         // items we want to show per column and then render the wrapping divs
         // accordingly.
+
+        // eslint-disable-next-line array-callback-return
         content = this.chunkIntoSegments(entityList, itemsPerColumn).map((col, i) => {
           // We only want to show the specified amount of columns.
           if (i < numOfColumns) {
@@ -318,8 +320,22 @@ class EntityList extends React.Component {
       'multi-column': multiColumn
     })
     return (
-      <div ref={ref => this.entityList = ref} className="network-entity-list">
-        {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
+      <div
+        ref={(ref) => {
+          this.entityList = ref
+          return this.entityList
+        }}
+        className="network-entity-list"
+      >
+        {this.hasActiveItems() &&
+          <div
+            className="connector-divider"
+            ref={(ref) => {
+              this.connector = ref
+              return this.connector
+            }}
+          />
+        }
         <AccountManagementHeader
           title={title}
           creationPermission={creationPermission}
@@ -327,7 +343,13 @@ class EntityList extends React.Component {
           disableButtons={disableButtons}
         />
 
-        <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+        <div
+          ref={(ref) => {
+            this.entityListItems = ref
+            return this.entityListItems
+          }}
+          className={entityListClasses}
+        >
           {fetching ? <LoadingSpinner/> : this.renderListItems()}
         </div>
       </div>
@@ -340,7 +362,6 @@ EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   contentTextGenerator: PropTypes.func,
   creationPermission: PropTypes.string,
-  deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
@@ -360,7 +381,8 @@ EntityList.propTypes = {
   showButtons: PropTypes.bool,
   starburstData: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  titleGenerator: PropTypes.func
+  titleGenerator: PropTypes.func,
+  viewPermission: PropTypes.string
 }
 EntityList.defaultProps = {
   disableButtons: false,

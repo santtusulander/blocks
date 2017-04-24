@@ -1,0 +1,55 @@
+// Configuration Dialog
+// ====================
+
+.configuration-dialog {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-configuration-dialog;
+  height: $configuration-dialog-height;
+
+  .has-sidebar & {
+    left: $sidebar-width;
+
+    @include md {
+      left: $md-sidebar-width;
+    }
+
+    @include sm {
+      left: $sm-sidebar-width;
+      min-width: 1024px - $sm-sidebar-width;
+    }
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.08)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.1));
+    background-size: 100%;
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
+  .btn-toolbar {
+    margin: ($btn-height / 2) ($bar-height / 2) 0;
+  }
+}
+
+.configuration-dialog-gradient {
+  height: $header-gradient-height;
+  background: $gradient-lg-green;
+}
+
+.configuration-dialog-content {
+  height: $configuration-dialog-height;
+  padding: ($btn-height / 3) ($bar-height / 2);
+  overflow: auto;
+
+  .configuration-dialog-title {
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+}

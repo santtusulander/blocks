@@ -1,0 +1,29 @@
+@import '../styles/base/colors';
+@import '../styles/base/variables';
+
+.udn-file-input {
+
+  input {
+    position: absolute;
+    z-index: $zindex-default-minus-one;
+    width: 0.1px;
+    height: 0.1px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  label.file-input-label { // sass-lint:disable-line no-qualifying-elements
+    height: 40px;
+    min-width: 120px;
+    padding: 0 20px;
+    font-weight: normal;
+    line-height: 40px;
+  }
+
+  input:focus  .file-input-label,
+  .file-input-label:hover {
+    color: #00a9d4;
+    fill: #00a9d4;
+    stroke: #00a9d4;
+  }
+}

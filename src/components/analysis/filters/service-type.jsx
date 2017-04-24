@@ -16,15 +16,14 @@ class FilterServiceType extends React.Component {
   toggleServiceType(type) {
     return () => {
       // TODO: Maybe some general error messaging box?
-      if(this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
+      if (this.props.serviceTypes.size === 1 && this.props.serviceTypes.includes(type)) {
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
           content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         });
-      }
-      else {
+      } else {
         this.props.toggleServiceType(type)
       }
     }
@@ -39,7 +38,7 @@ class FilterServiceType extends React.Component {
               checked={serviceTypes.includes('http')}
               disabled={serviceTypes.includes('http') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('http')}>
-              <span>HTTP</span>
+              <span><FormattedMessage id="portal.analytics.trafficOverview.httpDatasetLabel.text"/></span>
             </Checkbox>
           </FormGroup>
           <FormGroup>
@@ -47,7 +46,7 @@ class FilterServiceType extends React.Component {
               checked={serviceTypes.includes('https')}
               disabled={serviceTypes.includes('https') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('https')}>
-              <span>HTTPS</span>
+              <span><FormattedMessage id="portal.analytics.trafficOverview.httpsDatasetLabel.text"/></span>
             </Checkbox>
           </FormGroup>
         </div>

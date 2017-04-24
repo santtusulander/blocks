@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
-// import Typeahead from '../typeahead'
+// import Typeahead from '../shared/form-elements/typeahead'
 
 import {
   MAPBOX_LIGHT_THEME,
@@ -20,9 +21,10 @@ import {
   checkChangeInBounds,
   getScore
 } from '../../util/mapbox-helpers.js'
-// import IconExpand from '../icons/icon-expand';
-// import IconMinimap from '../icons/icon-minimap';
-import IconGlobe from '../icons/icon-globe';
+// import IconExpand from '../shared/icons/icon-expand';
+// import IconMinimap from '../shared/icons/icon-minimap';
+import IconGlobe from '../shared/icons/icon-globe';
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 class Mapbox extends React.Component {
   constructor(props) {
     super(props)
@@ -600,7 +602,10 @@ class Mapbox extends React.Component {
         // Saves map bounds to Redux so we can do comparison later on and see
         // if use has panned the viewport enough in order to request more cities.
         this.props.mapboxActions.setMapBounds({ south, west, north, east })
-        this.props.getCitiesWithinBounds(south, west, north, east)
+        this.setState({ isFetchingCityData: true })
+        this.props.getCitiesWithinBounds(south, west, north, east).then(() => {
+          this.setState({ isFetchingCityData: false })
+        })
       }
 
     }
@@ -626,11 +631,15 @@ class Mapbox extends React.Component {
   }
 
   render() {
+    const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
     return (
       <ReactMapboxGl
-        ref={ref => { this.mapbox = ref }}
+        ref={ref => {
+          this.mapbox = ref
+          return this.mapbox
+        }}
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
@@ -671,7 +680,7 @@ class Mapbox extends React.Component {
                 <table>
                   <tbody>
                     <tr>
-                      <td className="bold">Total</td>
+                      <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
                       <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
                     </tr>
                   </tbody>
@@ -704,6 +713,7 @@ class Mapbox extends React.Component {
               onClick={this.resetZoom.bind(this)}>
               <IconGlobe width={32} height={32} />
             </div>
+            {isFetchingCityData && <LoadingSpinnerSmall />}
           </div>
           {/*
           <div className="control map-minimap">
@@ -714,9 +724,9 @@ class Mapbox extends React.Component {
 
         {this.state.zoom < MAPBOX_CITY_LEVEL_ZOOM &&
           <div className="map-heat-legend">
-            <span>Low</span>
+            <span><FormattedMessage id="portal.analytics.map.low"/></span>
             <div className="heat-gradient" />
-            <span>High</span>
+            <span><FormattedMessage id="portal.analytics.map.high"/></span>
           </div>
         }
 
@@ -741,7 +751,9 @@ Mapbox.propTypes = {
 
 Mapbox.defaultProps = {
   dataKeyFormat: data => data,
-  getCitiesWithinBounds: () => {},
+  getCitiesWithinBounds: () => {
+    // no-op
+  },
   mapboxActions: {
     setMapBounds: () => null,
     setMapZoom: () => null

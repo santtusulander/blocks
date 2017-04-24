@@ -3,12 +3,14 @@ import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 import { FormGroup, FormControl } from 'react-bootstrap'
 
-import SectionHeader from '../../layout/section-header'
+import SectionHeader from '../../shared/layout/section-header'
 import RoleEditForm from './role-edit-form.jsx'
-import ActionButtons from '../../action-buttons.jsx'
+import ActionButtons from '../../shared/action-buttons.jsx'
 
-import TableSorter from '../../table-sorter'
-import ArrayTd from '../../array-td/array-td'
+import TableSorter from '../../shared/table-sorter'
+import ArrayTd from '../../shared/page-elements/array-td'
+import IsAllowed from '../../shared/permission-wrappers/is-allowed'
+import { MODIFY_ROLE } from '../../../constants/permissions'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -26,9 +28,9 @@ class RolesList extends React.Component {
   }
 
   labelPermissions(rolePermissions, permissions) {
-    let permissionNames = rolePermissions
+    const permissionNames = rolePermissions
       .map((rules, key) => {
-        let permissionName = permissions
+        const permissionName = permissions
           .find(permission => permission.get('name') === key)
           .get('title')
         return permissionName
@@ -47,14 +49,13 @@ class RolesList extends React.Component {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
-      }
-      else if(aVal > bVal) {
+      } else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -79,10 +80,9 @@ class RolesList extends React.Component {
 
     const hiddenRoles = this.props.roles.size - sortedRoles.size
 
-    const rolesSize = sortedRoles.size
-    const rolesText = ` Role${sortedRoles.size === 1 ? '' : 's'}`
+    const rolesText = this.props.intl.formatMessage({id: 'portal.role.list.counter.text' }, { numRoles: sortedRoles.size })
     const hiddenRolesText = hiddenRoles ? ` (${hiddenRoles} hidden)` : ''
-    const finalRolesText = rolesSize + rolesText + hiddenRolesText
+    const finalRolesText = rolesText + hiddenRolesText
 
     return (
       <div className='roles-list'>
@@ -102,7 +102,9 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="1%" />
+              <IsAllowed to={MODIFY_ROLE}>
+                <th width="1%" />
+              </IsAllowed>
             </tr>
           </thead>
 
@@ -118,29 +120,26 @@ class RolesList extends React.Component {
                     {role.get('name')}
                   </td>
                   {this.props.permissions.size ?
-                    <ArrayTd maxItemsShown={5} items={[/*
-                     TODO: Uncomment these when we support API permissions
-                     ...this.labelPermissions(
-                     role.get('permissions').get('aaa'),
-                     this.props.permissions.get('aaa')
-                     ).toArray(),
-                     ...this.labelPermissions(
-                     role.get('permissions').get('north'),
-                     this.props.permissions.get('north')
-                     ).toArray(),*/
+                    <ArrayTd maxItemsShown={5} items={[
                       ...this.labelPermissions(
                       role.getIn(['permissions', 'ui'], Immutable.List()).filter(permission => permission),
                       this.props.permissions.get('ui')
                       ).toArray()
                     ]} />
-                    : <td>No permissions found</td>}
+                    : (
+                      <td>
+                        <FormattedMessage id="portal.role.list.search.noPermissionsResults.text"/>
+                      </td>
+                    )}
                   <td>
-                    {userCount} User{userCount !== 1 && 's'}
+                    {userCount} <FormattedMessage id="portal.role.list.search.userCount.text" values={{userCount: userCount}}/>
                   </td>
-                  <td className="nowrap-column">
-                    <ActionButtons
-                      onEdit={() => this.props.onEdit(role.get('id'))}/>
-                  </td>
+                  <IsAllowed to={MODIFY_ROLE}>
+                    <td className="nowrap-column">
+                      <ActionButtons
+                        onEdit={() => this.props.onEdit(role.get('id'))}/>
+                    </td>
+                  </IsAllowed>
                 </tr>
               );
             }) :

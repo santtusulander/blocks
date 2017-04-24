@@ -1,0 +1,77 @@
+$unit-field-margin-top: 58px;
+$unit-field-margin-left: -15px;
+$arb-toggle-margin-top: 9px;
+$arb-toggle-margin-right: 18px;
+$estimate-field-width: 180px;
+$estimate-field-max-width: 215px;
+$label-margin-top: 12px;
+$label-margin-bottom: 10px;
+
+.storage-form {
+  .form-group {
+    .name-field {
+      width: $input-width;
+    }
+
+    label {
+      margin: $label-margin-top 0 $label-margin-bottom;
+    }
+  }
+
+  .multi-option-selector-fields,
+  .abr-profile-field {
+    width: 100%;
+  }
+
+  .estimate-field {
+    width: $estimate-field-width;
+    text-align: right;
+  }
+
+  .estimate-field-group {
+    .form-group {
+      float: left;
+      max-width: $estimate-field-max-width;
+      margin-right: $arb-toggle-margin-right;
+
+      .number-input-group {
+        width: $estimate-field-width; 
+      }
+    }
+  }
+
+  .unit-field {
+    margin-top: $unit-field-margin-top;
+    margin-left: $unit-field-margin-left;
+  }
+
+  .abr-field {
+    width: 100%;
+    clear: both;
+
+    .toggle {
+      float: right;
+      margin-top: $arb-toggle-margin-top;
+      margin-right: $arb-toggle-margin-right;
+    }
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .addon-after-label {
+    display: inline;
+  }
+}

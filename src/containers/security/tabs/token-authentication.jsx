@@ -1,46 +1,69 @@
 import React, { PropTypes, Component } from 'react'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { withRouter } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 
-import * as propertyActionCreators from '../../../redux/modules/properties/actions'
-import {getProperties} from '../../../redux/modules/properties/selectors'
+import propertyActions from '../../../redux/modules/entities/properties/actions'
+import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 
 import { getTokenAuthRules } from '../../../util/policy-config'
 import { getContentUrl, getRoute } from '../../../util/routes'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching//selectors'
+
 import TokenAuthList from '../../../components/security/token-auth-list'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
+const REQUEST_TAG = 'req-token-auth'
+
 class TabTokenAuthentication extends Component {
-  componentDidMount(){
-    this.fetchData()
+  componentWillMount() {
+    const { brand, account, group } = this.props.params
+    if (group) {
+      this.fetchData(brand, account, group)
+    }
   }
 
-  fetchData(){
-    const {brand,account,group} = this.props.params
-    this.props.fetchProperties(brand,account,group)
+  componentWillReceiveProps(nextProps) {
+    const { brand, account, group } = nextProps.params
+
+    if (group && group !== this.props.params.group) {
+      this.fetchData(brand, account, group)
+    }
   }
 
-  render(){
+  fetchData(brand, account, group) {
+    this.props.fetchProperties({ brand, account, group })
+  }
+
+  render() {
     const {properties, isFetching} = this.props
 
     const editUrlBuilder = (propertyId, policyParams) => editOrDelete => {
-      const property = this.props.properties[propertyId]
+
+      const property = this.props.properties.find(p => p.get('published_host_id') === propertyId)
+
       const propertyParams = {
         brand: this.props.params.brand,
-        account: property.accountId,
-        group: property.groupId
+        account: this.props.params.account,
+        group: property.get('parentId')
       }
       return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
     }
 
-    if ( isFetching )
+    if (isFetching) {
       return <LoadingSpinner />
+    }
 
-    const tokenAuthRules = getTokenAuthRules( properties )
+    const tokenAuthRules = getTokenAuthRules(properties.toJS())
 
     return (
+      !this.props.params.group
+        ?
+          <p className='text-center'>
+            <FormattedMessage id='portal.security.tokenAuth.selectGroup.text' />
+          </p>
+        :
           <TokenAuthList rules={tokenAuthRules} editUrlBuilder={editUrlBuilder}/>
     )
 
@@ -53,32 +76,27 @@ TabTokenAuthentication.propTypes = {
   fetchProperties: PropTypes.func,
   isFetching: PropTypes.bool,
   params: PropTypes.object,
-  properties: PropTypes.object
+  properties: PropTypes.instanceOf(List)
 }
 
 TabTokenAuthentication.defaultProps = {
-  properties: {}
+  properties: List()
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const {params: {brand, account, group} } = ownProps
-  return {
-    properties: getProperties(state, brand, parseInt(account), parseInt(group)).toJS(),
-    isFetching: false
+/* istanbul ignore next */
+const mapStateToProps = (state, ownProps) => (
+  {
+    properties: getPropertiesByGroup(state, ownProps.params.group),
+    isFetching: getFetchingByTag(state, REQUEST_TAG)
   }
-}
+)
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
-  const propertyActions = bindActionCreators(propertyActionCreators, dispatch)
-
-  const fetchProperties = (brand, account, group) => {
-    propertyActions.startFetching()
-    propertyActions.fetchAllWithDetails(brand,account,group)
-  }
-
+  const filterParams = { filter_by: '..tokenauth', filter_value: '*' }
   return {
-    fetchProperties
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true, filterParams}))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TabTokenAuthentication))
+export default connect(mapStateToProps, mapDispatchToProps)(TabTokenAuthentication)

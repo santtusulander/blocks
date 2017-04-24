@@ -1,8 +1,9 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
+import { Button, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import Radio from '../radio'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import Radio from '../shared/form-elements/radio'
 
 class ConfigurationPublishVersion extends React.Component {
   constructor(props) {
@@ -62,8 +63,8 @@ class ConfigurationPublishVersion extends React.Component {
         </FormGroup>
 
         {/* Action buttons */}
-        <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" onClick={this.props.hideAction}>
+        <FormFooterButtons>
+          <Button className="btn-secondary" onClick={this.props.hideAction}>
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
           <Button bsStyle="primary"
@@ -72,7 +73,7 @@ class ConfigurationPublishVersion extends React.Component {
             disabled={this.props.publishing || !this.state.publishTarget}>
             {this.props.publishing ? <FormattedMessage id="portal.button.PUBLISHING"/> : <FormattedMessage id="portal.button.PUBLISH"/>}
           </Button>
-        </ButtonToolbar>
+        </FormFooterButtons>
       </form>
     )
   }

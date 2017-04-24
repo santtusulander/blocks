@@ -171,7 +171,13 @@ $lt-caret-color: $silver-60;
     }
   }
 
+  .btn-icon {
+    padding: 0;
+    line-height: 0;
+  }
+
   .btn-link {
+    line-height: $btn-line-height;
     color: $btn-primary-background;
     text-transform: none;
     background-color: transparent;
@@ -187,11 +193,6 @@ $lt-caret-color: $silver-60;
       outline: none;
       box-shadow: none;
     }
-  }
-
-  .btn-icon {
-    padding: 0;
-    line-height: 0;
   }
 
   .btn-round {
@@ -461,7 +462,7 @@ $lt-caret-color: $silver-60;
 }
 
 // TODO: Update class name btn-outline from all elements and remove these styles
-.light-theme {
+.light-theme { // sass-lint:disable-line no-mergeable-selectors
   .configuration-sidebar .btn-outline {
     color: $pale-blue;
     background-color: $white !important;

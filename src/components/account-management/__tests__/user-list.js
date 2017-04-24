@@ -17,17 +17,17 @@ const fakeUsers = fromJS([
 describe('UserList', () => {
 
   it('should exist', () => {
-    const list = shallow(<UserList/>)
+    const list = shallow(<UserList intl={{formatMessage:jest.fn()}}/>)
     expect(list.length).toBe(1)
   })
 
   it('should show empty message', () => {
-    const list = shallow(<UserList users={fromJS([])}/>)
+    const list = shallow(<UserList users={fromJS([])} intl={{formatMessage:jest.fn()}}/>)
     expect(list.find('#empty-msg').length).toBe(1)
   })
 
   it('should list users', () => {
-    const list = shallow(<UserList users={fakeUsers}/>)
+    const list = shallow(<UserList users={fakeUsers} intl={{formatMessage:jest.fn()}}/>)
     expect(list.find('tbody tr').length).toBe(6)
   })
 })

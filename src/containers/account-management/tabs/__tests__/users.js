@@ -1,10 +1,14 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import { Router } from 'react-router'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
 jest.unmock('../users.jsx');
 import Users from '../users.jsx'
+
+jest.unmock('../../../../util/helpers.js')
+import { getSortData } from '../../../../util/helpers.js'
 
 jest.unmock('../../../__mocks__/gen-async');
 import { genAsyncMock } from '../../../__mocks__/gen-async'
@@ -14,11 +18,13 @@ import { Router as routerMock } from '../../../__mocks__/router'
 
 describe('AccountManagementAccountUsers', () => {
   it('should exist', () => {
-    const users = TestUtils.renderIntoDocument(
+    const users = shallow(
       <Users
         account={Immutable.Map()}
-        currentUser= {'dummy' }
+        currentUser= { Immutable.Map({'roles': {toJS: () => { return []} }}) }
         deleteUser= { jest.fn() }
+        fetchUsers= { jest.fn() }
+        fetchGroups= { jest.fn() }
         formFieldFocus= { jest.fn() }
         groupActions={ {
           fetchGroups: genAsyncMock,
@@ -31,10 +37,9 @@ describe('AccountManagementAccountUsers', () => {
         }}
         resetRoles={ jest.fn() }
         roles={ Immutable.List() }
-        rolesActions={ {
-          fetchRoles: genAsyncMock,
-        }}
+        fetchRoleNames={jest.fn()}
         route={ {} }
+        intl={{formatMessage: jest.fn()}}
         router={ routerMock }
         uiActions= {{}}
         userActions={ {
@@ -43,6 +48,6 @@ describe('AccountManagementAccountUsers', () => {
         users={ Immutable.List() }
       />
     )
-    expect(TestUtils.isCompositeComponent(users)).toBeTruthy()
+    expect(users).toBeTruthy()
   })
 })

@@ -42,21 +42,21 @@ export const createFailed = (state) => {
 
 //LIST WITH DETAILS
 export const receiveWithDetails = (state, action) => {
-  return state.merge( {resources: action.payload, fetching: false})
+  return state.merge({resources: action.payload, fetching: false})
 }
 
 export const receiveWithDetailsFailed = (state) => {
   return state.set('fetching', false)
 }
 
-export const resourceDetailsFailed = ( state ) => {
+export const resourceDetailsFailed = (state) => {
   return state.set('fetching', false)
 }
 
 //UPDATE
 export const updateSuccess = (state, { payload: { data, id } }) => {
-  const index = state.get('resources').findIndex( record => record.get('id') === id)
-  return state.merge( {fetching: false, resources: state.get('resources').set(index, fromJS(data)) })
+  const index = state.get('resources').findIndex(record => record.get('id') === id)
+  return state.merge({fetching: false, resources: state.get('resources').set(index, fromJS(data)) })
 }
 
 export const updateFailed = (state) => {
@@ -65,8 +65,8 @@ export const updateFailed = (state) => {
 
 //DELETE
 export const deleteSuccess = (state, { payload }) => {
-  const index = state.get('resources').findIndex( record => record.get('id') === payload)
-  return state.merge({ resources: state.get('resources').delete( index ), fetching: false })
+  const index = state.get('resources').findIndex(record => record.get('id') === payload)
+  return state.merge({ resources: state.get('resources').delete(index), fetching: false })
 }
 export const deleteFailed = (state) => {
   return state.set('fetching', false)

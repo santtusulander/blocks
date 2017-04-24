@@ -1,0 +1,139 @@
+// Sidebar
+// =======
+
+// scss-lint:disable SelectorDepth
+// Need to override BootStrap
+.sidebar-layout {
+  position: fixed;
+  top: $header-total-height;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-side-panel;
+  width: $sidebar-width;
+  overflow: auto;
+
+  @include md {
+    top: $md-header-total-height;
+    width: $md-sidebar-width;
+  }
+
+  @include sm {
+    width: $sm-sidebar-width;
+  }
+
+  @include print {
+    display: none;
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: linear-gradient(rgba($pale-blue, 0.7),
+      rgba($ericsson-dark-blue, 0.7));
+    background-size: 100%;
+
+    a {
+      color: $dt-text-color;
+
+      &:hover {
+        color: rgba($white, 0.9);
+      }
+    }
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
+    background-size: 100%;
+
+    a {
+      color: $lt-text-color;
+
+      &.active {
+        color: $white;
+      }
+
+      &:hover {
+        color: rgba($black, 0.4);
+      }
+    }
+  }
+
+  .sidebar-header {
+    padding: $btn-sm-height ($bar-height / 2) ($bar-height / 4);
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    @include md {
+      padding: $md-btn-sm-height ($md-bar-height / 2) ($md-bar-height / 4);
+    }
+
+    @include sm {
+      padding: $md-btn-sm-height ($md-bar-height / 3) ($md-bar-height / 4);
+    }
+
+    .dropdown {
+      width: 100%;
+    }
+
+    h3,
+    p {
+      margin-bottom: 2px;
+    }
+  }
+
+  .sidebar-content {
+    padding: $bar-height / 2;
+
+    @include md {
+      padding: $md-bar-height / 2;
+    }
+
+    @include sm {
+      padding: $md-bar-height / 3;
+    }
+  }
+
+  .sidebar-section-header {
+    display: block;
+    min-height: $btn-height;
+    padding-left: $bar-height / 2;
+    font-weight: 500;
+    line-height: $btn-height;
+    text-decoration: none;
+
+    @include md {
+      min-height: $md-btn-height;
+      padding-left: $md-bar-height / 2;
+      line-height: $md-btn-height;
+    }
+
+    .dark-theme &,
+    .light-theme & {
+      background-color: rgba($black, 0.2);
+    }
+  }
+
+  .sidebar-actions {
+    margin-top: 30px;
+  }
+
+  .sidebar-hr {
+    height: 0;
+    margin: 0 $bar-height / 2;
+
+    @include md {
+      margin: 0 $md-bar-height / 2;
+    }
+
+    @include sm {
+      margin: 0 $md-bar-height / 3;
+    }
+
+    .dark-theme &,
+    .light-theme & {
+      border-top-color: rgba($black, 0.4);
+    }
+  }
+}

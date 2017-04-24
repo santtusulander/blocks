@@ -6,11 +6,11 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import AnalysisByTime from '../analysis/by-time'
-import IconChart from '../icons/icon-chart.jsx'
-import IconConfiguration from '../icons/icon-configuration.jsx'
+import IconChart from '../shared/icons/icon-chart.jsx'
+import IconConfiguration from '../shared/icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import ContentItemTag from './content-item-tag'
-import TruncatedTitle from '../truncated-title'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import { paleblue } from '../../constants/colors'
 import LinkWrapper from './link-wrapper'
 
@@ -41,7 +41,7 @@ class ContentItemList extends React.Component {
   }
   render() {
     const datasets = []
-    if(this.props.primaryData.size) {
+    if (this.props.primaryData.size) {
       datasets.push({
         area: true,
         color: paleblue,
@@ -113,8 +113,8 @@ class ContentItemList extends React.Component {
               <Row>
                 <Col xs={6}>
                   <h1>{this.props.cacheHitRate || 0}
-                    <span className="heading-suffix"> %</span></h1>
-                  <p className="text-sm">Avg. Cache Hit Rate</p>
+                    <span className="heading-suffix"><FormattedMessage id="portal.spaceWithPercentage"/></span></h1>
+                  <p className="text-sm"><FormattedMessage id="portal.content.avgHitRate.text"/></p>
                 </Col>
                 <Col xs={6}>
                   <h1>

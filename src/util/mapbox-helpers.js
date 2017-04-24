@@ -11,14 +11,17 @@ import {
  */
 export const calculateMedian = (values) => {
 
-  values.sort( function(a,b) {return a - b;} );
+  values.sort(function(a,b) {
+    return a - b;
+  });
 
-  var half = Math.floor(values.length/2);
+  const half = Math.floor(values.length/2);
 
-  if(values.length % 2)
+  if (values.length % 2) {
     return values[half];
-  else
+  } else    {
     return (values[half-1] + values[half]) / 2.0;
+  }
 }
 /**
  * Get Score for value compared to 'median' range (0 - steps)
@@ -68,12 +71,14 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
  * Fetches city data with specific bounds and options
  *
  * @method getCitiesWithinBounds
- * @param  {object}              params                   Object of values to match
- * @param  {object}              filters                  Filters to match, e.g. date range
- * @param  {string}              location                 [description]
- * @param  {object}              coordinates              Object of map bounds, lngLat coordinates
- * @param  {string}              activeHostConfiguredName String of active host
- * @param  {object}              actions                  Object of which actions should be called
+ * @param  {Object}              params                   Object of values to match
+ * @param  {Object}              filters                  Filters to match, e.g. date range
+ * @param  {String}              location                 Page location
+ * @param  {Object}              coordinates              Object of map bounds, lngLat coordinates
+ * @param  {String}              activeHostConfiguredName String of active host
+ * @param  {Object}              actions                  Object of which actions should be called
+ * @param  {Object}              aggregation              Aggregation settings
+ * @returns {Promise}
  */
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions, aggregation } = {}) {
   const { byCityOpts } = buildFetchOpts({
@@ -85,7 +90,7 @@ export function getCitiesWithinBounds({ params, filters, location, coordinates, 
   })
 
   actions.startFetching()
-  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation }).then(
+  return actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation }).then(
     actions.finishFetching()
   )
 }

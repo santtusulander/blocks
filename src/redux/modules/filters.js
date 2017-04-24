@@ -16,30 +16,33 @@ import {
   getAnalysisErrorCodes
 } from '../../util/status-codes'
 
-const initialState = Immutable.fromJS({
-  filters: {
-    dateRange: {
-      startDate: moment().utc().startOf('month'),
-      endDate: moment().utc().endOf('day')
-    },
-    customDateRange: {
-      startDate: moment().utc().startOf('day'),
-      endDate: moment().utc().endOf('day')
-    },
-    includeComparison: false,
-    dateRangeLabel: DateRanges.MONTH_TO_DATE,
-    recordType: 'transfer_rates',
-    serviceTypes: ['http', 'https'],
-    contentProviders: [],
-    contentProviderGroups: [],
-    contentProviderProperties: [],
-    serviceProviders: [],
-    serviceProviderGroups: [],
-    onOffNet: ['on', 'off'],
-    errorCodes: Immutable.List(),
-    statusCodes: Immutable.List(),
-    video: '/elephant/169ar/elephant_master.m3u8'
+export const defaultFilters =  Immutable.fromJS({
+  dateRange: {
+    startDate: moment().utc().startOf('month'),
+    endDate: moment().utc().endOf('day')
   },
+  customDateRange: {
+    startDate: moment().utc().startOf('day'),
+    endDate: moment().utc().endOf('day')
+  },
+  includeComparison: false,
+  dateRangeLabel: DateRanges.MONTH_TO_DATE,
+  recordType: 'transfer_rates',
+  serviceTypes: ['http', 'https'],
+  contentProviders: [],
+  contentProviderGroups: [],
+  contentProviderProperties: [],
+  serviceProviders: [],
+  serviceProviderGroups: [],
+  onOffNet: ['on', 'off'],
+  errorCodes: Immutable.List(),
+  statusCodes: Immutable.List(),
+  storageType: 'bytes',
+  video: '/elephant/169ar/elephant_master.m3u8'
+})
+
+const initialState = Immutable.fromJS({
+  filters: defaultFilters,
   filterOptions: {
     recordType: [{label: 'Bandwidth', value: 'transfer_rates'}, {label: 'Requests', value: 'requests'}],
     serviceTypes: [{label: 'http', value: 'http'}, {label: 'https', value: 'https'}],
@@ -49,8 +52,12 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: [{label: 'On-Net', value: 'on'}, {label: 'Off-Net', value: 'off'}],
-    errorCodes: getAnalysisErrorCodes().map((obj) => { return { label: obj, value: obj } } ),
-    statusCodes: getAnalysisStatusCodes().map((obj) => { return { label: obj, value: obj } } )
+    errorCodes: getAnalysisErrorCodes().map((obj) => {
+      return { label: obj, value: obj }
+    }),
+    statusCodes: getAnalysisStatusCodes().map((obj) => {
+      return { label: obj, value: obj }
+    })
   },
   fetching: false
 })
@@ -73,7 +80,7 @@ export function setValue(state, action) {
     }
   }
 
-  return state.setIn(['filters', filterName], Immutable.fromJS(filterValue) )
+  return state.setIn(['filters', filterName], Immutable.fromJS(filterValue))
 }
 
 export function resetDefaults(state) {
@@ -353,32 +360,36 @@ export const fetchContentProviderGroups = createAction(CONTENT_PROVIDER_GROUPS_F
 
 export const fetchServiceProvidersWithTrafficForCP = createAction(SERVICE_PROVIDERS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=accounts`)
-    .then(action => Promise.all(action.data.data.map(
-      account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
-    )))
-    .then(resp => resp.map(resp => resp.data))
+              .then((resp) => {
+                return resp.data.data.map((obj) => {
+                  return obj
+                })
+              })
 })
 
 export const fetchContentProvidersWithTrafficForSP = createAction(CONTENT_PROVIDERS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=accounts`)
-  .then(action => Promise.all(action.data.data.map(
-    account => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
-  )))
-  .then(resp => resp.map(resp => resp.data))
+              .then((resp) => {
+                return resp.data.data.map((obj) => {
+                  return obj
+                })
+              })
 })
 
 export const fetchServiceProviderGroupsWithTrafficForCP = createAction(SERVICE_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_CP_FETCHED, (brand, sp_account, opts) => {
   return axios.get(`${analyticsBase()}/sps-with-traffic-for-cp${qsBuilder(opts)}&entity=groups&sp_account=${sp_account}`)
-    .then(action => Promise.all(action.data.data.map(
-      group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${sp_account}/groups/${group}`)
-    )))
-    .then(resp => resp.map(resp => resp.data))
+              .then((resp) => {
+                return resp.data.data.map((obj) => {
+                  return obj
+                })
+              })
 })
 
 export const fetchContentProviderGroupsWithTrafficForSP = createAction(CONTENT_PROVIDER_GROUPS_WITH_TRAFFIC_FOR_SP_FETCHED, (brand, cp_account, opts) => {
   return axios.get(`${analyticsBase()}/cps-with-traffic-for-sp${qsBuilder(opts)}&entity=groups&account=${cp_account}`)
-  .then(action => Promise.all(action.data.data.map(
-    group => axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${cp_account}/groups/${group}`)
-  )))
-  .then(resp => resp.map(resp => resp.data))
+              .then((resp) => {
+                return resp.data.data.map((obj) => {
+                  return obj
+                })
+              })
 })

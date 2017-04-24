@@ -2,8 +2,8 @@ import React from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 // import Immutable from 'immutable'
 
-import Toggle from '../../toggle'
-import Select from '../../select'
+import Toggle from '../../shared/form-elements/toggle'
+import Select from '../../shared/form-elements/select'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -72,8 +72,6 @@ class Compression extends React.Component {
 Compression.displayName = 'Compression'
 Compression.propTypes = {
   changeValue: React.PropTypes.func
-  // path: React.PropTypes.instanceOf(Immutable.List),
-  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = Compression

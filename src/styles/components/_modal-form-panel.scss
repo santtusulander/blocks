@@ -3,13 +3,13 @@
 @import '../../styles/components/configuration/sidebar';
 
 .modal-form-panel {
-  @extend .configuration-sidebar;
+  @extend .configuration-sidebar; // sass-lint:disable-line placeholder-in-extend
 
   height: 100%;
 
   .modal-content {
-    overflow-y: auto;
     height: 100%;
+    overflow-y: auto;
   }
 
   .modal-body {
@@ -26,6 +26,7 @@
 
   .form-group {
     padding-bottom: 0;
+
     + hr {
       margin-top: 30px;
     }
@@ -36,40 +37,40 @@
   }
 
   .dropdown-menu {
-    z-index: 9999;
+    z-index: $zindex-dropdown-menu;
   }
 
   .btn-toolbar {
     position: fixed;
     bottom: 0;
-    margin-left: $bar-height*-1;
-    margin-right: $bar-height*-1;
     width: $configuration-sidebar-width !important;
     padding: (($md-bar-height / 2) / 1.5) $bar-height;
+    margin-right: $bar-height*-1;
+    margin-left: $bar-height*-1;
 
     @include md {
       width: $md-configuration-sidebar-width !important;
-      margin-left: $md-bar-height*-1;
-      margin-right: $md-bar-height*-1;
       padding: (($md-bar-height / 2) / 1.5) $md-bar-height;
+      margin-right: $md-bar-height*-1;
+      margin-left: $md-bar-height*-1;
     }
 
     @include sm {
       width: $sm-configuration-sidebar-width !important;
-      margin-left: ($md-bar-height / 2)*-1;
-      margin-right: ($md-bar-height / 2)*-1;
       padding: ($md-bar-height / 2) $md-bar-height;
+      margin-right: ($md-bar-height / 2)*-1;
+      margin-left: ($md-bar-height / 2)*-1;
     }
 
     .dark-theme & {
+      z-index: $zindex-button-toolbar;
       background: rgba($pale-blue, 0.2);
-      background: #1c486b;
-      z-index: 1060;
+      background: #1c486b; // sass-lint:disable-line no-duplicate-properties
     }
 
     .light-theme & {
+      z-index: $zindex-button-toolbar;
       background: $white;
-      z-index: 1060;
     }
   }
 

@@ -4,11 +4,11 @@ import { FormattedMessage } from 'react-intl'
 
 import { getRoute } from '../../util/routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/routes'
-import PageHeader from '../layout/page-header'
-import AccountSelector from '../global-account-selector/global-account-selector'
-import IsAllowed from '../../components/is-allowed'
-import TruncatedTitle from '../truncated-title'
-import IconCaretDown from '../../components/icons/icon-caret-down'
+import PageHeader from '../shared/layout/page-header'
+import AccountSelector from '../global-account-selector/account-selector-container'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -16,7 +16,6 @@ const SupportPageHeader = (props) => {
   const {
     activeAccount,
     params,
-    params: {brand, account},
     router
   } = props;
   const subPage = getTabName(router, params);
@@ -25,12 +24,14 @@ const SupportPageHeader = (props) => {
     <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
-          as="support"
-          params={{ brand, account }}
-          topBarTexts={{ brand: 'UDN Admin' }}
-          topBarAction={() => router.push(`${getRoute('support')}/${brand}`)}
-          onSelect={(...params) => router.push(`${getUrl(getRoute('support'), ...params)}/${subPage}`)}
-          restrictedTo="account">
+          params={params}
+          levels={[ 'brand', 'account' ]}
+          onItemClick={(entity) => {
+
+            const { nodeInfo, idKey = 'id' } = entity
+            router.push(`${getUrl(getRoute('support'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+
+          }}>
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
               tooltipPlacement="bottom" className="account-management-title"/></h1>

@@ -36,7 +36,7 @@ export function getUrl(baseUrl, linkType, val, params) {
 
   let url = baseUrl
 
-  switch(linkType) {
+  switch (linkType) {
     case 'brand':
       url = `${baseUrl}/${val}`
       break;
@@ -55,7 +55,7 @@ export function getUrl(baseUrl, linkType, val, params) {
 }
 
 export function getAnalyticsUrl(linkType, val, params) {
-  switch(linkType) {
+  switch (linkType) {
     case 'brand':
       return getRoute('analyticsBrand', { brand: val })
     case 'account':
@@ -64,11 +64,13 @@ export function getAnalyticsUrl(linkType, val, params) {
       return getRoute('analyticsGroup', { ...params, group: val })
     case 'property':
       return getRoute('analyticsProperty', { ...params, property: val })
+    case 'storage':
+      return getRoute('analyticsStorage', { ...params, storage: val })
   }
 }
 
 export function getDashboardUrl(linkType, val, params) {
-  switch(linkType) {
+  switch (linkType) {
     case 'brand':
       return getRoute('dashboardBrand', { brand: val })
     case 'account':
@@ -77,7 +79,7 @@ export function getDashboardUrl(linkType, val, params) {
 }
 
 export function getContentUrl(linkType, val, params) {
-  switch(linkType) {
+  switch (linkType) {
     case 'brand':
       return getRoute('contentBrand', { brand: val })
     case 'account':
@@ -87,14 +89,17 @@ export function getContentUrl(linkType, val, params) {
     case 'group':
       return getRoute('contentGroup', { ...params, group: val })
     case 'property':
+    case 'propertySummary':
       return getRoute('contentProperty', { ...params, property: val })
     case 'propertyConfiguration':
       return getRoute('contentPropertyConfiguration', { ...params, property: val })
+    case 'storage':
+      return getRoute('contentStorage', { ...params, storage: val })
   }
 }
 
 export function getNetworkUrl(linkType, val, params) {
-  switch(linkType) {
+  switch (linkType) {
     case 'brand':
       return getRoute('networkBrand', { brand: val })
     case 'account':
@@ -109,6 +114,17 @@ export function getNetworkUrl(linkType, val, params) {
       return getRoute('networkPop', { ...params, pop: val })
     case 'pod':
       return getRoute('networkPod', { ...params, pod: val })
+  }
+}
+
+export function getSecurityUrl(linkType, val, params) {
+  switch (linkType) {
+    case 'brand':
+      return getRoute('securityBrand', { brand: val })
+    case 'account':
+      return getRoute('securityAccount', { ...params, account: val })
+    case 'group':
+      return getRoute('securityGroup', { ...params, group: val })
   }
 }
 

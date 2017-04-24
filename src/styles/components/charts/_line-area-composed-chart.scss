@@ -1,0 +1,61 @@
+@import '../../base/colors';
+
+.line-area-composed-chart-container {
+  .storage {
+    path {
+      &:first-child {
+        stroke: $gradient-teal;
+        stroke-width: 4px;
+      }
+
+      .light-theme & {
+        &:last-child {
+          fill: $pale-blue-40;
+        }
+      }
+
+      .dark-theme & {
+        &:last-child {
+          fill: $deep-blue-20;
+        }
+      }
+    }
+  }
+
+
+  .comparison_storage { // sass-lint:disable-line class-name-format
+    path {
+      &:first-child {
+        stroke: $pale-blue;
+        stroke-width: 4px;
+      }
+
+      .light-theme & {
+        &:last-child {
+          fill: $pale-blue-60;
+        }
+      }
+
+      .dark-theme & {
+        &:last-child {
+          fill: $deep-blue;
+        }
+      }
+    }
+  }
+
+  .estimate {
+    path {
+      stroke: $grey-40;
+      stroke-width: 2px;
+    }
+  }
+
+  .line-area-composed-chart-label {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-weight: bold;
+  }
+
+}

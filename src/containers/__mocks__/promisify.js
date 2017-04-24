@@ -4,12 +4,12 @@ export const promisify = function (returnValue, delay) {
   delay = !!delay;
   let delayCount = 0;
 
-  let recursiveMockPromise = new function () {
-    let self = this;
+  const recursiveMockPromise = new function () {
+    const self = this;
     self.returnValue = returnValue;
 
     self.then = (cb) => {
-      let performCallback = () => {
+      const performCallback = () => {
         self.returnValue = cb(self.returnValue);
       };
 

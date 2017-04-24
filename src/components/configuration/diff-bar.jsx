@@ -4,7 +4,7 @@ import diff from 'immutablediff'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import Dialog from '../layout/dialog'
+import Dialog from '../shared/layout/dialog'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -19,6 +19,7 @@ class ConfigurationDiffBar extends React.Component {
   }
   render() {
     const configDiff = diff(this.props.originalConfig, this.props.currentConfig)
+
     return (
       <ReactCSSTransitionGroup
         component="div"
@@ -28,10 +29,10 @@ class ConfigurationDiffBar extends React.Component {
         transitionLeaveTimeout={350}
         transitionAppear={true}
         transitionAppearTimeout={10}>
-        {configDiff.size != 0 &&
+        {configDiff.size !== 0 &&
           <Dialog className="configuration-diff-bar">
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="primary"
+              <Button bsStyle="secondary"
                 onClick={this.resetConfig}>
                 <FormattedMessage id="portal.button.CANCEL"/>
               </Button>
@@ -47,9 +48,9 @@ class ConfigurationDiffBar extends React.Component {
               </p>
               <p>
                 {configDiff.map((change, i) => {
-                  return(
+                  return (
                     <span key={i}>
-                      [{change.get('op')} {change.get('path')}]
+                      <FormattedMessage id="portal.configuration.changes.list.text" values={{op: change.get('op'), path: change.get('path')}}/>
                     </span>
                   )
                 })}

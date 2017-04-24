@@ -2,7 +2,7 @@
 // =======
 
 .tooltip {
-  z-index: 1040;
+  z-index: $zindex-tooltip;
   max-width: 320px;
   font-size: $tooltip-font-size;
   white-space: pre-line;
@@ -12,7 +12,7 @@
   }
 
   &.display-long-name-tooltip {
-    z-index: 1120;
+    z-index: $zindex-tooltip-long-name;
     word-wrap: break-word;
 
     .tooltip-arrow {
@@ -117,6 +117,28 @@
 
     @include md {
       font-size: 13px;
+    }
+  }
+
+  .tooltip-arrow {
+    display: none;
+  }
+}
+
+.storage-item-tooltip {
+  &.top {
+    padding: 0 0 30px;
+  }
+
+  .storage-item-inner-tooltip {
+    min-width: 250px;
+
+    .storage-month-info {
+      margin-top: 18px;
+
+      .tooltip-storage-value {
+        float: right;
+      }
     }
   }
 

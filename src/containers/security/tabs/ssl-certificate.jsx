@@ -9,8 +9,10 @@ import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import ModalWindow from '../../../components/modal'
-import CertificateForm from '../../../components/security/certificate-form-container'
+import { parseResponseError } from '../../../redux/util'
+
+import ModalWindow from '../../../components/shared/modal'
+import CertificateFormContainer from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -37,7 +39,7 @@ class TabSslCertificate extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+    if (JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchData(nextProps)
     }
   }
@@ -64,7 +66,7 @@ class TabSslCertificate extends Component {
         if (res.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.security.ssl.updateFailed.text'},
-                                {reason: res.payload.data.message}))
+                                {reason: parseResponseError(res.payload)}))
         } else {
           this.showNotification(<FormattedMessage id="portal.security.ssl.sslIsRemoved.text" />)
         }
@@ -72,9 +74,8 @@ class TabSslCertificate extends Component {
       })
   }
 
-  render(){
+  render() {
     const {
-      activeAccount,
       activeModal,
       activeCertificates,
       fetchAccount,
@@ -91,43 +92,45 @@ class TabSslCertificate extends Component {
       ? <FormattedMessage id="portal.security.editCertificate.text"/>
       : <FormattedMessage id="portal.security.uploadCertificate.text"/>
 
-    const certificateFormProps = {
-      title: modalTitle,
-      showNotification: this.showNotification,
-      activeAccount,
-      fetchAccount,
-      toggleModal
-    }
-
-    const sslListProps = {
-      groups,
-      activeModal,
-      activeCertificates,
-      certificates: sslCertificates,
-      isFetching: isFetching,
-      onCheck: commonName => toggleActiveCertificates(commonName),
-      uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
-      editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
-      deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
-    }
-
-    if ( !this.props.params.group) return (
+    if (!this.props.params.group) {
+      return (
       <p className='text-center'>
         <FormattedMessage id="portal.security.ssl.selectGroup.text" />
       </p>
-    )
+      )
+    }
 
-    if ( isFetching )
+    if (isFetching) {
       return <LoadingSpinner />
+    }
 
 
     return (
       <div className='ssl-certificate-tab'>
 
-        <SSLList {...sslListProps}/>
+        <SSLList
+          groups={groups}
+          activeModal={activeModal}
+          activeCertificates={activeCertificates}
+          certificates={sslCertificates}
+          isFetching={isFetching}
+          onCheck={commonName => toggleActiveCertificates(commonName)}
+          uploadCertificate={() => toggleModal(UPLOAD_CERTIFICATE)}
+          editCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE))}
+          deleteCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))}
+        />
 
-        {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
-        {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
+        {(activeModal === EDIT_CERTIFICATE || activeModal === UPLOAD_CERTIFICATE) &&
+          <CertificateFormContainer
+            title={modalTitle}
+            showNotification={this.showNotification}
+            activeAccount={this.props.params.account}
+            activeGroup={this.props.params.group}
+            fetchAccount={fetchAccount}
+            toggleModal={toggleModal}
+          />
+        }
+
         {activeModal === DELETE_CERTIFICATE &&
           <ModalWindow
             title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
@@ -138,7 +141,7 @@ class TabSslCertificate extends Component {
             invalid={true}
             verifyDelete={true}>
             <p>
-              <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Certificate"}}/>
+              <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete: "Certificate"}}/>
             </p>
           </ModalWindow>
         }
@@ -150,7 +153,6 @@ class TabSslCertificate extends Component {
 TabSslCertificate.displayName = 'TabSslCertificate'
 
 TabSslCertificate.propTypes = {
-  activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   changeNotification: PropTypes.func,
@@ -171,7 +173,6 @@ function mapStateToProps(state, ownProps) {
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
     groups: state.group.get('allGroups'),
     isFetching: state.security.get('fetching'),
     sslCertificates: state.security.get('sslCertificates').filter(cert =>

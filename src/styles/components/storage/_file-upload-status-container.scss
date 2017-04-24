@@ -1,0 +1,73 @@
+@import '../styles/base/colors';
+
+$upload-status-width: rem(360px);
+$upload-status-offset: rem(24px);
+$upload-status-wrapper-paddings: rem(6px) rem(14px);
+$upload-status-body-paddings: rem(10px) rem(14px);
+
+.file-upload-status-wrapper {
+  position: fixed;
+  right: $upload-status-offset;
+  bottom: $upload-status-offset;
+  z-index: $zindex-file-status;
+  width: $upload-status-width;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.file-upload-status-header {
+  width: 100%;
+  padding: $upload-status-wrapper-paddings;
+  font-weight: bold;
+  color: $dt-text-color;
+  background-color: $pale-blue;
+
+  .light-theme & {
+    color: $white;
+  }
+}
+
+.file-upload-status-header-caret {
+  float: right;
+  padding: 0;
+
+  > svg {
+    width: rem(16px);
+    height: rem(16px);
+    fill: $dt-text-color !important;
+
+    .light-theme & {
+      fill: $white !important;
+    }
+  }
+
+  > .caret-icon {
+    transition: transform 0.35s;
+
+    &.upward {
+      transform: rotateZ(180deg);
+    }
+  }
+}
+
+.file-upload-status-cancel-link {
+  text-align: right;
+
+  > .btn {
+    padding: 0;
+  }
+}
+
+.file-upload-status-body {
+
+  .panel-body {
+    padding: $upload-status-body-paddings;
+  }
+
+  .dark-theme & {
+    background-color: $black;
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+}

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { normalize, schema } from 'normalizr'
 
-import { BASE_URL_AAA } from '../../../util.js'
+import { BASE_URL_AAA, PAGINATION_MOCK } from '../../../util.js'
 
 const accountSchema = new schema.Entity('accounts', {}, {
   processStrategy: (value, parent) => {
@@ -23,7 +23,7 @@ const baseURL = brand => `${BASE_URL_AAA}/brands/${brand}/accounts`
  */
 export const fetch = ({brand, id }) => {
   return axios.get(`${baseURL(brand)}/${id}`)
-    .then( ({ data }) => {
+    .then(({ data }) => {
 
       const accountData = {
         id: brand,
@@ -41,8 +41,8 @@ export const fetch = ({brand, id }) => {
  * @return {[type]}         [description]
  */
 export const fetchAll = ({ brand }) => {
-  return axios.get(baseURL(brand))
-    .then( ({data}) => {
+  return axios.get(baseURL(brand), PAGINATION_MOCK)
+    .then(({data}) => {
 
       const brandAccounts = {
         id: brand,
@@ -59,7 +59,7 @@ export const fetchAll = ({ brand }) => {
  * @param  {[type]} payload [data to create account with]
  */
 export const create = ({ brand, payload }) =>
-  axios.post(baseURL(brand), payload)
+  axios.post(baseURL(brand), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const brandAccounts = {
@@ -77,7 +77,7 @@ export const create = ({ brand, payload }) =>
  * @param  {[type]} payload [data to update account with]
  */
 export const update = ({ brand, id, payload }) =>
-  axios.put(`${baseURL(brand)}/${id}`, payload)
+  axios.put(`${baseURL(brand)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
 
       const brandAccounts = {

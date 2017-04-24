@@ -1,10 +1,11 @@
 import React from 'react'
 import { List } from 'immutable'
 import classNames from 'classnames'
-import IconIncident from '../components/icons/icon-incident'
-import IconProblem from '../components/icons/icon-problem'
-import IconQuestion from '../components/icons/icon-question'
-import IconTask from '../components/icons/icon-task'
+import IconIncident from '../components/shared/icons/icon-incident'
+import IconProblem from '../components/shared/icons/icon-problem'
+import IconQuestion from '../components/shared/icons/icon-question'
+import IconTask from '../components/shared/icons/icon-task'
+import { FormattedMessage } from 'react-intl'
 
 import {
   PRIORITY_URGENT,
@@ -80,30 +81,30 @@ export function isStatusClosed(status) {
 
 export function getTicketPriorityOptions() {
   return [
-    { value: PRIORITY_URGENT, label: 'Urgent', icon: getTicketPriorityIcon(PRIORITY_URGENT) },
-    { value: PRIORITY_HIGHT, label: 'High', icon: getTicketPriorityIcon(PRIORITY_HIGHT) },
-    { value: PRIORITY_NORMAL, label: 'Normal', icon: getTicketPriorityIcon(PRIORITY_NORMAL) },
-    { value: PRIORITY_LOW, label: 'Low', icon: getTicketPriorityIcon(PRIORITY_LOW) }
+    { value: PRIORITY_URGENT, label: <FormattedMessage id="portal.support.tickets.priority.urgent"/>, icon: getTicketPriorityIcon(PRIORITY_URGENT) },
+    { value: PRIORITY_HIGHT, label: <FormattedMessage id="portal.support.tickets.priority.high"/>, icon: getTicketPriorityIcon(PRIORITY_HIGHT) },
+    { value: PRIORITY_NORMAL, label: <FormattedMessage id="portal.support.tickets.priority.normal"/>, icon: getTicketPriorityIcon(PRIORITY_NORMAL) },
+    { value: PRIORITY_LOW, label: <FormattedMessage id="portal.support.tickets.priority.low"/>, icon: getTicketPriorityIcon(PRIORITY_LOW) }
   ]
 }
 
 export function getTicketStatusOptions() {
   return [
-    { value: STATUS_NEW, label: 'New' },
-    { value: STATUS_OPEN, label: 'Open' },
-    { value: STATUS_PENDING, label: 'Pending' },
-    { value: STATUS_HOLD, label: 'Hold' },
-    { value: STATUS_SOLVED, label: 'Solved' },
-    { value: STATUS_CLOSED, label: 'Closed' }
+    { value: STATUS_NEW, label: <FormattedMessage id="portal.support.tickets.status.new"/> },
+    { value: STATUS_OPEN, label: <FormattedMessage id="portal.support.tickets.status.open"/> },
+    { value: STATUS_PENDING, label: <FormattedMessage id="portal.support.tickets.status.pending"/> },
+    { value: STATUS_HOLD, label: <FormattedMessage id="portal.support.tickets.status.hold"/> },
+    { value: STATUS_SOLVED, label: <FormattedMessage id="portal.support.tickets.status.solved"/> },
+    { value: STATUS_CLOSED, label: <FormattedMessage id="portal.support.tickets.status.closed"/> }
   ]
 }
 
 export function getTicketTypeOptions() {
   return [
-    { value: TYPE_PROBLEM, label: 'Problem', icon: getTicketTypeIcon(TYPE_PROBLEM) },
-    { value: TYPE_INCIDENT, label: 'Incident', icon: getTicketTypeIcon(TYPE_INCIDENT) },
-    { value: TYPE_QUESTION, label: 'Question', icon: getTicketTypeIcon(TYPE_QUESTION) },
-    { value: TYPE_TASK, label: 'Task', icon: getTicketTypeIcon(TYPE_TASK) }
+    { value: TYPE_PROBLEM, label: <FormattedMessage id="portal.support.tickets.type.problem"/>, icon: getTicketTypeIcon(TYPE_PROBLEM) },
+    { value: TYPE_INCIDENT, label: <FormattedMessage id="portal.support.tickets.type.incident"/>, icon: getTicketTypeIcon(TYPE_INCIDENT) },
+    { value: TYPE_QUESTION, label: <FormattedMessage id="portal.support.tickets.type.question"/>, icon: getTicketTypeIcon(TYPE_QUESTION) },
+    { value: TYPE_TASK, label: <FormattedMessage id="portal.support.tickets.type.task"/>, icon: getTicketTypeIcon(TYPE_TASK) }
   ]
 }
 
@@ -135,8 +136,8 @@ export function getTicketPriorityIcon(priority) {
 export function getTicketPriorityLabel(priority) {
   const options = List(getTicketPriorityOptions())
 
-  const option = options.find((option) => {
-    return option.value === priority
+  const option = options.find((single_option) => {
+    return single_option.value === priority
   })
 
   return option.label
@@ -145,8 +146,8 @@ export function getTicketPriorityLabel(priority) {
 export function getTicketTypeLabel(type) {
   const options = List(getTicketTypeOptions())
 
-  const option = options.find((option) => {
-    return option.value === type
+  const option = options.find((single_option) => {
+    return single_option.value === type
   })
 
   return option.label

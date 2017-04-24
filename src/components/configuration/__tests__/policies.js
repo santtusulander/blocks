@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 jest.unmock('../policies.jsx')
 import ConfigurationPolicies from '../policies.jsx'
 import ConfigurationSidebar from '../sidebar.jsx'
-import { POLICY_TYPES, DEFAULT_MATCH } from '../../../constants/property-config'
+import { POLICY_TYPES, DEFAULT_CONDITION } from '../../../constants/property-config'
 
 const fakeConfig = Immutable.fromJS(
 {
@@ -101,24 +101,14 @@ const fakeConfig = Immutable.fromJS(
     "last_edited": "10 Jan 2016 - 10:52",
     "deployment_status": 1
   },
-  "default_policy": {"policy_rules": [
-    {
-      "set": {
-        "cache_control": {
-          "honor_origin": true,
-          "check_etag": "weak",
-          "max_age": 0
-        }
-      }
-    },
-    {
-      "set": {
-        "cache_name": {
-          "ignore_case": false
-        }
-      }
-    }
-  ]},
+  "defaults": {
+    "cache_control_max_age": null,
+    "cache_key_query": null,
+    "cache_control_check_etag": "false",
+    "response_remove_vary": true,
+    "cache_control_honor_origin": false,
+    "cache_name_ignore_case": true
+  },
   "response_policy": {"policy_rules": [
     {
       "match": {

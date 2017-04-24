@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter, routerShape } from 'react-router'
 import { Button } from 'react-bootstrap'
-import IconArrowLeft from '../components/icons/icon-arrow-left'
+import IconArrowLeft from '../components/shared/icons/icon-arrow-left'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -24,13 +24,13 @@ const StarburstHelp = ({router}) => {
             <FormattedMessage tagName="tspan" id="portal.startburstHelp.today.text"/>
           </text>
           <text transform="matrix(1 0 0 1 1198.3925 706.3748)">
-            6/21/16
+            <FormattedMessage tagName="tspan" id="portal.starburst.help.mock.date1"/>
           </text>
           <text transform="matrix(1 0 0 1 844.085 1037.5986)">
-            6/14/16
+            <FormattedMessage tagName="tspan" id="portal.starburst.help.mock.date2"/>
           </text>
           <text transform="matrix(1 0 0 1 526.9711 706.3748)">
-            6/1/16
+            <FormattedMessage tagName="tspan" id="portal.starburst.help.mock.date3"/>
           </text>
           {/* Detail image pointer*/}
           <line className="pointer" x1="1086.9" y1="517.2" x2="1529.7" y2="341.1"/>
@@ -49,16 +49,16 @@ const StarburstHelp = ({router}) => {
             <circle cx="1560.7" cy="1018.1" r="20"/>
             {/* Descriptions */}
             <text transform="matrix(1 0 0 1 1620.0648 717.5681)">
-              <tspan x="0" y="0">More traffic during that week the </tspan>
-              <tspan x="0" y="28">previous month</tspan>
+              <tspan x="0" y="0"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.moreTraffic1" /></tspan>
+              <tspan x="0" y="28"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.moreTraffic2" /></tspan>
             </text>
             <text transform="matrix(1 0 0 1 1620.0648 815.0632)">
-              <tspan x="0" y="0">Same amount of traffic during that week </tspan>
-              <tspan x="0" y="28">the previous month</tspan>
+              <tspan x="0" y="0"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.sameTraffic1" /></tspan>
+              <tspan x="0" y="28"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.sameTraffic2" /></tspan>
             </text>
             <text transform="matrix(1 0 0 1 1620.0648 913.2663)">
-              <tspan x="0" y="0">Less traffic during that week the </tspan>
-              <tspan x="0" y="28">previous month</tspan>
+              <tspan x="0" y="0"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.lessTraffic1" /></tspan>
+              <tspan x="0" y="28"><FormattedMessage tagName="tspan" id="portal.starburst.help.mock.lessTraffic2" /></tspan>
             </text>
             <text transform="matrix(1 0 0 1 1620.0648 1025.8904)">
               <FormattedMessage tagName="tspan" id="portal.startburstHelp.noData.text"/>
@@ -156,7 +156,7 @@ const StarburstHelp = ({router}) => {
             <g className="example-icon">
               <circle cx="30" cy="1134" r="30"/>
               <text transform="matrix(1 0 0 1 22 1145)">
-                ?
+                <FormattedMessage tagName="tspan" id="portal.question" />
               </text>
             </g>
           </g>

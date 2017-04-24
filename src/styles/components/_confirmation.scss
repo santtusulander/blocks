@@ -1,5 +1,9 @@
 // Confirmation
 // ============
+$confirmation-slider-min-height-lg: 25px;
+$confirmation-slider-min-height-sm: 60px;
+$confirmation-slider-padding-top-lg: 5px;
+$confirmation-slider-padding-top-sm: 12px;
 
 .confirmation-slider {
   position: absolute;
@@ -38,5 +42,22 @@
     .btn-danger {
       background-color: $btn-danger-background !important;
     }
+  }
+
+  padding-bottom: 0;
+
+  @media (min-width: $screen-lg-min) {
+    min-height: $confirmation-slider-min-height-lg;
+    padding-top: $confirmation-slider-padding-top-lg;
+  }
+
+  @include md {
+    min-height: $confirmation-slider-min-height-sm;
+    padding-top: $confirmation-slider-padding-top-sm;
+  }
+
+  @media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+    min-height: $confirmation-slider-min-height-sm;
+    padding-top: $confirmation-slider-padding-top-sm;
   }
 }

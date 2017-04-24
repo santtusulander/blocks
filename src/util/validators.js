@@ -2,7 +2,12 @@ import validator from 'validator'
 import { matchesRegexp } from './helpers'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
-         FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
+         FORM_TEXT_FIELD_DEFAULT_MAX_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN } from '../constants/common'
+
+import { STORAGE_ESTIMATE_MIN } from '../constants/storage'
 
 import { ASN_MIN,
          ASN_MAX,
@@ -40,17 +45,32 @@ export function isValidFloat(str) {
   return matchesRegexp(str, /^\d*\.?\d+$/)
 }
 
+
+/**
+ * Check if valid IP or IP list when subnet mask is not allowed
+ * @param array or string
+ * @returns {boolean}
+ */
+export function isValidIP(addresses, IPversion = 4) {
+  if (Array.isArray(addresses)) {
+    const hasInvalidIP = addresses.some(address => !validator.isIP(address, IPversion))
+    return !hasInvalidIP
+  }
+  return !!addresses && validator.isIP(addresses, IPversion)
+}
+
+
 /**
  * Check if valid IPv4 address
  * @param address
  * @returns {*}
  */
-export function isValidIPv4Address(address) {
+export function isValidIPv4Address(address, onlyCIDR) {
+  const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
-
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) <= 32 )
+  if (splitAddr.length > 1 || onlyCIDR) {
+    const cidr = Number(splitAddr[1])
+    return validator.isIP(splitAddr[0], 4) && ((cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32)
   }
 
   return !!address && validator.isIP(address, 4)
@@ -65,8 +85,8 @@ export function isValidIPv6Address(address) {
 
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) <= 32 )
+  if (splitAddr.length > 1) {
+    return validator.isIP(splitAddr[0], 6) && (parseInt(splitAddr[1]) <= 32)
   }
 
   return !!address && validator.isIP(address, 6)
@@ -134,18 +154,46 @@ export function isValidHostName(hostName) {
     - doesn't begin or end with a hyphen;
     - can end with a dot.
   */
-  if (hostName.length > 255) return false
+  if (hostName.length > 255) {
+    return false
+  }
   return matchesRegexp(hostName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }
 
 /**
  * Check if valid text-field
  * @param text
+ * @param minLength
+ * @param maxLength
  * @returns {boolean}
  */
-export function isValidTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLen = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
-  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLen},${maxLen}}$`)
+export function isValidTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLength},${maxLength}}$`)
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
+}
+
+/**
+ * Check if valid text-field, only allow special character _ ., used in footprint and pod form
+ * @param text
+ * @param minLength
+ * @param maxLength
+ * @returns {boolean}
+ */
+export function isValidFootprintTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9 ._]{${minLength},${maxLength}}$`)
+  return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
+}
+
+/**
+ * Check if valid description, allow every character except a line break, only any character from range, used in footprint and pod form
+ * @param text
+ * @param minLength
+ * @param maxLength
+ * @returns {boolean}
+ */
+export function isValidFootprintDescription(text, minLength = FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN, maxLength = FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^.{${minLength},${maxLength}}$`)
+  return textFieldRegexp.test(text)
 }
 
 /**
@@ -173,8 +221,8 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !isNaN(int) &&
-         parseInt(Number(int)) == int &&
+  // eslint-disable-next-line eqeqeq
+  return !isNaN(int) && parseInt(Number(int)) == int &&
          !isNaN(parseInt(int, 10));
 }
 
@@ -212,11 +260,14 @@ export function isValidPhoneNumber(str) {
  */
 export function isValidASN(asn) {
 
-  if (!matchesRegexp(asn, /^[0-9]+$/)) return
+  if (!matchesRegexp(asn, /^[0-9]+$/)) {
+    return
+  }
   let isValid = false
 
   if (asn >= ASN_MIN && asn <= ASN_MAX) {
     isValid = true
+    // eslint-disable-next-line eqeqeq
     if (asn == ASN_RESERVED || (asn >= ASN_RESERVED_RANGE_START && asn <= ASN_RESERVED_RANGE_END)) {
       isValid = false
     }
@@ -235,11 +286,11 @@ export function isValidLatitude(str) {
 }
 
 /**
- * Check if valid longtitude
+ * Check if valid longitude
  * @param  float
  * @return {Boolean}
  */
-export function isValidLongtitude(str) {
+export function isValidLongitude(str) {
   return str >= MIN_LONGTITUDE && str <= MAX_LONGTITUDE
 }
 
@@ -254,4 +305,65 @@ export function isValidProviderWeight(str) {
   }
   const providerWeight = parseFloat(str)
   return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
+}
+
+/**
+ * Check if valid charge number
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidChargeNumber(str) {
+  return matchesRegexp(str, /^C-[0-9]{8}$/)
+}
+
+/**
+ * Check if estimated usage
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidEstimatedUsage(str) {
+  if (!isInt(str)) {
+    return false
+  }
+
+  return (parseInt(str) >= STORAGE_ESTIMATE_MIN)
+}
+
+/**
+ * Check if valid storage nama
+ * @param storageName
+ * @returns {boolean|*}
+ */
+export function isValidStorageName(storageName) {
+  /* Validation rules:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-z0-9-];
+    - hyphen is not allowed;
+  */
+  if (storageName.length > 255) {
+    return false
+  }
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/, true)
+}
+
+/**
+ * Check if valid CNAME
+ * @param cName
+ * @returns {boolean|*}
+ */
+export function isValidCName(cName) {
+  /* Rules matching CloudScale's Hostname validation:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-zA-Z0-9-];
+    - doesn't begin or end with a hyphen;
+    - can end with a dot.
+  */
+  if (cName.length > 255) {
+    return false
+  }
+  return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }

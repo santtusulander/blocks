@@ -1,6 +1,6 @@
 // Toggle
 // ======
-
+$disabled-color: #a6a6a6;
 $toggle-font-size: 14px;
 $toggle-height: em(36px, $toggle-font-size);
 $toggle-horizontal-padding: em(16px, $toggle-font-size);
@@ -78,7 +78,13 @@ $indicator-margin: ($toggle-height - $indicator-height) / 2;
   }
 
   &.readonly {
+    color: $disabled-color;
     cursor: default;
+
+    .indicator {
+      background-color: $disabled-color;
+      transition: none;
+    }
   }
 }
 

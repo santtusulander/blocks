@@ -38,12 +38,11 @@ class Header extends React.Component {
       roles,
       router,
       user,
-      params,
-      params: { account, brand }
+      params
     } = this.props
 
     let className = 'header'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 
@@ -54,13 +53,7 @@ class Header extends React.Component {
         <div className="header__content">
           <ul className="header__left nav navbar-nav">
             <LogoItem user={this.props.user} />
-            <AccountSelectorItem
-              account={account}
-              activeAccount={activeAccount}
-              brand={brand}
-              router={router}
-              user={user}
-            />
+            <AccountSelectorItem params={params} activeAccount={activeAccount} router={router}/>
             <BreadcrumbsItem
               activeGroup={activeGroup}
               params={params}
@@ -71,21 +64,6 @@ class Header extends React.Component {
             />
           </ul>
           <ul className="header__right nav navbar-nav navbar-right">
-            {/* Hide in 1.0 UDNP-1409
-            <li>
-              <Button className="btn-header btn-icon btn-round btn-alerts">
-                <IconAlerts />
-                <span className="btn-alerts-indicator" />
-              </Button>
-            </li>
-            <li>
-              <Button className="btn-header btn-icon btn-round btn-help"><IconQuestionMark /></Button>
-            </li>
-            <li>
-              <Input className="header-search-input"
-                type="text" placeholder="Search" />
-            </li>
-            */}
             <li>
               <UserMenu
                 handleThemeChange={this.handleThemeChange}
@@ -121,7 +99,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   theme: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map)

@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 
-import ActionButtons from '../action-buttons'
+import ActionButtons from '../shared/action-buttons'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'

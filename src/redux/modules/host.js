@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {BASE_URL_NORTH, mapReducers, parseResponseData} from '../util'
+import {BASE_URL_NORTH, PAGINATION_MOCK, mapReducers, parseResponseData} from '../util'
 import {getConfiguredName} from '../../util/helpers'
 
 const HOST_CREATED = 'HOST_CREATED'
@@ -45,7 +45,7 @@ export function createFailure(state) {
 
 export function deleteSuccess(state, action) {
   const allHosts = state.get('allHosts')
-    .filterNot(property => property === action.payload.get('published_host_id'))
+    .filterNot(property => property.get('published_host_id') === action.payload.get('published_host_id'))
   const configuredHostNames = state.get('configuredHostNames')
     .filterNot(property => property === getConfiguredName(action.payload))
   return state.merge({
@@ -55,28 +55,28 @@ export function deleteSuccess(state, action) {
   })
 }
 
-export function deleteFailure(state, action) {
+export function deleteFailure(state) {
   return state.merge({
-    activeHost: Immutable.fromJS(action.payload),
+    activeHost: null,
     fetching: false
   })
 }
 
 export function fetchSuccess(state, action) {
-  let host = action.payload
+  const host = action.payload
   host.services[0].configurations = host.services[0].configurations.map(config => {
-    if(!config.default_policy || !config.default_policy.policy_rules) {
-      config.default_policy = {policy_rules:[]}
+    if (!config.defaults) {
+      config.defaults = {}
     }
-    if(!config.request_policy || !config.request_policy.policy_rules) {
-      config.request_policy = {policy_rules:[]}
+    if (!config.request_policy || !config.request_policy.policy_rules) {
+      config.request_policy = {policy_rules: []}
     }
-    if(!config.response_policy || !config.response_policy.policy_rules) {
-      config.response_policy = {policy_rules:[]}
+    if (!config.response_policy || !config.response_policy.policy_rules) {
+      config.response_policy = {policy_rules: []}
     }
     return config;
   })
-  if(!host.services[0].active_configurations) {
+  if (!host.services[0].active_configurations) {
     host.services[0].active_configurations = []
   }
   const newActive = Immutable.fromJS(host)
@@ -170,10 +170,10 @@ export default handleActions({
 
 // ACTIONS
 
-export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
+export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode, serviceType) => {
   return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
-    services:[{
-      service_type: "large",
+    services: [{
+      service_type: serviceType,
       deployment_mode: deploymentMode,
       configurations: [{
         edge_configuration: {
@@ -190,7 +190,7 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
     }
   })
   .then(res => {
-    if(res) {
+    if (res) {
       return Immutable.fromJS(res.data).set('id', id)
     }
   })
@@ -210,16 +210,13 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 })
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
-  .then(parseResponseData);
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
+    .then(resp => resp.data.data);
 })
 
 export const fetchConfiguredHostNames = createAction(HOST_NAMES_FETCHED_ALL, (brand, account, group) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
-    .then(action => Promise.all(action.data.map(
-      property => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}`)
-    )))
-    .then(resp => resp.map(property => getConfiguredName(Immutable.fromJS(property.data))));
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
+    .then(resp => resp.data.data.map(property => getConfiguredName(Immutable.fromJS(property))))
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {

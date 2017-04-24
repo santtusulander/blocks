@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import PageHeader from '../layout/page-header'
+import PageHeader from '../shared/layout/page-header'
 import FilterDateRange from '../analysis/filters/date-range'
 import ProviderTypes from '../../constants/provider-types'
 import {
@@ -19,15 +19,16 @@ import FilterVideo from '../analysis/filters/video.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 import StatusCodes from './analytics-status-codes'
+import FilterStorageType from '../analysis/filters/storage-type'
 
-function getToggledValues( currentValues, toggleVal) {
+function getToggledValues(currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
-    return currentValues.filter( (val ) => {
+    return currentValues.filter((val) => {
       return val.toLowerCase() !== toggleVal.toLowerCase()
     })
   }
 
-  return currentValues.push( toggleVal )
+  return currentValues.push(toggleVal)
 }
 
 const AnalyticsFilters = (props) => {
@@ -46,9 +47,7 @@ const AnalyticsFilters = (props) => {
     spFilterOptions = ['sp-group']
   } else if (userIsContentProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
-
-    // spFilterOptions = ['sp-account','sp-group'] // TODO: uncomment line as part of UDNP-1577
-    spFilterOptions = ['sp-account'] // TODO: delete line as part of UDNP-1577
+    spFilterOptions = ['sp-account', 'sp-group']
   } else if (userIsCloudProvider(currentUser)) {
     cpFilterOptions = ['cp-account','cp-group','cp-property']
     spFilterOptions = ['sp-account','sp-group']
@@ -125,7 +124,7 @@ const AnalyticsFilters = (props) => {
             toggleFilter={val => {
               props.onFilterChange(
                 'onOffNet',
-                getToggledValues( props.filters.get('onOffNet'), val)
+                getToggledValues(props.filters.get('onOffNet'), val)
               )
             }}
           />
@@ -141,7 +140,7 @@ const AnalyticsFilters = (props) => {
             toggleServiceType={val => {
               props.onFilterChange(
                 'serviceTypes',
-                getToggledValues( props.filters.get('serviceTypes'), val)
+                getToggledValues(props.filters.get('serviceTypes'), val)
               )
             }}
           />
@@ -180,6 +179,19 @@ const AnalyticsFilters = (props) => {
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
             onChange={values => props.onFilterChange('statusCodes', values.toJS())}/>
+        </div>
+      }
+
+      {props.showFilters.includes('storageType') &&
+        <div className='action'>
+          <FilterStorageType
+            storageType={props.filters.get('storageType')}
+            toggleStorageType={val => {
+              props.onFilterChange(
+                'storageType', val
+              )
+            }}
+          />
         </div>
       }
 

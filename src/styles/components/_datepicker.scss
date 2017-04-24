@@ -5,7 +5,7 @@
 // Need to override default styles
 
 .react-datepicker__tether-element {
-  z-index: 1030;
+  z-index: $zindex-datepicker;
 
   &.react-datepicker__tether-element-attached-bottom,
   &.react-datepicker__tether-element-attached-top {

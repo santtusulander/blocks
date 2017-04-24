@@ -1,0 +1,18 @@
+
+.service-option-selector {
+  width: 550px;
+
+  .flex-row {
+    &.enabled {
+      font-weight: 600;
+    }
+  }
+
+  .name {
+    flex: 3;
+  }
+
+  .tick {
+    flex: 0 0 5rem !important;
+  }
+}

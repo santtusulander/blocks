@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
-import SectionHeader from '../../../components/layout/section-header'
-import SectionContainer from '../../../components/layout/section-container'
+import SectionHeader from '../../../components/shared/layout/section-header'
+import SectionContainer from '../../../components/shared/layout/section-container'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import AnalysisCacheHitRate from '../../../components/analysis/cache-hit-rate.jsx'
@@ -29,7 +29,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters ||
+    if (this.props.filters !== nextProps.filters ||
         changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
@@ -44,12 +44,12 @@ class AnalyticsTabCacheHitRate extends React.Component {
   fetchData(params, filters, location, hostConfiguredName) {
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
 
-    let trafficParams = {
+    const trafficParams = {
       account: params.account,
       startDate: fetchOpts.startDate,
       endDate: fetchOpts.endDate,
       service_type: fetchOpts.service_type,
-      field_filter: 'chit_ratio',
+      field_filters: 'timestamp,chit_ratio',
       granularity: 'day'
     }
 
@@ -116,6 +116,7 @@ AnalyticsTabCacheHitRate.defaultProps = {
   trafficByTime: Immutable.Map()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => ({
   activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
   fetching: state.traffic.get('fetching'),
@@ -130,4 +131,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default withRouter( connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate) );
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate));

@@ -8,14 +8,16 @@ import { FormattedMessage } from 'react-intl'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as purgeActionCreators from '../../redux/modules/purge'
 import * as uiActionCreators from '../../redux/modules/ui'
+import propertyActions from '../../redux/modules/entities/properties/actions'
 
-import Content from '../../components/layout/content'
+import Content from '../../components/shared/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
 import PropertyTabControl from '../../components/content/property/property-tab-control'
-import PurgeModal from '../../components/purge-modal'
-import ModalWindow from '../../components/modal'
+import PurgeModal from '../../components/content/property/purge-modal'
+import ModalWindow from '../../components/shared/modal'
 
 import { getContentUrl } from '../../util/routes'
+import { parseResponseError } from '../../redux/util'
 
 export class Property extends React.Component {
   constructor(props) {
@@ -58,9 +60,11 @@ export class Property extends React.Component {
       activePurge.toJS()
     )
     .then(({ payload }) => {
-      const getMessage = () => payload instanceof Error ?
-        <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/> :
-        <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
+      const getMessage = () => {
+        return payload instanceof Error
+        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: parseResponseError(payload)}}/>
+        : <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
+      }
 
       this.setState({purgeActive: false})
       this.showNotification(getMessage())
@@ -82,9 +86,7 @@ export class Property extends React.Component {
 
     const {
       currentUser,
-      hostActions: {
-        deleteHost
-      },
+      deleteProperty,
       params: {
         brand,
         account,
@@ -127,8 +129,8 @@ export class Property extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           onSubmit={() => {
-            deleteHost(brand, account, group, this.props.activeHost)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+            deleteProperty(brand, account, group, this.props.activeHost.get('published_host_id'))
+              .then(() => router.replace(getContentUrl('group', group, { brand, account })))
           }}
           invalid={true}
           verifyDelete={true}>
@@ -152,6 +154,7 @@ Property.propTypes = {
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  deleteProperty: React.PropTypes.func,
   group: React.PropTypes.string,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
@@ -182,7 +185,8 @@ function mapDispatchToProps(dispatch) {
   return {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id}))
   };
 }
 

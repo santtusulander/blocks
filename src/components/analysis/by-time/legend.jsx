@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import './legend.scss'
+import { FormattedMessage } from 'react-intl'
 
 function Legend({dataSets, values}) {
   return (
@@ -11,7 +11,7 @@ function Legend({dataSets, values}) {
             <span className={classNames({
               'legend-label': true,
               'comparison': dataset.comparisonData})}>
-              <span className="legend-line" id='legend-line' style={{color: dataset.color}}>&mdash; </span>
+              <span className="legend-line" id='legend-line' style={{color: dataset.color}}><FormattedMessage id="portal.mdashWithSpace"/></span>
               {dataset.label}
             </span>
             <span id='legend-value' className='legend-value'>{values[i]}</span>

@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import Tooltip from '../../tooltip'
+import Tooltip from '../../shared/tooltips/tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
 
@@ -21,7 +21,7 @@ const getExtent = (datasets, key) => {
   ]
 }
 
-const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
+const configureTooltip = (date, positionVal, height, width, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
   const val = actualVal || 0
   const formattedValue = formatY(val)
@@ -32,7 +32,8 @@ const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, ac
     text: text,
     x: xScale(date),
     y: yScale(positionVal),
-    top: yScale(positionVal) + 50 > height
+    top: yScale(positionVal) + 50 > height,
+    left: xScale(date) > width/2
   }
 }
 
@@ -45,6 +46,7 @@ class AnalysisByTime extends React.Component {
       tooltipX: [],
       tooltipY: [],
       tooltipOffsetTop: [],
+      tooltipOffsetLeft: [],
       labelWidth: []
     }
 
@@ -59,6 +61,7 @@ class AnalysisByTime extends React.Component {
       time,
       positionData,
       this.props.height,
+      this.props.width,
       this.formatY,
       xScale,
       yScale,
@@ -67,7 +70,7 @@ class AnalysisByTime extends React.Component {
     )
     return e => {
       const sourceData = datasets.reduce((longest, dataset) => {
-        if(dataset.data.length > longest.length) {
+        if (dataset.data.length > longest.length) {
           return dataset.data
         }
         return longest
@@ -77,7 +80,7 @@ class AnalysisByTime extends React.Component {
       let i = closestDate(sourceData, xDate, 1)
       const d0 = sourceData[i - 1]
       const d1 = sourceData[i]
-      if(d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
+      if (d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
         i = i -1
       } else if (!d1) {
         i = i -1
@@ -87,10 +90,10 @@ class AnalysisByTime extends React.Component {
         //catch any TypeError: Cannot read property 'bits_per_second' of undefined(…)
         try {
           let realValue = dataset.data[i][this.props.dataKey]
-          if(dataset.stackedAgainst) {
+          if (dataset.stackedAgainst) {
             const against = datasets
               .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
-            if(against) {
+            if (against) {
               realValue = realValue - against.data[i][this.props.dataKey]
             }
           }
@@ -116,7 +119,8 @@ class AnalysisByTime extends React.Component {
         tooltipText: tooltipData.map(tooltip => tooltip.text),
         tooltipX: tooltipData.map(tooltip => tooltip.x),
         tooltipY: tooltipData.map(tooltip => tooltip.y),
-        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top)
+        tooltipOffsetTop: tooltipData.map(tooltip => tooltip.top),
+        tooltipOffsetLeft: tooltipData.map(tooltip => tooltip.left)
       })
     }
   }
@@ -136,18 +140,18 @@ class AnalysisByTime extends React.Component {
   }
 
   render() {
-    if(!this.props.width || !this.props.dataSets) {
-      return <div>Loading...</div>
+    if (!this.props.width || !this.props.dataSets) {
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
-    if(!this.props.dataSets || !this.props.dataSets.length ||
+    if (!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
       return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
-      if(dataset.get('stackedAgainst')) {
+      if (dataset.get('stackedAgainst')) {
         const against = this.props.dataSets
           .find(otherDataset => otherDataset.id === dataset.get('stackedAgainst'))
-        if(against && against.data.length) {
+        if (against && against.data.length) {
           dataset = dataset.set('data', dataset.get('data').map((data, i) => {
             return data.merge({
               bits_per_second: data.get('bits_per_second') + against.data[i].bits_per_second,
@@ -177,7 +181,7 @@ class AnalysisByTime extends React.Component {
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
 
-    if(!this.props.noXNice) {
+    if (!this.props.noXNice) {
       xScale.nice(d3.time.day.utc, 1)
     }
 
@@ -193,13 +197,13 @@ class AnalysisByTime extends React.Component {
       .interpolate('monotone')
 
     let className = 'analysis-by-time'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
     const slices = []
-    if(this.props.sliceGranularity) {
+    if (this.props.sliceGranularity) {
       slices.push(startDate)
-      while(slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
+      while (slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
         slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
@@ -210,7 +214,7 @@ class AnalysisByTime extends React.Component {
     return (
       <div className={className}
       onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
+      onMouseLeave={!this.props.noHover && this.deactivateTooltip}>
         <svg
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}
@@ -229,16 +233,20 @@ class AnalysisByTime extends React.Component {
                     className="area"
                     fill={`url(#${dataset.id}-${i}-gradient)`} />}
                 <defs>
-                  <linearGradient key={i} id={`${dataset.id}-${i}-gradient`} x1="0%" y1="0%" x2="0%" y2="100%">
+                  <linearGradient
+                    key={i} id={`${dataset.id}-${i}-gradient`}
+                    x1="0%" y1="0%" x2="0%" y2="100%">
+
                     <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
                     <stop offset="100%" stopColor={dataset.color} stopOpacity={dataset.noGradient ? '0.5' : '0'} />
+
                   </linearGradient>
                 </defs>
               </g>
             )
           })}
           {!this.props.noHover && this.state.tooltipText.map((text, i) => {
-            return(
+            return (
               <g key={i}>
                 <circle r="5"
                   cx={this.state.tooltipX[i]}
@@ -258,20 +266,20 @@ class AnalysisByTime extends React.Component {
             />}
           {this.props.axes ? (() => {
             let numTicks = 4;
-            const yMax = Math.max(...yScale.ticks(numTicks))
+            const yMaxAxes = Math.max(...yScale.ticks(numTicks))
 
-            // If the yMax is less than the number of ticks, we end up seeing
+            // If the yMaxAxes is less than the number of ticks, we end up seeing
             // multiple ticks on the Y axis with the same number. See UDNP-1586
-            numTicks = yMax < numTicks ? yMax : numTicks
+            numTicks = yMaxAxes < numTicks ? yMaxAxes : numTicks
 
             return yScale.ticks(numTicks).reduce((axes, tick, i) => {
-              if(i) {
+              if (i) {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.formatY(tick, yMax)}
+                      {this.formatY(tick, yMaxAxes)}
                     </text>
                   </g>
                 );
@@ -314,6 +322,7 @@ class AnalysisByTime extends React.Component {
               y={this.state.tooltipY[i]}
               hidden={!this.state.tooltipText[i]}
               offsetTop={this.state.tooltipOffsetTop[i]}
+              offsetLeft={this.state.tooltipOffsetLeft[i]}
             >
                 {this.state.tooltipText[i]}
             </Tooltip>
