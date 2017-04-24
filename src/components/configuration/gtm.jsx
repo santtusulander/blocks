@@ -32,7 +32,7 @@ import { parseResponseError } from '../../redux/util'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
-import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
+import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH, GTM_TTL_DEFAULT } from '../../constants/gtm'
 
 const validate = ({ GTMToggle, cdnName = '', cName = '', ttl }) => {
   if (!GTMToggle) {
@@ -391,9 +391,6 @@ ConfigurationGlobalTrafficManager.propTypes = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, { params: { property }, intl }) => {
-
-  const defaultTTL = 60
-
   const getFieldValue = formValueSelector('gtmForm')
   const GTMToggle = getFieldValue(state, 'GTMToggle')
   const initialValues = formatConfigToInitialValues(state, property, intl.formatMessage)
@@ -403,7 +400,7 @@ const mapStateToProps = (state, { params: { property }, intl }) => {
     isFormDisabled: !GTMToggle,
     getRule: (index) => getFieldValue(state, 'rules')[index],
     property: getProperty(state, property),
-    initialValues: { ttl: defaultTTL, ...initialValues }
+    initialValues: { ttl: GTM_TTL_DEFAULT, ...initialValues }
   }
 }
 
