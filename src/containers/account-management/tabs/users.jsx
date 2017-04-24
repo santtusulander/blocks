@@ -48,6 +48,8 @@ import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
 
+import { paginationChanged } from '../../../util/pagination'
+
 const PAGE_SIZE = 20
 const MAX_PAGINATION_ITEMS = 6
 
@@ -104,14 +106,9 @@ export class AccountManagementAccountUsers extends Component {
     //if brand, account or sort has changed -> refetch
     if (brand !== this.props.params.brand
       || account !== this.props.params.account
-      || page !== this.props.location.query.page
-      || sortBy !== this.props.location.query.sortBy
-      || sortOrder !== this.props.location.query.sortOrder
-      || filterBy !== this.props.location.query.filterBy
-      || filterValue !== this.props.location.query.filterValue) {
+      || paginationChanged(this.props.location, nextProps.location)) {
 
-
-      //TODO: Should reset pagination
+      //TODO: UDNP-3513 Should reset pagination
       this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     }
 
@@ -259,7 +256,7 @@ export class AccountManagementAccountUsers extends Component {
   getGroupsForUser(/*user*/) {
     return []
 
-    //Removed until we have group id in users
+    // TODO: UDNP-3529 - Removed until we have group id in users
     // const groups = user.get('group_id')
     //   .map(groupId => this.props.groups
     //     .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
@@ -391,7 +388,8 @@ export class AccountManagementAccountUsers extends Component {
             />
           </FormGroup>
 
-          {/* commented out until we can do server side filtering for roles / groups
+          {/* TODO: UDNP-3529
+            commented out until we can do server side filtering for roles / groups
           <FormGroup className="inline">
             <SelectWrapper
               id='filtered-roles'
@@ -429,7 +427,7 @@ export class AccountManagementAccountUsers extends Component {
                 <FormattedMessage id="portal.user.list.email.text" />
               </TableSorter>
               <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-              {/* Removed until we have group_id in user
+              {/* TODO: UDNP-3529 - Removed until we have group_id in user
                 <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
               */}
 
@@ -449,7 +447,7 @@ export class AccountManagementAccountUsers extends Component {
                     {this.getEmailForUser(user)}
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
-                  { /* removed until we have group data in user
+                  { /* TODO: UDNP-3529 removed until we have group data in user
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   */ }
                   <td className="nowrap-column">
@@ -554,7 +552,6 @@ AccountManagementAccountUsers.propTypes = {
   createUser: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
-  //fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
@@ -564,7 +561,6 @@ AccountManagementAccountUsers.propTypes = {
   paginationMeta: PropTypes.instanceOf(Map),
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
-  //resetRoles: PropTypes.func,
   roles: PropTypes.instanceOf(List),
   route: PropTypes.object,
   router: PropTypes.object,
