@@ -384,7 +384,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const form = reduxForm({
-  form: 'advancedForm'
+  form: 'advancedForm',
+  enableReinitialize: true
 })(injectIntl(ConfigurationAdvanced))
 
 export default connect(mapStateToProps, mapDispatchToProps)(form)
