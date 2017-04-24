@@ -27,6 +27,7 @@ import { parseResponseError } from '../../redux/util'
 import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 import groupActionCreators from '../../redux/modules/entities/groups/actions'
+import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 import usersActions from '../../redux/modules/entities/users/actions'
 
 import Content from '../../components/shared/layout/content'
@@ -306,6 +307,7 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal,
       activeAccount,
+      activeGroup,
       router
     } = this.props
 
@@ -383,7 +385,7 @@ export class AccountManagement extends Component {
 
               }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
+                <h1><TruncatedTitle content={activeGroup.get('name') || activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
                 <IconCaretDown />
               </div>
@@ -518,6 +520,7 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
   changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -536,6 +539,7 @@ AccountManagement.propTypes = {
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
+  activeGroup: Map(),
   dnsData: Map(),
   roles: List(),
   users: List()
@@ -546,6 +550,7 @@ function mapStateToProps(state, ownProps) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: getByBrand(state, ownProps.params.brand),
     activeAccount: getAccountById(state, ownProps.params.account),
+    activeGroup: getGroupById(state, ownProps.params.group),
     dnsData: state.dns,
     permissions: state.permissions,
     roles: state.roles.get('roles'),
