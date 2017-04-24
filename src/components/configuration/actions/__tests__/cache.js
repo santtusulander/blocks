@@ -3,6 +3,8 @@ import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
 jest.unmock('../cache.jsx')
+jest.unmock('../../helpers.js')
+
 import Cache from '../cache.jsx'
 
 const fakeConfig = Immutable.fromJS({
@@ -18,12 +20,13 @@ function intlMaker() {
 }
 
 describe('Cache', () => {
-  let handleSubmit, close, change, component
+  let handleSubmit, close, change, component, saveAction
 
   beforeEach(() => {
     handleSubmit = jest.fn()
     close = jest.fn()
     change = jest.fn()
+    saveAction = jest.fn()
 
     let props = {
       change,
@@ -32,7 +35,10 @@ describe('Cache', () => {
       invalid: false,
       set: Immutable.Map(),
       intl: intlMaker(),
-      saveAction: jest.fn()
+      saveAction: jest.fn(),
+      path: Immutable.List(['foo', 'bar']),
+      setKey: 'cache_name',
+      saveAction
     }
 
     component = shallow(<Cache {...props} />)
@@ -43,19 +49,24 @@ describe('Cache', () => {
   })
 
   it('should save changes', () => {
-    const changeValue = jest.genMockFunction()
-    const close = jest.genMockFunction()
-    const values = { noStore, checkEtag, honorOrigin, ttlValue, ttlUnit } 
-    const expectedSave = Immutable.fromJS({
+    const values = {
+      noStore: false,
+      checkEtag: 'aaa',
+      honorOrigin: true,
+      ttlValue: 123,
+      ttlUnit: 'seconds' } 
+
+    const expectedSave = {
       check_etag: 'aaa',
       honor_origin: true,
       max_age: 123,
       no_store: false
-    })
+    }
 
-    component.instance().saveChanges()
+    component.instance().saveChanges(values)
 
-    expect(changeValue.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
-    expect(Immutable.is(changeValue.mock.calls[0][1], expectedSave)).toBeTruthy()
+    expect(saveAction).toBeCalled()
+    expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
+    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
   })
 })
