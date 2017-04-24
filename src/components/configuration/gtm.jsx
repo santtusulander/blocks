@@ -392,6 +392,8 @@ ConfigurationGlobalTrafficManager.propTypes = {
 /* istanbul ignore next */
 const mapStateToProps = (state, { params: { property }, intl }) => {
 
+  const defaultTTL = 60
+
   const getFieldValue = formValueSelector('gtmForm')
   const GTMToggle = getFieldValue(state, 'GTMToggle')
   const initialValues = formatConfigToInitialValues(state, property, intl.formatMessage)
@@ -401,7 +403,7 @@ const mapStateToProps = (state, { params: { property }, intl }) => {
     isFormDisabled: !GTMToggle,
     getRule: (index) => getFieldValue(state, 'rules')[index],
     property: getProperty(state, property),
-    initialValues: { ttl: 60, ...initialValues }
+    initialValues: { ttl: defaultTTL, ...initialValues }
   }
 }
 
