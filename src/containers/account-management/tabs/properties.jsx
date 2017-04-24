@@ -285,7 +285,9 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="created">
                     <FormattedMessage id="portal.account.properties.table.deployed.text"/>
                   </TableSorter>
-                  <th width="1%"/>
+                  <IsAllowed to={MODIFY_PROPERTY}>
+                    <th width="1%"/>
+                  </IsAllowed>
                 </tr>
                 </thead>
                 <tbody>
@@ -298,17 +300,17 @@ class AccountManagementProperties extends React.Component {
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{property.get('originHostname')}</td>
                       <td>{formatUnixTimestamp(property.get('created'))}</td>
-                      <td className="nowrap-column">
-                        <IsAllowed to={MODIFY_PROPERTY}>
-                          <ActionButtons
-                            onEdit={() => {
-                              this.editProperty(property)
-                            }}
-                            onDelete={() => {
-                              this.openDeleteModal(property.get('parentId'), propertyId)
-                            }} />
-                        </IsAllowed>
-                      </td>
+                      <IsAllowed to={MODIFY_PROPERTY}>
+                        <td className="nowrap-column">
+                            <ActionButtons
+                              onEdit={() => {
+                                this.editProperty(property)
+                              }}
+                              onDelete={() => {
+                                this.openDeleteModal(property.get('parentId'), propertyId)
+                              }} />
+                        </td>
+                      </IsAllowed>
                     </tr>
                   )
                 })}

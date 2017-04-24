@@ -401,7 +401,9 @@ export class AccountManagementAccountUsers extends Component {
               </TableSorter>
               <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
               <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
-              <th width="1%"/>
+              <IsAllowed to={MODIFY_USER}>
+                <th width="1%"/>
+              </IsAllowed>
             </tr>
           </thead>
           <tbody>
@@ -418,15 +420,15 @@ export class AccountManagementAccountUsers extends Component {
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  <td className="nowrap-column">
-                    <IsAllowed to={MODIFY_USER}>
-                      <ActionButtons
-                        onEdit={() => {
-                          this.editUser(user)
-                        }}
-                        onDelete={() => this.deleteUser(user.get('email'))} />
-                    </IsAllowed>
-                  </td>
+                  <IsAllowed to={MODIFY_USER}>
+                    <td className="nowrap-column">
+                        <ActionButtons
+                          onEdit={() => {
+                            this.editUser(user)
+                          }}
+                          onDelete={() => this.deleteUser(user.get('email'))} />
+                    </td>
+                  </IsAllowed>
                 </tr>
               )
             })}
