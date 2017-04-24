@@ -1,5 +1,3 @@
-/*TODO: UDNP-2873 remove lint disable */
-/*eslint-disable no-unused-vars */
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
