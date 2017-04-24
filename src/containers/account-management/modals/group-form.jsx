@@ -318,14 +318,15 @@ const  mapStateToProps = (state, ownProps) => {
   const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = getAccountById(state, account)
-  const activeGroup = getGroupsById(state, groupId)
+  const activeGroup = getGroupsById(state, groupId) || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
   const roles = getRoles(state)
   //Since group object in new redux has several property that are not accepted by the server,
   //we have to filter out those fields. This is temporary until we have better solution
-  const filteredGroupData = activeGroup && activeGroup.delete('backend_id').delete('parentId')
+  const filteredGroupData = activeGroup.delete('backend_id').delete('parentId')
+
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
