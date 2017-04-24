@@ -6,6 +6,7 @@ import ActionButtons from '../shared/action-buttons'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import HelpTooltip from '../shared/tooltips/help-tooltip'
 import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
 import Select from '../shared/form-elements/select'
 import {
@@ -193,7 +194,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         <Col xs={4}>
           <div>
             {!match.fieldDetail && match.name}
-            {match.fieldDetail && 
+            {match.fieldDetail &&
               <div className="condition-name">
                 {match.name} <FormattedMessage id="portal.colonWithSpace" />&nbsp;
                 <TruncatedTitle content={match.fieldDetail}/>
@@ -214,7 +215,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   renderConditions(conditions, ruleMatchType) {
     const { disabled, activeMatchPath } = this.props
     const { label } = ruleMatchTypeOptions.find(opt => opt.value === ruleMatchType)
-  
+
     return (
       <div className="conditions">
         {conditions.map((match, i) => {
@@ -387,7 +388,12 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <Row className="header-btn-row">
             <Col xs={8}>
-              <h3><FormattedMessage id="portal.policy.edit.editRule.defaultActions.text"/></h3>
+              <h3>
+                <FormattedMessage id="portal.policy.edit.rules.fallbackActions.text"/>
+                <HelpTooltip id="tooltip-help" title={<FormattedMessage id="portal.policy.edit.rules.fallbackActions.text"/>}>
+                  <FormattedMessage id="portal.policy.edit.rules.fallbackActions.help.text" />
+                </HelpTooltip>
+              </h3>
             </Col>
             <Col xs={4} className="text-right">
               <Button

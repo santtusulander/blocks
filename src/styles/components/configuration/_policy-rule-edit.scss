@@ -25,6 +25,20 @@
     }
   }
 
+  h3 .btn-icon {
+    width: $input-height;
+    height: $input-height;
+    margin: -5px 0 0 20px;
+    color: $white;
+    background-color: rgba($black, 0.2);
+    border-radius: 50%;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
   .condition {
     min-height: $bar-height;
     padding: 10px 0 0 15px;
@@ -104,7 +118,12 @@
   bottom: 30px;
 }
 
+.cache-key-action-input-connector {
+  top: 48px;
+  bottom: 40px;
+}
+
 .matcher-input-connector {
   top: 50px;
-  bottom: 40px;
+  bottom: calc(100% - 106px);
 }

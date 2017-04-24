@@ -8,6 +8,8 @@ import * as dnsRecordActionCreators from '../../../redux/modules/dns-records/act
 import { hideInfoDialog, showInfoDialog, toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
+import { parseResponseError } from '../../../redux/util'
+
 import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -221,6 +223,7 @@ AccountManagementSystemDNS.propTypes = {
   toggleModal: PropTypes.func
 }
 
+/* istanbul ignore next */
 function mapStateToProps({ dns, dnsRecords, ui }) {
   return {
     loadingDomains: dns.get('fetching'),
@@ -232,6 +235,7 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
   const { changeActiveDomain, deleteDomain, fetchDomains, fetchDomain, startFetchingDomains, stopFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
   const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)
@@ -260,12 +264,13 @@ function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
           if (res.error) {
             dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
-              content: res.payload.data.message,
+              content: parseResponseError(res.payload),
               okButton: true,
               cancel: () => dispatch(hideInfoDialog())
             }))
+          } else {
+            showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           }
-          showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           stopFetchingDomains()
         })
     }

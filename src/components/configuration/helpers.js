@@ -9,10 +9,12 @@ import ConfigurationMatchFileExtension from './matches/file-extension'
 // import ConfigurationMatchFileName from './matches/file-name'
 // import ConfigurationMatchIpAddress from './matches/ip-address'
 import ConfigurationContentTargetingMatch from './matches/content-targeting'
+import ConfigurationResponseCodeMatch from './matches/response-code'
 import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
-import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
+import ConfigurationActionNegativeCache from './actions/negative-cache'
+import ConfigurationActionCacheKeyQueryStringForm from './actions/cache-key-query-string-form'
 import ConfigurationTokenAuth from './actions/token-authentication'
 // import ConfigurationActionRedirection from './actions/redirection'
 // import ConfigurationActionOriginHostname from './actions/origin-hostname'
@@ -149,6 +151,9 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'content_targeting_country_code':
         activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
         break
+      case 'response_code':
+        activeEditForm = <ConfigurationResponseCodeMatch {...matcherProps} />
+        break
       default:
         activeEditForm = (
           <MatchesSelection
@@ -178,7 +183,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
     switch (setKey) {
       case 'cache_name':
         activeEditForm = (
-          <ConfigurationActionCacheKeyQueryString {...setterProps}/>
+          <ConfigurationActionCacheKeyQueryStringForm {...setterProps}/>
         )
         break
       case 'cache_control':
@@ -199,6 +204,11 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'reply':
         activeEditForm = (
           <ConfigurationContentTargetingAction {...setterProps}/>
+        )
+        break
+      case 'negative_cache':
+        activeEditForm = (
+          <ConfigurationActionNegativeCache {...setterProps}/>
         )
         break
       default:

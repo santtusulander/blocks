@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.5.0-b16",
+  "version": "1.5.0-rc1",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -51,7 +51,7 @@
     "webpack-notifier": "^1.4.1"
   },
   "dependencies": {
-    "axios": "^0.12.0",
+    "axios": "^0.16.1",
     "blueimp-md5": "^2.7.0",
     "classlist-polyfill": "^1.0.3",
     "classnames": "^2.2.5",

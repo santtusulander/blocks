@@ -14,6 +14,8 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
+import { parseResponseError } from '../../../redux/util'
+
 import withPagination from '../../../decorators/pagination-hoc'
 
 import PageContainer from '../../../components/shared/layout/page-container'
@@ -80,7 +82,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.group !== this.props.params.group) {
+    if (nextProps.params.group && (nextProps.params.group !== this.props.params.group)) {
       const { params: { brand, account, group }, pagination: { getQueryParams } } = nextProps
       this.refreshData(brand, account, group, getQueryParams())
     }
@@ -109,10 +111,10 @@ class AccountManagementProperties extends React.Component {
       this.props.params.account,
       this.props.params.group,
       payload
-      ).then(({error}) => {
+      ).then(({ error, payload }) => {
         this.cancelAdding()
         if (error) {
-          throw new SubmissionError({ _error: error.data.message })
+          throw new SubmissionError({_error: parseResponseError(payload)})
         } else {
           this.showNotification(<FormattedMessage id="portal.account.properties.create.success.text" />)
         }
@@ -403,6 +405,7 @@ const paginationConfig = {
   page_size: PAGINATION_CONFIG_PAGE_SIZE
 }
 
+/* istanbul ignore next */
 function mapStateToProps(state, ownProps) {
   const { account, group } = ownProps.params
   return {
@@ -413,6 +416,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
+/* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
     createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload})),

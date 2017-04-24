@@ -13,6 +13,8 @@ export const serviceTypes = {
 }
 
 export const CIS_ORIGIN_HOST_PORT = 80
+export const HOST_HEADER_OPTION_ORIGIN_HOSTNAME = 'option_origin_host_name'
+export const HOST_HEADER_OPTION_PUBLISHED_NAME = 'option_published_name'
 
 export const TOKEN_AUTH_STATIC = 'standard'
 export const TOKEN_AUTH_STREAMING = 'on_demand_hls'

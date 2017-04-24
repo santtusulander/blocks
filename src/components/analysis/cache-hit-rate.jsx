@@ -87,7 +87,7 @@ class AnalysisCacheHitRate extends React.Component {
         comparisonData: false,
         data,
         id: 'http',
-        label: 'Cache Hit Ratio',
+        label: <FormattedMessage id="portal.analytics.cacheHitRatio.text"/>,
         line: true,
         stackedAgainst: false,
         xAxisFormatter: false

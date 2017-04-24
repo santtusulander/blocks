@@ -4,12 +4,13 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { isDirty } from 'redux-form'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -18,7 +19,9 @@ import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 
+import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
 import { hasService } from '../util/helpers'
@@ -27,7 +30,7 @@ import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
-import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
+import { STORAGE_SERVICE_ID, GTM_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
@@ -78,7 +81,6 @@ export class Configuration extends React.Component {
   componentWillMount() {
     const {brand, account, group, property} = this.props.params
     this.props.accountActions.fetchAccount(brand, account)
-    this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
@@ -156,7 +158,7 @@ export class Configuration extends React.Component {
       if (action.error) {
         this.showNotification(this.props.intl.formatMessage(
                               {id: 'portal.configuration.updateFailed.text'},
-                              {reason: action.payload.data.message}))
+                              {reason: parseResponseError(action.payload)}))
       } else {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
@@ -225,7 +227,7 @@ export class Configuration extends React.Component {
         if (action.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.retireFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
@@ -235,7 +237,7 @@ export class Configuration extends React.Component {
           this.togglePublishModal()
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.publishFailed.text'},
-                                {reason: action.payload.data.message}))
+                                {reason: parseResponseError(action.payload)}))
         } else {
           this.togglePublishModal()
           this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
@@ -249,14 +251,24 @@ export class Configuration extends React.Component {
   toggleVersionModal() {
     this.setState({showVersionModal: !this.state.showVersionModal})
   }
-  showNotification(message) {
+  showNotification(message = <FormattedMessage id="portal.configuration.updateSuccessfull.text"/>) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
+    const {
+      intl: { formatMessage },
+      activeHost,
+      deleteProperty ,
+      params: { brand, account, group, property },
+      router,
+      children,
+      isGTMFormDirty,
+      groupHasGTMService,
+      isAdvancedFormDirty } = this.props
+
     if (this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
@@ -272,9 +284,10 @@ export class Configuration extends React.Component {
     const serviceTypeText = formatMessage({ id: serviceTypes[serviceType] || serviceTypes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
+    const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
+
     return (
       <Content>
-        {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
@@ -298,8 +311,7 @@ export class Configuration extends React.Component {
                 this.props.router.push(`${url}/${children.props.route.path}`)
               })
 
-            }}
-            drillable={true}>
+            }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
@@ -326,75 +338,46 @@ export class Configuration extends React.Component {
               </IsAllowed>
               : null
             }
-            {/* Hide in 1.0 – UDNP-1406
-            <Button bsStyle="primary" onClick={this.cloneActiveVersion}>
-              <FormattedMessage id="portal.button.copy"/>
-            </Button>
-            {activeEnvironment === 2 || activeEnvironment === 3 ?
-              <Button bsStyle="primary"
-                onClick={() => this.changeActiveVersionEnvironment(1)}>
-                <FormattedMessage id="portal.button.retire"/>
-              </Button>
-              : null
-            }
-            <Button bsStyle="primary" onClick={this.toggleVersionModal}>
-              <FormattedMessage id="portal.button.versions"/>
-            </Button>
-            */}
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
-          <li data-eventKey='details'>
+          <li data-eventKey='details' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/details'} activeClassName="active">
             <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li data-eventKey='defaults'>
+          <li data-eventKey='defaults' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
             <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li data-eventKey='policies'>
+          <li data-eventKey='policies' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/policies'} activeClassName="active">
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
           {this.hasSecurityServicePermission() &&
-            <li data-eventKey='security'>
+            <li data-eventKey='security' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
               <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
               </Link>
             </li>
           }
-
-          <li data-eventKey='gtm'>
-            <Link to={baseUrl + '/gtm'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.gtm.text" />
-            </Link>
-          </li>
+          { groupHasGTMService &&
+            <li data-eventKey='gtm' className={classNames({ disabled: diff || isAdvancedFormDirty })}>
+              <Link to={baseUrl + '/gtm'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.gtm.text" />
+              </Link>
+            </li>
+          }
 
           <IsAdmin>
-            <li data-eventKey='advanced'>
+            <li data-eventKey='advanced' className={classNames({ disabled: diff || isGTMFormDirty })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
             </li>
           </IsAdmin>
-
-          {/* Hide in 1.0 – UDNP-1406
-          <li data-eventKey={'performance'}>
-            <FormattedMessage id="portal.configuration.performance.text"/>
-          </li>
-          <li data-eventKey={'security'}>
-            <FormattedMessage id="portal.configuration.security.text"/>
-          </li>
-          <li data-eventKey={'certificates'}>
-            <FormattedMessage id="portal.configuration.certificates.text"/>
-          </li>
-          <li data-eventKey={'change-log'}>
-            <FormattedMessage id="portal.configuration.changeLog.text"/>
-          </li>
-          */}
         </Tabs>
 
         <PageContainer>
@@ -418,6 +401,7 @@ export class Configuration extends React.Component {
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
+            showNotification: this.showNotification,
             storagePermission: this.props.storagePermission,
             serviceType: serviceType,
             serviceTypeText: serviceTypeText
@@ -446,7 +430,7 @@ export class Configuration extends React.Component {
                 if (action.error) {
                   this.showNotification(this.props.intl.formatMessage(
                                         {id: 'portal.configuration.deleteFailed.text'},
-                                        {reason: action.payload.data.message}))
+                                        {reason: parseResponseError(action.payload)}))
                 } else {
                   this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text"/>)
                   router.push(getContentUrl('group', group, { brand, account }))
@@ -508,10 +492,12 @@ Configuration.propTypes = {
   deleteProperty: React.PropTypes.func,
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
+  groupHasGTMService: React.PropTypes.bool,
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
+  isAdvancedFormDirty: React.PropTypes.bool,
+  isGTMFormDirty: React.PropTypes.bool,
   notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -532,13 +518,14 @@ Configuration.defaultProps = {
   sslCertificates: Immutable.List()
 }
 
-function mapStateToProps(state) {
-  const { group } = state
-  const activeGroup = group.get('activeGroup') || Immutable.Map()
+function mapStateToProps(state, ownProps) {
+  const activeGroup = getGroupById(state, ownProps.params.group) || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-
+  const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const isGTMFormDirty = isDirty('gtmForm')
+  const isAdvancedFormDirty = isDirty('advancedForm')
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -551,16 +538,18 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: roles,
     groupHasStorageService,
+    groupHasGTMService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
-    sslCertificates: state.security.get('sslCertificates')
+    sslCertificates: state.security.get('sslCertificates'),
+    isGTMFormDirty: isGTMFormDirty(state),
+    isAdvancedFormDirty: isAdvancedFormDirty(state)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

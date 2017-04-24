@@ -109,7 +109,6 @@ const fakeHost = fromJS({
 })
 
 const fakeLocation = {pathname: ''}
-
 const fakeParams = {brand: 'aaa', account: 'bbb', group: 'ccc', property: 'ddd'}
 
 const fakeFetchAccountData = jest.fn()
@@ -216,6 +215,6 @@ describe('Main', () => {
     const testRoles = fromJS(fakeRole)
 
     const wrapper = subject(null, true, testUser, testRoles)
-    expect(wrapper.instance().getChildContext()).toEqual({roles: testRoles, currentUser: testUser})
+    expect(wrapper.instance().getChildContext()).toEqual({roles: testRoles, currentUser: testUser, location: fakeLocation, params: fakeParams})
   })
 })

@@ -1,4 +1,6 @@
 import Immutable from 'immutable'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:mm a'
 
@@ -19,6 +21,8 @@ export const CLOUD_PROVIDER_REGION_MAX_LENGTH = 40
 export const CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH = 2
 export const CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH = 40
 
+export const CLOUD_PROVIDER_LOCATION_NAME_WITHOUT_IDS = 'Bare Metal'
+
 export const MIN_LATITUDE = -90
 export const MAX_LATITUDE = 90
 export const MIN_LONGTITUDE = -180
@@ -26,42 +30,42 @@ export const MAX_LONGTITUDE = 180
 
 
 export const LOCATION_CLOUD_PROVIDER_OPTIONS = [
-  { value: 'Bare Metal', label: 'Bare Metal' }
+  { value: 'Bare Metal', label: <FormattedMessage id="portal.network.locationForm.cloudProvider.bareMetal"/> }
 ]
 
 export const LOCATION_CLOUD_PROVIDER_ID_OPTIONS = [
-  { value: 'sl', label: 'IBM SoftLayer' },
-  { value: 'do', label: 'Digital Ocean' },
-  { value: 'ec2',label: 'Amazon EC2' }
+  { value: 'sl', label: <FormattedMessage id="portal.network.locationForm.cloudProvider.options.sl"/> },
+  { value: 'do', label: <FormattedMessage id="portal.network.locationForm.cloudProvider.options.do"/> },
+  { value: 'ec2',label: <FormattedMessage id="portal.network.locationForm.cloudProvider.options.ec2"/> }
 ]
 
 export const NODE_TYPE_OPTIONS = [
-  { value: 'sp_edge', label: 'SP Edge' },
-  { value: 'udn_core', label: 'UDN Core' }
+  { value: 'sp_edge', label: <FormattedMessage id="portal.network.nodeForm.nodeType.sp_edge"/> },
+  { value: 'udn_core', label: <FormattedMessage id="portal.network.nodeForm.nodeType.udn_core"/> }
 ]
 
 export const NODE_ENVIRONMENT_OPTIONS = [
-  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: 'Development'  },
-  { value: 'cdx-test', cacheValue: 'cdx-test', label: 'Testing' },
-  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'cdx', cacheValue: 'cdx', label: 'Production' }
+  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: 'portal.network.nodeForm.environment.cdx-dev'},
+  { value: 'cdx-test', cacheValue: 'cdx-test', label: 'portal.network.nodeForm.environment.cdx-test'},
+  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: 'portal.network.nodeForm.environment.cdx-stag'},
+  { value: 'cdx', cacheValue: 'cdx', label: 'portal.network.nodeForm.environment.cdx'}
 ]
 
 export const NODE_ROLE_OPTIONS = [
-  { value: 'cache', label: 'Cache' },
-  { value: 'gslb', label: 'GSLB' },
-  { value: 'slb', label: 'SLB' }
+  { value: 'cache', label: 'portal.network.nodeForm.roles.cache'},
+  { value: 'gslb', label: 'portal.network.nodeForm.roles.gslb'},
+  { value: 'slb', label: 'portal.network.nodeForm.roles.slb'}
 ]
 
 export const NODE_CLOUD_DRIVER_OPTIONS = [
-  { value: 1, label: 'Amazon EC2' },
-  { value: 2, label: 'Digital Ocean' },
-  { value: 3, label: 'SoftLayer' },
-  { value: 4, label: 'OpenStack' },
-  { value: 5, label: 'VMWare' },
-  { value: 6, label: 'Bare Metal' },
-  { value: 7, label: 'LXC' },
-  { value: 8, label: 'Docker' }
+  { value: 1, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.AmazonEC2"/> },
+  { value: 2, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.digitalOcean"/> },
+  { value: 3, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.SoftLayer"/> },
+  { value: 4, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.OpenStack"/> },
+  { value: 5, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.VMWare"/> },
+  { value: 6, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.bareMetal"/> },
+  { value: 7, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.LXC"/> },
+  { value: 8, label: <FormattedMessage id="portal.network.nodeForm.cloudDriver.docker"/> }
 ]
 
 export const NODE_TYPE_DEFAULT = 'udn_core'
@@ -70,9 +74,9 @@ export const NODE_ENVIRONMENT_DEFAULT = 'cdx'
 export const NODE_CLOUD_DRIVER_DEFAULT = 6
 
 export const FOOTPRINT_UDN_TYPES = [
-  { value: 'billing_asn', label: 'Billing ASN' },
-  { value: 'on_net', label: 'On Net' },
-  { value: 'off_net', label: 'Off Net' }
+  { value: 'billing_asn', label: <FormattedMessage id="portal.network.footprintForm.udn_type.billing_asn"/> },
+  { value: 'on_net', label: <FormattedMessage id="portal.network.footprintForm.udn_type.on_net"/> },
+  { value: 'off_net', label: <FormattedMessage id="portal.network.footprintForm.udn_type.off_net"/> }
 ]
 
 export const FOOTPRINT_FILE_TYPES = ['text/csv', 'text/plain', '']

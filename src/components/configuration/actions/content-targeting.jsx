@@ -97,7 +97,7 @@ class ContentTargeting extends React.Component {
     const denyStatusCodeOptions = StatusCodes
                                 .getPickedResponseCodes([401, 403, 404], false)
                                 .map(code => {
-                                  return { value: code.code, label: code.message } 
+                                  return { value: code.code, label: code.message }
                                 })
 
     return (
@@ -124,7 +124,7 @@ class ContentTargeting extends React.Component {
                 name="location"
                 component={FieldFormGroup}
                 label={<FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.redirect.to.text" />}
-                placeholder="Enter URL"
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.redirect.to.placeholder'})}
                 required={true}
               />
             }

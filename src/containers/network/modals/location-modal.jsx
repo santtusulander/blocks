@@ -8,6 +8,7 @@ import { getById as getLocationById } from '../../../redux/modules/entities/loca
 
 import { isValidLatitude, isValidLongitude } from '../../../util/validators'
 import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
+import { parseResponseError } from '../../../redux/util'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
@@ -178,7 +179,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({'_error': resp.data.message})
+        throw new SubmissionError({'_error': parseResponseError(resp)})
 
       })
   }
@@ -204,7 +205,7 @@ class NetworkLocationFormContainer extends Component {
 
       }).catch(resp => {
 
-        throw new SubmissionError({_error: resp.data.message})
+        throw new SubmissionError({_error: parseResponseError(resp)})
 
       })
   }
@@ -231,6 +232,7 @@ class NetworkLocationFormContainer extends Component {
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
+      selectedCloudProvider,
       onCancel,
       iataCodes,
       invalid,
@@ -269,6 +271,7 @@ class NetworkLocationFormContainer extends Component {
             onDelete={() => this.onToggleDeleteModal(true)}
             onSubmit={(values) => this.onSubmit(edit, values)}
             readOnly={!allowModify}
+            selectedCloudProvider={selectedCloudProvider}
           />
         </SidePanel>
         {edit && showDeleteModal &&
@@ -306,6 +309,7 @@ NetworkLocationFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   params: PropTypes.object,
+  selectedCloudProvider: PropTypes.string,
   show: PropTypes.bool
 };
 
@@ -331,6 +335,7 @@ const mapStateToProps = (state, ownProps) => {
     cloudProvidersOptions: LOCATION_CLOUD_PROVIDER_OPTIONS,
     cloudProvidersIdOptions: LOCATION_CLOUD_PROVIDER_ID_OPTIONS,
     iataCodes: getIataCodes(state),
+    selectedCloudProvider: selector(state, 'cloudName'),
     initialValues: {
       ...values,
       iataCode: [

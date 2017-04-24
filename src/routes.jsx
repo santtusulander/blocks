@@ -17,7 +17,9 @@ import {
   UserCanViewHosts,
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
-  CanViewStorageTab
+  CanViewStorageTab,
+  UserCanViewGTM,
+  AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
 import {
@@ -32,7 +34,7 @@ import AccountManagementAccountUsers from './containers/account-management/tabs/
 import AccountManagementGroups from './containers/account-management/tabs/groups'
 import AccountManagementProperties from './containers/account-management/tabs/properties'
 import AccountManagementAccounts from './containers/account-management/tabs/accounts'
-import AccountManagementSystemUsers from './components/account-management/system/users'
+import AccountManagementSystemUsers from './containers/account-management/tabs/users'
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementStorages from './containers/account-management/tabs/storages'
@@ -58,8 +60,6 @@ import ConfigurationAdvanced from './components/configuration/advanced'
 import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
-// UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
-// import HavingTrouble from './containers/having-trouble'
 import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
@@ -190,6 +190,8 @@ const AccountIsSP = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+
+
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
@@ -221,11 +223,6 @@ export const getRoutes = store => {
     <Route path={routes.root}>
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
-      {/*
-        UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
-        Should be used by 2FA components to allow user changing 2FA methods on demand.
-        <Route path="/having-trouble" component={UserIsNotLoggedIn(HavingTrouble)}/>
-      */}
       <Route path="/recovery-key" component={UserIsNotLoggedIn(RecoveryKey)}/>
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
@@ -292,7 +289,7 @@ export const getRoutes = store => {
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
-            <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
             <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
           </Route>
 
@@ -382,7 +379,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -390,7 +387,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
@@ -398,7 +395,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-            <Route path={routes.accountManagementTabAccountProperties} component={AccountManagementProperties}/>
+            <Route path={routes.accountManagementTabAccountProperties} component={AccountCanViewProperties(AccountManagementProperties)}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
             <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>

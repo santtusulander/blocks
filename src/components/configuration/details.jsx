@@ -10,7 +10,7 @@ import Select from '../shared/form-elements/select'
 import Toggle from '../shared/form-elements/toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
-import { CIS_ORIGIN_HOST_PORT } from '../../constants/configuration'
+import { CIS_ORIGIN_HOST_PORT, HOST_HEADER_OPTION_ORIGIN_HOSTNAME, HOST_HEADER_OPTION_PUBLISHED_NAME } from '../../constants/configuration'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
@@ -33,6 +33,12 @@ class ConfigurationDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!Immutable.is(this.props.storages, nextProps.storages)) {
       this.storageListOptions = this.generateStorageListOptions(nextProps.storages)
+    }
+
+    // Check if CIS is selected and change host_header value to Origin Hostname
+    const isCIS = nextProps.edgeConfiguration.get('origin_type') === 'cis' && nextProps.groupHasStorageService
+    if (isCIS && nextProps.edgeConfiguration.get('host_header') !== HOST_HEADER_OPTION_ORIGIN_HOSTNAME) {
+      nextProps.changeValue(['edge_configuration', 'host_header'], HOST_HEADER_OPTION_ORIGIN_HOSTNAME)
     }
   }
   handleChange(path) {
@@ -259,7 +265,7 @@ class ConfigurationDetails extends React.Component {
               <InputGroup>
                 <Select
                   className="input-select"
-                  disabled={readOnly}
+                  disabled={readOnly || isCIS}
                   onSelect={this.handleSelectChange(
                     ['edge_configuration', 'host_header'])}
                   value={this.props.edgeConfiguration.get('host_header')}
@@ -267,9 +273,9 @@ class ConfigurationDetails extends React.Component {
                     [isOtherHostHeader ?
                       this.props.edgeConfiguration.get('host_header') : '',
                       <FormattedMessage id="portal.configuration.details.useOtherHostnameValue.text" />],
-                    ['option_origin_host_name',
+                    [ HOST_HEADER_OPTION_ORIGIN_HOSTNAME,
                       <FormattedMessage id="portal.configuration.details.useOriginHostname.text" />],
-                    ['option_published_name',
+                    [ HOST_HEADER_OPTION_PUBLISHED_NAME,
                       <FormattedMessage id="portal.configuration.details.usePublishedHostname.text" />]
                   ]}/>
                 <InputGroup.Addon>

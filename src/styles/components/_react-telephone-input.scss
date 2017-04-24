@@ -1,9 +1,15 @@
 .react-tel-input {
   width: auto;
 
-  &:not(.empty) {
+  & {
     .flag {
       background-image: url('../assets/img/flags.png') !important;
+    }
+
+    &.empty {
+      .flag {
+        opacity: 0;
+      }
     }
   }
 

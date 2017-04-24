@@ -1,31 +1,31 @@
 import React, {Component, PropTypes} from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map } from 'immutable'
 import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-// import * as userActionCreators from '../../../redux/modules/user'
-// import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
+
+import { parseResponseError } from '../../../redux/util'
 
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
 import usersActions from '../../../redux/modules/entities/users/actions'
-import { getByAccount } from '../../../redux/modules/entities/users/selectors'
+import { getByPage } from '../../../redux/modules/entities/users/selectors'
+import { getPaginationMeta } from '../../../redux/modules/entity/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
-import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+//import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
-import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
-// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
+//import SelectWrapper from '../../../components/shared/form-elements/select-wrapper'
 import ActionButtons from '../../../components/shared/action-buttons'
 import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../../../components/shared/form-fields/field-form-group-select'
@@ -38,21 +38,29 @@ import ArrayCell from '../../../components/shared/page-elements/array-td'
 import ModalWindow from '../../../components/shared/modal'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import Paginator from '../../../components/shared/paginator/paginator'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors, getSortData } from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
+
+import { paginationChanged } from '../../../util/pagination'
+
+const PAGE_SIZE = 20
+const MAX_PAGINATION_ITEMS = 6
 
 export class AccountManagementAccountUsers extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       sortBy: 'email',
-      sortDir: 1,
-      search: '',
+      sortOrder: parseInt(props.location.query.sortOrder) || 1,
+      search: props.location.query.filterValue || '',
       filteredGroups: 'all',
       filteredRoles: 'all',
       showEditModal: false,
@@ -71,36 +79,37 @@ export class AccountManagementAccountUsers extends Component {
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
-    this.changeSearch = this.changeSearch.bind(this)
+    this.onSearchChange = this.onSearchChange.bind(this)
+    this.onSearchSubmit = this.onSearchSubmit.bind(this)
     this.isLeaving = false;
+
+    this.onActivePageChange = this.onActivePageChange.bind(this)
   }
 
   componentWillMount() {
     document.addEventListener('click', this.cancelAdding, false)
-    const {router, route, params: { brand, account }} = this.props
+    const {location, router, route, params: { brand, account }} = this.props
 
-    this.props.fetchUsers({brand, account})
-    this.props.fetchGroups({brand, account})
+    const {sortBy, sortOrder, filterBy, filterValue} = location.query
+    const page = location.query.page ? location.query.page : 1
+
+    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue})
     this.props.fetchRoleNames()
 
-//    if (!this.props.groups.toJS().length) {
-//      this.props.groupActions.fetchGroups(brand, account);
-//    }
-//
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
+    const {page, sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
 
-    if (!is(this.props.account, nextProps.account)) {
+    //if brand, account or sort has changed -> refetch
+    if (brand !== this.props.params.brand
+      || account !== this.props.params.account
+      || paginationChanged(this.props.location, nextProps.location)) {
 
-      this.props.fetchUsers({brand, account})
-      this.props.fetchGroups({brand, account})
-
-      !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
-      this.props.resetRoles()
-
+      //TODO: UDNP-3513 Should reset pagination
+      this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     }
 
   }
@@ -109,16 +118,34 @@ export class AccountManagementAccountUsers extends Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
+  /**
+   * Pushes ?sort/page/filter -params to url for pagination
+   */
+  onActivePageChange(nextPage) {
+    const pathname = this.props.location.pathname
+
+    this.props.router.push({
+      pathname,
+      query: {
+        page: nextPage,
+        sortBy: this.state.sortBy,
+        sortOrder: this.state.sortOrder,
+        filterBy: 'email',
+        filterValue: this.state.search
+      }
+    })
+  }
 
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
-      sortDir: direction
-    })
+      sortOrder: direction
+    }, () => this.onActivePageChange(1)
+    )
   }
 
   newUser({ email, roles }) {
-    const { userActions: { createUser }, params: { brand, account } } = this.props
+    const { createUser, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -126,9 +153,9 @@ export class AccountManagementAccountUsers extends Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    return createUser(requestBody).then(res => {
+    return createUser({payload: requestBody}).then(res => {
       if (res.error) {
-        throw new SubmissionError({email: res.payload.message})
+        throw new SubmissionError({email: parseResponseError(res.payload)})
       } else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
@@ -149,12 +176,25 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   getRoleOptions(roleMapping, props) {
+    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => {
+      .filter((roleToCheck) => {
+        // Don't allow UDN admin to create another UDN Admin or Super admin
+        // TODO: make dynamic check
+        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
+            return false
+          }
+        }
+
+        return true
+      })
+      .map((mapped_role) => {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
         return matchedRole
-              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              ? [matchedRole.get('id'), matchedRole.get('name')]
               : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
       })
   }
@@ -181,7 +221,7 @@ export class AccountManagementAccountUsers extends Component {
             name="email"
             ref="emails"
             ErrorComponent={errorTooltip}
-            placeholder=" Email"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.form.email.placeholder'})}
             component={FieldFormGroup}/>
         }
       ],
@@ -201,19 +241,6 @@ export class AccountManagementAccountUsers extends Component {
             </Button>,
           positionClass: 'col-xs-2 text-right'
         }
-      ],
-      [
-        // Disable until API support allows listing groups for user with some assigned
-        // {
-        //   input: <FilterChecklistDropdown
-        //     className="inline-add-dropdown"
-        //     value={this.state.usersGroups}
-        //     handleCheck={newValues => {
-        //       this.setState({ usersGroups: newValues })
-        //     }}
-        //     options={this.props.groups.map(group => Map({ value: group.get('id'), label: group.get('name') }))}/>,
-        //   positionClass: 'row col-xs-7'
-        // }
       ]
     ]
   }
@@ -226,13 +253,16 @@ export class AccountManagementAccountUsers extends Component {
     this.setState({ showPermissionsModal: !this.state.showPermissionsModal })
   }
 
-  getGroupsForUser(user) {
-    const groups = user.get('group_id')
-      .map(groupId => this.props.groups
-        .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
-        .get('name'))
-      .toJS()
-    return groups.length > 0 ? groups : ['User has no groups']
+  getGroupsForUser(/*user*/) {
+    return []
+
+    // TODO: UDNP-3529 - Removed until we have group id in users
+    // const groups = user.get('group_id')
+    //   .map(groupId => this.props.groups
+    //     .find(group => group.get('id') === groupId, null, Map({ name: 'Loading' }))
+    //     .get('name'))
+    //   .toJS()
+    // return groups.length > 0 ? groups : ['User has no groups']
   }
 
   getRolesForUser(user) {
@@ -246,8 +276,8 @@ export class AccountManagementAccountUsers extends Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.addingNew) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id="portal.common.error.warning.title" />,
+        content: <FormattedMessage id="portal.account.leaving.warning.text" />,
         stayButton: true,
         continueButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -263,15 +293,15 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   deleteUser(user) {
-    if (user === this.props.currentUser) {
+    if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
-        title: 'Error',
-        content: 'You cannot delete the account you are logged in with.',
+        title: <FormattedMessage id="portal.errorModal.error.text" />,
+        content: <FormattedMessage id="portal.account.delete.current.user.warning" />,
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
     } else {
-      this.props.deleteUser({id: user})
+      this.props.deleteUser(user)
     }
   }
 
@@ -290,7 +320,7 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   saveUser(user) {
-    return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
+    return this.props.updateUser({id: this.state.userToEdit.get('email'), payload: user})
       .then((response) => {
         if (!response.error) {
           this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
@@ -305,62 +335,45 @@ export class AccountManagementAccountUsers extends Component {
       })
   }
 
-  changeSearch(e) {
+  onSearchChange(e) {
     this.setState({
       search: e.target.value
     })
   }
 
-  render() {
-    const {fetching} = this.props
+  onSearchSubmit(e) {
+    if (e.key === 'Enter') {
+      this.onActivePageChange(1)
+    }
+  }
 
-    if (fetching) {
-      return <LoadingSpinner />
+  render() {
+    const {
+      fetching,
+      users
+    } = this.props
+
+    const totalCount = this.props.paginationMeta && this.props.paginationMeta.get('total') ? this.props.paginationMeta.get('total') : 0
+
+    const paginationProps = {
+      activePage: parseInt(this.props.location.query.page)|| 1,
+      items: Math.floor(totalCount / PAGE_SIZE),
+      onSelect: this.onActivePageChange,
+      maxButtons: MAX_PAGINATION_ITEMS,
+      boundaryLinks: true,
+      first: true,
+      last: true,
+      next: true,
+      prev: true
     }
 
-
-    const users = this.props.users;
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
-      activeDirection: this.state.sortDir
+      activeDirection: this.state.sortOrder
     }
-    const filteredUsersByRole = users.filter((user) => {
-      if (this.state.filteredRoles === 'all') {
-        return true
-      } else {
-        return user.get('roles').find(role => {
-          return this.state.filteredRoles === role
-        })
-      }
-    })
-    const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if (this.state.filteredGroups === 'all') {
-        return true
-      } else {
-        return user.get('group_id').find(group => {
-          return this.state.filteredGroups === group
-        })
-      }
-    })
-    const searchedUsers = filteredUsersByGroup.filter((user) => {
-      return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
-    })
-    const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
-    roleOptions.unshift(['all', 'All Roles'])
-
-    const groupOptions = this.props.groups.map(group => [
-      group.get('id'),
-      group.get('name')
-    ]).insert(0, ['all', 'All Groups']).toArray()
-    const numHiddenUsers = users.size - sortedUsers.size;
-
-    const usersSize = sortedUsers.size
-    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
-    const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
-    const finalUserText = usersSize + usersText + hiddenUserText
+    const finalUserText = <FormattedMessage id='portal.role.list.search.userCount.text' values={{userCount: totalCount}} />
 
     return (
       <PageContainer>
@@ -368,10 +381,15 @@ export class AccountManagementAccountUsers extends Component {
           <FormGroup className="search-input-group inline">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={this.props.intl.formatMessage({id: 'portal.user.form.search.placeholder'})}
               value={this.state.search}
-              onChange={this.changeSearch} />
+              onChange={this.onSearchChange}
+              onKeyPress={this.onSearchSubmit}
+            />
           </FormGroup>
+
+          {/* TODO: UDNP-3529
+            commented out until we can do server side filtering for roles / groups
           <FormGroup className="inline">
             <SelectWrapper
               id='filtered-roles'
@@ -390,6 +408,8 @@ export class AccountManagementAccountUsers extends Component {
               }}
               options={groupOptions}/>
           </div>
+          */}
+
           <IsAllowed to={CREATE_USER}>
             <Button bsStyle="success" className="btn-icon"
               onClick={this.toggleInlineAdd}>
@@ -398,14 +418,19 @@ export class AccountManagementAccountUsers extends Component {
           </IsAllowed>
         </SectionHeader>
 
-        <Table striped={true}>
+        { fetching
+          ? <LoadingSpinner />
+          : <Table striped={true}>
           <thead>
             <tr>
               <TableSorter {...sorterProps} column="email" width="40%">
                 <FormattedMessage id="portal.user.list.email.text" />
               </TableSorter>
               <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-              <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+              {/* TODO: UDNP-3529 - Removed until we have group_id in user
+                <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+              */}
+
               <th width="1%"/>
             </tr>
           </thead>
@@ -415,14 +440,16 @@ export class AccountManagementAccountUsers extends Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {sortedUsers.map((user, i) => {
+            {users && users.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
                     {this.getEmailForUser(user)}
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                  { /* TODO: UDNP-3529 removed until we have group data in user
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                  */ }
                   <td className="nowrap-column">
                     <IsAllowed to={MODIFY_USER}>
                       <ActionButtons
@@ -437,8 +464,15 @@ export class AccountManagementAccountUsers extends Component {
             })}
           </tbody>
         </Table>
+        }
 
-        {sortedUsers.size === 0 &&
+        {/* Show Pagination if more items than fit on PAGE_SIZE */
+          totalCount > PAGE_SIZE &&
+          <Paginator {...paginationProps} />
+        }
+
+
+        {users && users.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
               <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: this.state.search}} /></span>
@@ -515,22 +549,24 @@ export class AccountManagementAccountUsers extends Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
-  currentUser: PropTypes.string,
+  createUser: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
-  fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
+  location: PropTypes.object,
+  paginationMeta: PropTypes.instanceOf(Map),
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
-  resetRoles: PropTypes.func,
   roles: PropTypes.instanceOf(List),
   route: PropTypes.object,
   router: PropTypes.object,
   showNotification: PropTypes.func,
   uiActions: PropTypes.object,
-  userActions: PropTypes.object,
+  updateUser: PropTypes.func,
   users: PropTypes.instanceOf(List)
 }
 
@@ -540,16 +576,16 @@ AccountManagementAccountUsers.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const {account} = ownProps.params
+  const page = ownProps.location.query.page ? ownProps.location.query.page : 1
 
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
-    users: getByAccount(state, account),
-    currentUser: state.user.get('currentUser').get('email'),
+    users: getByPage(state, page),
+    currentUser: state.user.get('currentUser'),
     permissions: state.permissions,
-    groups: getGroupsByAccount(state, account)
+    paginationMeta: getPaginationMeta(state, 'user')
   }
 }
 
@@ -562,8 +598,11 @@ const mapDispatchToProps = (dispatch) => {
 
     fetchGroups: (params) => dispatch(groupsActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNameActions.fetchAll({})),
-    fetchUsers: (params) => dispatch(usersActions.fetchAll(params))
+    fetchUsers: (params) => dispatch(usersActions.fetchAll({...params, offset: (params.page - 1) * PAGE_SIZE, limit: PAGE_SIZE})),
+
+    createUser: (user) => dispatch(usersActions.create(user)),
+    updateUser: (user) => dispatch(usersActions.update(user))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagementAccountUsers)))

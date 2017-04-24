@@ -48,6 +48,8 @@ export class Main extends React.Component {
   getChildContext() {
     return {
       currentUser: this.props.currentUser,
+      location: this.props.location,
+      params: this.props.params,
       roles: this.props.roles
     }
   }
@@ -290,13 +292,15 @@ Main.defaultProps = {
 
 Main.childContextTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  location: PropTypes.object,
+  params: PropTypes.object,
   roles: PropTypes.instanceOf(Map)
 }
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
-  const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params
+  const {brand = 'udn', account, group, property } = ownProps.params
   const {entities, ...rest} = state
 
   const stateMap = Map(rest)

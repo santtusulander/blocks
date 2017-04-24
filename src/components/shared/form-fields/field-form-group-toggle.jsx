@@ -21,7 +21,7 @@ const FieldFormGroupToggle = ({ addonAfter, addonAfterLabel, addonBefore, input,
         </InputGroup.Addon>
       }
 
-      <Toggle value={input.value}
+      <Toggle value={!!input.value}
               changeValue={onToggle}
               onText={onText}
               offText={offText}

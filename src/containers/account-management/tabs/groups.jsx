@@ -17,7 +17,6 @@ import SectionHeader from '../../../components/shared/layout/section-header'
 import ActionButtons from '../../../components/shared/action-buttons'
 import IconAdd from '../../../components/shared/icons/icon-add'
 import TableSorter from '../../../components/shared/table-sorter'
-// import FilterChecklistDropdown from '../../../components/shared/form-elements/filter-checklist-dropdown'
 import ArrayTd from '../../../components/shared/page-elements/array-td'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
@@ -154,10 +153,9 @@ class AccountManagementAccountGroups extends Component {
 
     const sortedGroups = getSortData(filteredGroups, this.state.sortBy, this.state.sortDir)
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
-    const groupSize = sortedGroups.size
-    const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
+    const groupText = this.props.intl.formatMessage({id: 'portal.account.groups.counter.text'}, {numGroups: sortedGroups.size})
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
-    const finalGroupText = groupSize + groupText + hiddenGroupText
+    const finalGroupText = groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
         <SectionHeader sectionHeaderTitle={finalGroupText}>
@@ -186,9 +184,6 @@ class AccountManagementAccountGroups extends Component {
               <TableSorter {...sorterProps} column="created">
                 <FormattedMessage id="portal.account.groups.table.createdOn.text"/>
               </TableSorter>
-              {/* Not on 0.7
-              <th><FormattedMessage id="portal.account.groups.table.properties.text"/></th>
-              */}
               <th width="1%"/>
             </tr>
           </thead>
@@ -207,9 +202,6 @@ class AccountManagementAccountGroups extends Component {
                 <td>{group.get('name')}</td>
                 <ArrayTd items={userEmails.size ? userEmails.toArray() : [this.props.intl.formatMessage({id: 'portal.account.groups.table.noMembers.text'})]} />
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
-                {/* Not on 0.7
-                <td>NEEDS_API</td>
-                */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
                     <ActionButtons

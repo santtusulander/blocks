@@ -4,9 +4,13 @@ import { Map, List, fromJS } from 'immutable'
 
 import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
          PAGINATION_MOCK, mapReducers,
-         parseResponseData } from '../util'
-import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
+         parseResponseData, parseResponseError } from '../util'
 import { setUserName as setUserNameToStorage, deleteUserName as deleteUserNameFromStorage } from '../../util/local-storage.js'
+
+import {
+  UDN_ADMIN_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID
+} from '../../constants/account-management-options'
 
 import {
   getUserToken,
@@ -312,7 +316,7 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -333,7 +337,7 @@ export const twoFALogInWithCode = createAction(USER_LOGGED_IN, (username, code) 
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -355,7 +359,7 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -377,7 +381,7 @@ export const twoFALogInWithRecoveryKey = createAction(USER_LOGGED_IN, (username,
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   });
 })
 
@@ -469,7 +473,7 @@ export const createUser = createAction(USER_CREATED, user =>
   axios.post(`${BASE_URL_AAA}/users`, user, { headers: { 'Content-Type': 'application/json' } })
     .then(parseResponseData)
     .catch(err => {
-      throw new Error(err.data.message)
+      throw new Error(parseResponseError(err))
     })
 )
 
@@ -495,7 +499,7 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
       }
     }
   }, (res) => {
-    throw new Error(res.data.message)
+    throw new Error(parseResponseError(res))
   })
 })
 
@@ -537,7 +541,8 @@ export const getUserRoles = (state) => {
  * @return {Boolean}
  */
 export const isUdnAdmin = (state) => {
-  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) {
+  const userRoles = state && state.get('roles')
+  if (userRoles && (userRoles.includes(SUPER_ADMIN_ROLE_ID) || userRoles.includes(UDN_ADMIN_ROLE_ID))) {
     return true
   }
 
