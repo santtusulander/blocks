@@ -468,7 +468,7 @@ class Network extends React.Component {
   }
 
   nodeContentTextGenerator(entity) {
-    const { intl: { formatMessage } }= this.props
+    const { intl: { formatMessage } } = this.props
 
     const nodeRole = entity.getIn(['roles', '0'])
     const nodeEnv = entity.get('env')
