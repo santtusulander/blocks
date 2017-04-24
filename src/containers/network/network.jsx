@@ -452,7 +452,7 @@ class Network extends React.Component {
   }
 
   podContentTextGenerator(entity) {
-    const { intl: { formatMessage } }= this.props
+    const { intl: { formatMessage } } = this.props
     const podType = entity.get('pod_type')
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
     const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
