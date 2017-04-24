@@ -63,9 +63,17 @@ $input-height: 36px;
 
       .matches {
         .btn {
-          width: 100%;
+          max-width: 100%;
           overflow: hidden;
           text-overflow: ellipsis;
+
+          &:hover,
+          &:focus,
+          &:active {
+            color: inherit;
+            text-decoration: none;
+            cursor: default;
+          }
         }
 
       }
