@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { isDirty } from 'redux-form'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -19,6 +19,7 @@ import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
@@ -29,7 +30,7 @@ import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
-import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
+import { STORAGE_SERVICE_ID, GTM_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
@@ -80,7 +81,6 @@ export class Configuration extends React.Component {
   componentWillMount() {
     const {brand, account, group, property} = this.props.params
     this.props.accountActions.fetchAccount(brand, account)
-    this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
@@ -251,14 +251,24 @@ export class Configuration extends React.Component {
   toggleVersionModal() {
     this.setState({showVersionModal: !this.state.showVersionModal})
   }
-  showNotification(message) {
+  showNotification(message = <FormattedMessage id="portal.configuration.updateSuccessfull.text"/>) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
+    const {
+      intl: { formatMessage },
+      activeHost,
+      deleteProperty ,
+      params: { brand, account, group, property },
+      router,
+      children,
+      isGTMFormDirty,
+      groupHasGTMService,
+      isAdvancedFormDirty } = this.props
+
     if (this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
@@ -301,8 +311,7 @@ export class Configuration extends React.Component {
                 this.props.router.push(`${url}/${children.props.route.path}`)
               })
 
-            }}
-            drillable={true}>
+            }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
@@ -332,37 +341,38 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
-          <li data-eventKey='details'>
+          <li data-eventKey='details' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/details'} activeClassName="active">
             <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li data-eventKey='defaults'>
+          <li data-eventKey='defaults' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
             <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li data-eventKey='policies'>
+          <li data-eventKey='policies' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
             <Link to={baseUrl + '/policies'} activeClassName="active">
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
           {this.hasSecurityServicePermission() &&
-            <li data-eventKey='security'>
+            <li data-eventKey='security' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
               <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
               </Link>
             </li>
           }
-
-          <li data-eventKey='gtm' className={classNames({ disabled: diff })}>
-            <Link to={baseUrl + '/gtm'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.gtm.text" />
-            </Link>
-          </li>
+          { groupHasGTMService &&
+            <li data-eventKey='gtm' className={classNames({ disabled: diff || isAdvancedFormDirty })}>
+              <Link to={baseUrl + '/gtm'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.gtm.text" />
+              </Link>
+            </li>
+          }
 
           <IsAdmin>
-            <li data-eventKey='advanced' className={classNames({ disabled: diff })}>
+            <li data-eventKey='advanced' className={classNames({ disabled: diff || isGTMFormDirty })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
@@ -391,6 +401,7 @@ export class Configuration extends React.Component {
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
+            showNotification: this.showNotification,
             storagePermission: this.props.storagePermission,
             serviceType: serviceType,
             serviceTypeText: serviceTypeText
@@ -481,10 +492,12 @@ Configuration.propTypes = {
   deleteProperty: React.PropTypes.func,
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
+  groupHasGTMService: React.PropTypes.bool,
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
+  isAdvancedFormDirty: React.PropTypes.bool,
+  isGTMFormDirty: React.PropTypes.bool,
   notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -505,13 +518,14 @@ Configuration.defaultProps = {
   sslCertificates: Immutable.List()
 }
 
-function mapStateToProps(state) {
-  const { group } = state
-  const activeGroup = group.get('activeGroup') || Immutable.Map()
+function mapStateToProps(state, ownProps) {
+  const activeGroup = getGroupById(state, ownProps.params.group) || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-
+  const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const isGTMFormDirty = isDirty('gtmForm')
+  const isAdvancedFormDirty = isDirty('advancedForm')
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -524,16 +538,18 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: roles,
     groupHasStorageService,
+    groupHasGTMService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
-    sslCertificates: state.security.get('sslCertificates')
+    sslCertificates: state.security.get('sslCertificates'),
+    isGTMFormDirty: isGTMFormDirty(state),
+    isAdvancedFormDirty: isAdvancedFormDirty(state)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

@@ -38,13 +38,15 @@ import {
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 import * as PERMISSIONS from '../../constants/permissions'
 
-import * as accountActionCreators from '../../redux/modules/account'
-import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+import accountsActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
+
 // TODO: Rename to groupActions once the old groupActions is abandoned
-import newGroupActions from '../../redux/modules/entities/groups/actions'
+import groupActions from '../../redux/modules/entities/groups/actions'
+import {getByAccount as getGroupsByAccount} from '../../redux/modules/entities/groups/selectors'
 
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
@@ -216,7 +218,6 @@ class Network extends React.Component {
     switch (entityModal) {
 
       case ADD_EDIT_GROUP:
-        this.props.groupActions.changeActiveGroup(Immutable.Map())
         this.setState({groupId: null})
         this.props.toggleModal(ADD_EDIT_GROUP)
         break;
@@ -312,7 +313,7 @@ class Network extends React.Component {
   }
 
   handleAccountSave(brandId, accountId, data) {
-    this.props.accountActions.updateAccount(brandId, accountId, data)
+    this.props.updateAccount({brand: brandId, id: accountId, payload: data})
       .then(() => this.handleCancel(ADD_EDIT_ACCOUNT))
   }
 
@@ -328,14 +329,10 @@ class Network extends React.Component {
   }
 
   handleGroupClick(groupId) {
-    const { groupActions: { changeActiveGroup } } = this.props
-    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
     this.determineNextGroupState(groupId)
   }
 
   handleGroupEdit(groupId) {
-    const { groupActions: { changeActiveGroup } } = this.props
-    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
     this.setState({groupId: groupId})
     this.props.toggleModal(ADD_EDIT_GROUP)
   }
@@ -355,22 +352,22 @@ class Network extends React.Component {
       const { groupId, data } = payload
 
       return Promise.all([
-        this.props.groupActions.updateGroup(
-          'udn',
-          this.props.activeAccount.get('id'),
-          groupId,
-          data
+        this.props.updateGroup(
+          {
+            brand: 'udn',
+            account: this.props.activeAccount.get('id'),
+            id: groupId,
+            payload: data
+          }
         )
       ])
         .then(() => {
-          // This is temporary solution to update the entities store with the new
-          // group info, since this save function uses the old group actions
-          this.props.fetchGroup({ forceReload: true, brand: 'udn', account: this.props.activeAccount.get('id'), id: groupId })
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
         })
     } else {
-      return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload.data)
+      const { data } = payload
+      return this.props.createGroup({brand: 'udn', account: this.props.activeAccount.get('id'), payload: data })
         .then(action => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupCreated.text"/>)
@@ -387,20 +384,20 @@ class Network extends React.Component {
   }
 
   handleGroupDelete(group) {
-    const { groupActions: { deleteGroup } } = this.props
+    const { removeGroup } = this.props
     const url = getNetworkUrl('groups',   this.props.activeAccount.get('id'), this.props.params)
 
-    return deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      group.get('id')
-    ).then(response => {
+    return removeGroup({
+      brand: 'udn',
+      account: this.props.activeAccount.get('id'),
+      id: group.get('id')
+    }).then(response => {
       this.props.toggleDeleteConfirmationModal(null)
       this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
       this.props.router.push(url)
       response.error &&
         this.props.uiActions.showInfoDialog({
-          title: 'Error',
+          title: <FormattedMessage id="portal.errorModal.error.text"/>,
           content: parseResponseError(response.payload),
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
@@ -637,8 +634,6 @@ class Network extends React.Component {
   render() {
     const {
       isFetching,
-      groupsFetching,
-      accountFetching,
       accountManagementModal,
       activeAccount,
       networkModal,
@@ -681,7 +676,7 @@ class Network extends React.Component {
         <PageContainer ref={this.handleReference} className="network-entities-container">
           <div className="network-entities-wrapper">
             <EntityList
-              fetching={accountFetching}
+              fetching={isFetching('account')}
               ref={(accounts) => {
                 this.entityList.accountList = accounts
                 return this.entityList.accountList
@@ -705,12 +700,12 @@ class Network extends React.Component {
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
             />
 
             <EntityList
               noDataText={<FormattedMessage id="portal.network.entities.groups.noData"/>}
-              fetching={groupsFetching}
+              fetching={isFetching('groups-network')}
               isParentSelected={!!this.props.params.account}
               ref={(groupsRef) => {
                 this.entityList.groupList = groupsRef
@@ -923,23 +918,19 @@ class Network extends React.Component {
 
 Network.displayName = 'Network'
 Network.propTypes = {
-  accountActions: React.PropTypes.object,
   accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  accountFetching: React.PropTypes.bool,
   accountManagementModal: PropTypes.string,
   accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
+  createGroup: PropTypes.func,
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
-  fetchGroup: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
-  groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
-  groupsFetching: React.PropTypes.bool,
   intl: intlShape,
   isFetching: PropTypes.func,
   location: PropTypes.object,
@@ -949,11 +940,14 @@ Network.propTypes = {
   params: PropTypes.object,
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
+  removeGroup: PropTypes.func,
   roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object
+  uiActions: PropTypes.object,
+  updateAccount: PropTypes.func,
+  updateGroup: PropTypes.func
 }
 
 Network.defaultProps = {
@@ -963,11 +957,8 @@ Network.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const { group, network, pop, pod } = ownProps.params
+  const { account, group, network, pop, pod } = ownProps.params
   return {
-    //TODO: use fetching-selector and remove these once accounts/groups use new redux
-    groupsFetching: state.group.get('fetching'),
-    accountFetching: state.account.get('fetching'),
 
     accountManagementModal: state.ui.get('accountManagementModal'),
     nodes: sortByKey(getNodesByPod(state, buildReduxId(group, network, pop, pod)), 'updated', 'desc'),
@@ -978,8 +969,8 @@ const mapStateToProps = (state, ownProps) => {
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
-    activeAccount: state.account.get('activeAccount'),
-    groups: sortByKey(state.group.get('allGroups')),
+    activeAccount: getAccountById(state, account),
+    groups: sortByKey(getGroupsByAccount(state, account)),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
@@ -993,8 +984,6 @@ const mapStateToProps = (state, ownProps) => {
 function mapDispatchToProps(dispatch, ownProps) {
   const { brand, account } = ownProps.params
 
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
@@ -1008,10 +997,9 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
-    accountActions.fetchAccount(brand, account)
-    groupActions.startFetching()
+    dispatch(accountsActions.fetchOne({brand, id: account}))
+    dispatch(groupActions.fetchAll({...ownProps.params, requestTag: 'groups-network'}))
     metricsActions.startGroupFetching()
-    groupActions.fetchGroups(brand, account)
     metricsActions.fetchDailyAccountTraffic(accountMetricsOpts)
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
@@ -1022,11 +1010,15 @@ function mapDispatchToProps(dispatch, ownProps) {
     toggleModal: uiActions.toggleNetworkModal,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     fetchData: fetchData,
-    groupActions: groupActions,
-    accountActions: accountActions,
     uiActions: uiActions,
 
-    fetchGroup: (params) => dispatch(newGroupActions.fetchOne(params)),
+    updateAccount: (account) => dispatch(accountsActions.update(account)),
+
+    //requestTag is a work around method to prevent unexpected loading behaviors of groups
+    createGroup: (group) => dispatch(groupActions.create({...group, requestTag: 'groups-network'})),
+    updateGroup: (group) => dispatch(groupActions.update({...group, requestTag: 'groups-network'})),
+    removeGroup: (group) =>  dispatch(groupActions.remove({...group, requestTag: 'groups-network'})),
+
     fetchNetworks: (params) => params.group && dispatch(networkActions.fetchAll(params)),
     fetchPops: (params) => params.network && dispatch(popActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))

@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, FormControl } from 'react-bootstrap'
+import { injectIntl } from 'react-intl'
 
 import ToggleElement from './toggle-element'
 import IconArrowRight from '../shared/icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
 export const SelectorComponent = ({
+  intl,
   items,
   drillable,
   children,
@@ -25,7 +27,7 @@ export const SelectorComponent = ({
         <FormControl
           className="header-search-input"
           type="text"
-          placeholder="Search"
+          placeholder={intl.formatMessage({id: "portal.commom.select.placeholder"})}
           value={searchValue}
           onChange={onSearch}/>
       </li>
@@ -52,6 +54,7 @@ SelectorComponent.displayName = 'SelectorComponent'
 SelectorComponent.propTypes = {
   children: PropTypes.object,
   drillable: PropTypes.bool,
+  intl: PropTypes.object,
   items: PropTypes.array,
   onCaretClick: PropTypes.func,
   onItemClick: PropTypes.func,
@@ -64,4 +67,4 @@ SelectorComponent.propTypes = {
   topBarText: PropTypes.string
 }
 
-export default autoClose(SelectorComponent)
+export default autoClose(injectIntl(SelectorComponent))

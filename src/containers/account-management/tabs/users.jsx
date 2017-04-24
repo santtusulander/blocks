@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, Field, SubmissionError } from 'redux-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -44,6 +44,7 @@ import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
 
 export class AccountManagementAccountUsers extends Component {
   constructor(props) {
@@ -144,12 +145,25 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   getRoleOptions(roleMapping, props) {
+    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
     return roleMapping
       .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .map(mapped_role => {
+      .filter((roleToCheck) => {
+        // Don't allow UDN admin to create another UDN Admin or Super admin
+        // TODO: make dynamic check
+        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
+          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
+              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
+            return false
+          }
+        }
+
+        return true
+      })
+      .map((mapped_role) => {
         const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
         return matchedRole
-              ? [ matchedRole.get('id'), matchedRole.get('name') ]
+              ? [matchedRole.get('id'), matchedRole.get('name')]
               : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
       })
   }
@@ -176,7 +190,7 @@ export class AccountManagementAccountUsers extends Component {
             name="email"
             ref="emails"
             ErrorComponent={errorTooltip}
-            placeholder=" Email"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.form.email.placeholder'})}
             component={FieldFormGroup}/>
         }
       ],
@@ -228,8 +242,8 @@ export class AccountManagementAccountUsers extends Component {
   shouldLeave({ pathname }) {
     if (!this.isLeaving && this.state.addingNew) {
       this.props.uiActions.showInfoDialog({
-        title: 'Warning',
-        content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
+        title: <FormattedMessage id="portal.common.error.warning.title" />,
+        content: <FormattedMessage id="portal.account.leaving.warning.text" />,
         stayButton: true,
         continueButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -245,10 +259,10 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   deleteUser(user) {
-    if (user === this.props.currentUser) {
+    if (user === this.props.currentUser.get('email')) {
       this.props.uiActions.showInfoDialog({
-        title: 'Error',
-        content: 'You cannot delete the account you are logged in with.',
+        title: <FormattedMessage id="portal.errorModal.error.text" />,
+        content: <FormattedMessage id="portal.account.delete.current.user.warning" />,
         okButton: true,
         cancel: () => this.props.uiActions.hideInfoDialog()
       })
@@ -331,18 +345,17 @@ export class AccountManagementAccountUsers extends Component {
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
-    roleOptions.unshift(['all', 'All Roles'])
+    roleOptions.unshift(['all', <FormattedMessage id="portal.user.list.allRoles" />])
 
     const groupOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
-    ]).insert(0, ['all', 'All Groups']).toArray()
+    ]).insert(0, ['all', <FormattedMessage id="portal.user.list.allGroups" />]).toArray()
     const numHiddenUsers = users.size - sortedUsers.size;
 
-    const usersSize = sortedUsers.size
-    const usersText = ` User${sortedUsers.size === 1 ? '' : 's'}`
+    const usersText = this.props.intl.formatMessage({id: 'portal.user.list.title.text' }, { numUsers: sortedUsers.size })
     const hiddenUserText = numHiddenUsers ? ` (${numHiddenUsers} hidden)` : ''
-    const finalUserText = usersSize + usersText + hiddenUserText
+    const finalUserText = usersText + hiddenUserText
 
     return (
       <PageContainer>
@@ -350,7 +363,7 @@ export class AccountManagementAccountUsers extends Component {
           <FormGroup className="search-input-group inline">
             <FormControl
               className="search-input"
-              placeholder="Search"
+              placeholder={this.props.intl.formatMessage({id: 'portal.user.form.search.placeholder'})}
               value={this.state.search}
               onChange={this.changeSearch} />
           </FormGroup>
@@ -498,13 +511,14 @@ AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
   createUser: PropTypes.func,
-  currentUser: PropTypes.string,
+  currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchRoleNames: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   resetRoles: PropTypes.func,
@@ -530,7 +544,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByAccount(state, account),
-    currentUser: state.user.get('currentUser').get('email'),
+    currentUser: state.user.get('currentUser'),
     permissions: state.permissions,
     groups: getGroupsByAccount(state, account)
   }
@@ -551,4 +565,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountManagementAccountUsers))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountManagementAccountUsers)))

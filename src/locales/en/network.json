@@ -69,6 +69,26 @@
   "portal.network.nodeForm.type.help.text": "Define whether Node is part of SP Edge or UDN Core deployment",
   "portal.network.nodeForm.cloudDriver.help.text": "Defines whether node is hosted on Bare Metal or any other cloud provider",
   "portal.network.nodeForm.grains.help.text": "At present we utilize the FQDN as the custom grain",
+  "portal.network.nodeForm.nodeType.sp_edge": "SP Edge",
+  "portal.network.nodeForm.nodeType.udn_core": "UDN Core",
+
+  "portal.network.nodeForm.environment.cdx-dev": "Development",
+  "portal.network.nodeForm.environment.cdx-test": "Testing",
+  "portal.network.nodeForm.environment.cdx-stag": "Staging",
+  "portal.network.nodeForm.environment.cdx": "Production",
+
+  "portal.network.nodeForm.roles.cache": "Cache",
+  "portal.network.nodeForm.roles.gslb": "GSLB",
+  "portal.network.nodeForm.roles.slb": "SLB",
+
+  "portal.network.nodeForm.cloudDriver.AmazonEC2": "Amazon EC2",
+  "portal.network.nodeForm.cloudDriver.digitalOcean": "Digital Ocean",
+  "portal.network.nodeForm.cloudDriver.SoftLayer": "SoftLayer",
+  "portal.network.nodeForm.cloudDriver.OpenStack": "OpenStack",
+  "portal.network.nodeForm.cloudDriver.VMWare": "VMWare",
+  "portal.network.nodeForm.cloudDriver.bareMetal": "Bare Metal",
+  "portal.network.nodeForm.cloudDriver.LXC": "LXC",
+  "portal.network.nodeForm.cloudDriver.docker": "Docker",
 
   "portal.network.addNodeForm.title": "Add Node",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
@@ -173,6 +193,9 @@
   "portal.network.footprintForm.file.help.text": "Adding to Footprint from a CSV file - What fields can I import? \n\nAll required fields shown in the upload template must be provided. The first row in your CSV file must contain the name of the field that is contained in that column. \n\nThe available fields are listed below: \nname, description, data_type, value, udn_type \n\ne.g. net1, Specific Network, ipv4cidr, '10.10.10.0/24,11.11.11.0/24', on_net_off_net",
   "portal.network.footprintForm.file.download.text": "Download template",
   "portal.network.footprintForm.file.invalid.text": "Couldn't add a Footprint. Not a valid CSV file.",
+  "portal.network.footprintForm.udn_type.billing_asn": "Billing ASN",
+  "portal.network.footprintForm.udn_type.on_net": "On Net",
+  "portal.network.footprintForm.udn_type.off_net": "Off Net",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
@@ -197,6 +220,10 @@
   "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
   "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address",
   "portal.network.locationForm.latLongFields.addressNotFound": "Address not found",
+  "portal.network.locationForm.cloudProvider.bareMetal": "Bare Metal",
+  "portal.network.locationForm.cloudProvider.options.sl": "IBM SoftLayer",
+  "portal.network.locationForm.cloudProvider.options.do": "Digital Ocean",
+  "portal.network.locationForm.cloudProvider.options.ec2": "Amazon EC2",
 
   "portal.network.locationForm.name.required.error": "Location name is required",
   "portal.network.locationForm.iataCode.required.error": "IATA code is required",

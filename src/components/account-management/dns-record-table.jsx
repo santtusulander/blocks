@@ -1,7 +1,10 @@
 import React, { PropTypes, Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import TableSorter from '../shared/table-sorter'
+import { MODIFY_RECORD } from '../../constants/permissions'
+
 
 export class DNSRecordTable extends Component {
   constructor(props) {
@@ -39,7 +42,9 @@ export class DNSRecordTable extends Component {
           <th width="30%"><FormattedMessage id='portal.account.dnsList.address.header' /></th>
           <th width="30%"><FormattedMessage id='portal.account.dnsList.ttl.header' /></th>
           {shouldHavePrio && <th width="30%"><FormattedMessage id='portal.account.dnsList.prio.header' /></th>}
-          <th width="1%" />
+          <IsAllowed to={MODIFY_RECORD}>
+            <th width="1%" />
+          </IsAllowed>
         </tr>
         </thead>
         <tbody>

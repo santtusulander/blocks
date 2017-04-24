@@ -1,3 +1,5 @@
+$base-margin: 15px;
+
 .support-ticket {
   &__priority-icon {
     width: 20px;
@@ -8,4 +10,18 @@
     &--normal { background-color: $support-priority-normal; }
     &--low { background-color: $support-priority-low; }
   }
+}
+
+.account-support-documentation {
+
+  .section {
+    margin-bottom: $base-margin * 4;
+
+
+    .section-body {
+      margin-top: $base-margin;
+      margin-bottom: $base-margin * 2;
+    }
+  }
+
 }

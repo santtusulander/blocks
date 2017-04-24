@@ -96,9 +96,17 @@ $highlight-color: $gradient-teal;
           content: '';
         }
 
+        &:first-child::before {
+          left: 0;
+          width: 7px;
+          margin: 0;
+          border-bottom-left-radius: 50%;
+          border-top-left-radius: 50%;
+        }
+
         &:last-child::before {
           right: 0;
-          width: 5px;
+          width: 7px;
           margin: 0;
           border-top-right-radius: 50%;
           border-bottom-right-radius: 50%;
