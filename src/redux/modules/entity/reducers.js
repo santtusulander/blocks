@@ -7,6 +7,7 @@ import { fromJS } from 'immutable'
  * @return {Immutable Map} state fragment
  */
 export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) => {
+
   const { response = {}, payload } = action
 
   // TODO: remove me after the new Redux modules (with API-middleware) is implemented
@@ -72,4 +73,49 @@ export const failEntity = (state/*, action*/) => {
 export const removeEntity = (state, action) => {
   const id = String(action.response.id)
   return state.delete(id)
+}
+
+/**
+ * Handles paginated resource entities / page
+ * @param  {[type]} state  [description]
+ * @param  {[type]} action [description]
+ * @return {[type]}        [description]
+ */
+export const receiveEntityPagination = (state, action) => {
+
+  //Is paginated response?
+  const pagination = action.response.pagination
+  if (pagination && pagination.page_size > -1)  {
+    //use requestTag as pagination "key"
+    const [reqId] = Object.keys(action.payload)
+    const requestTag = action.payload[reqId].requestTag
+
+    //calculate current page number
+    const page = Math.floor(pagination.offset / pagination.page_size) + 1
+
+    //state mock
+    // {
+    //   account: {
+    //     meta: pagination
+    //     1: {
+    //       results: [ ids ...]
+    //     }
+    //   }
+    // }
+    //
+
+    //FIXME: UDNP-3513 mergeDeep causes bug when two pages with same page numbers are fetched (combines result, but should be updating)
+
+    return state.mergeDeep(fromJS({
+      [requestTag]: {
+        meta: pagination,
+        [page]: action.response.result
+      }
+    }))
+
+
+
+  }
+
+  return state
 }

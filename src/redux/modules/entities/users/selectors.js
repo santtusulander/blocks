@@ -1,4 +1,4 @@
-import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
+import {getEntityById, getEntitiesByParent, getEntitiesByPage} from '../../entity/selectors'
 /**
  * Get Users by ID
  * @param  {} state from redux
@@ -19,4 +19,9 @@ export const getByAccount = (state, account) => {
 
 export const getByGroup = (state, group) => {
   return getEntitiesByParent(state, 'users', group, 'group_id')
+}
+
+
+export const getByPage = (state, page) => {
+  return getEntitiesByPage(state, 'users', page, 'user')
 }

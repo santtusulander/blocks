@@ -17,10 +17,24 @@ export const getEntityById = (state, entityType, id) => {
  */
 export const getEntitiesByParent = (state, entityType, parentId, parentIdKey = 'parentId') => {
   const result = state.entities[entityType].filter(entity => {
-    return String(entity.get(parentIdKey)) === String(parentId) 
+    return String(entity.get(parentIdKey)) === String(parentId)
   }).toList()
 
   return result;
+}
+
+export const getEntitiesByPage = (state, entityType, page, entityPaginationType) => {
+  if (!entityPaginationType) {
+    entityPaginationType = entityType
+  }
+
+  const ids = state.entities.entityPagination.getIn([entityPaginationType, String(page)])
+
+  return ids && ids.map(id => getEntityById(state, entityType,id))
+}
+
+export const getPaginationMeta = (state, entityPaginationType) => {
+  return state.entities.entityPagination.getIn([entityPaginationType, 'meta'])
 }
 
 /**
