@@ -120,6 +120,7 @@ class Network extends React.Component {
 
     this.podContentTextGenerator = this.podContentTextGenerator.bind(this)
 
+    this.nodeContentTextGenerator = this.nodeContentTextGenerator.bind(this)
     this.state = {
       networks: Immutable.List(),
       pops: Immutable.List(),
@@ -466,11 +467,13 @@ class Network extends React.Component {
   }
 
   nodeContentTextGenerator(entity) {
+    const { intl: { formatMessage } }= this.props
+
     const nodeRole = entity.getIn(['roles', '0'])
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
     const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
-    return `${UIRole ? UIRole.label : 'Unknown role'}, ${UIEnv ? UIEnv.label : 'Unknown environment'}`
+    return `${UIRole ? formatMessage({id: UIRole.label}) : 'Unknown role'}, ${UIEnv ? formatMessage({id: UIEnv.label}) : 'Unknown environment'}`
   }
 
   showNotification(message) {
