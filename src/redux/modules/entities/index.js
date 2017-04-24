@@ -43,7 +43,7 @@ const footprints = handleActions({
 
 const groups =
   handleActions({
-    [actionTypes.RECEIVE]: receiveEntity({ key: 'groups' }),
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'groups', useMergeDeep: false }),
     [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())

@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl'
 import { Panel, Table, FormGroup, ControlLabel } from 'react-bootstrap'
 import classNames from 'classnames'
 import { fromJS, List } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import IconCheck from '../shared/icons/icon-check'
 import IconChevronRight from '../shared/icons/icon-chevron-right'
@@ -16,22 +17,37 @@ class ServiceOptionSelector extends React.Component {
       openPanels: []
     }
 
-    this.changeOptionValue = this.changeOptionValue.bind(this)
+    this.changeValue = this.changeValue.bind(this)
     this.handleOptionClick = this.handleOptionClick.bind(this)
+    this.handleServiceClick = this.handleServiceClick.bind(this)
     this.togglePanel = this.togglePanel.bind(this)
     this.renderFlexRowItem = this.renderFlexRowItem.bind(this)
   }
 
-  changeOptionValue (serviceId, optionId, hasValue, serviceIndex, optionIndex) {
+  changeValue (serviceId, optionId, hasValue, serviceIndex, optionIndex) {
+    if (!serviceId) {
+      return false
+    }
+
     const { input, onChangeServiceItem } = this.props
     const copy = input.value.toJS()
-    const options = copy[serviceIndex].options
 
-    if (!hasValue) {
-      options.push({ option_id: optionId })
+    if (optionId) {
+      const options = copy[serviceIndex].options
+
+      if (!hasValue) {
+        options.push({ option_id: optionId })
+      } else {
+        options.splice(optionIndex, 1)
+      }
     } else {
-      options.splice(optionIndex, 1)
+      if (!hasValue) {
+        copy.push({ service_id: serviceId, options: [] })
+      } else {
+        copy.splice(serviceIndex, 1)
+      }
     }
+
     input.onChange(fromJS(copy))
     onChangeServiceItem(fromJS(copy))
   }
@@ -44,7 +60,19 @@ class ServiceOptionSelector extends React.Component {
     if (option.requires_charge_number) {
       this.props.showServiceItemForm(serviceId, optionId, callback, optionValue)
     } else {
-      this.changeOptionValue(serviceId, optionId, optionValue, serviceIndex, optionIndex)
+      this.changeValue(serviceId, optionId, optionValue, serviceIndex, optionIndex)
+    }
+  }
+
+  handleServiceClick (isEnabled, itemInfo, index, serviceIndex) {
+    return () => {
+      if (itemInfo.options.length) {
+        this.togglePanel(index)
+      }
+
+      if (!itemInfo.requires_charge_number) {
+        this.changeValue(itemInfo.value, null, isEnabled, serviceIndex)
+      }
     }
   }
 
@@ -59,7 +87,7 @@ class ServiceOptionSelector extends React.Component {
     this.setState({ openPanels })
   }
 
-  renderFlexRowItem (isEnabled, itemInfo, regions, isService, index, onChangeCallback) {
+  renderFlexRowItem (itemIndex, isEnabled, itemInfo, regions, isService, index, onChangeCallback) {
     return (
       <div
         className={classNames(
@@ -68,12 +96,15 @@ class ServiceOptionSelector extends React.Component {
           {'active': isEnabled && isService},
           {'enabled': isEnabled}
         )}
-        onClick={() => isService && this.togglePanel(index)}
+        onClick={isService && this.handleServiceClick(isEnabled, itemInfo, index, itemIndex)}
       >
-        <div className="flex-item tick">{isEnabled ? <IconCheck /> : ''}</div>
-        <div className="flex-item name">{itemInfo.label}</div>
+        <div className="tick">{isEnabled ? <IconCheck /> : ''}</div>
+        <div className="name">{itemInfo.label}</div>
         <div className="flex-item">{regions && regions.size ? `${regions.size} regions` : ''}</div>
-        <div className="flex-item">{isEnabled ? 'ENABLED' : 'disabled'}</div>
+        <div className="flex-item">{isEnabled 
+                                    ? <FormattedMessage id='portal.account.chargeNumbersForm.enabled.title'/>
+                                    : <FormattedMessage id='portal.account.chargeNumbersForm.disabled.title'/>}
+        </div>
         <div className="flex-item arrow-right">
           {itemInfo.requires_charge_number
             ? <a
@@ -115,7 +146,7 @@ class ServiceOptionSelector extends React.Component {
                 key={`option-${i}`}
                 className="multi-option-panel"
               >
-                {this.renderFlexRowItem(optionValue, option, serviceRegions, true, i, input.onChange)}
+                {this.renderFlexRowItem(serviceIndex, optionValue, option, serviceRegions, true, i, input.onChange)}
 
                 <Panel collapsible={true} expanded={expanded}>
                   <Table striped={true} className="table-simple">
@@ -135,7 +166,7 @@ class ServiceOptionSelector extends React.Component {
                             onClick={() => this.handleOptionClick(subOption, option.value, subOption.value, subOptionValue, serviceIndex, subOptionIndex, input.onChange)}
                           >
                             <td>
-                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange)}
+                              {this.renderFlexRowItem(subOptionIndex, subOptionValue, subOption, optionRegions, false, i, input.onChange)}
                             </td>
                           </tr>
                         )
