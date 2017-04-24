@@ -214,7 +214,7 @@ export const UserCanViewGTM = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm\/?$/, 'i'), '')
     return redirectPath
   },
   allowRedirectBack: false
