@@ -170,45 +170,45 @@ describe('ConfigurationPolicies', () => {
     expect(policies).toBeDefined()
   })
 
-  it('should change values', () => {
-    const changeValue = jest.fn()
-    const policies = shallow(<ConfigurationPolicies changeValue={changeValue}
-      config={fakeConfig} intl={intlMaker()}/>)
-    policies.instance().handleChange('some path')(true)
-    expect(changeValue.mock.calls[0][0]).toEqual('some path')
-    expect(changeValue.mock.calls[0][1]).toBe(true)
-  });
+  // it('should change values', () => {
+  //   const changeValue = jest.fn()
+  //   const policies = shallow(<ConfigurationPolicies changeValue={changeValue}
+  //     config={fakeConfig} intl={intlMaker()}/>)
+  //   policies.instance().handleChange('some path')(true)
+  //   expect(changeValue.mock.calls[0][0]).toEqual('some path')
+  //   expect(changeValue.mock.calls[0][1]).toBe(true)
+  // });
 
-  it('should change active rule', () => {
-    const activateRule = jest.fn()
-    const activateMatch = jest.fn()
-    const changeValues = jest.fn()
-    const policies = shallow(
-      <ConfigurationPolicies config={fakeConfig} intl={intlMaker()} changeValues={changeValues}
-        activateRule={activateRule} activeRule={fakeRequestRulePath} activateMatch={activateMatch}/>
-    )
-    policies.instance().changeActiveRuleType(POLICY_TYPES.REQUEST)
-    expect(activateRule.mock.calls[0][0][0]).toEqual('request_policy')
-    policies.instance().changeActiveRuleType(POLICY_TYPES.RESPONSE)
-    expect(activateRule.mock.calls[1][0][0]).toEqual('response_policy')
-  })
+  // it('should change active rule', () => {
+  //   const activateRule = jest.fn()
+  //   const activateMatch = jest.fn()
+  //   const changeValues = jest.fn()
+  //   const policies = shallow(
+  //     <ConfigurationPolicies config={fakeConfig} intl={intlMaker()} changeValues={changeValues}
+  //       activateRule={activateRule} activeRule={fakeRequestRulePath} activateMatch={activateMatch}/>
+  //   )
+  //   policies.instance().changeActiveRuleType(POLICY_TYPES.REQUEST)
+  //   expect(activateRule.mock.calls[0][0][0]).toEqual('request_policy')
+  //   policies.instance().changeActiveRuleType(POLICY_TYPES.RESPONSE)
+  //   expect(activateRule.mock.calls[1][0][0]).toEqual('response_policy')
+  // })
 
-  it('should show sidebar when a rule is active', () => {
-    const policies = shallow(
-      <ConfigurationPolicies config={fakeConfig}
-        activeRule={Immutable.List([0])}
-        intl={intlMaker()}/>
-    )
-    const sidebar = policies.find(ConfigurationSidebar)
-    expect(sidebar.length).toBe(1)
-  })
+  // it('should show sidebar when a rule is active', () => {
+  //   const policies = shallow(
+  //     <ConfigurationPolicies config={fakeConfig}
+  //       activeRule={Immutable.List([0])}
+  //       intl={intlMaker()}/>
+  //   )
+  //   const sidebar = policies.find(ConfigurationSidebar)
+  //   expect(sidebar.length).toBe(1)
+  // })
 
-  it('should not show a sidebar when a rule is not active', () => {
-    const policies = shallow(
-      <ConfigurationPolicies config={fakeConfig} activeRule={null}
-        intl={intlMaker()}/>
-    )
-    const sidebar = policies.find(ConfigurationSidebar)
-    expect(sidebar.length).toBe(0)
-  })
+  // it('should not show a sidebar when a rule is not active', () => {
+  //   const policies = shallow(
+  //     <ConfigurationPolicies config={fakeConfig} activeRule={null}
+  //       intl={intlMaker()}/>
+  //   )
+  //   const sidebar = policies.find(ConfigurationSidebar)
+  //   expect(sidebar.length).toBe(0)
+  // })
 })
