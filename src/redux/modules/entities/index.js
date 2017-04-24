@@ -122,6 +122,12 @@ const roleNames =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const serviceTitles =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'serviceTitles' }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 const gtm =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'gtm', useMergeDeep: false }),
@@ -166,6 +172,7 @@ export default combineReducers({
   storageMetrics,
   roles,
   roleNames,
+  serviceTitles,
   users,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
   entityPagination
