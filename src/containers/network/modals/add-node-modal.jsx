@@ -35,12 +35,8 @@ const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 const getSubtitle = (state, params) => {
 
   const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
-
-  // eslint-disable-next-line eqeqeq
   const group = getGroupById(state, params.group)
-
   const network = getNetworkById(state, buildReduxId(params.group, params.network))
-
   const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
 
   return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
