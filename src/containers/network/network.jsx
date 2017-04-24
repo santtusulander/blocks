@@ -457,7 +457,8 @@ class Network extends React.Component {
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
     const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
     const UIDiscoveryMethod = DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod)[0]
-    return `${UIType ? formatMessage({id: UIType.label}) : 'Unknown type'}, ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : 'Unknown discovery method'}`
+    return `${UIType ? formatMessage({id: UIType.label}) : formatMessage({id: 'portal.network.podForm.pod_type.options.unknown.label'})},
+            ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : formatMessage({id: 'portal.network.podForm.discoveryMethod.options.unknown.label'})}`
   }
 
   /* ==== Node Handlers ==== */
@@ -473,7 +474,8 @@ class Network extends React.Component {
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
     const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
-    return `${UIRole ? formatMessage({id: UIRole.label}) : 'Unknown role'}, ${UIEnv ? formatMessage({id: UIEnv.label}) : 'Unknown environment'}`
+    return `${UIRole ? formatMessage({id: UIRole.label}) : formatMessage({id: 'portal.network.nodeForm.roles.unknown'})},
+            ${UIEnv ? formatMessage({id: UIEnv.label}) : formatMessage({id: 'portal.network.nodeForm.environment.unknown'})}`
   }
 
   showNotification(message) {
