@@ -4,7 +4,7 @@ import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -43,7 +43,7 @@ const footprints = handleActions({
 
 const groups =
   handleActions({
-    [actionTypes.RECEIVE]: receiveEntity({ key: 'groups' }),
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'groups', useMergeDeep: false }),
     [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())
@@ -122,6 +122,12 @@ const roleNames =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const serviceTitles =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'serviceTitles' }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 const gtm =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'gtm', useMergeDeep: false }),
@@ -140,6 +146,11 @@ const users =
     [actionTypes.RECEIVE]: receiveEntity({ key: 'users' }),
     [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
+  }, Map())
+
+const entityPagination =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntityPagination
   }, Map())
 
 export default combineReducers({
@@ -161,6 +172,8 @@ export default combineReducers({
   storageMetrics,
   roles,
   roleNames,
+  serviceTitles,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
+  entityPagination
 })

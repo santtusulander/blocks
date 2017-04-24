@@ -32,12 +32,14 @@ import { parseResponseError } from '../../redux/util'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
-import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
+import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH, GTM_TTL_DEFAULT } from '../../constants/gtm'
 
-const validate = ({ GTMToggle, cdnName = '', cName = '' }) => {
+const validate = ({ GTMToggle, cdnName = '', cName = '', ttl }) => {
   if (!GTMToggle) {
     return {}
   }
+
+  const ttlValue = ttl !== null ? ttl : undefined
 
   const conditions = {
     cdnName: {
@@ -54,7 +56,7 @@ const validate = ({ GTMToggle, cdnName = '', cName = '' }) => {
     }
   }
 
-  return checkForErrors({ cdnName, cName }, conditions, {
+  return checkForErrors({ cdnName, cName, ttl: ttlValue }, conditions, {
     cdnName: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cdnName.required"/>,
     cName: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cName.required"/>
   })
@@ -149,7 +151,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     const propertyServiceType = this.props.property.getIn(['services', 0, 'service_type'])
 
-    if (!values.GTMToggle) {
+    if (!values.GTMToggle && this.props.initialValues.GTMToggle) {
       return this.props.deleteGtm(propertyServiceType)
     }
 
@@ -164,7 +166,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
       customer_id: customerId
     }
 
-    return this.props.initialValues
+    return this.props.initialValues.GTMToggle
       ? this.props.updateGtm(propertyServiceType, gtmConfig)
         .then(() => this.props.showNotification())
         .catch(this.submissionError)
@@ -333,6 +335,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
                 {readOnly
                   ? initialValues.ttl
                   : <Field
+                    min={0}
                     name="ttl"
                     addonAfter={<FormattedMessage id="portal.units.seconds" />}
                     component={FieldFormGroupNumber}
@@ -367,7 +370,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
           onCancel={reset}
           invalid={invalid}
           saving={submitting}
-          show={(dirty && !!initialValues) || (!isFormDisabled && !initialValues)}>
+          show={(dirty && !!initialValues.GTMToggle) || (!isFormDisabled && !initialValues.GTMToggle)}>
           {error && <span>{error}<br/></span>}
           <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
         </SaveBar>
@@ -388,7 +391,6 @@ ConfigurationGlobalTrafficManager.propTypes = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, { params: { property }, intl }) => {
-
   const getFieldValue = formValueSelector('gtmForm')
   const GTMToggle = getFieldValue(state, 'GTMToggle')
   const initialValues = formatConfigToInitialValues(state, property, intl.formatMessage)
@@ -398,7 +400,7 @@ const mapStateToProps = (state, { params: { property }, intl }) => {
     isFormDisabled: !GTMToggle,
     getRule: (index) => getFieldValue(state, 'rules')[index],
     property: getProperty(state, property),
-    initialValues
+    initialValues: { ttl: GTM_TTL_DEFAULT, ...initialValues }
   }
 }
 

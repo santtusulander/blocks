@@ -6,13 +6,13 @@
     &.enabled {
       font-weight: 600;
     }
-  }
 
-  .name {
-    flex: 3;
-  }
+    .name {
+      flex: 4;
+    }
 
-  .tick {
-    flex: 0 0 5rem !important;
+    .tick {
+      flex: 0 0 5rem !important;
+    }
   }
 }

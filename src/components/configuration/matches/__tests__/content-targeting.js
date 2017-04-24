@@ -9,8 +9,9 @@ import ContentTargeting from '../content-targeting.jsx'
 import country_list from '../../../../constants/country-list'
 
 describe('ContentTargeting', () => {
-  let handleSubmit, change, close, intl, component
+  let handleSubmit, change, close, intl, component, changeValue, activateMatch
   const fakeConfig = Immutable.fromJS({
+    field: "content_targeting_country_code",
     "value": ['UA']
   })
 
@@ -21,11 +22,15 @@ describe('ContentTargeting', () => {
     handleSubmit = jest.fn()
     close = jest.fn()
     change = jest.fn()
+    changeValue = jest.fn()
+    activateMatch = jest.fn()
 
     let props = {
       change,
       handleSubmit,
       close,
+      changeValue,
+      activateMatch,
       invalid: false,
       match: fakeConfig,
       path: fakePath,
@@ -39,60 +44,23 @@ describe('ContentTargeting', () => {
     expect(component).toBeDefined()
   })
 
-  //TODO-2277
+  it('should save changes', () => {
+    const values = {
+      value: [{id: 'UA'}],
+      inverted: false
+    }
 
-  // it('should save changes', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   const component = subject({changeValue, close})
-  //   component.setState({
-  //     includes: [{id: 'US'}],
-  //     excludes: [{id: 'CA'}]
-  //   })
-  //   component.instance().saveChanges()
-  //   expect(close.mock.calls.length).toBe(1)
-  //   expect(changeValue.mock.calls.length).toBe(1)
+    component.instance().saveChanges(values)
 
-  //   expect(changeValue.mock.calls[0][0]).toEqual(Immutable.List(['foo', 'bar']))
-    // expect(changeValue.mock.calls[0][1]).toEqual(Immutable.fromJS(
-    //   {
-    //     "cases": [
-    //       [
-    //         ".*",
-    //         [
-    //           {
-    //             "script_lua": {
-    //               "target": {
-    //                 "geo": [
-    //                   {
-    //                     "country": [
-    //                       {
-    //                         "in": [
-    //                           "US"
-    //                         ],
-    //                         "response": {
-    //                           "code": 200
-    //                         }
-    //                       },
-    //                       {
-    //                         "in": [
-    //                           "CA"
-    //                         ],
-    //                         "response": {
-    //                           "code": 401
-    //                         }
-    //                       }
-    //                     ]
-    //                   }
-    //                 ]
-    //               }
-    //             }
-    //           }
-    //         ]
-    //       ]
-    //     ],
-    //     "field": "request_host"
-    //   }
-    // ))
-  //})
+    expect(changeValue.mock.calls.length).toBe(1)
+    expect(changeValue.mock.calls[0][0]).toEqual(Immutable.List(['foo', 'bar']))
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(
+      {
+        field: "content_targeting_country_code",
+        value: ['UA'],
+        type: 'in',
+        inverted: false
+      }
+    )
+  })
 })
