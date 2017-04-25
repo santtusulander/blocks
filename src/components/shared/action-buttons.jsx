@@ -19,7 +19,8 @@ class ActionButtons extends Component {
   constructor(props) {
     super(props)
 
-    this.state={
+    this.state = {
+      handleConfirm: '',
       showConfirmation: false
     }
   }
@@ -80,7 +81,12 @@ class ActionButtons extends Component {
         {onDelete &&
         <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
           <Button
-            onClick={showConfirmation ? () => this.setState({showConfirmation: true}) : onDelete}
+            onClick={showConfirmation
+              ? () => this.setState({
+                handleConfirm: onDelete,
+                showConfirmation: true
+              })
+              : onDelete}
             className="btn btn-icon delete-button"
             disabled={deleteDisabled}>
             <IconTrash/>
@@ -91,7 +97,12 @@ class ActionButtons extends Component {
         {onRemove &&
         <IsAllowed to={permissions ? permissions.remove : ALLOW_ALWAYS}>
           <Button
-            onClick={showConfirmation ? () => this.setState({showConfirmation: true}) : onRemove}
+            onClick={showConfirmation
+              ? () => this.setState({
+                handleConfirm: onRemove,
+                showConfirmation: true
+              })
+              : onRemove}
             className="btn btn-icon remove-button"
             disabled={removeDisabled}>
             <IconClose/>
@@ -112,7 +123,7 @@ class ActionButtons extends Component {
             <Confirmation
               cancelText={intl.formatMessage({id: 'portal.button.no'})}
               confirmText={intl.formatMessage({id: 'portal.button.yes'})}
-              handleConfirm={onDelete? onDelete: onRemove}
+              handleConfirm={this.state.handleConfirm}
               handleCancel={() => this.setState({ showConfirmation: false })}>
               <FormattedMessage id="portal.common.delete.disclaimer.text"/>
             </Confirmation>}
