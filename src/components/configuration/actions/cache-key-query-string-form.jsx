@@ -31,10 +31,10 @@ const parseQueryArgs = (qNames) => {
         .map(name => name.get('field_detail'))
 
   if (currentQueryArgs.size) {
-    queryArgs = currentQueryArgs.toJS().map(value => ({ value }))
+    queryArgs = currentQueryArgs.toJS()
 
     if (currentQueryArgs.last() !== '') {
-      queryArgs = queryArgs.concat([{value: ''}])
+      queryArgs = queryArgs.concat([''])
     }
   }
 
@@ -64,13 +64,15 @@ const validate = ({ activeFilter, queryArgs }) => {
 
   if (activeFilter === 'include_some_parameters') {
     queryArgs.forEach((queryArg, i) => {
-      if (queryArg.value && !isValidTextField(queryArg.value, MIN_FIELD_LENGTH, MAX_FIELD_LENGTH)) {
-        errors.queryArgs.splice(i, 0, {value: <FormattedMessage id="portal.policy.edit.matcher.invalid.error"/>})
+      if (queryArg && !isValidTextField(queryArg, MIN_FIELD_LENGTH, MAX_FIELD_LENGTH)) {
+        errors.queryArgs.splice(i, 0, <FormattedMessage id="portal.policy.edit.matcher.invalid.error"/>)
+      } else {
+        errors.queryArgs.push(null)
       }
     })
   }
 
-  return errors.queryArgs.length ? errors : {}
+  return errors.queryArgs.filter(v => v).length ? errors : {}
 }
 
 class CacheKeyQueryStringForm extends React.Component {
@@ -85,8 +87,8 @@ class CacheKeyQueryStringForm extends React.Component {
         || JSON.stringify(this.props.allQueryArgs) !== JSON.stringify(nextProps.allQueryArgs)) {
       if (nextProps.containsQueryArgs) {
         if (!nextProps.allQueryArgs.length
-            || nextProps.allQueryArgs[nextProps.allQueryArgs.length - 1].value !== '') {
-          this.props.dispatch(arrayPush('cache-key-query-string-form', 'queryArgs', {value: ''}))
+            || !!nextProps.allQueryArgs[nextProps.allQueryArgs.length - 1]) {
+          this.props.dispatch(arrayPush('cache-key-query-string-form', 'queryArgs', ''))
         }
       } else {
         this.props.dispatch(arrayRemoveAll('cache-key-query-string-form', 'queryArgs'))
@@ -106,7 +108,7 @@ class CacheKeyQueryStringForm extends React.Component {
             <Field
               type="text"
               key={i}
-              name={`${queryArg}.value`}
+              name={`${queryArg}`}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.cacheKeyQueryString.queryName.text"/>}
               required={false}
@@ -137,10 +139,10 @@ class CacheKeyQueryStringForm extends React.Component {
       }
 
       queryArgs.forEach(queryArg => {
-        if (queryArg.value) {
+        if (queryArg) {
           newName = newName.push(Map({
             field: 'request_query_arg',
-            field_detail: queryArg.value
+            field_detail: queryArg
           }))
         }
       })
