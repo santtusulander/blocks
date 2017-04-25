@@ -26,7 +26,7 @@ import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
 import { hasService } from '../util/helpers'
 
-import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
+import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
 
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
@@ -42,7 +42,6 @@ import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import ModalWindow from '../components/shared/modal'
 import Tabs from '../components/shared/page-elements/tabs'
-import IsAdmin from '../components/shared/permission-wrappers/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
@@ -109,6 +108,10 @@ export class Configuration extends React.Component {
 
   isReadOnly() {
     return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_PROPERTY)
+  }
+
+  isAdvancedTabReadOnly() {
+    return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_ADVANCED)
   }
 
   hasSecurityServicePermission() {
@@ -283,6 +286,7 @@ export class Configuration extends React.Component {
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const serviceTypeText = formatMessage({ id: serviceTypes[serviceType] || serviceTypes['unknown'] })
     const readOnly = this.isReadOnly()
+    const advancedReadOnly = this.isAdvancedTabReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
 
@@ -371,18 +375,19 @@ export class Configuration extends React.Component {
             </li>
           }
 
-          <IsAdmin>
+          <IsAllowed to={VIEW_ADVANCED}>
             <li data-eventKey='advanced' className={classNames({ disabled: diff || isGTMFormDirty })}>
               <Link to={baseUrl + '/advanced'} activeClassName="active">
               <FormattedMessage id="portal.configuration.advanced.text" />
               </Link>
             </li>
-          </IsAdmin>
+          </IsAllowed>
         </Tabs>
 
         <PageContainer>
           {React.cloneElement(children, {
             readOnly,
+            advancedReadOnly,
             params: this.props.params,
             cancelEditPolicyRoute: this.cancelEditPolicyRoute,
             activateMatch: this.props.uiActions.changePolicyActiveMatch,
