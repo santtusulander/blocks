@@ -13,12 +13,17 @@ const roleNamesActions = {
   fetchRoleNames: jest.fn()
 }
 
+const serviceTitleActions = {
+  fetchServiceTitle: jest.fn()
+}
+
 describe('AccountManagementSystemRoles', () => {
   it('should exist', () => {
     const roles = shallow(
       <Roles
         fetchAccounts={accountActions.fetchAccounts}
         fetchRoleNames={roleNamesActions.fetchRoleNames}
+        fetchServiceTitle={serviceTitleActions.fetchServiceTitle}
         params={{}}
       />
     )
