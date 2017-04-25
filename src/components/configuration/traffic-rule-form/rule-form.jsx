@@ -9,6 +9,7 @@ import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 
 import { checkForErrors } from '../../../util/helpers'
 
+import TruncatedTitle from '../../shared/page-elements/truncated-title'
 import PolicyWeight from '../policy-weight'
 import Input from '../../shared/form-fields/field-form-group'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
@@ -47,8 +48,7 @@ const Matches = ({ fields, activeCondition = 'or', chooseMatch, disabled }) => {
             component={({ input }) => (
               <Row className="condition">
                 <Col xs={10} className="condition-info-column" onClick={onEdit}>
-
-                  <p>{input.value.label}</p>
+                  <TruncatedTitle content={input.value.label} />
                   {index + 1 !== matchArrayLength && <h4>{conditionLabel}</h4>}
 
                 </Col>
