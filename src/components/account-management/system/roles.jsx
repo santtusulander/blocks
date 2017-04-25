@@ -19,7 +19,8 @@ class AccountManagementSystemRoles extends React.Component {
 
     this.state = {
       editRole: null,
-      showAddNewDialog: false
+      showAddNewDialog: false,
+      roleWithPermissions: Immutable.List()
     }
 
     this.editRole = this.editRole.bind(this)
@@ -38,11 +39,16 @@ class AccountManagementSystemRoles extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!Immutable.is(this.props.roleNames, nextProps.roleNames)) {
-      return Promise.all(
+      Promise.all(
         nextProps.roleNames.map(roleName => {
           return this.props.fetchRolePermissions({id: roleName.get('id')})
         })
       )
+      .then(() => {
+        this.setState({
+          roleWithPermissions: this.populateRoleNames()
+        })
+      })
     }
   }
 
@@ -63,11 +69,9 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   editRole(id) {
-    const roles = this.populateRoleNames()
-
     this.showAddNewRoleDialog()
     this.setState({
-      editRole: roles.find(role => role.get('id') === id)
+      editRole: this.state.roleWithPermissions.find(role => role.get('id') === id)
     })
   }
 
@@ -77,7 +81,6 @@ class AccountManagementSystemRoles extends React.Component {
 
   render() {
     const { fetchingAccounts, fetchingRoles, fetchingRoleNames, fetchingPermissionNames } = this.props
-    const filteredRoles = this.populateRoleNames()
 
     return (
       <PageContainer>
@@ -85,7 +88,7 @@ class AccountManagementSystemRoles extends React.Component {
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
-            roles={filteredRoles}
+            roles={this.state.roleWithPermissions}
             permissions={this.props.permissions}
             onCancel={this.hideAddNewRoleDialog}
             onSave={this.saveRole}
