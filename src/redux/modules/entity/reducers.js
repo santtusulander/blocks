@@ -97,23 +97,20 @@ export const receiveEntityPagination = (state, action) => {
     // {
     //   account: {
     //     meta: pagination
-    //     1: {
-    //       results: [ ids ...]
-    //     }
+    //     1: [ ids ...]
+    //     2: ...
     //   }
     // }
     //
 
-    //FIXME: UDNP-3513 mergeDeep causes bug when two pages with same page numbers are fetched (combines result, but should be updating)
+    const newPage = fromJS({
+      meta: pagination,
+      [page]: action.response.result
+    })
 
-    return state.mergeDeep(fromJS({
-      [requestTag]: {
-        meta: pagination,
-        [page]: action.response.result
-      }
-    }))
+    const newState = state.mergeIn([requestTag], newPage)
 
-
+    return newState
 
   }
 
