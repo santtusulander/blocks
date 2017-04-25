@@ -76,11 +76,12 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   render() {
+    const { fetchingAccounts, fetchingRoles, fetchingRoleNames, fetchingPermissionNames } = this.props
     const filteredRoles = this.populateRoleNames()
 
     return (
       <PageContainer>
-        {this.props.fetchingAccounts || this.props.fetchingRoles || this.props.fetchingPermissionNames
+        {fetchingAccounts || fetchingRoles || fetchingPermissionNames || fetchingRoleNames
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
@@ -104,6 +105,7 @@ AccountManagementSystemRoles.propTypes = {
   fetchServiceTitle: React.PropTypes.func,
   fetchingAccounts: React.PropTypes.bool,
   fetchingPermissionNames: React.PropTypes.bool,
+  fetchingRoleNames: React.PropTypes.bool,
   fetchingRoles: React.PropTypes.bool,
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
@@ -121,6 +123,7 @@ function mapStateToProps(state) {
   return {
     fetchingAccounts: state.account.get('fetching'),
     fetchingRoles: getFetchingByTag(state, 'roles'),
+    fetchingRoleNames: getFetchingByTag(state, 'roleNames'),
     fetchingPermissionNames: getFetchingByTag(state, 'serviceTitles'),
     roleNames: state.entities.roleNames.toList(),
     roles: state.entities.roles,
