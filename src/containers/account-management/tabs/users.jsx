@@ -350,7 +350,8 @@ export class AccountManagementAccountUsers extends Component {
   render() {
     const {
       fetching,
-      users
+      users,
+      params: {account}
     } = this.props
 
     const totalCount = this.props.paginationMeta && this.props.paginationMeta.get('total') ? this.props.paginationMeta.get('total') : 0
@@ -409,13 +410,14 @@ export class AccountManagementAccountUsers extends Component {
               options={groupOptions}/>
           </div>
           */}
+          { account &&
+            <IsAllowed to={CREATE_USER}>
+              <Button bsStyle="success" className="btn-icon"
+                onClick={this.toggleInlineAdd}>
+                <IconAdd />
+              </Button>
+            </IsAllowed>}
 
-          <IsAllowed to={CREATE_USER}>
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.toggleInlineAdd}>
-              <IconAdd />
-            </Button>
-          </IsAllowed>
         </SectionHeader>
 
         { fetching
