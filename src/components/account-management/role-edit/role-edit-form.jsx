@@ -50,7 +50,7 @@ class RoleEditForm extends React.Component {
     } = this.props
 
     const getPermissionName = (permissionKey, section) => {
-      return permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
+      return permissions.getIn(section).find(value => value.get('name') === permissionKey).get('title')
     }
 
     return (
@@ -84,7 +84,7 @@ class RoleEditForm extends React.Component {
               return (
                 <tr key={key}>
                   <td className="no-border">
-                    {getPermissionName(key, 'ui')}
+                    {getPermissionName(key, ['UI','resources'])}
                   </td>
                   <td>
                     <Field

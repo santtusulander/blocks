@@ -63,9 +63,11 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   editRole(id) {
+    const roles = this.populateRoleNames()
+
     this.showAddNewRoleDialog()
     this.setState({
-      editRole: this.props.roles.find(role => role.get('id') === id)
+      editRole: roles.find(role => role.get('id') === id)
     })
   }
 
