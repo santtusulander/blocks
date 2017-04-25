@@ -416,7 +416,8 @@ export class AccountManagementAccountUsers extends Component {
                 onClick={this.toggleInlineAdd}>
                 <IconAdd />
               </Button>
-            </IsAllowed>}
+            </IsAllowed>
+          }
 
         </SectionHeader>
 
