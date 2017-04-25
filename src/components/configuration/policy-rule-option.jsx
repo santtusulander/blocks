@@ -28,7 +28,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
   const className = classNames({
     inactive: !isEnabled
   })
-  let listItem = (isEnabled &&
+  let listItem = (
     <li>
       <a href="#" className={className} onClick={isEnabled ? onClick(key) : null}>
         <IconCaretRight width={28} height={28} />
@@ -45,7 +45,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     listItem = <HasServicePermission anyOf={servicePermissions}>{listItem}</HasServicePermission>
   }
 
-  return listItem
+  return isEnabled ? listItem : null
 }
 
 PolicyRuleOption.displayName = 'PolicyRuleOption'
