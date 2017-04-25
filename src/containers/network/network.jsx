@@ -87,7 +87,7 @@ class Network extends React.Component {
   constructor(props) {
     super(props)
 
-    this.container = null
+    this.container = undefined
     this.notificationTimeout = null
     this.showNotification = this.showNotification.bind(this)
 
@@ -179,7 +179,7 @@ class Network extends React.Component {
     // allows us to use the browsers navigation buttons to active the scrolling.
     const { group, network, pop, pod } = this.props.params
 
-    if (this.container === null) {
+    if (!this.container) {
       // There is no reason to perform any operation on detached container.
       return
     }
@@ -519,6 +519,11 @@ class Network extends React.Component {
    * @param  {boolean}             shouldScrollToPrevious A boolean to determine scroll direction
    */
   selectEntityAndScroll(selectedEntity, shouldScrollToPrevious) {
+    /* If container is not yet initialized - return */
+    if (!this.container) {
+      return
+    }
+
     const { entities, entityKeys } = this.elementAndContainerValues()
 
     // Get the next entity ref
