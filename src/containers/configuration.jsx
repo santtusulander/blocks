@@ -286,7 +286,7 @@ export class Configuration extends React.Component {
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const serviceTypeText = formatMessage({ id: serviceTypes[serviceType] || serviceTypes['unknown'] })
     const readOnly = this.isReadOnly()
-    const advancedReadOnly = this.isAdvancedTabReadOnly()
+    const advancedTabReadOnly = this.isAdvancedTabReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
 
@@ -387,7 +387,7 @@ export class Configuration extends React.Component {
         <PageContainer>
           {React.cloneElement(children, {
             readOnly,
-            advancedReadOnly,
+            advancedTabReadOnly,
             params: this.props.params,
             cancelEditPolicyRoute: this.cancelEditPolicyRoute,
             activateMatch: this.props.uiActions.changePolicyActiveMatch,
