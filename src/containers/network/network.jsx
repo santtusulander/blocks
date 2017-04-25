@@ -635,7 +635,7 @@ class Network extends React.Component {
    * Checks if the url has 'groups' string in it.
    *
    * @method hasGroupsInUrl
-   * @return {Boolean}      Boolean of having groups or not in the url
+   * @return {Boolean} Boolean of having groups or not in the url
    */
   hasGroupsInUrl() {
     return this.props.location.pathname.includes('groups')
