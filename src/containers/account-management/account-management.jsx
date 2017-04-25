@@ -59,6 +59,8 @@ import { checkForErrors } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
+const PAGE_SIZE = 20
+
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
@@ -109,7 +111,15 @@ export class AccountManagement extends Component {
     return this.props.deleteUser(this.userToDelete)
       .then(() => {
         this.props.toggleModal(null)
-        this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+        const {location, params: { brand, account }} = this.props
+
+        const {sortBy, sortOrder, filterBy, filterValue} = location.query
+        const page = location.query.page ? location.query.page : 1
+        this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
+          .then(() => {
+            // only show toast notification when receive all users after deleting user
+            this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+          })
       })
   }
 
@@ -525,9 +535,11 @@ AccountManagement.propTypes = {
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
+  fetchUsers: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   intl: PropTypes.object,
+  location: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
@@ -581,7 +593,8 @@ function mapDispatchToProps(dispatch) {
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
-    deleteUser: (id) => dispatch(usersActions.remove({id}))
+    deleteUser: (id) => dispatch(usersActions.remove({id})),
+    fetchUsers: (params) => dispatch(usersActions.fetchAll({...params, offset: (params.page - 1) * PAGE_SIZE, limit: PAGE_SIZE}))
   };
 }
 
