@@ -25,7 +25,6 @@ class AccountManagementSystemRoles extends React.Component {
     this.showAddNewRoleDialog = this.showAddNewRoleDialog.bind(this)
     this.hideAddNewRoleDialog = this.hideAddNewRoleDialog.bind(this)
     this.saveRole = this.saveRole.bind(this)
-    this.getPermissionTitle = this.getPermissionTitle.bind(this)
     this.populateRoleNames = this.populateRoleNames.bind(this)
   }
 
@@ -37,46 +36,20 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Immutable.is(this.props.roles, nextProps.roles)) {
+    if (!Immutable.is(this.props.roleNames, nextProps.roleNames)) {
       return Promise.all(
-        this.props.roles.map(roleName => {
+        nextProps.roleNames.map(roleName => {
           return this.props.fetchRolePermissions({id: roleName.get('id')})
         })
       )
     }
   }
 
-  getPermissionTitle() {
-    const { roles, serviceTitles } = this.props
-    if (!Immutable.isEmpty(roles) && !Immutable.isEmpty(serviceTitles)) {
-      const sampleUIRoles =  roles[0].get('ui')
-      return Object.keys(sampleUIRoles).map(role => {
-        return {
-          name: role,
-          title: serviceTitles.find(service => role === service.get('name'))
-        }
-      })
-    }
-    return []
-  }
-
   populateRoleNames() {
-    const { roles, roleNames } = this.props
-    // const titles = this.getPermissionTitle()
-    return roleNames.size() ? roleNames.map(roleName => {
-      // if (roleName.get('id') && roles[roleName.get('id')]) {
-      //   return {
-      //     id: roleName.get('id'),
-      //     roleName: roleName.get('name'),
-      //     roles: roles[roleName.get('id')].get('ui').mapKeys((rName, rValue) => {
-      //       return rValue ? titles.find(tit => tit.name === rName) : ''
-      //     })
-      //   }
-      // }
-      return {
-        id: roleName.get('id'),
-        name: roleName.get('name')
-      }
+    const { roleNames, roles } = this.props
+    return !roleNames.isEmpty() ? roleNames.map(roleName => {
+      const roleId = roleName.get('id').toString()
+      return roleName.set('permissions', roles.get(roleId))
     }) : roleNames
   }
 
@@ -108,8 +81,7 @@ class AccountManagementSystemRoles extends React.Component {
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
-            roles={this.props.filteredRoles}
-            users={this.props.users}
+            roles={filteredRoles}
             permissions={this.props.permissions}
             onCancel={this.hideAddNewRoleDialog}
             onSave={this.saveRole}
@@ -132,16 +104,13 @@ AccountManagementSystemRoles.propTypes = {
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roleNames: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  serviceTitles: React.PropTypes.instanceOf(Immutable.List),
-  users: React.PropTypes.instanceOf(Immutable.List)
+  roles: React.PropTypes.instanceOf(Immutable.Map)
 }
 AccountManagementSystemRoles.defaultProps = {
   permissions: Immutable.Map(),
-  roles: Immutable.List(),
+  roles: Immutable.Map(),
   roleNames: Immutable.List(),
-  users: Immutable.List(),
-  serviceTitles: Immutable.List()
+  users: Immutable.List()
 }
 
 function mapStateToProps(state) {
@@ -149,8 +118,8 @@ function mapStateToProps(state) {
     fetchingAccounts: state.account.get('fetching'),
     fetchingUsers: state.user.get('fetching'),
     roleNames: state.entities.roleNames.toList(),
-    roles: state.entities.roles.toList(),
-    serviceTitles: state.entities.serviceTitles.getIn(['UI','resources'])
+    roles: state.entities.roles,
+    permissions: state.entities.serviceTitles
   }
 }
 
