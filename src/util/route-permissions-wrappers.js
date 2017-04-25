@@ -220,6 +220,20 @@ export const UserCanViewGTM = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+export const UserCanViewAdvancedTab = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const path = ownProps.location.pathname.replace(/\/advanced$/, '')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'CanViewAdvancedTab',
+    predicate: permissionChecker(PERMISSIONS.VIEW_ADVANCED, store),
+    allowRedirectBack: false
+  })
+}
+
 export const AccountCanViewProperties = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
