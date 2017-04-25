@@ -26,10 +26,29 @@ const userSchema = new schema.Entity('users', {}, {
   idAttribute: 'email'
 })
 
-export const fetchAll = ({ brand, account, group }) => {
-  return axios.get(`${baseURL()}?${createQueryStr(brand, account, group)}` , PAGINATION_MOCK)
+export const fetchAll = ({ brand, account, group, offset, limit, sortBy, sortOrder, filterBy, filterValue }) => {
+  const paginationParams = offset >= 0 && limit
+  ? {
+    params: {
+      sort_by: sortBy,
+      sort_order: sortOrder === '-1' ? 'desc' : 'asc',
+      filter_by: filterBy,
+      filter_value: filterValue,
+
+      page_size: limit,
+      offset
+    }
+  } : PAGINATION_MOCK
+
+  return axios.get(`${baseURL()}?${createQueryStr(brand, account, group)}` , paginationParams)
     .then(({data}) => {
-      return normalize(data.data, [userSchema])
+      const {data: result, ...pagination} = data
+
+      return {
+        pagination,
+        ...normalize(result, [userSchema])
+      }
+
     })
 }
 

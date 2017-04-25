@@ -45,16 +45,16 @@ export const NODE_TYPE_OPTIONS = [
 ]
 
 export const NODE_ENVIRONMENT_OPTIONS = [
-  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: <FormattedMessage id="portal.network.nodeForm.environment.cdx-dev"/>  },
-  { value: 'cdx-test', cacheValue: 'cdx-test', label: <FormattedMessage id="portal.network.nodeForm.environment.cdx-test"/> },
-  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: <FormattedMessage id="portal.network.nodeForm.environment.cdx-stag"/> },
-  { value: 'cdx', cacheValue: 'cdx', label: <FormattedMessage id="portal.network.nodeForm.environment.cdx"/> }
+  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: 'portal.network.nodeForm.environment.cdx-dev'},
+  { value: 'cdx-test', cacheValue: 'cdx-test', label: 'portal.network.nodeForm.environment.cdx-test'},
+  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: 'portal.network.nodeForm.environment.cdx-stag'},
+  { value: 'cdx', cacheValue: 'cdx', label: 'portal.network.nodeForm.environment.cdx'}
 ]
 
 export const NODE_ROLE_OPTIONS = [
-  { value: 'cache', label: <FormattedMessage id="portal.network.nodeForm.roles.cache"/> },
-  { value: 'gslb', label: <FormattedMessage id="portal.network.nodeForm.roles.gslb"/> },
-  { value: 'slb', label: <FormattedMessage id="portal.network.nodeForm.roles.slb"/> }
+  { value: 'cache', label: 'portal.network.nodeForm.roles.cache'},
+  { value: 'gslb', label: 'portal.network.nodeForm.roles.gslb'},
+  { value: 'slb', label: 'portal.network.nodeForm.roles.slb'}
 ]
 
 export const NODE_CLOUD_DRIVER_OPTIONS = [

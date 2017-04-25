@@ -6,151 +6,253 @@ jest.unmock('../matcher.jsx')
 import Matcher from '../matcher.jsx'
 
 const fakeConfig = Immutable.fromJS({
-  type: 'equals',
+  type: 'contains',
   value: '123'
 })
 
 const fakePath = Immutable.List(['foo', 'bar'])
 
 describe('Matcher', () => {
-  let handleSubmit, close, change, component
+  let handleSubmit, close, change, changeValue, component, activateMatch
 
   beforeEach(() => {
     handleSubmit = jest.fn()
     close = jest.fn()
     change = jest.fn()
+    changeValue = jest.fn()
+    activateMatch = jest.fn()
 
     let props = {
       change,
+      changeValue,
       handleSubmit,
+      activateMatch,
       close,
       invalid: false,
       match: fakeConfig,
-      path: fakePath
+      path: fakePath,
+      hasExists: true,
+      hasEquals: true,
+      hasContains: true,
+      hasEmpty: true,
+      hasFieldDetail: true
     }
 
     component = shallow(<Matcher {...props} />)
   })
+
   it('should exist', () => {
     expect(component).toBeDefined()
   })
 
-  //TODO-2277
+  it('should have 8 filter options', () => {
+    expect(component.instance().getFilterOptions().length).toBe(8)
+  })
 
-  // it('should update the state as changes happen', () => {
-  //   let changeValue = jest.fn()
-  //   let matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}/>
-  //   )
-  //   let inputs = matcher.find('FormControl')
-  //   inputs.at(0).simulate('change', { target: { value: 'new' } })
-  //   expect(matcher.state('val')).toEqual('new')
-  // })
+  it('should have 3 Fields', () => {
+    expect(component.find('Field').length).toBe(3)
+  })
 
-  // it('should update the parameters as select change happens', () => {
-  //   let changeValue = jest.fn()
-  //   let matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}/>
-  //   )
-  //   expect(matcher.state('activeFilter')).toBe('exists')
-  //   matcher.instance().handleMatchesChange('foo')
-  //   expect(matcher.state('activeFilter')).toBe('foo')
-  // })
+  it('should have 2 Fields', () => {
+    component.setProps({ hasFieldDetail: false })
 
-  // it('should save changes', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   let matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}
-  //       close={close}/>
-  //   )
-  //   matcher.setState({
-  //     val: 'aaa'
-  //   })
-  //   matcher.instance().saveChanges()
-  //   expect(close.mock.calls.length).toBe(1)
-  //   expect(changeValue.mock.calls[0][0]).toEqual(Immutable.List(['foo', 'bar']))
-  //   expect(changeValue.mock.calls[0][1]).toEqual(Immutable.fromJS({
-  //     "cases": [["aaa", undefined]]
-  //   }))
-  // })
+    expect(component.find('Field').length).toBe(2)
+  })
 
-  // it('should include the rule selector by default', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   const matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}
-  //       close={close}/>
-  //   )
-  //   const inputSelects = matcher.find('Select')
-  //   expect(inputSelects.length).toEqual(1)
-  // })
+  it('should handle cancel click', () => {
+    component.find('Button').at(0).simulate('click')
 
-  // it('should be able to hide the rule selector', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   const matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}
-  //       close={close}
-  //       disableRuleSelector={true}/>
-  //   )
-  //   const inputSelects = matcher.find('Select')
-  //   expect(inputSelects.length).toEqual(0)
-  // })
+    expect(close.mock.calls.length).toBe(1)
+  })
 
-  // it('should validate for "exists" matches', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   const matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}
-  //       close={close}
-  //       disableRuleSelector={true}/>
-  //   )
-  //   matcher.instance().handleMatchesChange('exists')
-  //   expect(matcher.instance().validate()).toBe(true)
-  // })
+  it('should handle submit click', () => {
+    component.find('Button').at(1).simulate('click')
 
-  // it('should validate for "contains" matches', () => {
-  //   const changeValue = jest.fn()
-  //   const close = jest.fn()
-  //   const matcher = shallow(
-  //     <Matcher
-  //       changeValue={changeValue}
-  //       match={fakeConfig}
-  //       path={fakePath}
-  //       close={close}
-  //       disableRuleSelector={true}/>
-  //   )
+    expect(handleSubmit.mock.calls.length).toBe(1)
+  })
 
-  //   matcher.instance().handleMatchesChange('contains')
-  //   expect(matcher.instance().validate()).toBe(false)
-  //   matcher.instance().handleValChange({ target: { value: 'aaa' } })
-  //   matcher.instance().handleContainsValChange({ target: { value: 'bbb' } })
-  //   expect(matcher.instance().validate()).toBe(true)
+  it('should call changeValue', () => {
+    component.instance().saveChanges({})
 
-  //   matcher.instance().handleContainsValChange({ target: { } })
-  //   matcher.instance().handleMatchesChange('does_not_contain')
-  //   expect(matcher.instance().validate()).toBe(false)
-  //   matcher.instance().handleValChange({ target: { value: 'ccc' } })
-  //   matcher.instance().handleContainsValChange({ target: { value: 'ddd' } })
-  //   expect(matcher.instance().validate()).toBe(true)
-  // })
+    expect(changeValue.mock.calls.length).toBe(1)
+  })
+
+  it('should call changeValue with contains filter', () => {
+    component.instance().saveChanges({
+      activeFilter: 'contains',
+      containsVal: '123',
+      val: 'header'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'substr',
+      value: '123',
+      inverted: false,
+      field_detail: 'header'
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with does_not_contain filter', () => {
+    component.instance().saveChanges({
+      activeFilter: 'does_not_contain',
+      containsVal: '123',
+      val: 'header'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'substr',
+      value: '123',
+      inverted: true,
+      field_detail: 'header'
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with exists filter and return no value', () => {
+    component.setProps({ hasFieldDetail: false })
+    component.instance().saveChanges({
+      activeFilter: 'exists',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'exists',
+      value: '',
+      inverted: false
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with does_not_exist filter and return no value', () => {
+    component.setProps({ hasFieldDetail: false })
+    component.instance().saveChanges({
+      activeFilter: 'does_not_exist',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'exists',
+      value: '',
+      inverted: true
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with exists filter and populate field_detail', () => {
+    component.instance().saveChanges({
+      activeFilter: 'exists',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'exists',
+      field_detail: '123',
+      inverted: false
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with does_not_exist filter and populate field_detail', () => {
+    component.instance().saveChanges({
+      activeFilter: 'does_not_exist',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'exists',
+      field_detail: '123',
+      inverted: true
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with empty filter and return no value', () => {
+    component.setProps({ hasFieldDetail: false })
+    component.instance().saveChanges({
+      activeFilter: 'empty',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'empty',
+      value: '',
+      inverted: false
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with does_not_empty filter and return no value', () => {
+    component.setProps({ hasFieldDetail: false })
+    component.instance().saveChanges({
+      activeFilter: 'does_not_empty',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'empty',
+      value: '',
+      inverted: true
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with empty filter and populate field_detail', () => {
+    component.instance().saveChanges({
+      activeFilter: 'empty',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'empty',
+      field_detail: '123',
+      inverted: false
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
+  it('should call changeValue with does_not_empty filter and populate field_detail', () => {
+    component.instance().saveChanges({
+      activeFilter: 'does_not_empty',
+      val: '123'
+    })
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'empty',
+      field_detail: '123',
+      inverted: true
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
+  })
+
 })

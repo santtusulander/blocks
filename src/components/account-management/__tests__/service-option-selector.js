@@ -42,23 +42,33 @@ const options = [
     ],
     value: 2,
     requires_charge_number: true
+  },
+  {
+    label: 'Service 3',
+    options: [],
+    value: 3,
+    requires_charge_number: false
   }
 ]
 
-let changeOptionValue, showServiceItemForm
+let changeValue, showServiceItemForm, onChange, onChangeServiceItem
 
 describe('ServiceOptionSelector', () => {
   let subject, error, props = null
 
-  changeOptionValue = jest.fn()
+  changeValue = jest.fn()
   showServiceItemForm = jest.fn()
+  onChangeServiceItem = jest.fn()
+  onChange = jest.fn()
 
   beforeEach(() => {
     subject = () => {
       props = {
         input,
         options,
-        showServiceItemForm
+        showServiceItemForm,
+        onChangeServiceItem,
+        changeValue
       }
       return shallow(
         <ServiceOptionSelector {...props}/>
@@ -71,7 +81,7 @@ describe('ServiceOptionSelector', () => {
   })
 
   it('should have 2 panels', () => {
-    expect(subject().find(Panel).length).toBe(2)
+    expect(subject().find(Panel).length).toBe(3)
   })
 
   it('should have 6 options', () => {
@@ -115,23 +125,34 @@ describe('ServiceOptionSelector', () => {
     expect(component.state().openPanels).not.toContain(1)
   })
 
-  it('should call changeOptionValue if option does not require charge_number', () => {
+  it('should call onChangeServiceItem and onChange', () => {
     const component = subject()
 
-    component.instance().changeOptionValue = jest.fn()
+    component.instance().changeValue(3, null, true, -1)
+
+    const result = { service_id: 3, options: [] }
+
+    expect(input.onChange).toBeCalled()
+    expect(onChangeServiceItem).toBeCalled()
+  })
+
+  it('should call changeValue if option does not require charge_number', () => {
+    const component = subject()
+
+    component.instance().changeValue = jest.fn()
     component.instance().handleOptionClick({requires_charge_number: false}, 0, 3, true, 0)
 
-    expect(component.instance().changeOptionValue).toBeCalled()
+    expect(component.instance().changeValue).toBeCalled()
     expect(showServiceItemForm).not.toBeCalled()
   })
 
-  it('should not call changeOptionValue if option require charge_number', () => {
+  it('should not call changeValue if option require charge_number', () => {
     const component = subject()
 
-    component.instance().changeOptionValue = jest.fn()
+    component.instance().changeValue = jest.fn()
     component.instance().handleOptionClick({requires_charge_number: true}, 0, 3, true, 0)
 
-    expect(component.instance().changeOptionValue).not.toBeCalled()
+    expect(component.instance().changeValue).not.toBeCalled()
     expect(showServiceItemForm).toBeCalled()
   })
 })
