@@ -26,6 +26,7 @@ describe('SelectorComponent', () => {
          items,
          drillable,
          children,
+         intl:{formatMessage:jest.fn()},
          onSelect,
          open,
          toggle,

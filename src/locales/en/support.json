@@ -1,8 +1,12 @@
 {
   "portal.support.tickets.body.text": "Stayed tuned for an incredible support experience.{br}{br}In the meantime, please click the support link to our external support tool{br}to log any support tickets and follow up on your outstanding tickets. Thank you!",
   "portal.support.tickets.body.link": "support.ericssonudn.com",
-  "portal.support.documentation.body.text": "Stayed tuned for an incredible support experience.{br}{br}In the meantime, please click the provided link to download{br}our current set of documentation. Thank you!",
-  "portal.support.documentation.body.link": "Documentation (PDF)",
+  "portal.support.documentation.userGuide.header": "Our Portal User Guide",
+  "portal.support.documentation.body.text": "Have questions on how to use the features of UDN? Our{br}Portal User Guide will help you make the most of UDN's{br}powerful functionality.",
+  "portal.support.documentation.body.link": "Portal User Guide (PDF)",
+  "portal.support.documentation.APIGuide.header": "API Documentation",
+  "portal.support.API.documentation.body.text": "Learn how you can integrate UDN’s functionality and data{br}into your own applications.  The following guide will{br}enumerate the API’s available and how your developers can{br}access these API’s.",
+  "portal.support.API.documentation.body.link": "API Documentation (PDF)",
 
   "portal.support.tabs.TICKETS.text": "TICKETS",
   "portal.support.tabs.TOOLS.text": "TOOLS",
@@ -96,6 +100,23 @@
   "portal.support.tickets.validation.type.maxLength.text": "Type is required",
   "portal.support.tickets.validation.priority.maxLength.text": "Priority is required",
   "portal.support.tickets.validation.assignee.maxLength.text": "Assignee is required",
+
+  "portal.support.tickets.priority.urgent": "Urgent",
+  "portal.support.tickets.priority.high": "High",
+  "portal.support.tickets.priority.normal": "Normal",
+  "portal.support.tickets.priority.low": "Low",
+
+  "portal.support.tickets.status.new": "New",
+  "portal.support.tickets.status.open": "Open",
+  "portal.support.tickets.status.pending": "Pending",
+  "portal.support.tickets.status.hold": "Hold",
+  "portal.support.tickets.status.solved": "Solved",
+  "portal.support.tickets.status.closed": "Closed",
+
+  "portal.support.tickets.type.problem": "Problem",
+  "portal.support.tickets.type.incident": "Incident",
+  "portal.support.tickets.type.question": "Question",
+  "portal.support.tickets.type.task": "Task",
 
   "portal.support.tickets.label.title.text": "Title",
   "portal.support.tickets.label.description.text": "Description",

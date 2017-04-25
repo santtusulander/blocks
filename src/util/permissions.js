@@ -1,7 +1,10 @@
 import * as PERMISSIONS from '../constants/permissions'
 import {
   ROLES_MAPPING,
-  ACCOUNT_TYPE_CLOUD_PROVIDER
+  ACCOUNT_TYPE_CLOUD_PROVIDER,
+  UDN_ADMIN_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID,
+  UDN_USER_ROLE_ID
 } from '../constants/account-management-options'
 
 const permissionMapping = {};
@@ -71,9 +74,9 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
     // do role checking in our permission mapping functions. This should be removed
     // once we come up with a better way to support listing accounts for the
     // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
-    const isSuperAdmin = roleId === 1 // NOTE: 1 is the role ID for UDN Admins
+    const isSuperAdmin = (roleId === UDN_ADMIN_ROLE_ID) || (roleId === SUPER_ADMIN_ROLE_ID) || (roleId === UDN_USER_ROLE_ID)
+    const canListAccounts = role.getIn(['aaa', 'accounts', 'list', 'allowed'], false)
 
-    const canListAccounts = role.getIn([ 'aaa', 'accounts', 'list', 'allowed'], false)
     return isSuperAdmin && canListAccounts
   }
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
@@ -82,8 +85,12 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn([ 'north', 'published_hosts', 'list', 'allowed'])
 
 // Account Permissions
-permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
+permissionMapping[PERMISSIONS.CREATE_ACCOUNT] =
+  (role) => role.getIn([ 'aaa', 'accounts', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_ACCOUNT] =
   (role) => role.getIn([ 'aaa', 'accounts', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_ACCOUNT] =
+  (role) => role.getIn([ 'aaa', 'accounts', 'delete', 'allowed'])
 
 // Group Permissions
 permissionMapping[PERMISSIONS.CREATE_GROUP] =
@@ -108,6 +115,8 @@ permissionMapping[PERMISSIONS.MODIFY_STORAGE] =
   (role) => role.getIn([ 'cis', 'ingest_points', 'modify', 'allowed'])
 permissionMapping[PERMISSIONS.DELETE_STORAGE] =
   (role) => role.getIn([ 'cis', 'ingest_points', 'delete', 'allowed'])
+permissionMapping[PERMISSIONS.CREATE_ACCESS_KEY] =
+  (role) => role.getIn([ 'cis', 'access_keys', 'create', 'allowed'])
 
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
@@ -115,12 +124,18 @@ permissionMapping[PERMISSIONS.CREATE_USER] =
 permissionMapping[PERMISSIONS.MODIFY_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed'])
 
+// Users Roles
+permissionMapping[PERMISSIONS.MODIFY_ROLE] =
+  (role) => role.getIn([ 'aaa', 'roles', 'modify', 'allowed'])
 
 // DNS permissions
 // Need role.permissions.zones.list.allowed AND role.permissions.rr.list.allowed
 
 permissionMapping[PERMISSIONS.VIEW_DNS] =
   (role) => role.getIn([ 'north', 'zones', 'list', 'allowed']) && role.getIn([ 'north', 'rr', 'list', 'allowed'])
+
+permissionMapping[PERMISSIONS.CONFIGURE_DNS] =
+  (role) => role.getIn([ 'north', 'zones', 'create', 'allowed']) && role.getIn([ 'north', 'rr', 'create', 'allowed'])
 
 permissionMapping[PERMISSIONS.CREATE_ZONE] =
   (role) => role.getIn([ 'north', 'zones', 'create', 'allowed'])
@@ -133,6 +148,12 @@ permissionMapping[PERMISSIONS.DELETE_ZONE] =
 
 permissionMapping[PERMISSIONS.CREATE_RECORD] =
   (role) => role.getIn([ 'north', 'rr', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_RECORD] =
+  (role) => role.getIn([ 'north', 'rr', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_RECORD] =
+  (role) => role.getIn([ 'north', 'rr', 'delete', 'allowed'])
 
 //Security permissions
 permissionMapping[PERMISSIONS.DELETE_CERTIFICATE] =

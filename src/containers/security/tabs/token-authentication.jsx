@@ -92,10 +92,11 @@ const mapStateToProps = (state, ownProps) => (
 )
 
 /* istanbul ignore next */
-const mapDispatchToProps = (dispatch) => (
-  {
-    fetchProperties: (params) => dispatch(propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true}))
+const mapDispatchToProps = (dispatch) => {
+  const filterParams = { filter_by: '..tokenauth', filter_value: '*' }
+  return {
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true, filterParams}))
   }
-)
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabTokenAuthentication)

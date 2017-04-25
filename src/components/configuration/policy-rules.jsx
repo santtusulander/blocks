@@ -153,7 +153,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th className="text-right"><FormattedMessage id="portal.policy.edit.rules.type.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
-              <th><FormattedMessage id="portal.policy.edit.rules.defaultActions.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.fallbackActions.text"/></th>
               <th width="1%" />
             </tr>
           </thead>

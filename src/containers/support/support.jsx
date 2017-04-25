@@ -54,30 +54,28 @@ class Support extends React.Component {
     const activeKey = routes[routes.length - 1].path
 
     return (
-      <div>
-        <SupportPageHeader {...this.props} />
-        <Tabs activeKey={activeKey}>
-          <li data-eventKey="tickets">
-            <Link to={baseUrl + '/tickets'} activeClassName="active">
-              <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
-            </Link>
-          </li>
-          {/*Hide for 1.0 release
-          <li eventKey="tools">
-            <Link to={baseUrl + '/tools'} activeClassName="active">
-              <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
-            </Link>
-          </li>*/}
-          <li data-eventKey="documentation">
-            <Link to={baseUrl + '/documentation'} activeClassName="active">
-              <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
-            </Link>
-          </li>
-        </Tabs>
         <Content>
+          <SupportPageHeader {...this.props} />
+          <Tabs activeKey={activeKey}>
+            <li data-eventKey="tickets">
+              <Link to={baseUrl + '/tickets'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
+              </Link>
+            </li>
+            {/*Hide for 1.0 release
+            <li eventKey="tools">
+              <Link to={baseUrl + '/tools'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
+              </Link>
+            </li>*/}
+            <li data-eventKey="documentation">
+              <Link to={baseUrl + '/documentation'} activeClassName="active">
+                <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
+              </Link>
+            </li>
+          </Tabs>
           {this.renderTabContent(children)}
         </Content>
-      </div>
     )
   }
 }

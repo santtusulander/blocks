@@ -57,7 +57,7 @@ class FieldFormGroupAsnLookup extends Component {
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}
-        multiple={true}
+        multiple={this.props.multiple}
         minLength={ASN_STARTING_SEARCH_COUNT}
         delay={ASN_SEARCH_DELAY}
         options={this.state.options}
@@ -69,11 +69,12 @@ class FieldFormGroupAsnLookup extends Component {
   }
 }
 
-
+FieldFormGroupAsnLookup.defaultProps = { multiple: true }
 FieldFormGroupAsnLookup.displayName = 'FieldFormGroupAsnLookup'
 FieldFormGroupAsnLookup.propTypes = {
   disabled: PropTypes.bool,
   intl: PropTypes.object,
+  multiple: PropTypes.bool,
   name: PropTypes.string,
   withoutLabel: PropTypes.bool
 }

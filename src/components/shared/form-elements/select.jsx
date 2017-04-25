@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { FormattedMessage } from 'react-intl'
 
 import { Dropdown, MenuItem } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret'
@@ -119,7 +120,7 @@ Select.propTypes = {
 Select.defaultProps = {
   options: [],
   disabled: false,
-  emptyLabel: 'Please Select'
+  emptyLabel: <FormattedMessage id="portal.select.emptyLabel"/>
 }
 
 export default Select

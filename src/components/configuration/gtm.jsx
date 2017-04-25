@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, ControlLabel, FormGroup } from 'react-bootstrap'
-import { Map } from 'immutable'
+import { is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
 import IconAdd from '../shared/icons/icon-add.jsx'
@@ -20,16 +20,26 @@ import RuleModal from './traffic-rule-form/rule-modal'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
+import FieldFormGroupNumber from '../shared/form-fields/field-form-group-number'
+
+import { getById as getProperty } from '../../redux/modules/entities/properties/selectors'
+import { formatConfigToInitialValues } from '../../redux/modules/entities/property-GTMs/selectors'
+import gtmActions from '../../redux/modules/entities/property-GTMs/actions'
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
+import { parseResponseError } from '../../redux/util'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
-import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
+import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH, GTM_TTL_DEFAULT } from '../../constants/gtm'
 
-const validate = ({ GTMToggle, cdnName, cName }) => {
+const validate = ({ GTMToggle, cdnName = '', cName = '', ttl }) => {
   if (!GTMToggle) {
     return {}
   }
+
+  const ttlValue = ttl !== null ? ttl : undefined
 
   const conditions = {
     cdnName: {
@@ -46,7 +56,7 @@ const validate = ({ GTMToggle, cdnName, cName }) => {
     }
   }
 
-  return checkForErrors({ cdnName, cName }, conditions, {
+  return checkForErrors({ cdnName, cName, ttl: ttlValue }, conditions, {
     cdnName: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cdnName.required"/>,
     cName: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cName.required"/>
   })
@@ -58,10 +68,74 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     this.editRule = this.editRule.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
-    this.deleteRule = this.deleteRule.bind(this)
-    this.handleSave = this.handleSave.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
 
     this.state = { ruleToEdit: {}, ruleModalOpen: false }
+  }
+  componentWillMount() {
+    this.props.property && this.props.fetchGtm(this.props.property.getIn(['services', 0, 'service_type']))
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    if (nextProps.property && !is(this.props.property, nextProps.property)) {
+      nextProps.fetchGtm(nextProps.property.getIn(['services', 0, 'service_type']))
+    }
+  }
+
+  generateSubmittableRules(values) {
+
+    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
+    const rules = !values.rules
+      ? []
+      : values.rules.reduce((generatedRules, rule) => {
+
+        const traffic_split_targets = [
+          {
+            percent: String(100 - rule.policyWeight),
+            cname: values.cdnName,
+            ttl: String(values.ttl)
+          },
+          {
+            percent: String(rule.policyWeight),
+            cname: udnPlaceholder,
+            ttl: String(values.ttl)
+          }
+        ]
+
+        const type = rule.matchArray[0].matchType
+        const rulesPerMatch = rule.matchArray[0].values[type].map(({ id }) => {
+
+          return {
+            request_match: {
+              type,
+              value: String(id).toLowerCase()
+            },
+            traffic_split_targets,
+            rule_name: rule.name,
+            on_match: 'traffic_split_targets'
+          }
+        })
+
+        generatedRules.push(...rulesPerMatch)
+        return generatedRules
+      }, [])
+
+    //Add this rule with 3rd party cname or udn as value based on rest of world-toggle
+    rules.push({
+      "request_match": { "type": "no_filter", value: '' },
+      "on_match": "response_value",
+      "response_value": {
+        "type": "CNAME",
+        "value": values.ROWToggle ? values.cName : udnPlaceholder
+      }
+    })
+
+    return rules
+  }
+
+  submissionError(response) {
+    throw new SubmissionError({ _error: parseResponseError(response) })
   }
 
   toggleModal() {
@@ -73,43 +147,55 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     this.setState({ ruleToEdit: { values: this.props.getRule(index), index } })
   }
 
-  deleteRule() {
-    /*
-      TODO: UDNP-3088 - Rules section
-    */
-  }
+  onSubmit(values) {
 
-  handleSave(e) {
-    /*
-      TODO: UDNP-3108 - Integrate Global Traffic form with Redux
+    const propertyServiceType = this.props.property.getIn(['services', 0, 'service_type'])
 
-      Please note - we should use existing approach of saving configuration
-                    like in other Configuragion tabs.
-    */
-    e.preventDefault()
-    this.props.saveChanges()
+    if (!values.GTMToggle && this.props.initialValues.GTMToggle) {
+      return this.props.deleteGtm(propertyServiceType)
+    }
+
+    const propertyId = this.props.property.get('published_host_id')
+    const customerId = `${this.props.params.account}-${this.props.params.group}`
+
+    const gtmConfig = {
+      rules: this.generateSubmittableRules(values),
+      title: values.cName,
+      customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
+      policy_name: propertyId,
+      customer_id: customerId
+    }
+
+    return this.props.initialValues.GTMToggle
+      ? this.props.updateGtm(propertyServiceType, gtmConfig)
+        .then(() => this.props.showNotification())
+        .catch(this.submissionError)
+
+      : this.props.createGtm(propertyServiceType, gtmConfig)
+        .then(() => this.props.showNotification())
+        .catch(this.submissionError)
   }
 
   render() {
     const {
-      config,
       intl,
+      error,
       isFormDisabled,
       initialValues,
       readOnly,
       reset,
       invalid,
       submitting,
+      handleSubmit,
+      isFetching,
       dirty } = this.props
 
-    if (!config || !config.size) {
-      return (
-        <LoadingSpinner />
-      )
+    if (isFetching) {
+      return <LoadingSpinner />
     }
 
     return (
-      <form className="configuration-gtm" onSubmit={this.handleSave}>
+      <form className="configuration-gtm" onSubmit={handleSubmit(this.onSubmit)}>
         {this.state.ruleModalOpen && <RuleModal rule={this.state.ruleToEdit} onCancel={this.toggleModal}/>}
         {/* ENABLE GTM */}
         <SectionContainer>
@@ -238,6 +324,27 @@ class ConfigurationGlobalTrafficManager extends React.Component {
               </Col>
             </FormGroup>
           </Row>
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />
+                </ControlLabel>
+              </Col>
+              <Col xs={2}>
+                {readOnly
+                  ? initialValues.ttl
+                  : <Field
+                    min={0}
+                    name="ttl"
+                    addonAfter={<FormattedMessage id="portal.units.seconds" />}
+                    component={FieldFormGroupNumber}
+                    disabled={isFormDisabled}
+                  />
+                }
+              </Col>
+            </FormGroup>
+          </Row>
         </SectionContainer>
 
         {/* TRAFFIC RULES */}
@@ -263,7 +370,8 @@ class ConfigurationGlobalTrafficManager extends React.Component {
           onCancel={reset}
           invalid={invalid}
           saving={submitting}
-          show={dirty}>
+          show={(dirty && !!initialValues.GTMToggle) || (!isFormDisabled && !initialValues.GTMToggle)}>
+          {error && <span>{error}<br/></span>}
           <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
         </SaveBar>
 
@@ -274,7 +382,6 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
 ConfigurationGlobalTrafficManager.displayName = 'ConfigurationGlobalTrafficManager'
 ConfigurationGlobalTrafficManager.propTypes = {
-  config: PropTypes.instanceOf(Map),
   gtmToggleState: PropTypes.bool,
   intl: intlShape.isRequired,
   readOnly: React.PropTypes.bool,
@@ -282,36 +389,34 @@ ConfigurationGlobalTrafficManager.propTypes = {
   ...reduxFormPropTypes
 }
 
-ConfigurationGlobalTrafficManager.defaultProps = {
-  config: Map()
-}
-
 /* istanbul ignore next */
-const mapStateToProps = (state) => {
-  const selector = formValueSelector('gtmForm')
-  const GTMToggle = selector(state, 'GTMToggle')
+const mapStateToProps = (state, { params: { property }, intl }) => {
+  const getFieldValue = formValueSelector('gtmForm')
+  const GTMToggle = getFieldValue(state, 'GTMToggle')
+  const initialValues = formatConfigToInitialValues(state, property, intl.formatMessage)
 
-  /*
-    TODO: UDNP-3108 - Integrate Global Traffic form with Redux
-
-    Please note - we should use existing approach of saving configuration
-                  like in other Configuragion tabs.
-  */
   return {
+    isFetching: getFetchingByTag(state, 'properties') || getFetchingByTag(state, 'gtm'),
     isFormDisabled: !GTMToggle,
-    getRule: (index) => selector(state, 'rules')[index],
-    initialValues: {
-      GTMToggle: true,
-      cdnName: 'google.com',
-      cName: 'google',
-      ROWToggle: true
-    }
+    getRule: (index) => getFieldValue(state, 'rules')[index],
+    property: getProperty(state, property),
+    initialValues: { ttl: GTM_TTL_DEFAULT, ...initialValues }
   }
 }
 
-const form = reduxForm({
-  form: 'gtmForm',
-  validate
-})(injectIntl(ConfigurationGlobalTrafficManager))
+const dispatchToProps = (dispatch, { params }) => {
+  return {
+    fetchGtm: service => dispatch(gtmActions.fetchOne({ ...params, service })),
+    updateGtm: (service, payload) => dispatch(gtmActions.update({ ...params, service, payload })),
+    deleteGtm: service => dispatch(gtmActions.remove({ ...params, service })),
+    createGtm: (service, payload) => dispatch(gtmActions.create({ ...params, service, payload }))
+  }
+}
 
-export default connect(mapStateToProps)(form)
+const GTMForm = reduxForm({
+  form: 'gtmForm',
+  enableReinitialize: true,
+  validate
+})(ConfigurationGlobalTrafficManager)
+
+export default injectIntl(connect(mapStateToProps, dispatchToProps)(GTMForm))

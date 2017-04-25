@@ -20,8 +20,7 @@ export const BrandList = (props) => {
 
   return (
     <div className='brandList'>
-
-      <AccountManagementHeader title={`${props.brands.length} Brands`} onAdd={() => props.toggleModal(EDIT_BRAND)}/>
+      <AccountManagementHeader title={<FormattedMessage id="portal.brand.header.text" values={{numBrand: props.brands.length}}/>} onAdd={() => props.toggleModal(EDIT_BRAND)}/>
 
       <table className="table table-striped">
         <thead>

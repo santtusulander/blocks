@@ -3,18 +3,18 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
-import countriesList from '../../../constants/country-list'
+import countriesList from '../../../constants/three-digit-countries'
 import { checkForErrors } from '../../../util/helpers'
 
 import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
-const validate = ({ countries }) => checkForErrors({ countries })
+const validate = ({ country }) => checkForErrors({ country })
 
 const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const saveMatch = values => {
-    const labelText = values.countries.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+    const labelText = values.country.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
     onSave({
       values,
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.country.items" values={{ items: labelText }} />,
@@ -26,10 +26,10 @@ const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmi
   return (
     <form onSubmit={handleSubmit(saveMatch)}>
       <Field
-        name="countries"
+        name="country"
         component={Typeahead}
-        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.country.input.placeholder" })}
         multiple={true}
+        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.country.input.placeholder" })}
         options={countriesList}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.country" />}/>
       <FormFooterButtons>
@@ -64,6 +64,6 @@ CountryMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-const Form = reduxForm({ form: 'countries-traffic-match', validate })(injectIntl(CountryMatchForm))
-Form.defaultProps = { initialValues: { countries: [] } }
+const Form = reduxForm({ form: 'country-traffic-match', validate })(injectIntl(CountryMatchForm))
+Form.defaultProps = { initialValues: { country: [] } }
 export default Form

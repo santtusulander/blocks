@@ -117,6 +117,17 @@ export function getNetworkUrl(linkType, val, params) {
   }
 }
 
+export function getSecurityUrl(linkType, val, params) {
+  switch (linkType) {
+    case 'brand':
+      return getRoute('securityBrand', { brand: val })
+    case 'account':
+      return getRoute('securityAccount', { ...params, account: val })
+    case 'group':
+      return getRoute('securityGroup', { ...params, group: val })
+  }
+}
+
 export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
     roles, currentUser, tab.get('permission')

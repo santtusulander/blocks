@@ -13,7 +13,7 @@ const validate = ({ AsnLookup }) => checkForErrors({ AsnLookup })
 const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
   const saveMatch = values => {
-    const labelText = values.AsnLookup.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
+    const labelText = values.asn.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
     onSave({
       values,
       label: <FormattedMessage id="portal.configuration.traffic.rules.match.asn.items" values={{ items: labelText }} />,
@@ -24,7 +24,7 @@ const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, i
 
   return (
     <form onSubmit={handleSubmit(saveMatch)}>
-      <ASNTypeahead/>
+      <ASNTypeahead name="asn"/>
         <FormFooterButtons>
           <Button
             id='cancel-button'
