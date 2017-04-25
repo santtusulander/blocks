@@ -19,6 +19,7 @@ import {
   CanViewStorageSummary,
   CanViewStorageTab,
   UserCanViewGTM,
+  UserCanViewAdvancedTab,
   AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
@@ -290,7 +291,7 @@ export const getRoutes = store => {
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
             <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
-            <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
+            <Route path={routes.configurationTabAdvanced} component={UserCanViewAdvancedTab(store)(ConfigurationAdvanced)}/>
           </Route>
 
           {/* Storage - routes */}
