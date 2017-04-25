@@ -61,7 +61,7 @@ export const CREATE_USER = 'CREATE_USER'
 export const MODIFY_USER = 'MODIFY_USER'
 
 // AAA Roles Permissions
-export const MODIFY_ROLE = 'MODIFY_USER'
+export const MODIFY_ROLE = 'MODIFY_ROLE'
 
 //DNS Permissions
 export const CREATE_RECORD = 'CREATE_RECORD'
