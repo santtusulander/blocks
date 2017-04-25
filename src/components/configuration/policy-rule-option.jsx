@@ -28,7 +28,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
   const className = classNames({
     inactive: !isEnabled
   })
-  let listItem = (
+  let listItem = (isEnabled &&
     <li>
       <a href="#" className={className} onClick={isEnabled ? onClick(key) : null}>
         <IconCaretRight width={28} height={28} />
