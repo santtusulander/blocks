@@ -8,6 +8,7 @@ import { getById as getAccountById } from '../redux/modules/entities/accounts/se
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
+import { getServicePermissions } from '../util/services-helpers'
 
 import {
   hasService
@@ -158,7 +159,11 @@ export const UserCanViewAccountDetail = (store) => {
 
 export const CanViewConfigurationSecurity = (store) => {
   return UserAuthWrapper({
-    authSelector: state => state.group.get('servicePermissions'),
+    authSelector: (state, ownProps) => {
+      const activeGroup = getGroupById(state, ownProps.params.group)
+ 
+      return getServicePermissions(activeGroup)
+    },
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/security/, '')
 
