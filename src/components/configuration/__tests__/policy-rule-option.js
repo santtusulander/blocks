@@ -48,7 +48,6 @@ describe('PolicyRuleOption', () => {
 
     const link = subject().find('a').at(0)
     expect(link.onClick).toBeUndefined()
-    expect(link.hasClass('inactive')).toBeTruthy()
   })
 
   it('should be able to be disabled based on option values', () => {
@@ -56,11 +55,12 @@ describe('PolicyRuleOption', () => {
 
     const link = subject().find('a').at(0)
     expect(link.onClick).toBeUndefined()
-    expect(link.hasClass('inactive')).toBeTruthy()
   })
 
   it('should check for admin role, if needed', () => {
     expect(subject().find('IsAdmin').length).toBe(0)
+    
+    fakeCheckIfEnabled = jest.fn(() => true)
     fakeOption.requiresAdmin = true
     expect(subject().find('IsAdmin').length).toBe(1)
   })

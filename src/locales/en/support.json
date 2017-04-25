@@ -3,7 +3,7 @@
   "portal.support.tickets.body.link": "support.ericssonudn.com",
   "portal.support.documentation.userGuide.header": "Our Portal User Guide",
   "portal.support.documentation.body.text": "Have questions on how to use the features of UDN? Our{br}Portal User Guide will help you make the most of UDN's{br}powerful functionality.",
-  "portal.support.documentation.body.link": "Our Portal User Guide (PDF)",
+  "portal.support.documentation.body.link": "Portal User Guide (PDF)",
   "portal.support.documentation.APIGuide.header": "API Documentation",
   "portal.support.API.documentation.body.text": "Learn how you can integrate UDN’s functionality and data{br}into your own applications.  The following guide will{br}enumerate the API’s available and how your developers can{br}access these API’s.",
   "portal.support.API.documentation.body.link": "API Documentation (PDF)",

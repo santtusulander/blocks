@@ -41,7 +41,7 @@ describe('CacheKeyQueryStringForm', () => {
   it('should call saveAction', () => {
     component.instance().saveChanges({
       activeFilter: 'include_all_query_parameters',
-      queryArgs: [{value: '123'}]
+      queryArgs: ['123']
     })
 
     expect(saveAction.mock.calls.length).toBe(1)
@@ -50,7 +50,7 @@ describe('CacheKeyQueryStringForm', () => {
   it('should call saveAction with "Include all" params', () => {
     component.instance().saveChanges({
       activeFilter: 'include_all_query_parameters',
-      queryArgs: [{value: '123'}]
+      queryArgs: ['123']
     })
 
     const result = {
@@ -67,7 +67,7 @@ describe('CacheKeyQueryStringForm', () => {
   it('should call saveAction with "Ignore all" params', () => {
     component.instance().saveChanges({
       activeFilter: 'ignore_all_query_parameters',
-      queryArgs: [{value: '123'}]
+      queryArgs: ['123']
     })
 
     const result = {
@@ -83,7 +83,7 @@ describe('CacheKeyQueryStringForm', () => {
   it('should call saveAction with "Include some" params', () => {
     component.instance().saveChanges({
       activeFilter: 'include_some_parameters',
-      queryArgs: [{value: '123'}]
+      queryArgs: ['123']
     })
 
     const result = {
@@ -100,7 +100,7 @@ describe('CacheKeyQueryStringForm', () => {
   it('should call saveAction and avoid empty fields', () => {
     component.instance().saveChanges({
       activeFilter: 'include_some_parameters',
-      queryArgs: [{value: '123'}, {value: ''}]
+      queryArgs: ['123', '']
     })
 
     const result = {
