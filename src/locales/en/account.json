@@ -3,7 +3,8 @@
   "portal.accountManagement.locations.text": "Locations",
   "portal.accountManagement.locations.tooltip.message": "Users can build a Locations service catalog that allows them to provide information about their physical network infrastructure.\nUsers can utilize a created location across the entire account.",
   "portal.accountManagement.noLocations.text": "Add at least one POP Location for Service Provider",
-
+  
+  "portal.account.leaving.warning.text": "You have made changes to the User(s), are you sure you want to exit without saving?",
   "portal.account.dnsList.addRecord.button": "Add record",
   "portal.account.dnsList.records.visibleRecords": "{visibleRecordCount} Records ",
   "portal.account.dnsList.records.hiddenRecords": "({hiddenRecordCount}) hidden",

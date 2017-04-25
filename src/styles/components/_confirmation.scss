@@ -38,6 +38,10 @@ $confirmation-slider-padding-top-sm: 12px;
     @include md {
       margin-left: $md-btn-height / 2;
     }
+
+    .btn-danger {
+      background-color: $btn-danger-background;
+    }
   }
 
   padding-bottom: 0;

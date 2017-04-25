@@ -70,7 +70,7 @@ export class DrillableMenu extends Component {
         break
 
       } else {
-        foundFromChild = this.findActiveNode(nodeInfo.nodes, nodeId)
+        foundFromChild = nodeInfo.nodes && this.findActiveNode(nodeInfo.nodes, nodeId)
 
         if (foundFromChild) {
           return foundFromChild

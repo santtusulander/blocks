@@ -32,7 +32,8 @@ class ConfigurationDiffBar extends React.Component {
         {configDiff.size !== 0 &&
           <Dialog className="configuration-diff-bar">
             <ButtonToolbar className="pull-right">
-              <Button bsStyle="secondary"
+              <Button
+                className="btn-secondary"
                 onClick={this.resetConfig}>
                 <FormattedMessage id="portal.button.CANCEL"/>
               </Button>

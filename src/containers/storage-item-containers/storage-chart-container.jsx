@@ -85,7 +85,7 @@ const makeStateToProps = () => {
     return {
       storageEntity: getStorageEntity(state, {storageReduxId, ...ownProps}, entitySelector),
       storageMetrics: getMetrics(state, ownProps, metricsSelector),
-      isFetchingMetrics: getFetchingByTag(state, 'storageMetrics')
+      isFetchingMetrics: getFetchingByTag(state, 'storageMetrics') || state.dashboard.get('fetching')
     }
   }
 

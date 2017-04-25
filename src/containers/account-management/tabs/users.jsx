@@ -374,7 +374,8 @@ export class AccountManagementAccountUsers extends Component {
       users,
       roles,
       permissions,
-      permissionServiceTitles
+      permissionServiceTitles,
+      params: {account}
     } = this.props
 
     //Merge corresponding UIpermissions to role object inorder to display permission modal
@@ -439,13 +440,15 @@ export class AccountManagementAccountUsers extends Component {
               options={groupOptions}/>
           </div>
           */}
+          { account &&
+            <IsAllowed to={CREATE_USER}>
+              <Button bsStyle="success" className="btn-icon"
+                onClick={this.toggleInlineAdd}>
+                <IconAdd />
+              </Button>
+            </IsAllowed>
+          }
 
-          <IsAllowed to={CREATE_USER}>
-            <Button bsStyle="success" className="btn-icon"
-              onClick={this.toggleInlineAdd}>
-              <IconAdd />
-            </Button>
-          </IsAllowed>
         </SectionHeader>
 
         { fetching
