@@ -16,8 +16,9 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { ALLOW_ALWAYS } from '../../constants/permissions'
 
 class ActionButtons extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+
     this.state={
       showConfirmation: false
     }
@@ -79,7 +80,7 @@ class ActionButtons extends Component {
         {onDelete &&
         <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
           <Button
-            onClick={onDelete}
+            onClick={showConfirmation ? () => this.setState({showConfirmation: true}) : onDelete}
             className="btn btn-icon delete-button"
             disabled={deleteDisabled}>
             <IconTrash/>
@@ -88,9 +89,9 @@ class ActionButtons extends Component {
         }
 
         {onRemove &&
-        <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
+        <IsAllowed to={permissions ? permissions.remove : ALLOW_ALWAYS}>
           <Button
-            onClick={showConfirmation? () => this.setState({showConfirmation: true}) :onRemove}
+            onClick={showConfirmation ? () => this.setState({showConfirmation: true}) : onRemove}
             className="btn btn-icon remove-button"
             disabled={removeDisabled}>
             <IconClose/>
