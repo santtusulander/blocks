@@ -10,6 +10,7 @@ import accountActions from '../../../redux/modules/entities/accounts/actions'
 import roleNamesActions from '../../../redux/modules/entities/role-names/actions'
 import serviceTitleActions from '../../../redux/modules/entities/serviceTitles/actions'
 import rolesActions from '../../../redux/modules/entities/roles/actions'
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 
 class AccountManagementSystemRoles extends React.Component {
@@ -77,7 +78,7 @@ class AccountManagementSystemRoles extends React.Component {
 
     return (
       <PageContainer>
-        {this.props.fetchingAccounts || this.props.fetchingUsers
+        {this.props.fetchingAccounts || this.props.fetchingRoles || this.props.fetchingPermissionNames
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
@@ -100,7 +101,8 @@ AccountManagementSystemRoles.propTypes = {
   fetchRolePermissions: React.PropTypes.func,
   fetchServiceTitle: React.PropTypes.func,
   fetchingAccounts: React.PropTypes.bool,
-  fetchingUsers: React.PropTypes.bool,
+  fetchingPermissionNames: React.PropTypes.bool,
+  fetchingRoles: React.PropTypes.bool,
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roleNames: React.PropTypes.instanceOf(Immutable.List),
@@ -116,7 +118,8 @@ AccountManagementSystemRoles.defaultProps = {
 function mapStateToProps(state) {
   return {
     fetchingAccounts: state.account.get('fetching'),
-    fetchingUsers: state.user.get('fetching'),
+    fetchingRoles: getFetchingByTag(state, 'roles'),
+    fetchingPermissionNames: getFetchingByTag(state, 'serviceTitles'),
     roleNames: state.entities.roleNames.toList(),
     roles: state.entities.roles,
     permissions: state.entities.serviceTitles
