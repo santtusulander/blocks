@@ -45,7 +45,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     listItem = <HasServicePermission anyOf={servicePermissions}>{listItem}</HasServicePermission>
   }
 
-  return listItem
+  return isEnabled ? listItem : null
 }
 
 PolicyRuleOption.displayName = 'PolicyRuleOption'

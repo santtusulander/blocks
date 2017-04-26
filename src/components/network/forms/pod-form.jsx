@@ -26,6 +26,7 @@ import HelpTooltip from '../../shared/tooltips/help-tooltip'
 import ButtonDisableTooltip from '../../shared/tooltips/button-disable-tooltip'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../shared/form-fields/field-form-group-typeahead'
+import ActionButtons from '../../shared/action-buttons'
 
 import {
   DELETE_POD, MODIFY_POD,
@@ -480,23 +481,13 @@ const PodForm = ({
               </Col>
 
               <Col xs={4} className="action-buttons">
-                <IsAllowed to={VIEW_FOOTPRINT}>
-                  <Button
-                    className="btn btn-icon edit-button"
-                    onClick={onShowRoutingDaemonModal}>
-                    <IconEdit/>
-                  </Button>
-                </IsAllowed>
-
-                <IsAllowed to={MODIFY_FOOTPRINT}>
-                  <Button
-                    bsStyle="link"
-                    className="btn btn-icon delete-button btn-undo"
-                    onClick={onDeleteRoutingDaemon}
-                  >
-                    <IconClose/>
-                  </Button>
-                </IsAllowed>
+                  <ActionButtons
+                    permissions={{modify: VIEW_FOOTPRINT , remove: MODIFY_FOOTPRINT}}
+                    className="btn btn-icon"
+                    onEdit={onShowRoutingDaemonModal}
+                    onRemove={onDeleteRoutingDaemon}
+                    showConfirmation={true}
+                  />
               </Col>
             </Row>
           </li>

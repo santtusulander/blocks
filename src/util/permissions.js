@@ -118,6 +118,12 @@ permissionMapping[PERMISSIONS.DELETE_STORAGE] =
 permissionMapping[PERMISSIONS.CREATE_ACCESS_KEY] =
   (role) => role.getIn([ 'cis', 'access_keys', 'create', 'allowed'])
 
+// Advanced
+permissionMapping[PERMISSIONS.VIEW_ADVANCED] =
+  (role) => role.getIn([ 'north', 'custom_policy_configs', 'list', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_ADVANCED] =
+  (role) => role.getIn([ 'north', 'custom_policy_configs', 'modify', 'allowed'])
+
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'create', 'allowed'])
