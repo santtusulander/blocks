@@ -13,6 +13,12 @@ Unfortunately, if anything fails, the console output from the build is hidden be
 
 It can be very convenient to have these lint checks done while you are coding. For a recommended editor configuration to support this, see the next section.
 
+Please follow our style guides and code guidelines:
+ - [Code Guidelines](wiki/Code-Guidelines/)
+ - [JavaScript Style Guide](wiki/JavaScript-Style-Guide/)
+ - [React Style Guide](wiki/React-Style-Guide/)
+ - [CSS Style Guide](wiki/CSS-Style-Guide/)
+
 ### Recommended editor
 
 We strongly recommend the use of Atom with the following plugins installed:
