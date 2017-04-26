@@ -337,3 +337,23 @@ export default function checkPermissions(roles, user, permission) {
     return false
   })
 }
+
+/**
+ * checkUserPermissons
+ * @param  {[type]} user              [description]
+ * @param  {[type]} userPermissions   [description]
+ * @param  {[type]} permissionToCheck [description]
+ * @return {[type]}                   [description]
+ */
+export const checkUserPermission = (user, userPermissions, permissionToCheck) => {
+  const userRoles = user && user.size > 0 && user.get('roles')
+  if (!userRoles || !userPermissions) {
+    return false
+  }
+
+  //get first roleId
+  const [roleId] = userRoles
+
+  return !!permissionMapping[permissionToCheck](userPermissions, roleId)
+
+}

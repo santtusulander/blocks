@@ -190,7 +190,17 @@ export function userTokenChecked(state, action) {
 
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
-    return state.set('loggedIn', true)
+    //Set keys toLowerCase to provide compability with the old permissionMapping
+    const compatPermissions = Object.keys(action.payload.currentUserPermissions).reduce((acc, val) => {
+      acc[val.toLowerCase()] = action.payload.currentUserPermissions[val]
+
+      return acc;
+    }, {})
+
+    return state.merge({
+      currentUserPermissions: compatPermissions,
+      'loggedIn': true
+    })
   } else {
     deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
@@ -421,9 +431,12 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
-      //TODO: UDNP-2357 Should we save services object?
       if (res) {
         return {
+          //UDNP-2357
+          //Save current user services/permissions (handled in other reducer listening to 'USER_TOKEN_CHECKED' -action type) )
+          currentUserPermissions: res.data.services,
+
           token: token,
           username: res.data.username,
           tokenMeta: {
