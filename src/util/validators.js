@@ -59,6 +59,12 @@ export function isValidIP(addresses, IPversion = 4) {
   return !!addresses && validator.isIP(addresses, IPversion)
 }
 
+/**
+ * Considers valid if last part of a valid IPv4 address is '0' and mask is 0-32
+ * @param  {[type]}       cidr
+ * @return {Boolean}      is valid
+ */
+export const isValidIPv4Cidr = (cidr) => matchesRegexp(cidr, /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.?){3}0(\/([0-9]|[1-2][0-9]|3[0-2]))?$/)
 
 /**
  * Check if valid IPv4 address

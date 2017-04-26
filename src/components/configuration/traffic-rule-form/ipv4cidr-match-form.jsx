@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
-import { isValidIPv4Address } from '../../../util/validators'
+import { isValidIPv4Cidr } from '../../../util/validators'
 
 import Typeahead from '../../shared/form-fields/field-form-group-typeahead'
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
@@ -15,7 +15,7 @@ const validate = ({ ipv4_cidr_prefix }) => {
 
   for (const value of ipv4_cidr_prefix) {
 
-    if (!isValidIPv4Address(value.label, true)) {
+    if (!isValidIPv4Cidr(value.label)) {
       return { ipv4_cidr_prefix: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.input.error" /> }
     }
   }
@@ -50,7 +50,7 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
         multiple={true}
         allowNew={true}
         options={[]}
-        validation={(value) => value && isValidIPv4Address(value.label, true)}
+        validation={(value) => value && isValidIPv4Cidr(value.label)}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr" />}/>
       <FormFooterButtons>
         <Button
