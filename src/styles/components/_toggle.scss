@@ -19,6 +19,16 @@ $indicator-margin: ($toggle-height - $indicator-height) / 2;
   .dark-theme & {
     color: $white;
     background-color: rgba($black, 0.2);
+
+    &.readonly {
+      color: rgba($silver-60, 0.2);
+      cursor: default;
+      background-color: rgba($black, 0.1);
+
+      .indicator {
+        transition: none;
+      }
+    }
   }
 
   .light-theme & {
@@ -30,6 +40,16 @@ $indicator-margin: ($toggle-height - $indicator-height) / 2;
       color: $white;
       background-color: rgba($black, 0.2);
       box-shadow: none;
+    }
+
+    &.readonly {
+      color: rgba($grey-80, 0.2);
+      cursor: default;
+      background: none;
+
+      .indicator {
+        transition: none;
+      }
     }
   }
 
@@ -74,16 +94,6 @@ $indicator-margin: ($toggle-height - $indicator-height) / 2;
 
     .on-text {
       opacity: 1;
-    }
-  }
-
-  &.readonly {
-    color: rgba($silver-60, 0.2);
-    cursor: default;
-    background-color: rgba($black, 0.1);
-
-    .indicator {
-      transition: none;
     }
   }
 }
