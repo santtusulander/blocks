@@ -72,10 +72,10 @@ describe('User Module', () => {
     })
 
     it('should handle userTokenChecked -- with payload', () => {
-      const newState = userTokenChecked(state, {payload: {token: 'foorbar'} } )
+      const newState = userTokenChecked(state, {payload: {currentUserPermissions: {}, token: 'foorbar'} } )
       const expectedState = Immutable.fromJS({
-        loggedIn: true
-
+        loggedIn: true,
+        currentUserPermissions: {}
       })
 
       expect( Immutable.is(newState, expectedState) ).toBeTruthy()
