@@ -34,6 +34,10 @@ label {
       box-shadow: none;
     }
   }
+
+  input[disabled]::placeholder {
+    color: rgba($silver-60, 0.2);
+  }
 }
 
 .light-theme {
@@ -46,6 +50,10 @@ label {
     &:active {
       box-shadow: 0 0 0 1px rgba($black, 0.1);
     }
+  }
+
+  input[disabled]::placeholder {
+    color: rgba($grey-80, 0.2);
   }
 }
 
