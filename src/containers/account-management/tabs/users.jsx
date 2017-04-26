@@ -463,8 +463,9 @@ export class AccountManagementAccountUsers extends Component {
               {/* TODO: UDNP-3529 - Removed until we have group_id in user
                 <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
               */}
-
-              <th width="1%"/>
+              <IsAllowed to={MODIFY_USER}>
+                <th width="1%"/>
+              </IsAllowed>
             </tr>
           </thead>
           <tbody>
@@ -487,15 +488,15 @@ export class AccountManagementAccountUsers extends Component {
                   { /* TODO: UDNP-3529 removed until we have group data in user
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   */ }
-                  <td className="nowrap-column">
-                    <IsAllowed to={MODIFY_USER}>
-                      <ActionButtons
-                        onEdit={() => {
-                          this.editUser(user)
-                        }}
-                        onDelete={() => this.deleteUser(user.get('email'))} />
-                    </IsAllowed>
-                  </td>
+                  <IsAllowed to={MODIFY_USER}>
+                    <td className="nowrap-column">
+                        <ActionButtons
+                          onEdit={() => {
+                            this.editUser(user)
+                          }}
+                          onDelete={() => this.deleteUser(user.get('email'))} />
+                    </td>
+                  </IsAllowed>
                 </tr>
               )
             })}

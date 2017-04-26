@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 
 import ActionButtons from '../shared/action-buttons'
+import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
@@ -22,7 +23,9 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
             <th width="25%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="25%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
             <th width="24%"><FormattedMessage id="portal.security.ssl.expirationDate.text"/></th>
-            <th width="1%"/>
+            <IsAllowed to={MODIFY_CERTIFICATE || DELETE_CERTIFICATE}>
+              <th width="1%"/>
+            </IsAllowed>
           </tr>
         </thead>
         <tbody>
@@ -39,12 +42,14 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
                 <td>{commonName}</td>
                 <td>{groupName}</td>
                 <td>{expirationDate}</td>
-                <td className="nowrap-column">
-                  <ActionButtons
-                    permissions={{ modify: MODIFY_CERTIFICATE, delete: DELETE_CERTIFICATE }}
-                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
-                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
-                </td>
+                <IsAllowed to={MODIFY_CERTIFICATE || DELETE_CERTIFICATE}>
+                  <td className="nowrap-column">
+                    <ActionButtons
+                      permissions={{ modify: MODIFY_CERTIFICATE, delete: DELETE_CERTIFICATE }}
+                      onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
+                      onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
+                  </td>
+                </IsAllowed>
               </tr>
             )
           }) : (

@@ -252,7 +252,9 @@ class AccountManagementStorages extends Component {
                       <FormattedMessage id="portal.account.storage.table.usage.text"/>
                     </TableSorter>
                     <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
-                    <th width="1%"/>
+                    <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
+                      <th width="1%"/>
+                    </IsAllowed>
                   </tr>
                 </thead>
                 <tbody>
@@ -276,17 +278,20 @@ class AccountManagementStorages extends Component {
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
                         <td>{storage.get('files_count')}</td>
-                        <td className="nowrap-column">
+                        <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
+                          <td className="nowrap-column">
 
-                        {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
-                            onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
-                        */}
-                        <ActionButtons
-                          permissions={permissions}
-                          onDelete={() => {
-                            this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))
-                          }} />
-                        </td>
+                          {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                              onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                          */}
+
+                          <ActionButtons
+                            permissions={permissions}
+                            onDelete={() => {
+                              this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))
+                            }} />
+                          </td>
+                        </IsAllowed>
                       </tr>
                     )
                   })}
