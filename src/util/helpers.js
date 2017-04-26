@@ -722,3 +722,8 @@ export function hasOption(group, optionID) {
 export function formatASN(asnObj) {
   return asnObj ? `ASN${asnObj.asn} (${asnObj.organization})` : ''
 }
+
+export function getCISname(originHostname) {
+  const matchedResult = originHostname.match(/-(\w+).origin/)
+  return matchedResult ? matchedResult[1] : ''
+}
