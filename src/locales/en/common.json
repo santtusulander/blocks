@@ -70,6 +70,7 @@
   "portal.common.date": "Date",
   "portal.common.date.created": "Created",
   "portal.common.date.updated": "Updated",
+  "portal.common.delete.disclaimer.text": "Are you sure you want to delete it?",
   "portal.common.value": "Value",
   "portal.common.unknown": "Unknown",
 

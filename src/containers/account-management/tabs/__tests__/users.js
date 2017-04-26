@@ -29,6 +29,7 @@ describe('AccountManagementAccountUsers', () => {
         groupActions={ {
           fetchGroups: genAsyncMock,
         }}
+        fetchServiceTitle= {jest.fn()}
         groups={Immutable.List()}
         params={{}}
         permissions= {Immutable.Map()}
@@ -45,6 +46,7 @@ describe('AccountManagementAccountUsers', () => {
         userActions={ {
           fetchUsers: genAsyncMock,
         }}
+        location={{query: {}}}
         users={ Immutable.List() }
       />
     )

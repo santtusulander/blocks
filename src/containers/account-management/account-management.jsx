@@ -27,6 +27,7 @@ import { parseResponseError } from '../../redux/util'
 import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
 import groupActionCreators from '../../redux/modules/entities/groups/actions'
+import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 import usersActions from '../../redux/modules/entities/users/actions'
 
 import Content from '../../components/shared/layout/content'
@@ -57,6 +58,8 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import { checkForErrors } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
+
+const PAGE_SIZE = 20
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -108,7 +111,15 @@ export class AccountManagement extends Component {
     return this.props.deleteUser(this.userToDelete)
       .then(() => {
         this.props.toggleModal(null)
-        this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+        const {location, params: { brand, account }} = this.props
+
+        const {sortBy, sortOrder, filterBy, filterValue} = location.query
+        const page = location.query.page ? location.query.page : 1
+        this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
+          .then(() => {
+            // only show toast notification when receive all users after deleting user
+            this.showNotification(<FormattedMessage id="portal.accountManagement.userRemoved.text" />)
+          })
       })
   }
 
@@ -306,6 +317,7 @@ export class AccountManagement extends Component {
       accountManagementModal,
       toggleModal,
       activeAccount,
+      activeGroup,
       router
     } = this.props
 
@@ -373,7 +385,6 @@ export class AccountManagement extends Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
-          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               params={params}
               levels={[ 'brand', 'account' ]}
@@ -384,16 +395,11 @@ export class AccountManagement extends Component {
 
               }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
+                <h1><TruncatedTitle content={activeGroup.get('name') || activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
                 <IconCaretDown />
               </div>
             </AccountSelector>
-          </IsAllowed>
-          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-          </IsAllowed>
-
           { /*
             Edit activeAccount -button
             */
@@ -524,13 +530,16 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
   changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
+  fetchUsers: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
   intl: PropTypes.object,
+  location: PropTypes.object,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
@@ -542,6 +551,7 @@ AccountManagement.propTypes = {
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
+  activeGroup: Map(),
   dnsData: Map(),
   roles: List(),
   users: List()
@@ -552,6 +562,7 @@ function mapStateToProps(state, ownProps) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: getByBrand(state, ownProps.params.brand),
     activeAccount: getAccountById(state, ownProps.params.account),
+    activeGroup: getGroupById(state, ownProps.params.group),
     dnsData: state.dns,
     permissions: state.permissions,
     roles: state.roles.get('roles'),
@@ -582,7 +593,8 @@ function mapDispatchToProps(dispatch) {
     rolesActions: rolesActions,
     uiActions: uiActions,
     userActions: userActions,
-    deleteUser: (id) => dispatch(usersActions.remove({id}))
+    deleteUser: (id) => dispatch(usersActions.remove({id})),
+    fetchUsers: (params) => dispatch(usersActions.fetchAll({...params, offset: (params.page - 1) * PAGE_SIZE, limit: PAGE_SIZE}))
   };
 }
 

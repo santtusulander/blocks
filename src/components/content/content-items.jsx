@@ -406,7 +406,7 @@ class ContentItems extends React.Component {
 
     const paginationProps = {
       activePage: currentPage,
-      items: Math.floor(contentItems.count() / PAGE_SIZE),
+      items: Math.ceil(contentItems.count() / PAGE_SIZE),
       onSelect: this.onActivePageChange,
       maxButtons: MAX_PAGINATION_ITEMS,
       boundaryLinks: true,
@@ -597,7 +597,7 @@ class ContentItems extends React.Component {
                 })}
 
 
-                {/* Show Pagination if more items than fit on PAGE_SIZE */
+                { /* Show Pagination if more items than fit on PAGE_SIZE */
                   contentItems && contentItems.count() > PAGE_SIZE &&
                   <Paginator {...paginationProps} />
                 }

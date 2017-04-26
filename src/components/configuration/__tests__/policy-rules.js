@@ -7,38 +7,38 @@ jest.unmock('../policy-rules')
 import ConfigurationPolicyRules from '../policy-rules'
 
 const requestPolicies = fromJS(
-  [                  {
-                    "rule_name": "newRule123",
-                    "rule_body": {
-                      "actions": [
-                        {
-                          "cache_control": {
-                            "check_etag": "false",
-                            "max_age": 604800,
-                            "no_store": true,
-                            "honor_origin": true
-                          }
-                        }
-                      ],
-                      "conditions": [
-                        {
-                          "type": "equals",
-                          "field": "request_url",
-                          "field_detail": "",
-                          "value": "(.*)\\\\.(sdf|sdf|sdf)",
-                          "inverted": false,
-                          "_temp": true
-                        },
-                        {
-                          "type": "equals",
-                          "field": "request_cookie",
-                          "field_detail": "",
-                          "value": "qwqw",
-                          "inverted": false
-                        }
-                      ]
-                    }
-                  }]
+  [{
+    "rule_name": "newRule123",
+    "rule_body": {
+      "actions": [
+        {
+          "cache_control": {
+            "check_etag": "false",
+            "max_age": 604800,
+            "no_store": false,
+            "honor_origin": true
+          }
+        }
+      ],
+      "conditions": [
+        {
+          "type": "equals",
+          "field": "request_url",
+          "field_detail": "",
+          "value": "(.*)\\\\.(sdf|sdf|sdf)",
+          "inverted": false,
+          "_temp": true
+        },
+        {
+          "type": "equals",
+          "field": "request_cookie",
+          "field_detail": "",
+          "value": "qwqw",
+          "inverted": false
+        }
+      ]
+    }
+  }]
 )
 
 describe('ConfigurationPolicyRules', () => {
@@ -63,19 +63,16 @@ describe('ConfigurationPolicyRules', () => {
 
   it('should exist', () => {
     expect(subject()).toBeDefined()
-  });
+  })
 
-  //TODO-2277
+  it('should set and reset policy types', () => {
+    let policyRules = subject()
+    expect(policyRules.state().request_policy).toBe(null);
 
-  // it('should set and reset policy types', () => {
-  //   let policyRules = subject()
-  //   expect(policyRules.state().request_policy).toBe(null);
+    policyRules.instance().showConfirmation('request_policy', 'foo')();
+    expect(policyRules.state().request_policy).toBe('foo');
 
-  //   policyRules.instance().showConfirmation('request_policy', 'foo')();
-  //   expect(policyRules.state().request_policy).toBe('foo');
-
-  //   policyRules.instance().closeConfirmation('request_policy')();
-  //   expect(policyRules.state().request_policy).toBe(null);
-  // })
-
+    policyRules.instance().closeConfirmation('request_policy')();
+    expect(policyRules.state().request_policy).toBe(null);
+  })
 })

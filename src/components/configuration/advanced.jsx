@@ -110,6 +110,7 @@ class ConfigurationAdvanced extends React.Component {
 
   render() {
     const {
+      advancedTabReadOnly,
       metadata,
       invalid,
       dirty,
@@ -140,6 +141,7 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_REQUEST}
               component={FieldFormGroupCheckbox}
+              disabled={advancedTabReadOnly}
             />
           }
         />
@@ -154,14 +156,14 @@ class ConfigurationAdvanced extends React.Component {
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
-                    disabled={!isRequestEnabled}
+                    disabled={!isRequestEnabled || advancedTabReadOnly}
                   />
                 </Col>
                 <Col xs={1}>
                   <Button
                     onClick={() => this.restoreConfig(FIELD_REQUEST)}
                     bsStyle="primary"
-                    disabled={invalid || submitting || (!isRequestEnabled)}>
+                    disabled={invalid || submitting || (!isRequestEnabled) || advancedTabReadOnly}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
                   </Button>
                 </Col>
@@ -178,6 +180,7 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_RESPONSE}
               component={FieldFormGroupCheckbox}
+              disabled={advancedTabReadOnly}
             />
           }
         />
@@ -192,14 +195,14 @@ class ConfigurationAdvanced extends React.Component {
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
-                    disabled={!isResponseEnabled}
+                    disabled={!isResponseEnabled || advancedTabReadOnly}
                   />
                 </Col>
                 <Col xs={1}>
                   <Button
                     onClick={() => this.restoreConfig(FIELD_RESPONSE)}
                     bsStyle="primary"
-                    disabled={invalid || submitting || (!isResponseEnabled)}>
+                    disabled={invalid || submitting || (!isResponseEnabled) || advancedTabReadOnly}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
                   </Button>
                 </Col>
@@ -216,6 +219,7 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_FINAL_REQUEST}
               component={FieldFormGroupCheckbox}
+              disabled={advancedTabReadOnly}
             />
           }
         />
@@ -230,14 +234,14 @@ class ConfigurationAdvanced extends React.Component {
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
-                    disabled={!isFinalRequestEnabled}
+                    disabled={!isFinalRequestEnabled || advancedTabReadOnly}
                   />
                 </Col>
                 <Col xs={1}>
                   <Button
                     onClick={() => this.restoreConfig(FIELD_FINAL_REQUEST)}
                     bsStyle="primary"
-                    disabled={invalid || submitting || (!isFinalRequestEnabled)}>
+                    disabled={invalid || submitting || (!isFinalRequestEnabled) || advancedTabReadOnly}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
                   </Button>
                 </Col>
@@ -254,6 +258,7 @@ class ConfigurationAdvanced extends React.Component {
             <Field
               name={FIELD_USE_FINAL_RESPONSE}
               component={FieldFormGroupCheckbox}
+              disabled={advancedTabReadOnly}
             />
           }
         />
@@ -268,14 +273,14 @@ class ConfigurationAdvanced extends React.Component {
                     type="textarea"
                     placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
                     component={FieldFormGroup}
-                    disabled={!isFinalResponseEnabled}
+                    disabled={!isFinalResponseEnabled || advancedTabReadOnly}
                   />
                 </Col>
                 <Col xs={1}>
                   <Button
                     onClick={() => this.restoreConfig(FIELD_FINAL_RESPONSE)}
                     bsStyle="primary"
-                    disabled={invalid || submitting || (!isFinalResponseEnabled)}>
+                    disabled={invalid || submitting || (!isFinalResponseEnabled) || advancedTabReadOnly}>
                     <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
                   </Button>
                 </Col>
@@ -285,13 +290,15 @@ class ConfigurationAdvanced extends React.Component {
         }
         <hr />
 
-        <SaveBar
-          onCancel={reset}
-          invalid={invalid}
-          saving={submitting}
-          show={dirty}>
-          <FormattedMessage id="portal.configuration.advanced.edit.unsavedChanges.text"/>
-        </SaveBar>
+        {!advancedTabReadOnly &&
+          <SaveBar
+            onCancel={reset}
+            invalid={invalid}
+            saving={submitting}
+            show={dirty}>
+            <FormattedMessage id="portal.configuration.advanced.edit.unsavedChanges.text"/>
+          </SaveBar>
+        }
 
       </form>
     )
@@ -300,6 +307,7 @@ class ConfigurationAdvanced extends React.Component {
 
 ConfigurationAdvanced.displayName = 'ConfigurationAdvanced'
 ConfigurationAdvanced.propTypes = {
+  advancedTabReadOnly: PropTypes.bool,
   config: PropTypes.instanceOf(Map),
   intl: intlShape.isRequired,
   isFinalRequestEnabled: PropTypes.bool,
@@ -372,6 +380,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchProperty: (params) => dispatch(propertiesActions.fetchOne(params)) ,
@@ -384,7 +393,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const form = reduxForm({
-  form: 'advancedForm'
+  form: 'advancedForm',
+  enableReinitialize: true
 })(injectIntl(ConfigurationAdvanced))
 
 export default connect(mapStateToProps, mapDispatchToProps)(form)

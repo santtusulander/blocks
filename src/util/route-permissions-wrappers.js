@@ -8,6 +8,7 @@ import { getById as getAccountById } from '../redux/modules/entities/accounts/se
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
+import { getServicePermissions } from '../util/services-helpers'
 
 import {
   hasService
@@ -158,7 +159,11 @@ export const UserCanViewAccountDetail = (store) => {
 
 export const CanViewConfigurationSecurity = (store) => {
   return UserAuthWrapper({
-    authSelector: state => state.group.get('servicePermissions'),
+    authSelector: (state, ownProps) => {
+      const activeGroup = getGroupById(state, ownProps.params.group)
+ 
+      return getServicePermissions(activeGroup)
+    },
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/security/, '')
 
@@ -214,11 +219,25 @@ export const UserCanViewGTM = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm/, 'i'), '')
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/gtm\/?$/, 'i'), '')
     return redirectPath
   },
   allowRedirectBack: false
 })
+
+export const UserCanViewAdvancedTab = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const path = ownProps.location.pathname.replace(/\/advanced$/, '')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'CanViewAdvancedTab',
+    predicate: permissionChecker(PERMISSIONS.VIEW_ADVANCED, store),
+    allowRedirectBack: false
+  })
+}
 
 export const AccountCanViewProperties = UserAuthWrapper({
   authSelector: (state, ownProps) => {

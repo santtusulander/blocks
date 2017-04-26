@@ -87,7 +87,7 @@ class Network extends React.Component {
   constructor(props) {
     super(props)
 
-    this.container = null
+    this.container = undefined
     this.notificationTimeout = null
     this.showNotification = this.showNotification.bind(this)
 
@@ -120,6 +120,7 @@ class Network extends React.Component {
 
     this.podContentTextGenerator = this.podContentTextGenerator.bind(this)
 
+    this.nodeContentTextGenerator = this.nodeContentTextGenerator.bind(this)
     this.state = {
       networks: Immutable.List(),
       pops: Immutable.List(),
@@ -178,7 +179,7 @@ class Network extends React.Component {
     // allows us to use the browsers navigation buttons to active the scrolling.
     const { group, network, pop, pod } = this.props.params
 
-    if (this.container === null) {
+    if (!this.container) {
       // There is no reason to perform any operation on detached container.
       return
     }
@@ -451,12 +452,13 @@ class Network extends React.Component {
   }
 
   podContentTextGenerator(entity) {
-    const { intl: { formatMessage } }= this.props
+    const { intl: { formatMessage } } = this.props
     const podType = entity.get('pod_type')
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
     const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
     const UIDiscoveryMethod = DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod)[0]
-    return `${UIType ? formatMessage({id: UIType.label}) : 'Unknown type'}, ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : 'Unknown discovery method'}`
+    return `${UIType ? formatMessage({id: UIType.label}) : formatMessage({id: 'portal.network.podForm.pod_type.options.unknown.label'})},
+            ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : formatMessage({id: 'portal.network.podForm.discoveryMethod.options.unknown.label'})}`
   }
 
   /* ==== Node Handlers ==== */
@@ -466,11 +468,14 @@ class Network extends React.Component {
   }
 
   nodeContentTextGenerator(entity) {
+    const { intl: { formatMessage } } = this.props
+
     const nodeRole = entity.getIn(['roles', '0'])
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
     const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
-    return `${UIRole ? UIRole.label : 'Unknown role'}, ${UIEnv ? UIEnv.label : 'Unknown environment'}`
+    return `${UIRole ? formatMessage({id: UIRole.label}) : formatMessage({id: 'portal.network.nodeForm.roles.unknown'})},
+            ${UIEnv ? formatMessage({id: UIEnv.label}) : formatMessage({id: 'portal.network.nodeForm.environment.unknown'})}`
   }
 
   showNotification(message) {
@@ -514,6 +519,11 @@ class Network extends React.Component {
    * @param  {boolean}             shouldScrollToPrevious A boolean to determine scroll direction
    */
   selectEntityAndScroll(selectedEntity, shouldScrollToPrevious) {
+    /* If container is not yet initialized - return */
+    if (!this.container) {
+      return
+    }
+
     const { entities, entityKeys } = this.elementAndContainerValues()
 
     // Get the next entity ref
@@ -625,7 +635,7 @@ class Network extends React.Component {
    * Checks if the url has 'groups' string in it.
    *
    * @method hasGroupsInUrl
-   * @return {Boolean}      Boolean of having groups or not in the url
+   * @return {Boolean} Boolean of having groups or not in the url
    */
   hasGroupsInUrl() {
     return this.props.location.pathname.includes('groups')

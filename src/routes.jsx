@@ -19,6 +19,7 @@ import {
   CanViewStorageSummary,
   CanViewStorageTab,
   UserCanViewGTM,
+  UserCanViewAdvancedTab,
   AccountCanViewProperties
 } from './util/route-permissions-wrappers'
 
@@ -34,7 +35,7 @@ import AccountManagementAccountUsers from './containers/account-management/tabs/
 import AccountManagementGroups from './containers/account-management/tabs/groups'
 import AccountManagementProperties from './containers/account-management/tabs/properties'
 import AccountManagementAccounts from './containers/account-management/tabs/accounts'
-import AccountManagementSystemUsers from './components/account-management/system/users'
+import AccountManagementSystemUsers from './containers/account-management/tabs/users'
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementStorages from './containers/account-management/tabs/storages'
@@ -290,7 +291,7 @@ export const getRoutes = store => {
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
             <Route path={routes.configurationTabGlobalTrafficManager} component={UserCanViewGTM(ConfigurationGlobalTrafficManager)}/>
-            <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
+            <Route path={routes.configurationTabAdvanced} component={UserCanViewAdvancedTab(store)(ConfigurationAdvanced)}/>
           </Route>
 
           {/* Storage - routes */}

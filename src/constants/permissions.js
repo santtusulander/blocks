@@ -61,7 +61,7 @@ export const CREATE_USER = 'CREATE_USER'
 export const MODIFY_USER = 'MODIFY_USER'
 
 // AAA Roles Permissions
-export const MODIFY_ROLE = 'MODIFY_USER'
+export const MODIFY_ROLE = 'MODIFY_ROLE'
 
 //DNS Permissions
 export const CREATE_RECORD = 'CREATE_RECORD'
@@ -127,3 +127,7 @@ export const DELETE_STORAGE = 'DELETE_STORAGE'
 export const VIEW_STORAGE = 'VIEW_STORAGE'
 export const LIST_STORAGE = 'LIST_STORAGE'
 export const CREATE_ACCESS_KEY = 'CREATE_ACCESS_KEY'
+
+// Advanced Permissions
+export const VIEW_ADVANCED = 'VIEW_ADVANCED'
+export const MODIFY_ADVANCED = 'MODIFY_ADVANCED'
