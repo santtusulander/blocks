@@ -29,6 +29,7 @@ describe('AccountManagementAccountUsers', () => {
         groupActions={ {
           fetchGroups: genAsyncMock,
         }}
+        fetchServiceTitle= {jest.fn()}
         groups={Immutable.List()}
         params={{}}
         permissions= {Immutable.Map()}

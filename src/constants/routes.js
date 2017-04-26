@@ -94,7 +94,7 @@ const ROUTES = {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
-  dashboardGroup: '/dashboard/:brand/:account/:group',
+  dashboardGroup: '/dashboard/:brand/:account/groups/:group',
   dashboardProperty: '/dashboard/:brand/:account/:group/:property',
 
   network: '/network',

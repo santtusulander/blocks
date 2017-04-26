@@ -106,9 +106,11 @@ const fakePermissions = fromJS({
   north :
     [{name: 'analytics', title: 'Analytics'}]
   ,
-  ui :
-    [{name: 'analytics_cp_traffic', title: 'Analytics: CP: Traffic'}]
-
+  UI : {
+    name: 'UI',
+    type: 'ui',
+    resources: [{name: 'analytics_cp_traffic', title: 'Analytics: CP: Traffic'}]
+  }
 })
 
 function intlMaker() {

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is, fromJS } from 'immutable'
 import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -13,6 +13,12 @@ import { parseResponseError } from '../../../redux/util'
 
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
+
+import rolesActions from '../../../redux/modules/entities/roles/actions'
+import {getAll as getAllPermissions} from '../../../redux/modules/entities/roles/selectors'
+
+import serviceTitleActions from '../../../redux/modules/entities/serviceTitles/actions'
+import {getById as getTitlesByID} from '../../../redux/modules/entities/serviceTitles/selectors'
 
 import usersActions from '../../../redux/modules/entities/users/actions'
 import { getByPage } from '../../../redux/modules/entities/users/selectors'
@@ -95,6 +101,7 @@ export class AccountManagementAccountUsers extends Component {
 
     this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue})
     this.props.fetchRoleNames()
+    this.props.fetchServiceTitle({id: 'UI'})
 
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
@@ -112,6 +119,13 @@ export class AccountManagementAccountUsers extends Component {
       this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     }
 
+    if (is(this.props.roles, nextProps.roles)) {
+      Promise.all(
+         this.props.roles.map(roleName => {
+           return this.props.fetchRolePermissions({id: roleName.get('id')})
+         })
+       )
+    }
   }
 
   componentWillUnmount() {
@@ -159,6 +173,13 @@ export class AccountManagementAccountUsers extends Component {
       } else {
         this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
+        //reload from server inorder to reset pagination
+        const {location, params: { brand, account }} = this.props
+
+        const {sortBy, sortOrder, filterBy, filterValue} = location.query
+        const page = location.query.page ? location.query.page : 1
+
+        this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
       }
     })
   }
@@ -233,13 +254,13 @@ export class AccountManagementAccountUsers extends Component {
             ErrorComponent={errorTooltip}
             options={roleOptions}
             component={FieldFormGroupSelect}/>,
-          positionClass: 'row col-xs-10'
+          positionClass: 'row col-xs-7'
         },
         {
           input: <Button bsStyle="primary" className="btn-icon" onClick={this.togglePermissionModal}>
               <IconInfo/>
             </Button>,
-          positionClass: 'col-xs-2 text-right'
+          positionClass: 'col-xs-2'
         }
       ]
     ]
@@ -351,8 +372,17 @@ export class AccountManagementAccountUsers extends Component {
     const {
       fetching,
       users,
+      roles,
+      permissions,
+      permissionServiceTitles,
       params: {account}
     } = this.props
+
+    //Merge corresponding UIpermissions to role object inorder to display permission modal
+    const rolesWithPermission = roles.map(role => {
+      const roleID = String(role.get('id'))
+      return role.merge(fromJS({permissions: permissions.get(roleID)}))
+    })
 
     const totalCount = this.props.paginationMeta && this.props.paginationMeta.get('total') ? this.props.paginationMeta.get('total') : 0
 
@@ -443,7 +473,11 @@ export class AccountManagementAccountUsers extends Component {
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}
-            {users && users.map((user, i) => {
+            {/*
+              Note, this is the temporary approach to fix bug when deleting user cause by pagination, remove filter() when
+              the pagination is fixed
+            */}
+            {users && users.filter(user => user).map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
@@ -506,19 +540,19 @@ export class AccountManagementAccountUsers extends Component {
           />
         }
 
-        { !!this.props.roles.size && !!this.props.permissions.size && this.state.showPermissionsModal &&
+        { !!rolesWithPermission.size && !!this.props.permissions.size && this.state.showPermissionsModal &&
           <ModalWindow
             title="View Permissions"
             closeModal={true}
             closeButton={true}
             cancel={this.togglePermissionModal}>
-              {this.props.roles.map((role, roleIndex) => {
+              {rolesWithPermission.map((role, roleIndex) => {
                 return role.getIn(['permissions', 'ui']) ?
                 (<PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={roleIndex}>
                     <Table striped={true} key={roleIndex}>
                       <tbody>
-                      {this.props.permissions.get('ui').map((uiPermission, uiPermissionIndex) => {
+                      {permissionServiceTitles.map((uiPermission, uiPermissionIndex) => {
                         const permissionTitle = uiPermission.get('title')
                         const permissionName = uiPermission.get('name')
                         return (
@@ -556,6 +590,8 @@ AccountManagementAccountUsers.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
   fetchRoleNames: PropTypes.func,
+  fetchRolePermissions: PropTypes.func,
+  fetchServiceTitle: PropTypes.func,
   fetchUsers: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
@@ -563,6 +599,7 @@ AccountManagementAccountUsers.propTypes = {
   location: PropTypes.object,
   paginationMeta: PropTypes.instanceOf(Map),
   params: PropTypes.object,
+  permissionServiceTitles: PropTypes.instanceOf(List),
   permissions: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List),
   route: PropTypes.object,
@@ -580,15 +617,16 @@ AccountManagementAccountUsers.defaultProps = {
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const page = ownProps.location.query.page ? ownProps.location.query.page : 1
-
+  const permissionTitles = getTitlesByID(state,'UI')
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
     currentUser: state.user.get('currentUser'),
-    permissions: state.permissions,
-    paginationMeta: getPaginationMeta(state, 'user')
+    permissions: getAllPermissions(state),
+    paginationMeta: getPaginationMeta(state, 'user'),
+    permissionServiceTitles: permissionTitles ? permissionTitles.get('resources'): List()
   }
 }
 
@@ -604,7 +642,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchUsers: (params) => dispatch(usersActions.fetchAll({...params, offset: (params.page - 1) * PAGE_SIZE, limit: PAGE_SIZE})),
 
     createUser: (user) => dispatch(usersActions.create(user)),
-    updateUser: (user) => dispatch(usersActions.update(user))
+    updateUser: (user) => dispatch(usersActions.update(user)),
+    fetchRolePermissions: (params) => dispatch(rolesActions.fetchOne(params)),
+    fetchServiceTitle: (params) => dispatch(serviceTitleActions.fetchOne(params))
   };
 }
 

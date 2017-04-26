@@ -68,7 +68,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
       return Promise.all([
 
-        shouldFetch(VIEW_CONTENT_ACCOUNTS) && dispatch(accountActions.fetchAll({ brand })),
+        shouldFetch(VIEW_CONTENT_ACCOUNTS) && brand && dispatch(accountActions.fetchAll({ brand })),
 
         !shouldFetch(VIEW_CONTENT_ACCOUNTS) && account && dispatch(accountActions.fetchOne({ brand, id: account })),
 
@@ -101,17 +101,20 @@ const accountSelectorStateToProps = (state, { params: { storage, property, group
   let activeNode = brand
   let tree = []
 
-  if (canViewBrand) {
+  if (activeNode) {
 
-    tree = getBrands(state, canView)
+    if (canViewBrand) {
 
-  } else if (canViewAccount) {
+      tree = getBrands(state, canView)
 
-    tree = getAccounts(state, { brand }, canView)
+    } else if (canViewAccount) {
 
-  } else if (canViewGroup) {
+      tree = getAccounts(state, { brand }, canView)
 
-    tree = getGroups(state, { brand, account }, canView)
+    } else if (canViewGroup) {
+
+      tree = getGroups(state, { brand, account }, canView)
+    }
   }
 
   if (canViewAccount && account) {

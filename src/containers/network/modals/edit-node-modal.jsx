@@ -11,9 +11,7 @@ import { changeNotification } from '../../../redux/modules/ui'
 
 import { buildReduxId, parseResponseError } from '../../../redux/util'
 
-// Use this when the network container has the new entities groups
-// import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
-
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
@@ -38,9 +36,7 @@ const getSubtitle = (state, params) => {
 
   const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
-  // const group = getGroupById(state, params.group)
-  // eslint-disable-next-line
-  const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
+  const group = getGroupById(state, params.group)
   const network = getNetworkById(state, buildReduxId(params.group, params.network))
 
   const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
