@@ -19,8 +19,7 @@ class AccountManagementSystemRoles extends React.Component {
 
     this.state = {
       editRole: null,
-      showAddNewDialog: false,
-      roleWithPermissions: Immutable.List()
+      showAddNewDialog: false
     }
 
     this.editRole = this.editRole.bind(this)
@@ -31,10 +30,19 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   componentWillMount() {
-
     this.props.fetchAccounts({ brand: this.props.params.brand})
     this.props.fetchServiceTitle({id: 'UI'})
-    this.props.fetchRoleNames()
+    if (this.props.roleNames.isEmpty()) {
+      this.props.fetchRoleNames()
+    } else {
+      if (this.props.roleNames.size > this.props.roles.size) {
+        Promise.all(
+          this.props.roleNames.map(roleName => {
+            return this.props.fetchRolePermissions({id: roleName.get('id')})
+          })
+        )
+      }
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,11 +52,6 @@ class AccountManagementSystemRoles extends React.Component {
           return this.props.fetchRolePermissions({id: roleName.get('id')})
         })
       )
-      .then(() => {
-        this.setState({
-          roleWithPermissions: this.populateRoleNames()
-        })
-      })
     }
   }
 
@@ -69,9 +72,11 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   editRole(id) {
+    const roleWithPermissions = this.populateRoleNames()
+
     this.showAddNewRoleDialog()
     this.setState({
-      editRole: this.state.roleWithPermissions.find(role => role.get('id') === id)
+      editRole: roleWithPermissions.find(role => role.get('id') === id)
     })
   }
 
@@ -81,14 +86,14 @@ class AccountManagementSystemRoles extends React.Component {
 
   render() {
     const { fetchingAccounts, fetchingRoles, fetchingRoleNames, fetchingPermissionNames } = this.props
-
+    const roleWithPermissions = this.populateRoleNames()
     return (
       <PageContainer>
         {fetchingAccounts || fetchingRoles || fetchingPermissionNames || fetchingRoleNames
           ? <LoadingSpinner/>
           : <RolesList
             editRole={this.state.editRole}
-            roles={this.state.roleWithPermissions}
+            roles={roleWithPermissions}
             permissions={this.props.permissions}
             onCancel={this.hideAddNewRoleDialog}
             onSave={this.saveRole}
