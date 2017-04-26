@@ -173,7 +173,7 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, error } = this.props
+    const { handleSubmit, error, intl } = this.props
     const footerButtons = this.getFooterButtons()
 
     return (
@@ -220,7 +220,7 @@ class NetworkAddNodeForm extends React.Component {
             name="node_role"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={NODE_ROLE_OPTIONS}
+            options={NODE_ROLE_OPTIONS.map(role => ({...role, label: intl.formatMessage({id: role.label})}))}
             label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
             addonAfter={
               <HelpTooltip
@@ -235,7 +235,7 @@ class NetworkAddNodeForm extends React.Component {
             name="node_env"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={NODE_ENVIRONMENT_OPTIONS}
+            options={NODE_ENVIRONMENT_OPTIONS.map(env => ({...env, label: intl.formatMessage({id: env.label})}))}
             label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
             addonAfter={
               <HelpTooltip
