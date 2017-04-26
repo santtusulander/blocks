@@ -192,7 +192,7 @@ export function userTokenChecked(state, action) {
 
     //Set keys toLowerCase to provide compability with the old permissionMapping
     const compatPermissions = Object.keys(action.payload.currentUserPermissions).reduce((acc, val) => {
-      acc[val.toLowerCase()] = action.payload.currentUserPermissions[val]
+      acc[val.toLowerCase()] = action.payload.currentUserPermissions[val].permissions.resources
 
       return acc;
     }, {})
