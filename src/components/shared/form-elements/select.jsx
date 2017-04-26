@@ -36,7 +36,7 @@ class Select extends Component {
         className={this.props.value === value && 'hidden'}>
         {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
-        <div className="dropdown-select__option-second-label">{secondLabel}</div>
+        {secondLabel && <div className="dropdown-select__option-second-label">{secondLabel}</div>}
       </MenuItem>
     )
   }
@@ -73,7 +73,7 @@ class Select extends Component {
       <div className="dropdown-select__selected-item">
         {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
-        <div>{secondLabel}</div>
+        {secondLabel && <div>{secondLabel}</div>}
       </div>
     )
   }
