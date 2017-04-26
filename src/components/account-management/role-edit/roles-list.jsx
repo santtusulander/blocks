@@ -101,7 +101,6 @@ class RolesList extends React.Component {
             <tr>
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
-              <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
               <IsAllowed to={MODIFY_ROLE}>
                 <th width="1%" />
               </IsAllowed>
@@ -110,10 +109,6 @@ class RolesList extends React.Component {
 
         <tbody>
             {!sortedRoles.isEmpty() ? sortedRoles.map((role, i) => {
-              const userCount = this.props.users
-                .filter(user => user.get('roles').contains(role.get('id')))
-                .size
-
               return (
                 <tr key={i}>
                   <td className={`name-${i}`}>
@@ -123,7 +118,7 @@ class RolesList extends React.Component {
                     <ArrayTd maxItemsShown={5} items={[
                       ...this.labelPermissions(
                       role.getIn(['permissions', 'ui'], Immutable.List()).filter(permission => permission),
-                      this.props.permissions.get('ui')
+                      this.props.permissions.getIn(['UI','resources'])
                       ).toArray()
                     ]} />
                     : (
@@ -131,9 +126,6 @@ class RolesList extends React.Component {
                         <FormattedMessage id="portal.role.list.search.noPermissionsResults.text"/>
                       </td>
                     )}
-                  <td>
-                    {userCount} <FormattedMessage id="portal.role.list.search.userCount.text" values={{userCount: userCount}}/>
-                  </td>
                   <IsAllowed to={MODIFY_ROLE}>
                     <td className="nowrap-column">
                       <ActionButtons
@@ -176,13 +168,11 @@ RolesList.propTypes = {
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),
-  showAddNewDialog: React.PropTypes.bool,
-  users: React.PropTypes.instanceOf(Immutable.List)
+  showAddNewDialog: React.PropTypes.bool
 }
 RolesList.defaultProps = {
   permissions: Immutable.Map(),
-  roles: Immutable.List(),
-  users: Immutable.List()
+  roles: Immutable.List()
 }
 
 export default injectIntl(RolesList)
