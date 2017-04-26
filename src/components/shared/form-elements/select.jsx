@@ -41,16 +41,16 @@ class Select extends Component {
     )
   }
 
+  getOptionSecondLabel(option) {
+    return Array.isArray(option) ? option[3] : option.secondLabel
+  }
+
   getOptionIcon(option) {
     return Array.isArray(option) ? option[2] : option.icon
   }
 
   getOptionLabel(option) {
     return Array.isArray(option) ? option[1] : option.label
-  }
-
-  getOptionSecondLabel(option) {
-    return Array.isArray(option) ? option[1] : option.secondLabel
   }
 
   getOptionValue(option) {
