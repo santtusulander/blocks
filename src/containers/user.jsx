@@ -84,7 +84,8 @@ class User extends React.Component {
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
       tfa: currentUser.get('tfa'),
-      changingPassword: false
+      changingPassword: false,
+      language: currentUser.get('locale')
     } : {}
 
     return (

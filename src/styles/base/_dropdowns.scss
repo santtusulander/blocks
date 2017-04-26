@@ -229,6 +229,10 @@ $search-input-left-padding: em(36px, $search-font-size);
       }
     }
   }
+
+  .dropdown-select__option-second-label {
+    margin-right: 18px;
+  }
 }
 
 .navbar-fixed-top .dropdown-menu:not(.dropdown-user-menu) {

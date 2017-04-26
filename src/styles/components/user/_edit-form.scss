@@ -8,6 +8,25 @@
 
   .form-group {
     padding-bottom: 0;
+
+    .dropdown-select {
+      width: 100%;
+    }
+  }
+
+  .tfa {
+    margin: 0;
+  }
+
+  .tfa,
+  .locale {
+    .form-control-static {
+      text-align: right;
+    }
+
+    .dropdown {
+      min-width: 144px;
+    }
   }
 
   .select-box-tooltip {
@@ -24,6 +43,7 @@
 
   .recovery-key {
     padding-left: 15px;
+    margin-left: 260px;
 
     div {
       max-width: 600px;
