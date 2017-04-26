@@ -23,7 +23,8 @@ import Tooltip from '../../../components/shared/tooltips/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
-  formatBitsPerSecond
+  formatBitsPerSecond,
+  getCISname
 } from '../../../util/helpers'
 
 import DateRanges from '../../../constants/date-ranges'
@@ -343,6 +344,12 @@ class PropertySummary extends React.Component {
       })
     }
 
+    const originType = activeConfig.get('edge_configuration').get('origin_type')
+    const originalHostName = activeConfig.get('edge_configuration').get('origin_host_name')
+    const originHostname = originType === 'cis'
+                            ? getCISname(originalHostName)
+                            : originalHostName
+
     return (
 
       <PageContainer className="property-container">
@@ -350,7 +357,7 @@ class PropertySummary extends React.Component {
           <Col xs={3} className="kpi">
             <FormattedMessage id="portal.content.property.summary.originHostname.title"/>
             <h3>
-              {activeConfig.get('edge_configuration').get('origin_host_name')}
+              {originHostname}
             </h3>
           </Col>
           <Col xs={3} className="kpi">
