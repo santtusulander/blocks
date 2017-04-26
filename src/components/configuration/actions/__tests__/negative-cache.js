@@ -35,7 +35,6 @@ describe('NegativeCache', () => {
       invalid: false,
       set: Immutable.Map(),
       intl: intlMaker(),
-      //saveChanges: jest.fn(),
       path: Immutable.List(['foo', 'bar']),
       setKey: 'negative_cache',
       saveAction

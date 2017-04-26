@@ -15,7 +15,7 @@ function intlMaker() {
 
 describe('ContentTargeting', () => {
   let subject = null
-  let props = {}, close, handleSubmit, change
+  let props = {}, close, handleSubmit, change, saveAction
   const fakeConfig = Immutable.fromJS({ "code": 200 })
 
   const fakePath = Immutable.List(['foo', 'bar'])
@@ -24,11 +24,14 @@ describe('ContentTargeting', () => {
     close = jest.fn()
     change = jest.fn()
     close = jest.fn()
+    saveAction = jest.fn()
+
     subject = () => {
       props = {
         set: fakeConfig,
         path: fakePath,
         handleSubmit,
+        saveAction,
         change,
         close,
         intl: intlMaker()
@@ -40,35 +43,73 @@ describe('ContentTargeting', () => {
     expect(subject().length).toBe(1)
   })
 
-  //TODO-2277
+  it('should handle cancel click', () => {
+    subject().find('Button').at(0).simulate('click')
 
-  // it('should handle save-button click', () => {
-  //   subject().find('#save-button').simulate('click')
-  //   expect(changeValue.mock.calls.length).toBe(1)
-  //   expect(close.mock.calls.length).toBe(1)
-  // })
+    expect(close.mock.calls.length).toBe(1)
+  })
 
-  // it('should handle close-button click', () => {
-  //   subject().find('#close-button').simulate('click')
-  //   expect(close.mock.calls.length).toBe(1)
-  // })
+  it('should handle submit click', () => {
+    subject().find('Button').at(1).simulate('click')
 
-  // it('should set correct state', () => {
-  //   const component = subject()
+    expect(handleSubmit.mock.calls.length).toBe(1)
+  })
 
-  //   component.instance().handleTypeChange()('deny')
-  //   expect(component.state('type')).toBe('deny')
-  //   expect(component.state('status_code')).toBe(401)
-  //   expect(component.state('redirectURL')).toBeUndefined()
+  it('should call saveAction with Allow params', () => {
+    const component = subject()
 
-  //   component.instance().handleTypeChange()('redirect')
-  //   expect(component.state('type')).toBe('redirect')
-  //   expect(component.state('status_code')).toBe(302)
-  //   expect(component.state('redirectURL')).toBeDefined()
+    const values = {
+      code: 200
+    } 
 
-  //   component.instance().handleTypeChange()('allow')
-  //   expect(component.state('type')).toBe('allow')
-  //   expect(component.state('status_code')).toBe(200)
-  //   expect(component.state('redirectURL')).toBeUndefined()
-  // })
+    const expectedSave = {
+      code: 200,
+      location: ''
+    }
+
+    component.instance().saveChanges(values)
+
+    expect(saveAction).toBeCalled()
+    expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
+    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+  })
+
+  it('should call saveAction with Redirect params', () => {
+    const component = subject()
+
+    const values = {
+      code: 302,
+      location: 'www.qwerty.com'
+    } 
+
+    const expectedSave = {
+      code: 302,
+      location: 'www.qwerty.com'
+    }
+
+    component.instance().saveChanges(values)
+
+    expect(saveAction).toBeCalled()
+    expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
+    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+  })
+
+  it('should call saveAction with Deny params', () => {
+    const component = subject()
+
+    const values = {
+      code: 401
+    } 
+
+    const expectedSave = {
+      code: 401,
+      location: ''
+    }
+
+    component.instance().saveChanges(values)
+
+    expect(saveAction).toBeCalled()
+    expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
+    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+  })
 })
