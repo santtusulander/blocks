@@ -337,6 +337,16 @@ $lt-caret-color: $silver-60;
         background-color: rgba($black, 0.5);
         box-shadow: none;
       }
+
+      &.disabled {
+        color: rgba($silver-60, 0.2);
+        background-color: rgba($black, 0.1);
+        opacity: 1;
+
+        .icon {
+          fill: rgba($silver-60, 0.2);
+        }
+      }
     }
 
     &.open .dropdown-toggle {
@@ -440,6 +450,16 @@ $lt-caret-color: $silver-60;
 
       .icon {
         fill: $lt-caret-color;
+      }
+
+      &.disabled {
+        color: rgba($grey-80, 0.2);
+        background: none;
+        opacity: 1;
+
+        .icon {
+          fill: rgba($grey-80, 0.2);
+        }
       }
     }
 
