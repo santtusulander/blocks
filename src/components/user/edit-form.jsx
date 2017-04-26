@@ -325,22 +325,6 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
-        {/* LANGUAGE */}
-        <Row>
-          <ControlLabel className="col-xs-2">
-            Language
-          </ControlLabel>
-          <Col xs={6}>
-            <Field
-              name="language"
-              component={FieldFormGroupSelect}
-              options={[{value: 'en-US', label: 'English'}, {value: 'zh-CN', label: 'Chinese'}]}
-            />
-          </Col>
-        </Row>
-
-        <hr/>
-
         { /* PASSWORD */}
         <Row>
           <ControlLabel className="col-xs-2">
@@ -407,57 +391,92 @@ class UserEditForm extends React.Component {
             <FormattedMessage id="portal.user.edit.2FA.text" />
           </ControlLabel>
 
-          <Col xs={9}>
-            <Row>
-              <Col xs={3}>
-                <Field
-                  name="tfa_toggle"
-                  component={FieldFormGroupToggle}
-                />
-              </Col>
-              <Col xs={2}>
-                <p className="form-control-static">
-                  <FormattedMessage id="portal.user.edit.2FA.method.text" />
-                </p>
-              </Col>
-              <Col xs={1}>
-                <Field
-                  name="tfa"
-                  component={FieldFormGroupSelect}
-                  disabled={!tfa_toggle}
-                  options={this.tfaMethodOptions()}
-                />
-              </Col>
-              <Col xs={3}>
-                <div className="select-box-tooltip">
-                  {this.renderTwoFAMethodsTooltips(tfa)}
-                </div>
-              </Col>
+          <Row className="tfa">
+            <Col xs={3}>
+              <Field
+                name="tfa_toggle"
+                component={FieldFormGroupToggle}
+              />
+            </Col>
+            <Col xs={2}>
+              <p className="form-control-static">
+                <FormattedMessage id="portal.user.edit.2FA.method.text" />
+              </p>
+            </Col>
+            <Col xs={1}>
+              <Field
+                name="tfa"
+                component={FieldFormGroupSelect}
+                disabled={!tfa_toggle}
+                options={this.tfaMethodOptions()}
+              />
+            </Col>
+            <Col xs={3}>
+              <div className="select-box-tooltip">
+                {this.renderTwoFAMethodsTooltips(tfa)}
+              </div>
+            </Col>
+          </Row>
+
+          { initialTfa && tfa &&
+            <Row className="recovery-key">
+              <Button bsStyle="primary" onClick={this.toggleRecoveryKeyModal}>
+                <FormattedMessage id="portal.user.edit.recoveryKey.button.showRecoveryKey"/>
+              </Button>
+              <div><FormattedMessage id="portal.user.edit.recoveryKey.helpText"/></div>
             </Row>
+          }
 
-            { initialTfa && tfa &&
-              <Row className="recovery-key">
-                <Button bsStyle="primary" onClick={this.toggleRecoveryKeyModal}>
-                  <FormattedMessage id="portal.user.edit.recoveryKey.button.showRecoveryKey"/>
-                </Button>
-                <div><FormattedMessage id="portal.user.edit.recoveryKey.helpText"/></div>
-              </Row>
-            }
+          { this.state.showRecoveryKeyModal &&
+            <ModalWindow
+              okButton={true}
+              className="recovery-key-modal"
+              title={<FormattedMessage id="portal.user.edit.recoveryKey.modal.title"/>}
+              cancel={() => this.toggleRecoveryKeyModal()}>
 
-            { this.state.showRecoveryKeyModal &&
-              <ModalWindow
-                okButton={true}
-                className="recovery-key-modal"
-                title={<FormattedMessage id="portal.user.edit.recoveryKey.modal.title"/>}
-                cancel={() => this.toggleRecoveryKeyModal()}>
+               <FormattedMessage id="portal.user.edit.recoveryKey.modal.helpText"/>
+               <input type="text" value={this.state.recoveryKey} readOnly="true"/>
+               <a href="#" onClick={() => this.copyToClipboard()}>
+                 <FormattedMessage id="portal.common.copyToClipboard"/>
+               </a>
+            </ModalWindow>
+          }
 
-                 <FormattedMessage id="portal.user.edit.recoveryKey.modal.helpText"/>
-                 <input type="text" value={this.state.recoveryKey} readOnly="true"/>
-                 <a href="#" onClick={() => this.copyToClipboard()}>
-                   <FormattedMessage id="portal.common.copyToClipboard"/>
-                 </a>
-              </ModalWindow>
-            }
+        </Row>
+
+        <hr/>
+
+        {/* LOCALE */}
+        <Row className="locale">
+          <ControlLabel className="col-xs-2">
+            <FormattedMessage id="portal.user.edit.localeSettings.text"/>
+          </ControlLabel>
+          <Col xs={3}>
+            <Field
+              name="language"
+              component={FieldFormGroupSelect}
+              options={[
+                {value: 'en-US', label: 'English(US)', secondLabel: 'EN'},
+                {value: 'zh-CN', label: '中文', secondLabel: 'ZH'},
+                {value: 'es-ES', label: 'Español', secondLabel: 'ES'},
+                {value: 'fr-FR', label: 'Françias', secondLabel: 'FR'}
+              ]}
+            />
+          </Col>
+          <Col xs={2}>
+            <p className="form-control-static">
+              <FormattedMessage id="portal.user.edit.dateFormat.text"/>
+            </p>
+          </Col>
+          <Col xs={1}>
+            <Field
+              name="date-format"
+              component={FieldFormGroupSelect}
+              options={[
+                {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
+                {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
+              ]}
+            />
           </Col>
         </Row>
 

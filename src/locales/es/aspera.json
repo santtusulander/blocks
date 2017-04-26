@@ -1,0 +1,14 @@
+{
+  "portal.aspera.connect.installer.init": "Trying to launch Aspera Connect...",
+  "portal.aspera.connect.installer.fail": "Aspera Connect is unable to launch. Use Aspera Connect for smooth user experience. Need to {troubleshoot}?",
+  "portal.aspera.connect.installer.outdated": "A newer version of Aspera Connect is required, please update.",
+  "portal.aspera.connect.installer.running": "Aspera Connect is running!",
+  "portal.aspera.connect.installer.troubleshoot": "troubleshoot",
+
+  "portal.aspera.connect.installer.cancel": "CANCEL",
+  "portal.aspera.connect.installer.download": "DOWNLOAD LATEST VERSION",
+  "portal.aspera.connect.installer.try_again": "REFRESH?",
+
+  "portal.aspera.error.transfer": "Error has been occurred during transfer. Need to {troubleshoot}?",
+  "portal.aspera.error.access_code": "Your upload session has timed out. Please refresh page to continue file upload."
+}

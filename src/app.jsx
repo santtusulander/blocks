@@ -190,11 +190,15 @@ if (!window.Intl) {
   require.ensure([
     'intl',
     'intl/locale-data/jsonp/en.js',
-    'intl/locale-data/jsonp/zh.js'
+    'intl/locale-data/jsonp/zh.js',
+    'intl/locale-data/jsonp/es.js',
+    'intl/locale-data/jsonp/fr.js'
   ], (require) => {
     require('intl');
     require('intl/locale-data/jsonp/en.js');
     require('intl/locale-data/jsonp/zh.js');
+    require('intl/locale-data/jsonp/es.js');
+    require('intl/locale-data/jsonp/fr.js');
 
     startApp(Root);
   });
