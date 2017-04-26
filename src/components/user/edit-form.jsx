@@ -19,7 +19,9 @@ import { BASE_URL_AAA, parseResponseError } from '../../redux/util'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
-         TWO_FA_DEFAULT_AUTH_METHOD
+         TWO_FA_DEFAULT_AUTH_METHOD,
+         LANGUAGE_OPTIONS,
+         DATE_FORMAT_OPTIONS
         } from '../../constants/user.js'
 
 import '../../styles/components/user/_edit-form.scss'
@@ -455,12 +457,7 @@ class UserEditForm extends React.Component {
             <Field
               name="language"
               component={FieldFormGroupSelect}
-              options={[
-                {value: 'en-US', label: 'English(US)', secondLabel: 'EN'},
-                {value: 'zh-CN', label: '中文', secondLabel: 'ZH'},
-                {value: 'es-ES', label: 'Español', secondLabel: 'ES'},
-                {value: 'fr-FR', label: 'Françias', secondLabel: 'FR'}
-              ]}
+              options={LANGUAGE_OPTIONS}
             />
           </Col>
           <Col xs={2}>
@@ -472,10 +469,7 @@ class UserEditForm extends React.Component {
             <Field
               name="date-format"
               component={FieldFormGroupSelect}
-              options={[
-                {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
-                {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
-              ]}
+              options={DATE_FORMAT_OPTIONS}
             />
           </Col>
         </Row>

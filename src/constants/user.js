@@ -20,3 +20,15 @@ export const TWO_FA_METHODS_OPTIONS = [
     intl_label: 'portal.user.edit.2FA.method.one_touch.label.text'
   }
 ]
+
+export const LANGUAGE_OPTIONS = [
+  {value: 'en-US', label: 'English(US)', secondLabel: 'EN'},
+  {value: 'zh-CN', label: '中文', secondLabel: 'ZH'},
+  {value: 'es-ES', label: 'Español', secondLabel: 'ES'},
+  {value: 'fr-FR', label: 'Françias', secondLabel: 'FR'}
+]
+
+export const DATE_FORMAT_OPTIONS = [
+  {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
+  {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
+]

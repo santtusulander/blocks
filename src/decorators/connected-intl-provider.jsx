@@ -8,8 +8,8 @@ import MESSAGES_FR from '../locales/fr'
 
 import en from 'react-intl/locale-data/en';
 import zh from 'react-intl/locale-data/zh';
-import es from 'react-intl/locale-data/zh';
-import fr from 'react-intl/locale-data/zh';
+import es from 'react-intl/locale-data/es';
+import fr from 'react-intl/locale-data/fr';
 
 
 addLocaleData([...en, ...zh, ...es, ...fr]);
