@@ -322,20 +322,25 @@ export const getStoragePermissions = (roles, user) => ({
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-  const userRoles = user && user.size > 0 && user.get('roles')
-  if (!userRoles) {
-    return false
-  }
+  console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
 
-  return userRoles.some(roleId => {
+  const userRole = user && user.get('roles').first()
+  return checkUserPermissions(user, roles.get(String(userRole)), permission)
 
-    const role = roles && roles.get(String(roleId))
-    if (role) {
-      return permissionMapping[permission](role, roleId)
-    }
-
-    return false
-  })
+  // const userRoles = user && user.size > 0 && user.get('roles')
+  // if (!userRoles) {
+  //   return false
+  // }
+  //
+  // return userRoles.some(roleId => {
+  //
+  //   const role = roles && roles.get(String(roleId))
+  //   if (role) {
+  //     return permissionMapping[permission](role, roleId)
+  //   }
+  //
+  //   return false
+  // })
 }
 
 /**
@@ -345,7 +350,7 @@ export default function checkPermissions(roles, user, permission) {
  * @param  {[type]} permissionToCheck [description]
  * @return {[type]}                   [description]
  */
-export const checkUserPermission = (user, userPermissions, permissionToCheck) => {
+export const checkUserPermissions = (user, userPermissions, permissionToCheck) => {
   const userRoles = user && user.size > 0 && user.get('roles')
   if (!userRoles || !userPermissions) {
     return false
@@ -353,7 +358,7 @@ export const checkUserPermission = (user, userPermissions, permissionToCheck) =>
 
   //get first roleId
   const [roleId] = userRoles
-
-  return !!permissionMapping[permissionToCheck](userPermissions, roleId)
+  //TODO: .some
+  return permissionMapping[permissionToCheck](userPermissions, roleId)
 
 }
