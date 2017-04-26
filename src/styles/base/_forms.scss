@@ -39,8 +39,8 @@ label {
 .light-theme {
   input[disabled],
   textarea[disabled] {
-    color: rgba($lt-text-color, 0.4);
-    opacity: 0.6;
+    color: rgba($grey-80, 0.2);
+    background: none;
     user-select: none;
 
     &:active {
