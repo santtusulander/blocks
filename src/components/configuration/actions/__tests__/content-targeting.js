@@ -71,11 +71,12 @@ describe('ContentTargeting', () => {
 
     expect(saveAction).toBeCalled()
     expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
-    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+    expect(saveAction.mock.calls[0][2].toJS()).toEqual(expectedSave)
   })
 
   it('should call saveAction with Redirect params', () => {
     const component = subject()
+    component.setProps({actionType: 'redirect'})
 
     const values = {
       code: 302,
@@ -91,7 +92,7 @@ describe('ContentTargeting', () => {
 
     expect(saveAction).toBeCalled()
     expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
-    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+    expect(saveAction.mock.calls[0][2].toJS()).toEqual(expectedSave)
   })
 
   it('should call saveAction with Deny params', () => {
@@ -110,6 +111,6 @@ describe('ContentTargeting', () => {
 
     expect(saveAction).toBeCalled()
     expect(saveAction.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
-    expect(saveAction.mock.calls[0][2]).toEqual(expectedSave)
+    expect(saveAction.mock.calls[0][2].toJS()).toEqual(expectedSave)
   })
 })
