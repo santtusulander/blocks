@@ -14,10 +14,10 @@ Unfortunately, if anything fails, the console output from the build is hidden be
 It can be very convenient to have these lint checks done while you are coding. For a recommended editor configuration to support this, see the next section.
 
 Please follow our style guides and code guidelines:
- - [Code Guidelines](wiki/Code-Guidelines/)
- - [JavaScript Style Guide](wiki/JavaScript-Style-Guide/)
- - [React Style Guide](wiki/React-Style-Guide/)
- - [CSS Style Guide](wiki/CSS-Style-Guide/)
+ - [Code Guidelines](https://github.com/VidScale/udnportal/wiki/Code-Guidelines/)
+ - [JavaScript Style Guide](https://github.com/VidScale/udnportal/wiki/JavaScript-Style-Guide/)
+ - [React Style Guide](https://github.com/VidScale/udnportal/wiki/React-Style-Guide/)
+ - [CSS Style Guide](https://github.com/VidScale/udnportal/wiki/CSS-Style-Guide/)
 
 ### Recommended editor
 
@@ -128,6 +128,8 @@ The following plugins can be helpful as well:
         <strong>normal:</strong> <code>$ npm start</code>
         <br>
         <strong>source maps:</strong> <code>$ npm start -- --source-map</code>
+        <br>
+        <strong>for IE11:</strong> <code>$ npm start -- --no-hmr</code>
         <br>
         <small><em>slower build that generates source maps</em></small>
       </td>
