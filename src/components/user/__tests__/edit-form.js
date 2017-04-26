@@ -89,9 +89,9 @@ describe('UserEditForm', () => {
      expect(subject().find('form').length).toBe(1)
    })
 
-   it('should have 6 Fields inside the form', () => {
+   it('should have 8 Fields inside the form', () => {
      expect(subject().find('Fields').length).toBe(1)
-     expect(subject().find('Field').length).toBe(5)
+     expect(subject().find('Field').length).toBe(7)
    })
 
 })
