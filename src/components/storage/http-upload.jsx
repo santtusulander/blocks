@@ -5,8 +5,6 @@ import { Map, fromJS } from 'immutable'
 import classNames from 'classnames'
 
 import selectors from '../../redux/modules/http-file-upload/selectors'
-import actions from '../../redux/modules/http-file-upload/actions'
-import * as actionTypes from '../../redux/modules/http-file-upload/actionTypes'
 import UploadStatusContainer from './file-upload-status-container'
 
 /**
@@ -99,12 +97,7 @@ class HTTPUpload extends Component {
         type: 'file',
         progress: stats.get('progress', 0),
         error: stats.get('error', false),
-        cancel: () => {
-          if (stats.has('xhr')) {
-            stats.get('xhr')['abort']()
-          }
-          this.props[actionTypes.UPLOAD_FINISHED](name)
-        }
+        cancel: stats.get('cancelUpload')
       })).toArray()
 
     const cancelAll = () => uploads.forEach(u => u.cancel())
@@ -136,4 +129,4 @@ HTTPUpload.propTypes = {
   uploads: PropTypes.instanceOf(Map)
 }
 
-export default connect(selectors, actions)(HTTPUpload)
+export default connect(selectors)(HTTPUpload)
