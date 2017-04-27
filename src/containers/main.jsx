@@ -155,7 +155,6 @@ export class Main extends React.Component {
           routes={this.props.routes}
           pathname={this.props.location.pathname}
           params={this.props.params}
-          roles={this.props.roles}
           toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
           user={this.props.currentUser}/>
 
@@ -252,7 +251,6 @@ Main.propTypes = {
   location: PropTypes.object,
   notification: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   params: PropTypes.object,
-  roles: PropTypes.instanceOf(Map),
   router: PropTypes.object,
   routes: PropTypes.array,
   showErrorDialog: PropTypes.bool,
@@ -270,7 +268,6 @@ Main.defaultProps = {
   activeGroup: Map(),
   activeHost: Map(),
   currentUser: Map(),
-  roles: Map(),
   user: Map()
 }
 

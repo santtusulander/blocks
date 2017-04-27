@@ -85,7 +85,7 @@ class BreadcrumbsItem extends React.Component {
   updateLinks(props) {
     const links = []
     const { pathname, params, activeGroup } = props
-    const { roles, user, router } = this.props
+    const { user, router } = this.props
 
     if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
@@ -232,7 +232,6 @@ BreadcrumbsItem.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   params: PropTypes.object,
   pathname: PropTypes.string,
-  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   user: PropTypes.instanceOf(Immutable.Map)
 }

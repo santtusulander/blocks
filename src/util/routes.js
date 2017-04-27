@@ -150,10 +150,10 @@ export function getAnalyticsUrlFromParams(params, currentUser) {
   }
 }
 
-export function getContentUrlFromParams(params, currentUser, roles) {
+export function getContentUrlFromParams(params, currentUser) {
   const { brand, account, group, property } = params,
-    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES),
-    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
+    canListProperties = checkUserPermissions(currentUser, VIEW_CONTENT_PROPERTIES),
+    canViewAccountDetail = checkUserPermissions(currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (property) {
     return getRoute('contentProperty', params)
