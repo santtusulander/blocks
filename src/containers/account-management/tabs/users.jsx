@@ -504,7 +504,7 @@ export class AccountManagementAccountUsers extends Component {
         </Table>
         }
 
-        {/* Show Pagination if more items than fit on PAGE_SIZE */
+        { /* Show Pagination if more items than fit on PAGE_SIZE */
           totalCount > PAGE_SIZE &&
           <Paginator {...paginationProps} />
         }
