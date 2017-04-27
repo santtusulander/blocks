@@ -2,7 +2,7 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
-import checkPermissions from './permissions'
+import { checkUserPermissions } from './permissions'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
 
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
@@ -22,12 +22,12 @@ import {
  } from '../util/helpers'
 
 const authSelector = state => getCurrentUser(state)
-const permissionChecker = (permission, store) => user => {
+const permissionChecker = (permission /*, store*/) => user => {
   if (!permission) {
     return true
   }
-  return checkPermissions(
-    getRoles(store.getState()),
+  return checkUserPermissions(
+    //getRoles(store.getState()),
     user,
     permission
   )
@@ -98,8 +98,7 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const fallback = allTabs.find(([perm]) => {
-        return checkPermissions(
-          getRoles(state),
+        return checkUserPermissions(
           getCurrentUser(state),
           perm
         )
