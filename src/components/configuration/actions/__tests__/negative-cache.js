@@ -2,10 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.unmock('../cache.jsx')
+jest.unmock('../negative-cache.jsx')
 jest.unmock('../../helpers.js')
 
-import Cache from '../cache.jsx'
+import NegativeCache from '../negative-cache.jsx'
 
 const fakeConfig = Immutable.fromJS({
   "value": [["foo"]]
@@ -19,7 +19,7 @@ function intlMaker() {
   }
 }
 
-describe('Cache', () => {
+describe('NegativeCache', () => {
   let handleSubmit, close, change, component, saveAction
 
   beforeEach(() => {
@@ -36,11 +36,11 @@ describe('Cache', () => {
       set: Immutable.Map(),
       intl: intlMaker(),
       path: Immutable.List(['foo', 'bar']),
-      setKey: 'cache_name',
+      setKey: 'negative_cache',
       saveAction
     }
 
-    component = shallow(<Cache {...props} />)
+    component = shallow(<NegativeCache {...props} />)
   })
 
   it('should exist', () => {
@@ -49,17 +49,18 @@ describe('Cache', () => {
 
   it('should save changes', () => {
     const values = {
-      noStore: false,
-      checkEtag: 'aaa',
-      honorOrigin: true,
+      cacheable: true,
+      source: 'origin',
+      body: 'body',
       ttlValue: 123,
-      ttlUnit: 'seconds' } 
+      ttlUnit: 'seconds'
+    } 
 
     const expectedSave = {
-      check_etag: 'aaa',
-      honor_origin: true,
-      max_age: 123,
-      no_store: false
+      cacheable: true,
+      source: 'origin',
+      body: 'body',
+      max_age: 123
     }
 
     component.instance().saveChanges(values)

@@ -515,5 +515,6 @@
   "portal.policy.edit.versions.saved.text": "Saved",
   "portal.policy.edit.versions.deactivated.text": "De-Activated",
   "portal.policy.edit.matcher.required.error": "This field is required",
-  "portal.policy.edit.matcher.invalid.error": "This field is invalid"
+  "portal.policy.edit.matcher.invalid.error": "This field is invalid",
+  "portal.policy.edit.action.responseCodes.required.error": "At least one response code should be selected"
 }
