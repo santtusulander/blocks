@@ -1,5 +1,5 @@
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
-import checkPermissions from './permissions'
+import checkPermissions, {checkUserPermissions} from './permissions'
 import routes from '../constants/routes'
 import {
   VIEW_CONTENT_PROPERTIES,
@@ -128,9 +128,9 @@ export function getSecurityUrl(linkType, val, params) {
   }
 }
 
-export function getAnalyticsUrlFromParams(params, currentUser, roles) {
-  const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
-    roles, currentUser, tab.get('permission')
+export function getAnalyticsUrlFromParams(params, currentUser) {
+  const allowedTab = analyticsTabConfig.find(tab =>
+     checkUserPermissions(currentUser, tab.get('permission')
   ))
   const landingTab = allowedTab ? allowedTab.get('key') : ''
   const { brand, account, group, property } = params,
