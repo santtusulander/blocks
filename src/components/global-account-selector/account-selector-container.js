@@ -18,7 +18,7 @@ import {
   VIEW_CONTENT_PROPERTIES,
   LIST_STORAGE } from '../../constants/permissions'
 
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 
 import DrillableMenu from '../drillable-menu/menu'
 
@@ -31,7 +31,7 @@ import DrillableMenu from '../drillable-menu/menu'
  * @param  {[type]}  permission  permission to check against
  * @return Boolean
  */
-const permissionCheck = (levels, user, roles) => permission => {
+const permissionCheck = (levels, user) => permission => {
   let hasLevel = false
 
   switch (permission) {
@@ -50,7 +50,7 @@ const permissionCheck = (levels, user, roles) => permission => {
       break
   }
 
-  return hasLevel && checkPermissions(roles, user, permission)
+  return hasLevel && checkUserPermissions(user, permission)
 }
 
 /**
