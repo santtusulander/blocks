@@ -59,6 +59,7 @@ export const VIEW_GROUP = 'VIEW_GROUP'
 // AAA Users Permissions
 export const CREATE_USER = 'CREATE_USER'
 export const MODIFY_USER = 'MODIFY_USER'
+export const DELETE_USER = 'DELETE_USER'
 
 // AAA Roles Permissions
 export const MODIFY_ROLE = 'MODIFY_ROLE'
