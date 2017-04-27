@@ -265,11 +265,11 @@ permissionMapping[PERMISSIONS.VIEW_FOOTPRINT] =
   (role) => role.getIn([ 'north', 'footprints', 'show', 'allowed'])
 
 
-export const getLocationPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_LOCATION),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_LOCATION),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_LOCATION),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_LOCATION)
+export const getLocationPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_LOCATION),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_LOCATION),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_LOCATION),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_LOCATION)
 })
 
 export const getNetworkPermissions = (roles, user) => ({
@@ -364,7 +364,7 @@ export const checkUserPermissions = (user, permissionToCheck) => {
   const [roleId] = userRoles
   //TODO: .some
   //
-  console.log('permissionToCheck', permissionToCheck);
+  console.warn('permissionToCheck', permissionToCheck);
   return permissionMapping[permissionToCheck](userPermissions, roleId)
 
 }

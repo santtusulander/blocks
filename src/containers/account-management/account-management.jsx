@@ -500,7 +500,7 @@ export class AccountManagement extends Component {
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
             disableDelete={String(this.state.groupToUpdate.get('id')) === String(this.props.params.group)}
-            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            locationPermissions={getLocationPermissions(childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.hideGroupModal()}
@@ -513,7 +513,7 @@ export class AccountManagement extends Component {
           <EntityEdit
             type='group'
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
-            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            locationPermissions={getLocationPermissions(childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.hideGroupModal()}

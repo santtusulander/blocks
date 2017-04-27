@@ -44,7 +44,7 @@ import ContentItems from '../../components/content/content-items'
 
 import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
-import checkPermissions, { getLocationPermissions } from '../../util/permissions'
+import { checkUserPermissions, getLocationPermissions } from '../../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
@@ -226,8 +226,8 @@ export class Account extends React.Component {
           fetchingMetrics={this.props.fetchingMetrics}
           headerText={{ summary: headerText, label: breadcrumbs[0].label }}
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
-          isAllowedToConfigure={checkPermissions(roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
-          locationPermissions={getLocationPermissions(roles, this.props.user.get('currentUser'))}
+          isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP)}
+          locationPermissions={getLocationPermissions(currentUser)}
           metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
           selectionStartTier="group"

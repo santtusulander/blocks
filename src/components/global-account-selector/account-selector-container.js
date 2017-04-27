@@ -64,9 +64,9 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
   return {
     dispatch,
-    fetchData: (user, roles) => {
+    fetchData: (user) => {
 
-      const shouldFetch = permissionCheck(levels, user, roles)
+      const shouldFetch = permissionCheck(levels, user)
 
       return Promise.all([
 
@@ -94,7 +94,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   */
 const accountSelectorStateToProps = (state, { params: { storage, property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
-  const canView = permissionCheck(levels, getCurrentUser(state), getRoles(state))
+  const canView = permissionCheck(levels, getCurrentUser(state))
 
   const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
   const canViewAccount = canView(VIEW_CONTENT_GROUPS)
@@ -143,8 +143,8 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
 
   return {
     dispatch,
-    fetchData: (user, roles) => {
-      const shouldFetch = permissionCheck([ 'group' ], user, roles)
+    fetchData: (user) => {
+      const shouldFetch = permissionCheck([ 'group' ], user)
 
       return Promise.all([
         shouldFetch(VIEW_CONTENT_GROUPS) && dispatch(groupActions.fetchOne(params)),
@@ -162,7 +162,7 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
  */
 const propertyConfigStateToProps = (state, { params }) => {
 
-  const canView = permissionCheck([ 'group' ], getCurrentUser(state), getRoles(state))
+  const canView = permissionCheck([ 'group' ], getCurrentUser(state))
 
   const tree = []
 
