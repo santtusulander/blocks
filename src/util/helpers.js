@@ -353,7 +353,7 @@ export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
  * @returns {moment}
  */
 export function unixTimestampToDate(unix) {
-  return moment.unix(unix).utc().isValid() ? moment.unix(unix).utc() : undefined
+  return moment.unix(unix).isValid() ? moment.unix(unix) : undefined
 }
 
 /**

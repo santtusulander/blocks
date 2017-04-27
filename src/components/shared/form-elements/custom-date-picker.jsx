@@ -42,8 +42,8 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleDateChange(dateValue) {
-    const startMoment = moment.utc(dateValue, DATE_FORMAT).startOf('day')
-    const endMoment = moment.utc(dateValue, DATE_FORMAT).endOf('day')
+    const startMoment = moment(dateValue, DATE_FORMAT).startOf('day')
+    const endMoment = moment(dateValue, DATE_FORMAT).endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
     this.setState({

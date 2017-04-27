@@ -3,20 +3,14 @@ import moment from 'moment'
 import { injectIntl, intlShape } from 'react-intl'
 import { MultiMonthView } from 'react-date-picker'
 import { Dropdown } from 'react-bootstrap'
-import DateRanges from '../../../constants/date-ranges'
+import DateRanges, {
+   startOfThisMonth, endOfThisDay, endOfLastMonth,
+   endOfLastWeek, endOfThisWeek, startOfLastMonth,
+   startOfLast28, startOfLastWeek, startOfThisWeek
+} from '../../../constants/date-ranges'
 
 import IconCalendar from '../icons/icon-calendar'
 import IconSelectCaret from '../icons/icon-select-caret'
-
-const startOfThisMonth = () => moment().utc().startOf('month')
-const endOfThisDay = () => moment().utc().endOf('day')
-const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
-const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')
-const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
-const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
-const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
-const startOfThisWeek = () => moment().utc().startOf('week')
-const endOfThisWeek = () => moment().utc().endOf('week')
 
 const DATE_FORMAT = 'MM/DD/YYYY'
 const LIMIT_VALUE = 4
@@ -115,8 +109,8 @@ class DateRangeSelect extends React.Component {
   }
 
   handleDateChange(dateValues) {
-    const startMoment = moment.utc(dateValues[0], DATE_FORMAT).startOf('day')
-    const endMoment = moment.utc(dateValues[1], DATE_FORMAT).endOf('day')
+    const startMoment = moment(dateValues[0], DATE_FORMAT).startOf('day')
+    const endMoment = moment(dateValues[1], DATE_FORMAT).endOf('day')
 
     if (dateValues.length !== 0) {
       this.setState({

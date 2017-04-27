@@ -203,8 +203,8 @@ class AnalysisByTime extends React.Component {
     const slices = []
     if (this.props.sliceGranularity) {
       slices.push(startDate)
-      while (slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
-        slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
+      while (slices[0] < moment(endDate).startOf(this.props.sliceGranularity).toDate()) {
+        slices.unshift(moment(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
 
@@ -292,7 +292,7 @@ class AnalysisByTime extends React.Component {
           }
           {slices.map((slice, i) => {
             const startX = xScale(slice)
-            const endX = xScale(moment.utc(slice).endOf(this.props.sliceGranularity))
+            const endX = xScale(moment(slice).endOf(this.props.sliceGranularity))
             return (
               <polygon key={i} className="slice"
                 onClick={() => {

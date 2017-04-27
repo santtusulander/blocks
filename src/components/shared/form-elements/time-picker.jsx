@@ -45,7 +45,7 @@ TimePicker.propTypes = {
 }
 TimePicker.defaultProps = {
   isUTC: true,
-  time: moment().utc()
+  time: moment()
 }
 
 export default TimePicker

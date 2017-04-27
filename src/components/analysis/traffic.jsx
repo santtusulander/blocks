@@ -157,7 +157,7 @@ class AnalysisTraffic extends React.Component {
           label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text'}),
           line: true,
           stackedAgainst: false,
-          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
+          xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
         })
       }
       if (this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
@@ -170,7 +170,7 @@ class AnalysisTraffic extends React.Component {
           label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text'}),
           line: true,
           stackedAgainst: 'httpComparison',
-          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
+          xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
         })
       }
     }

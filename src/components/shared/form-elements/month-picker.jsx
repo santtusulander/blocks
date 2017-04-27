@@ -4,6 +4,7 @@ import classnames from 'classnames'
 
 import IconArrowRight from '../icons/icon-arrow-right'
 import IconArrowLeft from '../icons/icon-arrow-left'
+import { startOfThisMonth } from '../../../constants/date-ranges'
 
 export class MonthPicker extends React.Component {
   constructor(props) {
@@ -38,10 +39,10 @@ export class MonthPicker extends React.Component {
   }
 
   setDates(year, month) {
-    const startDate = moment().year(year).month(month).utc().startOf('month')
+    const startDate = moment().year(year).month(month).startOf('month')
     const currentMonth = moment().format('MMMM')
     const endOfDateRange = month === currentMonth ? 'day' : 'month'
-    const endDate = moment().year(year).month(month).utc().endOf(endOfDateRange)
+    const endDate = moment().year(year).month(month).endOf(endOfDateRange)
 
     this.props.onChange(startDate, endDate)
   }
@@ -93,7 +94,7 @@ MonthPicker.propTypes = {
   onChange: React.PropTypes.func
 }
 MonthPicker.defaultProps = {
-  date: moment().utc().startOf('month').format('X')
+  date: startOfThisMonth().format('X')
 }
 
 export default MonthPicker

@@ -66,9 +66,8 @@ import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 
 import { formatBytes, separateUnit } from '../../util/helpers'
 
-import DateRanges from '../../constants/date-ranges'
+import DateRanges, { startOfThisDay, endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
-
 import { cityData, filterCheckboxOptions, spDashboardData,
          countryData, multiOptionSelectorOptions, typeaheadOptions,
          miniChartKPIData, storageKPIData } from '../__mocks__/styleguide-data.js'
@@ -85,11 +84,11 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       showSidePanel: false,
-      customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day'),
-      datePickerEndDate: moment().utc().endOf('day'),
+      customDatePickerEndDate: endOfThisDay(),
+      customDatePickerStartDate: startOfThisDay(),
+      datePickerEndDate: endOfThisDay(),
       datePickerLimit: false,
-      datePickerStartDate: moment().utc().startOf('month'),
+      datePickerStartDate: startOfThisMonth(),
       filterCheckboxValue: Immutable.fromJS([
         'link1',
         'link2',
@@ -104,7 +103,7 @@ class Styleguide extends React.Component {
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
       numberInputValue: 100,
       sortableMultiSelectorItems: Immutable.List([1, 2]),
-      timePickerTime: moment().utc()
+      timePickerTime: moment()
     }
   }
 

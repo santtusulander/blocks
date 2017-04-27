@@ -161,7 +161,7 @@ class ContentItemChart extends React.Component {
       avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
       maxTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('peak'), true)
       minTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('low'), true)
-      const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
+      const sliceStart = moment(activeSlice.get('timestamp'), 'X')
       tooltipDate = sliceStart.format('MMM D')
       if (this.props.showSlices) {
         link = `${this.props.linkTo}?startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
