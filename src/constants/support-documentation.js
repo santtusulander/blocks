@@ -1,7 +1,7 @@
 export const DOCUMENTATION_PATH = {
   // English documentation
   en: {
-    cp_user_guide_link: 'https://docs.google.com/uc?id=0B7P_-quuMHdqNlBLMV9xOG1VY1k&export=pdff',
+    cp_user_guide_link: 'https://docs.google.com/uc?id=0B7P_-quuMHdqNlBLMV9xOG1VY1k&export=pdf',
     sp_user_guide_link: 'https://docs.google.com/uc?id=0B7P_-quuMHdqcVlPbkVFTUR5d0U&export=pdf',
     cloud_provider_user_guide_link: 'https://docs.google.com/uc?id=0B7P_-quuMHdqN0xRLXltY0Zjb1U&export=pdf',
     reporting_api_documentation_link: 'https://docs.google.com/uc?id=0B9BiKzBEVL3wSHE0Z2praWVFajA&export=pdf',
