@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
+import IsAllowed from '../shared/permission-wrappers/is-allowed.jsx'
 import Confirmation from '../shared/page-elements/confirmation.jsx'
 import ActionButtons from '../shared/action-buttons.jsx'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
@@ -110,29 +111,31 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td>{defaultActionsLabel}</td>
-          <td className="nowrap-column">
-            {actionButtons}
-            {this.state[`${type}_policy`] !== false &&
-              <ReactCSSTransitionGroup
-                component="div"
-                className="confirmation-transition"
-                transitionName="confirmation-transition"
-                transitionEnterTimeout={10}
-                transitionLeaveTimeout={500}
-                transitionAppear={true}
-                transitionAppearTimeout={10}>
-                {this.state[`${type}_policy`] === i &&
-                  <Confirmation
-                    cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
-                    confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
-                    handleConfirm={this.deleteRule(`${type}_policy`, i)}
-                    handleCancel={this.closeConfirmation(`${type}_policy`)}>
-                    <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
-                  </Confirmation>
-                }
-              </ReactCSSTransitionGroup>
-            }
-          </td>
+          <IsAllowed to={MODIFY_PROPERTY || DELETE_PROPERTY}>
+            <td className="nowrap-column">
+              {actionButtons}
+              {this.state[`${type}_policy`] !== false &&
+                <ReactCSSTransitionGroup
+                  component="div"
+                  className="confirmation-transition"
+                  transitionName="confirmation-transition"
+                  transitionEnterTimeout={10}
+                  transitionLeaveTimeout={500}
+                  transitionAppear={true}
+                  transitionAppearTimeout={10}>
+                  {this.state[`${type}_policy`] === i &&
+                    <Confirmation
+                      cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                      confirmText={this.props.intl.formatMessage({id: 'portal.button.yes'})}
+                      handleConfirm={this.deleteRule(`${type}_policy`, i)}
+                      handleCancel={this.closeConfirmation(`${type}_policy`)}>
+                      <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
+                    </Confirmation>
+                  }
+                </ReactCSSTransitionGroup>
+              }
+            </td>
+          </IsAllowed>
         </tr>
       )
     }
@@ -154,7 +157,9 @@ class ConfigurationPolicyRules extends React.Component {
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.fallbackActions.text"/></th>
-              <th width="1%" />
+              <IsAllowed to={MODIFY_PROPERTY || DELETE_PROPERTY}>
+                <th width="1%" />
+              </IsAllowed>
             </tr>
           </thead>
           <tbody>

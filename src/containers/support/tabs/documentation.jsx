@@ -8,32 +8,62 @@ import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CLOUD_PROVIDER
 } from '../../../constants/account-management-options'
+
+import { DOCUMENTATION_PATH } from '../../../constants/support-documentation'
 import {
-  ACCOUNT_CONTENT_PROVIDER_USER_GUIDE_PATH,
-  ACCOUNT_SERVICE_PROVIDER_USER_GUIDE_PATH,
-  ACCOUNT_CLOUD_PROVIDER_USER_GUIDE_PATH,
-  API_DOCUMENTATION_PATH
-} from '../../../constants/support-documentation'
+  LANGUAGE_CODE_ENGLISH,
+  LANGUAGE_CODE_CHINESE,
+  LANGUAGE_CODE_SPANISH,
+  LANGUAGE_CODE_FRENCH
+} from '../../../constants/user'
 
 import { getCurrentUser } from '../../../redux/modules/user'
 
 class SupportTabDocumentation extends React.Component {
+
   render() {
-    const { currentUserRole } = this.props
-    const role = fromJS(ROLES_MAPPING).find(obj => obj.get('id') === currentUserRole)
+    const { currentUserRole, locale } = this.props
+    const role = fromJS(ROLES_MAPPING).find((obj) => {
+      return obj.get('id') === currentUserRole
+    })
+
     const accountType = role.get('accountTypes').get(0)
 
-    let documentPath = ""
+    let apiPath = ''
+    let documentPath = ''
+    let documentationObj = {}
 
+    switch (locale) {
+      case LANGUAGE_CODE_CHINESE:
+        documentationObj = DOCUMENTATION_PATH.ch
+        break;
+
+      case LANGUAGE_CODE_SPANISH:
+        documentationObj = DOCUMENTATION_PATH.sp
+        break;
+
+      case LANGUAGE_CODE_FRENCH:
+        documentationObj = DOCUMENTATION_PATH.fr
+        break;
+
+      case LANGUAGE_CODE_ENGLISH:
+      default:
+        documentationObj = DOCUMENTATION_PATH.en
+        break;
+    }
+
+    apiPath = documentationObj.purge_and_reporting_api_documentation_link
     switch (accountType) {
       case ACCOUNT_TYPE_CONTENT_PROVIDER:
-        documentPath = ACCOUNT_CONTENT_PROVIDER_USER_GUIDE_PATH
+        documentPath = documentationObj.cp_user_guide_link
         break
       case ACCOUNT_TYPE_SERVICE_PROVIDER:
-        documentPath = ACCOUNT_SERVICE_PROVIDER_USER_GUIDE_PATH
+        // SP should have documentation without purge feature details
+        apiPath = documentationObj.reporting_api_documentation_link
+        documentPath = documentationObj.sp_user_guide_link
         break
       case ACCOUNT_TYPE_CLOUD_PROVIDER:
-        documentPath = ACCOUNT_CLOUD_PROVIDER_USER_GUIDE_PATH
+        documentPath = documentationObj.cloud_provider_user_guide_link
         break
     }
 
@@ -55,7 +85,7 @@ class SupportTabDocumentation extends React.Component {
           <h3><FormattedMessage id="portal.support.documentation.APIGuide.header" /></h3>
           <p className="section-body"><FormattedMessage id="portal.support.API.documentation.body.text" values={{br: <br/>}} /></p>
           <p>
-            <a href={API_DOCUMENTATION_PATH}
+            <a href={apiPath}
               target="_blank"
               className="btn btn-primary">
               <FormattedMessage id="portal.support.API.documentation.body.link" />
@@ -68,14 +98,18 @@ class SupportTabDocumentation extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const currentUser = state.user.get('currentUser')
+
   return {
-    currentUserRole: getCurrentUser(state).get('roles').get(0)
-  };
+    currentUserRole: getCurrentUser(state).get('roles').get(0),
+    locale: currentUser && currentUser.get('locale')
+  }
 }
 
 SupportTabDocumentation.displayName = 'SupportTabDocumentation'
 SupportTabDocumentation.propTypes = {
-  currentUserRole: PropTypes.number
+  currentUserRole: PropTypes.number,
+  locale: PropTypes.string
 }
 
 export default connect(mapStateToProps)(SupportTabDocumentation)

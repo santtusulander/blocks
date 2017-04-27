@@ -35,7 +35,6 @@ describe('Cache', () => {
       invalid: false,
       set: Immutable.Map(),
       intl: intlMaker(),
-      saveAction: jest.fn(),
       path: Immutable.List(['foo', 'bar']),
       setKey: 'cache_name',
       saveAction

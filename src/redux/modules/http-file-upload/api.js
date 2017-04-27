@@ -1,5 +1,4 @@
-import axios from 'axios'
-import fileUploadAdapter from './uploader/file-upload-adapter'
+import axios, { CancelToken, isCancel } from 'axios'
 import * as actionTypes from './actionTypes'
 
 const UPLOAD_VERSION = 'v1'
@@ -12,31 +11,73 @@ const UPLOAD_PORT = ':443'
  * @param gateway {string} - gateway host
  * @param {object} file - {key - file name, value - file binary data}
  * @param uploadHandlers {object} - action creators map
- * @returns {axios.Promise}
+ * @returns {*|Promise.<T>}
  */
 export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
   const [ fileName ] = Object.keys(file)
   const [ data ] = Object.values(file)
   const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${fileName}`
-
   const headers = { 'X-Auth-Token': accessKey }
-  const adapter = fileUploadAdapter
+  const { cancel, token: cancelToken } = CancelToken.source()
 
-  const config = { headers, adapter, uploadHandlers, fileName }
+  /**
+   * Abort uploading
+   */
+  const cancelUpload = () => {
+    uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+    cancel()
+  }
 
-  return axios.post(url, data, config)
-    .then(response => {
-      // eslint-disable-next-line no-shadow
-      const { fileName } = response.config
+  /**
+   * Start uploading
+   */
+  const startUpload = () => {
+    uploadHandlers[actionTypes.UPLOAD_FILE](fileName, cancelUpload)
+  }
 
-      if (fileName) {
-        uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
-      }
-    })
-    // eslint-disable-next-line no-shadow
-    .catch((fileName) => {
-      if (typeof fileName === 'string') {
-        uploadHandlers[actionTypes.UPLOAD_FAILURE](fileName)
-      }
-    })
+  /**
+   * Update uploading progress
+   * @param {Event} e - upload event
+   */
+  const onUploadProgress = (e) => {
+    const { lengthComputable, loaded, total } = e
+    const progress = lengthComputable ? parseInt(loaded / total * 100) : 0
+
+    uploadHandlers[actionTypes.UPLOAD_PROGRESS](fileName, progress, cancelUpload)
+  }
+
+  /**
+   * File uploaded
+   * @param {axios.response} response - response
+   * @return {*}
+   */
+  const uploadFinished = (response) => {
+    uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+
+    return response
+  }
+
+  /**
+   * File upload failure
+   * @param {Error} error - error response
+   * @return {*}
+   */
+  const uploadFailed = (error) => {
+    const cancelled = isCancel(error)
+
+    if (cancelled) {
+      uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+    } else {
+      uploadHandlers[actionTypes.UPLOAD_FAILURE](fileName, !cancelled, cancelUpload)
+    }
+
+    return error
+  }
+
+  // init
+  startUpload()
+
+  return axios.post(url, data, { headers, cancelToken, fileName, onUploadProgress })
+    .then(uploadFinished)
+    .catch(uploadFailed)
 }

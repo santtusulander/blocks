@@ -29,7 +29,7 @@ import ModalWindow from '../../../components/shared/modal'
 import SidePanel from '../../../components/shared/side-panel'
 import AddHost from '../../../components/content/add-host'
 
-import { getSortData, formatUnixTimestamp} from '../../../util/helpers'
+import { getSortData, formatUnixTimestamp, getCISname} from '../../../util/helpers'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
@@ -172,7 +172,12 @@ class AccountManagementProperties extends React.Component {
       property
         .set('deploymentMode', this.getPropertyDeploymentMode(property))
         .set('originHostname', this.getPropertyOriginHostname(property))
+        .set('origin_type', this.getPropertyOriginType(property))
     ))
+  }
+
+  getPropertyOriginType(property) {
+    return property.getIn(['services', 0 , 'configurations', 0, 'edge_configuration', 'origin_type'])
   }
 
   getPropertyDeploymentMode(property) {
@@ -285,30 +290,36 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="created">
                     <FormattedMessage id="portal.account.properties.table.deployed.text"/>
                   </TableSorter>
-                  <th width="1%"/>
+                  <IsAllowed to={MODIFY_PROPERTY}>
+                    <th width="1%"/>
+                  </IsAllowed>
                 </tr>
                 </thead>
                 <tbody>
                 {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
                   const propertyId = property.get('published_host_id')
+                  const originHostname = property.get('origin_type') === 'cis'
+                                          ? getCISname(property.get('originHostname'))
+                                          : property.get('originHostname')
+
                   return (
                     <tr key={i}>
                       <td>{propertyId}</td>
                       <td>{groupName}</td>
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
-                      <td>{property.get('originHostname')}</td>
+                      <td>{originHostname}</td>
                       <td>{formatUnixTimestamp(property.get('created'))}</td>
-                      <td className="nowrap-column">
-                        <IsAllowed to={MODIFY_PROPERTY}>
-                          <ActionButtons
-                            onEdit={() => {
-                              this.editProperty(property)
-                            }}
-                            onDelete={() => {
-                              this.openDeleteModal(property.get('parentId'), propertyId)
-                            }} />
-                        </IsAllowed>
-                      </td>
+                      <IsAllowed to={MODIFY_PROPERTY}>
+                        <td className="nowrap-column">
+                            <ActionButtons
+                              onEdit={() => {
+                                this.editProperty(property)
+                              }}
+                              onDelete={() => {
+                                this.openDeleteModal(property.get('parentId'), propertyId)
+                              }} />
+                        </td>
+                      </IsAllowed>
                     </tr>
                   )
                 })}

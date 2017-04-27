@@ -184,7 +184,9 @@ class AccountManagementAccountGroups extends Component {
               <TableSorter {...sorterProps} column="created">
                 <FormattedMessage id="portal.account.groups.table.createdOn.text"/>
               </TableSorter>
-              <th width="1%"/>
+              <IsAllowed to={MODIFY_GROUP}>
+                <th width="1%"/>
+              </IsAllowed>
             </tr>
           </thead>
           <tbody>
@@ -202,19 +204,19 @@ class AccountManagementAccountGroups extends Component {
                 <td>{group.get('name')}</td>
                 <ArrayTd items={userEmails.size ? userEmails.toArray() : [this.props.intl.formatMessage({id: 'portal.account.groups.table.noMembers.text'})]} />
                 <td>{formatUnixTimestamp(group.get('created'))}</td>
-                <td className="nowrap-column">
-                  <IsAllowed to={MODIFY_GROUP}>
-                    <ActionButtons
-                      onEdit={() => {
-                        this.props.showGroupModal(group)
-                      }}
-                      onDelete={() => {
-                        this.props.deleteGroup(group)
-                      }}
-                      deleteDisabled={disabledDeleteButton}
-                    />
-                  </IsAllowed>
-                </td>
+                <IsAllowed to={MODIFY_GROUP}>
+                  <td className="nowrap-column">
+                      <ActionButtons
+                        onEdit={() => {
+                          this.props.showGroupModal(group)
+                        }}
+                        onDelete={() => {
+                          this.props.deleteGroup(group)
+                        }}
+                        deleteDisabled={disabledDeleteButton}
+                      />
+                  </td>
+                </IsAllowed>
               </tr>
             )
           })}

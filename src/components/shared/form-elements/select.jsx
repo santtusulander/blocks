@@ -11,6 +11,7 @@ class Select extends Component {
     this.selectOption = this.selectOption.bind(this)
     this.getMenuItem = this.getMenuItem.bind(this)
     this.getOptionLabel = this.getOptionLabel.bind(this)
+    this.getOptionSecondLabel = this.getOptionSecondLabel.bind(this)
     this.getOptionValue = this.getOptionValue.bind(this)
     this.getOptionIcon = this.getOptionIcon.bind(this)
     this.getSelected = this.getSelected.bind(this)
@@ -24,6 +25,7 @@ class Select extends Component {
   getMenuItem(option, i) {
     const value = this.getOptionValue(option)
     const label = this.getOptionLabel(option)
+    const secondLabel = this.getOptionSecondLabel(option)
     const icon = this.getOptionIcon(option)
 
     return (
@@ -34,8 +36,13 @@ class Select extends Component {
         className={this.props.value === value && 'hidden'}>
         {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
+        {secondLabel && <div className="dropdown-select__option-second-label">{secondLabel}</div>}
       </MenuItem>
     )
+  }
+
+  getOptionSecondLabel(option) {
+    return Array.isArray(option) ? option[3] : option.secondLabel
   }
 
   getOptionIcon(option) {
@@ -59,12 +66,14 @@ class Select extends Component {
   getSelectedItem() {
     const selected = this.getSelected()
     const label = selected ? this.getOptionLabel(selected) : this.props.emptyLabel
+    const secondLabel = selected ? this.getOptionSecondLabel(selected) : ''
     const icon = selected ? this.getOptionIcon(selected) : null
 
     return (
       <div className="dropdown-select__selected-item">
         {icon && <div className="dropdown-select__option-icon">{icon}</div>}
         <div className="dropdown-select__option-label">{label}</div>
+        {secondLabel && <div>{secondLabel}</div>}
       </div>
     )
   }

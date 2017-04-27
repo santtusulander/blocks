@@ -3,7 +3,6 @@ import {FormGroup, ControlLabel, InputGroup} from 'react-bootstrap';
 import { List } from 'immutable'
 
 import FilterChecklistDropdown from '../form-elements/filter-checklist-dropdown'
-import { getReduxFormValidationState } from '../../../util/helpers'
 import DefaultErrorBlock from '../form-elements/default-error-block'
 
 const FieldFilterChecklistDropdown  = ({ addonAfter, addonAfterLabel, addonBefore,
@@ -11,7 +10,7 @@ const FieldFilterChecklistDropdown  = ({ addonAfter, addonAfterLabel, addonBefor
                                  ErrorComponent, disabled, meta, meta: { touched, error },
                                  label, required = true }) => {
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+    <FormGroup controlId={input.name}>
       {label &&
         <ControlLabel>
           {label}{required && ' *'}

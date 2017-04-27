@@ -50,6 +50,10 @@
       align-items: center;
       justify-content: space-between;
 
+      .truncated-title {
+        white-space: nowrap;
+      }
+
       h4 {
         line-height: 2;
       }
