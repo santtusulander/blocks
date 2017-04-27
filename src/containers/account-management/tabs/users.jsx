@@ -51,7 +51,7 @@ import { ROLES_MAPPING } from '../../../constants/account-management-options'
 import { checkForErrors } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
-import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
+import { DELETE_USER, MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
 import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
 
 import { paginationChanged } from '../../../util/pagination'
@@ -463,7 +463,7 @@ export class AccountManagementAccountUsers extends Component {
               {/* TODO: UDNP-3529 - Removed until we have group_id in user
                 <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
               */}
-              <IsAllowed to={MODIFY_USER}>
+              <IsAllowed to={MODIFY_USER || DELETE_USER}>
                 <th width="1%"/>
               </IsAllowed>
             </tr>
@@ -488,9 +488,13 @@ export class AccountManagementAccountUsers extends Component {
                   { /* TODO: UDNP-3529 removed until we have group data in user
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
                   */ }
-                  <IsAllowed to={MODIFY_USER}>
+                  <IsAllowed to={MODIFY_USER || DELETE_USER}>
                     <td className="nowrap-column">
                         <ActionButtons
+                          permissions={{
+                            modify: MODIFY_USER,
+                            delete: DELETE_USER
+                          }}
                           onEdit={() => {
                             this.editUser(user)
                           }}
