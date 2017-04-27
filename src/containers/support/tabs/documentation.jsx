@@ -15,6 +15,8 @@ import {
   API_DOCUMENTATION_PATH
 } from '../../../constants/support-documentation'
 
+import { getCurrentUser } from '../../../redux/modules/user'
+
 class SupportTabDocumentation extends React.Component {
   render() {
     const { currentUserRole } = this.props
@@ -67,7 +69,7 @@ class SupportTabDocumentation extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    currentUserRole: state.user.get('currentUser').get('roles').get(0)
+    currentUserRole: getCurrentUser(state).get('roles').get(0)
   };
 }
 

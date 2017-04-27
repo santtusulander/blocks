@@ -7,9 +7,9 @@ import { checkUserPermissions } from '../../../util/permissions'
 class IsAllowed extends Component {
   render() {
     const { children,  to, not } = this.props;
-    const { currentUser, currentUserPermissions } = this.context;
+    const { currentUser } = this.context;
 
-    let isAllowed = checkUserPermissions(currentUser, currentUserPermissions, to)
+    let isAllowed = checkUserPermissions(currentUser, to)
     if (not) {
       isAllowed = !isAllowed
     }
@@ -22,8 +22,7 @@ class IsAllowed extends Component {
 IsAllowed.displayName = 'IsAllowed'
 
 IsAllowed.contextTypes = {
-  currentUser: PropTypes.instanceOf(Map),
-  currentUserPermissions: PropTypes.instanceOf(Map)
+  currentUser: PropTypes.instanceOf(Map)
 }
 
 IsAllowed.propTypes = {

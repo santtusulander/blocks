@@ -38,6 +38,7 @@ import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+import { getCurrentUser } from '../redux/modules/user'
 
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
@@ -492,7 +493,7 @@ const mapStateToProps = (state, { params: { account } }) => {
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
-    user: state.user.get('currentUser'),
+    user: getCurrentUser(state),
     theme: state.ui.get('theme'),
     mapBounds: state.mapbox.get('mapBounds'),
     cityData: state.traffic.get('byCity')

@@ -9,6 +9,7 @@ import * as hostActionCreators from '../../redux/modules/host'
 import * as purgeActionCreators from '../../redux/modules/purge'
 import * as uiActionCreators from '../../redux/modules/ui'
 import propertyActions from '../../redux/modules/entities/properties/actions'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import Content from '../../components/shared/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
@@ -177,7 +178,7 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
     allHosts: state.host.get('allHosts'),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

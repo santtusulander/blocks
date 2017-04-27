@@ -15,6 +15,7 @@ import * as metricsActionCreators from '../../../redux/modules/metrics'
 import * as purgeActionCreators from '../../../redux/modules/purge'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import AnalysisByTime from '../../../components/analysis/by-time'
@@ -509,7 +510,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),

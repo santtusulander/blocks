@@ -21,7 +21,7 @@ import { getById as getPodById } from '../../../redux/modules/entities/pods/sele
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
-
+import { getCurrentUser } from '../../../redux/modules/user'
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/shared/side-panel'
@@ -446,7 +446,7 @@ const mapStateToProps = (state, ownProps) => {
   const UIFootprints = selector(state, 'UIFootprints')
 
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))

@@ -12,6 +12,8 @@ import { changedParamsFiltersQS, buildFetchOpts } from '../../../util/helpers.js
 import { getCitiesWithinBounds } from '../../../util/mapbox-helpers.js'
 import { userHasRole } from '../../../util/helpers'
 
+import { getCurrentUser } from '../../../redux/modules/user'
+
 import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
 class AnalyticsTabVisitors extends React.Component {
@@ -159,7 +161,7 @@ function mapStateToProps(state) {
     byCity: state.visitors.get('byCity'),
     byOS: state.visitors.get('byOS'),
     byTime: state.visitors.get('byTime'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     fetching: state.visitors.get('fetching'),
     filters: state.filters.get('filters'),
     mapBounds: state.mapbox.get('mapBounds'),

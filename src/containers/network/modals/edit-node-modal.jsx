@@ -16,6 +16,7 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
@@ -198,7 +199,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   const nodeValues = getNodeValues(nodes)
 
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const initialValues = {}
   for (const field in nodeValues) {

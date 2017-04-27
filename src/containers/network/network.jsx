@@ -64,6 +64,7 @@ import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/sele
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId, parseResponseError } from '../../redux/util'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import Content from '../../components/shared/layout/content'
 import PageContainer from '../../components/shared/layout/page-container'
@@ -986,7 +987,7 @@ const mapStateToProps = (state, ownProps) => {
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
     roles: getRoles(state),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

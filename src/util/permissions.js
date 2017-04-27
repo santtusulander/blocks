@@ -324,9 +324,9 @@ export const getStoragePermissions = (roles, user) => ({
 export default function checkPermissions(roles, user, permission) {
   console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
 
-  const userRole = user && user.get('roles').first()
-  return checkUserPermissions(user, roles.get(String(userRole)), permission)
+  return checkUserPermissions(user, permission)
 
+  //const userRole = user && user.get('roles').first()
   // const userRoles = user && user.size > 0 && user.get('roles')
   // if (!userRoles) {
   //   return false
@@ -350,15 +350,19 @@ export default function checkPermissions(roles, user, permission) {
  * @param  {[type]} permissionToCheck [description]
  * @return {[type]}                   [description]
  */
-export const checkUserPermissions = (user, userPermissions, permissionToCheck) => {
-  const userRoles = user && user.size > 0 && user.get('roles')
-  if (!userRoles || !userPermissions) {
+export const checkUserPermissions = (user, permissionToCheck) => {
+  const userPermissions = user && user.get('permissions')
+  const userRoles = user && user.get('roles')
+
+  if (!(userPermissions && userRoles)) {
     return false
   }
 
   //get first roleId
   const [roleId] = userRoles
   //TODO: .some
+  //
+  console.log('permissionToCheck', permissionToCheck);
   return permissionMapping[permissionToCheck](userPermissions, roleId)
 
 }

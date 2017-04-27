@@ -8,6 +8,8 @@ import storageActions from '../../redux/modules/entities/CIS-ingest-points/actio
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
+import { getCurrentUser } from '../../redux/modules/user'
+
 import { getGroups, getBrands, getAccounts, getGroupForPropertyConfig } from './menu-selectors'
 
 import {
@@ -92,7 +94,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   */
 const accountSelectorStateToProps = (state, { params: { storage, property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
-  const canView = permissionCheck(levels, state.user.get('currentUser'), getRoles(state))
+  const canView = permissionCheck(levels, getCurrentUser(state), getRoles(state))
 
   const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
   const canViewAccount = canView(VIEW_CONTENT_GROUPS)
@@ -160,7 +162,7 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
  */
 const propertyConfigStateToProps = (state, { params }) => {
 
-  const canView = permissionCheck([ 'group' ], state.user.get('currentUser'), getRoles(state))
+  const canView = permissionCheck([ 'group' ], getCurrentUser(state), getRoles(state))
 
   const tree = []
 

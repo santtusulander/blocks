@@ -20,6 +20,7 @@ import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+import { getCurrentUser } from '../redux/modules/user'
 
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
@@ -528,13 +529,13 @@ function mapStateToProps(state, ownProps) {
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const roles = getRoles(state)
-  const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const storagePermission = getStoragePermissions(roles, getCurrentUser(state))
   const isGTMFormDirty = isDirty('gtmForm')
   const isAdvancedFormDirty = isDirty('advancedForm')
 
   return {
     activeHost: state.host.get('activeHost'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     storages: getByGroup(state, activeGroup.get('id')),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),

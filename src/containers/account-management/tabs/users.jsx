@@ -28,6 +28,7 @@ import groupsActions from '../../../redux/modules/entities/groups/actions'
 //import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
@@ -623,7 +624,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     permissions: getAllPermissions(state),
     paginationMeta: getPaginationMeta(state, 'user'),
     permissionServiceTitles: permissionTitles ? permissionTitles.get('resources'): List()

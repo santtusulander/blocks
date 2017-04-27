@@ -23,6 +23,7 @@ import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
 import { parseResponseError } from '../../redux/util'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
@@ -568,7 +569,7 @@ function mapStateToProps(state, ownProps) {
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
     users: state.user.get('allUsers'),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

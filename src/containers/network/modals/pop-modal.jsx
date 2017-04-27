@@ -26,7 +26,7 @@ import {
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
-
+import { getCurrentUser } from '../../../redux/modules/user'
 import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 import checkPermissions from '../../../util/permissions'
@@ -261,7 +261,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 

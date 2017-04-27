@@ -22,7 +22,7 @@ import rolesActions from '../redux/modules/entities/roles/actions'
 import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
 import { getGlobalFetching } from '../redux/modules/fetching/selectors'
-
+import { getCurrentUser } from '../redux/modules/user'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -48,6 +48,7 @@ export class Main extends React.Component {
   getChildContext() {
     return {
       currentUser: this.props.currentUser,
+      currentUserPermissions: this.props.currentUser.permissions,
       location: this.props.location,
       params: this.props.params,
       roles: this.props.roles
@@ -66,10 +67,12 @@ export class Main extends React.Component {
         this.fetchData(this.props.params)
 
         return this.props.userActions.fetchUser(action.payload.username)
+          /* TODO: remove when UDNP-3658 is done*/
           .then(() => {
 
             /* Fetch permissions for currentUser */
             const currentUser = this.props.currentUser
+            console.log(currentUser && currentUser.toJS());
             const currentRoles = currentUser && currentUser.get('roles')
 
             currentRoles.map(id => {
@@ -131,7 +134,7 @@ export class Main extends React.Component {
   }
 
   render() {
-    if (this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size) {
+    if (this.props.user.get('loggedIn') === false || !this.props.currentUser.get('email') /*|| !this.props.roles.size*/) {
       return <LoadingSpinner />
     }
 
@@ -259,6 +262,7 @@ Main.propTypes = {
   breadcrumbs: PropTypes.instanceOf(Map),
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
+  currentUserPermissions: PropTypes.instanceOf(Map),
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchProperty: PropTypes.func,
@@ -292,6 +296,7 @@ Main.defaultProps = {
 
 Main.childContextTypes = {
   currentUser: PropTypes.instanceOf(Map),
+  currentUserPermissions: PropTypes.instanceOf(Map),
   location: PropTypes.object,
   params: PropTypes.object,
   roles: PropTypes.instanceOf(Map)
@@ -316,7 +321,8 @@ const mapStateToProps = (state, ownProps) => {
 
     asperaNotification: state.ui.get('asperaNotification'),
     bannerNotification: state.ui.get('bannerNotification'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
+    //currentUserPermissions: state.user.get('currentUserPermissions'),
     fetching,
     notification: state.ui.get('notification'),
     roles: getRoles(state),
