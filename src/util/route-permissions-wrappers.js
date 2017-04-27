@@ -19,16 +19,28 @@ import {
   accountIsCloudProviderType
  } from '../util/helpers'
 
-const authSelector = state => state.user.get('currentUser')
-const permissionChecker = (permission, store) => user => {
+const authSelector = (state, props) => {
+  const user = state.user.get('currentUser')
+  return {
+    user,
+    userHasActiveAccount: !props.params.account || Number(props.params.account) === user.get('account_id')
+  }
+}
+
+const permissionChecker = (permission, store) => ({ user, userHasActiveAccount }) => {
   if (!permission) {
     return true
   }
-  return checkPermissions(
-    getRoles(store.getState()),
-    user,
-    permission
-  )
+
+  const roles = getRoles(store.getState())
+
+  if (checkPermissions(roles, user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)) {
+
+    return checkPermissions(roles, user, permission)
+
+  } else {
+    return userHasActiveAccount && checkPermissions(roles, user, permission)
+  }
 }
 
 const servicePermissionChecker = (permission) => permissions => {
@@ -161,7 +173,7 @@ export const CanViewConfigurationSecurity = (store) => {
   return UserAuthWrapper({
     authSelector: (state, ownProps) => {
       const activeGroup = getGroupById(state, ownProps.params.group)
- 
+
       return getServicePermissions(activeGroup)
     },
     failureRedirectPath: (state, ownProps) => {
