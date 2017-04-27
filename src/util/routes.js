@@ -252,9 +252,9 @@ export function getDashboardUrlFromParams(params) {
   }
 }
 
-export function getNetworkUrlFromParams(params, currentUser, roles) {
+export function getNetworkUrlFromParams(params, currentUser) {
   const { brand, account, group } = params,
-    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
+    canViewAccountDetail = checkUserPermissions(currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
     if (group) {

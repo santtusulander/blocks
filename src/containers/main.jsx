@@ -138,7 +138,6 @@ export class Main extends React.Component {
           currentUser={this.props.currentUser}
           params={this.props.params}
           pathname={this.props.location.pathname}
-          roles={this.props.roles}
         />
 
         <Header
