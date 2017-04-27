@@ -122,7 +122,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params, currentUser, roles)} activeClassName="active" className={analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, currentUser)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
               <span><FormattedMessage id="portal.navigation.analytics.text"/></span>
             </Link>

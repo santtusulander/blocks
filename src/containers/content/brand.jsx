@@ -87,7 +87,6 @@ export class Brand extends React.Component {
       fetchingMetrics,
       metrics,
       params,
-      roles,
       sortDirection,
       sortValuePath,
       viewingChart,
@@ -116,8 +115,7 @@ export class Brand extends React.Component {
     const analyticsURLBuilder = (...account) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, account},
-        currentUser,
-        roles
+        currentUser
       )
     }
     return (
@@ -171,7 +169,6 @@ Brand.propTypes = {
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
@@ -184,7 +181,6 @@ Brand.defaultProps = {
   activeAccount: Map(),
   dailyTraffic: List(),
   metrics: List(),
-  //roles: Map(),
   currentUser: Map()
 }
 

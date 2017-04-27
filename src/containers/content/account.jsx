@@ -26,6 +26,8 @@ import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
+import { getCurrentUser } from '../../redux/modules/user'
+
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
@@ -169,7 +171,7 @@ export class Account extends React.Component {
   render() {
 
     const { brand, account } = this.props.params
-    const { accountManagementModal, activeAccount, activeGroup, roles, user } = this.props
+    const { accountManagementModal, activeAccount, activeGroup, roles, currentUser } = this.props
 
     const nextPageURLBuilder = (groupID) => {
       if ((activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) || (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)) {
@@ -181,14 +183,13 @@ export class Account extends React.Component {
     const analyticsURLBuilder = (group) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, group},
-        user.get('currentUser'),
+        currentUser,
         roles
       )
     }
 
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
     const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
-    const currentUser = user.get('currentUser')
     const selectionDisabled = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
 
     let deleteModalProps = null
@@ -259,6 +260,7 @@ Account.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
   createGroup: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
@@ -296,6 +298,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     activeAccount: getAccountById(state, account),
+
+    currentUser: getCurrentUser(state),
 
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: getGlobalFetching(state),

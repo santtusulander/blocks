@@ -138,7 +138,7 @@ class BreadcrumbsItem extends React.Component {
       const accountParams = { 'brand': params.brand, 'account': params.account }
       links.push({
         label: <FormattedMessage id="portal.header.analytics.text"/>,
-        url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
+        url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user) : null
       })
     } else if (new RegExp(getRoute('accountManagement'), 'g').test(pathname)) {
       /*
