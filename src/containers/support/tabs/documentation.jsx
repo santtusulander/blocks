@@ -17,6 +17,8 @@ import {
   LANGUAGE_CODE_FRENCH
 } from '../../../constants/user'
 
+import { getCurrentUser } from '../../../redux/modules/user'
+
 class SupportTabDocumentation extends React.Component {
 
   render() {
@@ -96,10 +98,10 @@ class SupportTabDocumentation extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   return {
-    currentUserRole: currentUser && currentUser.get('roles').get(0),
+    currentUserRole: currentUser.get('roles').get(0),
     locale: currentUser && currentUser.get('locale')
   }
 }

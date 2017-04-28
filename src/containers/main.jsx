@@ -18,11 +18,8 @@ import { getById as getGroupById } from '../redux/modules/entities/groups/select
 import propertiesActions from '../redux/modules/entities/properties/actions'
 import { getById as getPropertyById } from '../redux/modules/entities/properties/selectors'
 
-import rolesActions from '../redux/modules/entities/roles/actions'
-import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
-
 import { getGlobalFetching } from '../redux/modules/fetching/selectors'
-
+import { getCurrentUser } from '../redux/modules/user'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -49,8 +46,7 @@ export class Main extends React.Component {
     return {
       currentUser: this.props.currentUser,
       location: this.props.location,
-      params: this.props.params,
-      roles: this.props.roles
+      params: this.props.params
     }
   }
 
@@ -63,20 +59,10 @@ export class Main extends React.Component {
           return false
         }
 
+        //fetch current user
+        this.props.userActions.fetchUser(action.payload.username)
+
         this.fetchData(this.props.params)
-
-        return this.props.userActions.fetchUser(action.payload.username)
-          .then(() => {
-
-            /* Fetch permissions for currentUser */
-            const currentUser = this.props.currentUser
-            const currentRoles = currentUser && currentUser.get('roles')
-
-            currentRoles.map(id => {
-              return this.props.fetchRole(id)
-            })
-          })
-
       })
   }
 
@@ -131,7 +117,7 @@ export class Main extends React.Component {
   }
 
   render() {
-    if (this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size) {
+    if (this.props.user.get('loggedIn') === false || !this.props.currentUser.get('email')) {
       return <LoadingSpinner />
     }
 
@@ -152,7 +138,6 @@ export class Main extends React.Component {
           currentUser={this.props.currentUser}
           params={this.props.params}
           pathname={this.props.location.pathname}
-          roles={this.props.roles}
         />
 
         <Header
@@ -170,7 +155,6 @@ export class Main extends React.Component {
           routes={this.props.routes}
           pathname={this.props.location.pathname}
           params={this.props.params}
-          roles={this.props.roles}
           toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
           user={this.props.currentUser}/>
 
@@ -262,13 +246,11 @@ Main.propTypes = {
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchProperty: PropTypes.func,
-  fetchRole: PropTypes.func,
   fetching: PropTypes.bool,
   infoDialogOptions: PropTypes.instanceOf(Map),
   location: PropTypes.object,
   notification: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   params: PropTypes.object,
-  roles: PropTypes.instanceOf(Map),
   router: PropTypes.object,
   routes: PropTypes.array,
   showErrorDialog: PropTypes.bool,
@@ -286,15 +268,13 @@ Main.defaultProps = {
   activeGroup: Map(),
   activeHost: Map(),
   currentUser: Map(),
-  roles: Map(),
   user: Map()
 }
 
 Main.childContextTypes = {
   currentUser: PropTypes.instanceOf(Map),
   location: PropTypes.object,
-  params: PropTypes.object,
-  roles: PropTypes.instanceOf(Map)
+  params: PropTypes.object
 }
 
 /* istanbul ignore next */
@@ -316,10 +296,9 @@ const mapStateToProps = (state, ownProps) => {
 
     asperaNotification: state.ui.get('asperaNotification'),
     bannerNotification: state.ui.get('bannerNotification'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     fetching,
     notification: state.ui.get('notification'),
-    roles: getRoles(state),
     showErrorDialog: state.ui.get('showErrorDialog'),
     showInfoDialog: state.ui.get('showInfoDialog'),
     infoDialogOptions: state.ui.get('infoDialogOptions'),
@@ -335,8 +314,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-
-    fetchRole: (id) => dispatch(rolesActions.fetchOne({id})),
 
     fetchAccount: (params) => dispatch(accountsActions.fetchOne(params)),
     fetchGroup: (params) => dispatch(groupsActions.fetchOne(params)),

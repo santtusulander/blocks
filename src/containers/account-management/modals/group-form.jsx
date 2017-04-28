@@ -12,7 +12,8 @@ import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entitie
 import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupsById } from '../../../redux/modules/entities/groups/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
+
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
@@ -24,7 +25,7 @@ import * as PERMISSIONS from '../../../constants/permissions'
 
 import { accountIsContentProviderType, accountIsServiceProviderType } from '../../../util/helpers'
 import { getServiceOptionsForGroup } from '../../../util/services-helpers'
-import checkPermissions from '../../../util/permissions'
+import { checkUserPermissions } from '../../../util/permissions'
 
 
 class GroupFormContainer extends React.Component {
@@ -192,16 +193,16 @@ GroupFormContainer.defaultProps = {
 
 /* istanbul ignore next */
 const  mapStateToProps = (state, ownProps) => {
-  const { user } = state
   const { groupId, params: { account } } = ownProps
-  const currentUser = user.get('currentUser')
+  const currentUser = getCurrentUser(state)
+
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = getAccountById(state, account)
   const activeGroup = getGroupsById(state, groupId) || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
-  const roles = getRoles(state)
+
   //Since group object in new redux has several property that are not accepted by the server,
   //we have to filter out those fields. This is temporary until we have better solution
   const filteredGroupData = activeGroup.delete('backend_id').delete('parentId')
@@ -223,7 +224,7 @@ const  mapStateToProps = (state, ownProps) => {
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP),
     networks: getNetworksByGroup(state, groupId)
   }
 }

@@ -48,5 +48,5 @@ export default Immutable.fromJS([
     filters: ['dateRange', 'statusCodes', 'serviceTypes'],
     permission: PERMISSIONS.VIEW_ANALYTICS_URL
   },
-  {key: 'playback-demo', filters: ['video'], permission: null}
+  {key: 'playback-demo', filters: ['video'], permission: PERMISSIONS.ALLOW_ALWAYS}
 ])

@@ -46,17 +46,17 @@ import IconSupport from '../shared/icons/icon-support.jsx'
 
 import { FormattedMessage } from 'react-intl'
 
-const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
+const Navigation = ({ activeAccount, currentUser, params, router }) => {
   const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
     networkActive = router.isActive(getRoute('network')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
   const isUDNCore = (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)
-  const contentOrNetworkUrlBuilder = (params, currentUserArg, userRoles) => {
+  const contentOrNetworkUrlBuilder = (params, currentUserArg) => {
     if (router.isActive(getRoute('network')) && (!isUDNCore)) {
-      return getNetworkUrlFromParams(params, currentUserArg, userRoles)
+      return getNetworkUrlFromParams(params, currentUserArg)
     } else {
-      return getContentUrlFromParams(params, currentUserArg, userRoles)
+      return getContentUrlFromParams(params, currentUserArg)
     }
   }
 
@@ -86,7 +86,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
             List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={(isUDNCore ? false : isSP)}>
           <li>
-            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive}>
+            <Link to={contentOrNetworkUrlBuilder(params, currentUser)} activeClassName="active" className={contentActive}>
               {isCP ? <IconContent/> : <IconBrowse />}
               <span>
                 {isCP
@@ -112,7 +112,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
 
         {(isSP || isUDNCore) &&
           <li>
-            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={networkActive}>
+            <Link to={getNetworkUrlFromParams(params, currentUser)} activeClassName="active" className={networkActive}>
               <IconNetwork />
               <span><FormattedMessage id="portal.navigation.network.text"/></span>
             </Link>
@@ -122,7 +122,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params, currentUser, roles)} activeClassName="active" className={analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, currentUser)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
               <span><FormattedMessage id="portal.navigation.analytics.text"/></span>
             </Link>
@@ -186,7 +186,6 @@ Navigation.propTypes = {
   activeAccount: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object
 }
 

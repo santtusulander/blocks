@@ -2,7 +2,7 @@ import React, { PropTypes, Component, Children } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 
-import { isUdnAdmin } from '../../../redux/modules/user'
+import { isUdnAdmin, getCurrentUser } from '../../../redux/modules/user'
 
 class IsAdmin extends Component {
   render() {
@@ -29,7 +29,7 @@ IsAdmin.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

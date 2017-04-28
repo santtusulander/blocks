@@ -15,6 +15,7 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import { buildReduxId, parseResponseError } from '../../../redux/util'
 
@@ -236,7 +237,7 @@ const mapStateToProps = (state, ownProps) => {
   const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),

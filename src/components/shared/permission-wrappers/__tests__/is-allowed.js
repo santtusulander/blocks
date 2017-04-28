@@ -4,13 +4,11 @@ import Immutable from 'immutable'
 
 jest.unmock('../is-allowed')
 import IsAllowed from '../is-allowed'
-import checkPermissions from '../../../../util/permissions'
+import { checkUserPermissions } from '../../../../util/permissions'
 
 const testUser = Immutable.Map({
   name: 'test'
 })
-
-const testRoles = Immutable.Map({1: 'testRole'})
 
 const subject = (not) => {
   return shallow(
@@ -19,7 +17,7 @@ const subject = (not) => {
       not={not}>
       <div />
     </IsAllowed>,
-    {context: {currentUser: testUser, roles: testRoles}}
+    {context: {currentUser: testUser}}
   )
 }
 
@@ -39,9 +37,9 @@ describe('IsAllowed', () => {
     expect( wrapper.find('div').length).toBe(1)
   })
 
-  it('should call checkPermissions with values from context', () => {
+  it('should call checkUserPermissions with values from context', () => {
     const wrapper = subject(true)
-    expect(checkPermissions).toBeCalledWith(testRoles, testUser, "VIEW_ACCOUNT_DETAIL")
+    expect(checkUserPermissions).toBeCalledWith(testUser, "VIEW_ACCOUNT_DETAIL")
   })
 
 })
