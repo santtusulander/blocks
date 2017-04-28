@@ -24,7 +24,6 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import { getCurrentUser } from '../../redux/modules/user'
 
@@ -171,7 +170,7 @@ export class Account extends React.Component {
   render() {
 
     const { brand, account } = this.props.params
-    const { accountManagementModal, activeAccount, activeGroup, roles, currentUser } = this.props
+    const { accountManagementModal, activeAccount, activeGroup, currentUser } = this.props
 
     const nextPageURLBuilder = (groupID) => {
       if ((activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) || (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)) {
@@ -184,7 +183,6 @@ export class Account extends React.Component {
       return getAnalyticsUrlFromParams(
         {...this.props.params, group},
         currentUser,
-        roles
       )
     }
 
@@ -270,7 +268,6 @@ Account.propTypes = {
   oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   toggleDeleteConfirmationModal: PropTypes.func,
@@ -286,7 +283,6 @@ Account.defaultProps = {
   dailyTraffic: List(),
   groups: List(),
   metrics: List(),
-  roles: Map(),
   sortValuePath: List(),
   user: Map()
 }
@@ -307,7 +303,6 @@ const mapStateToProps = (state, ownProps) => {
     groups: getGroupsByAccount(state, account),
 
     metrics: state.metrics.get('groupMetrics'),
-    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

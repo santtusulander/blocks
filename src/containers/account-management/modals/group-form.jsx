@@ -13,9 +13,6 @@ import { getServiceOptions, getServicesInfo } from '../../../redux/modules/servi
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupsById } from '../../../redux/modules/entities/groups/selectors'
 
-//TODO: remove
-//import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
-
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
@@ -207,9 +204,6 @@ const  mapStateToProps = (state, ownProps) => {
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
 
-  //TODO: remove
-  //const roles = getRoles(state)
-
   //Since group object in new redux has several property that are not accepted by the server,
   //we have to filter out those fields. This is temporary until we have better solution
   const filteredGroupData = activeGroup.delete('backend_id').delete('parentId')
@@ -231,7 +225,7 @@ const  mapStateToProps = (state, ownProps) => {
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
-    allowModify: checkUserPermissions(currentUser, currentUserPermissions, PERMISSIONS.MODIFY_GROUP),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP),
     networks: getNetworksByGroup(state, groupId)
   }
 }
