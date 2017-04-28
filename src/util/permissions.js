@@ -308,12 +308,12 @@ export const getNODEPermissions = (roles, user) => ({
 })
 
 export const getStoragePermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_STORAGE),
-  viewAnalyticAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
-  listAllowed: checkPermissions(roles, user, PERMISSIONS.LIST_STORAGE),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_STORAGE),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_STORAGE),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_STORAGE)
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_STORAGE),
+  viewAnalyticAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
+  listAllowed: checkUserPermissions(user, PERMISSIONS.LIST_STORAGE),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_STORAGE),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_STORAGE),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_STORAGE)
 })
 
 /**
@@ -324,33 +324,18 @@ export const getStoragePermissions = (roles, user) => ({
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
+  /*eslint-disable no-console */
   console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
+  /*eslint-enble no-console */
 
   return checkUserPermissions(user, permission)
-
-  //const userRole = user && user.get('roles').first()
-  // const userRoles = user && user.size > 0 && user.get('roles')
-  // if (!userRoles) {
-  //   return false
-  // }
-  //
-  // return userRoles.some(roleId => {
-  //
-  //   const role = roles && roles.get(String(roleId))
-  //   if (role) {
-  //     return permissionMapping[permission](role, roleId)
-  //   }
-  //
-  //   return false
-  // })
 }
 
 /**
- * checkUserPermissons
- * @param  {[type]} user              [description]
- * @param  {[type]} userPermissions   [description]
- * @param  {[type]} permissionToCheck [description]
- * @return {[type]}                   [description]
+ * checkUserPermissons check if user has permission
+ * @param  {Map} user currentUser (merged with permissions - Map (usually from redux - currentUserPermissions))
+ * @param  {String} permissionToCheck
+ * @return {Boolean}
  */
 export const checkUserPermissions = (user, permissionToCheck) => {
   const userPermissions = user && user.get('permissions')
@@ -364,7 +349,6 @@ export const checkUserPermissions = (user, permissionToCheck) => {
   const [roleId] = userRoles
   //TODO: .some
   //
-  console.warn('permissionToCheck', permissionToCheck);
   return permissionMapping[permissionToCheck](userPermissions, roleId)
 
 }
