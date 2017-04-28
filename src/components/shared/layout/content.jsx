@@ -1,22 +1,22 @@
 import React from 'react'
 
-class Content extends React.Component {
-  render() {
-    let className = 'content-layout';
-    if (this.props.className) {
-      className = className + ' ' + this.props.className;
-    }
-    return (
-      <div className={className}>
-        {this.props.children}
-      </div>
-    );
+const Content = (props) => {
+  let className = 'content-layout';
+  if (props.className) {
+    className = className + ' ' + props.className;
   }
+
+  return (
+    <div className={className}>
+      {props.children}
+    </div>
+  )
 }
+
 Content.displayName = 'Content'
 Content.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string
-};
+}
 
-module.exports = Content
+export default Content

@@ -1,30 +1,31 @@
 import React from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
-class Confirmation extends React.Component {
-  render() {
-    let className = 'confirmation-slider'
-    if (this.props.className) {
-      className += ' ' + this.props.className
-    }
-    return (
-      <div className={className}>
-        <div className="confirmation-content">{this.props.children}</div>
-        <ButtonToolbar>
-          <Button bsStyle="danger"
-            className="btn-sm"
-            onClick={this.props.handleCancel}>
-            {this.props.cancelText ? this.props.cancelText : 'Cancel'}
-          </Button>
-          <Button bsStyle="danger"
-            className="btn-sm"
-            onClick={this.props.handleConfirm}>
-            {this.props.confirmText ? this.props.confirmText : 'OK'}
-          </Button>
-        </ButtonToolbar>
-      </div>
-    );
+const Confirmation = (props) => {
+  let className = 'confirmation-slider'
+  if (props.className) {
+    className += ' ' + props.className
   }
+  return (
+    <div className={className}>
+      <div className="confirmation-content">{props.children}</div>
+      <ButtonToolbar>
+        <Button
+          bsStyle="danger"
+          className="btn-sm"
+          onClick={props.handleCancel}>
+          {props.cancelText ? props.cancelText : <FormattedMessage id="portal.button.cancel"/>}
+        </Button>
+        <Button
+          bsStyle="danger"
+          className="btn-sm"
+          onClick={props.handleConfirm}>
+          {props.confirmText ? props.confirmText : <FormattedMessage id="portal.button.ok"/>}
+        </Button>
+      </ButtonToolbar>
+    </div>
+  )
 }
 
 Confirmation.displayName = 'Confirmation'
@@ -37,4 +38,4 @@ Confirmation.propTypes = {
   handleConfirm: React.PropTypes.func
 }
 
-module.exports = Confirmation
+export default Confirmation
