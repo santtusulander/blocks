@@ -61,8 +61,6 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
-
 import { buildReduxId, parseResponseError } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
 
@@ -82,7 +80,7 @@ import EditNodeContainer from './modals/edit-node-modal'
 import EntityEdit from '../../components/account-management/entity-edit'
 
 import { sortByKey } from '../../util/helpers'
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 
 class Network extends React.Component {
   constructor(props) {
@@ -711,7 +709,7 @@ class Network extends React.Component {
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
+              isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
             />
 
             <EntityList
@@ -742,7 +740,7 @@ class Network extends React.Component {
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
               creationPermission={PERMISSIONS.CREATE_GROUP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.VIEW_GROUP)}
+              isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.VIEW_GROUP)}
             />
 
             <EntityList
@@ -952,7 +950,6 @@ Network.propTypes = {
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
@@ -986,7 +983,6 @@ const mapStateToProps = (state, ownProps) => {
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
-    roles: getRoles(state),
     currentUser: getCurrentUser(state)
   };
 }
