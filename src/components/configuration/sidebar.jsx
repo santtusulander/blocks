@@ -3,33 +3,28 @@ import { Modal } from 'react-bootstrap'
 import classnames from 'classnames'
 import IconClose from '../shared/icons/icon-close.jsx'
 
-class ConfigurationSidebar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const { rightColVisible, handleRightColClose } = this.props
+const ConfigurationSidebar = (props) => {
+  return (
+    <Modal
+      show={true}
+      dialogClassName="side-panel double-side-modal-container"
+      onHide={props.onHide}
+    >
+      <div className={classnames('primary-side-modal', { disabled: props.rightColVisible })}>
+        {props.children}
+      </div>
 
-    return (
-      <Modal
-        show={true}
-        dialogClassName="side-panel double-side-modal-container"
-        onHide={this.props.onHide}
-      >
-        <div className={classnames('primary-side-modal', { disabled: rightColVisible })}>
-          {this.props.children}
+      {props.rightColVisible &&
+        <div className="modal-content secondary-side-modal">
+          <a onClick={props.handleRightColClose} className="secondary-side-modal-close">
+            <IconClose />
+          </a>
+          {props.rightColContent}
         </div>
-        {rightColVisible &&
-          <div className="modal-content secondary-side-modal">
-            <a onClick={handleRightColClose} className="secondary-side-modal-close">
-              <IconClose />
-            </a>
-            {this.props.rightColContent}
-          </div>
-        }
-      </Modal>
-    )
-  }
+      }
+
+    </Modal>
+  )
 }
 
 ConfigurationSidebar.displayName = 'ConfigurationSidebar'
@@ -41,4 +36,4 @@ ConfigurationSidebar.propTypes = {
   rightColVisible: React.PropTypes.bool
 }
 
-module.exports = ConfigurationSidebar
+export default ConfigurationSidebar
