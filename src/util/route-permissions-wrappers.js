@@ -21,7 +21,7 @@ import {
  } from '../util/helpers'
 
 const authSelector = state => getCurrentUser(state)
-const permissionChecker = (permission /*, store*/) => user => {
+const permissionChecker = (permission) => user => {
   if (!permission) {
     return true
   }
@@ -39,11 +39,11 @@ const servicePermissionChecker = (permission) => permissions => {
   return permissions.contains(permission)
 }
 
-export const UserHasPermission = (permission, store) => UserAuthWrapper({
+export const UserHasPermission = (permission) => UserAuthWrapper({
   authSelector: authSelector,
   failureRedirectPath: '/',
   wrapperDisplayName: 'UserHasPermission',
-  predicate: permissionChecker(permission, store),
+  predicate: permissionChecker(permission),
   allowRedirectBack: false
 })(props => props.children)
 
@@ -56,7 +56,7 @@ export const UserCanListAccounts = store => {
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanListAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
 }
