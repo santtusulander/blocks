@@ -345,10 +345,8 @@ export const checkUserPermissions = (user, permissionToCheck) => {
     return false
   }
 
-  //get first roleId
-  const [roleId] = userRoles
-  //TODO: .some
-  //
-  return permissionMapping[permissionToCheck](userPermissions, roleId)
+  return userRoles.some(roleId => {
+    return permissionMapping[permissionToCheck](userPermissions, roleId)
+  })
 
 }
