@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { endOfThisDay, startOfThisMonth, startOfThisDay } from '../constants/date-ranges'
 
 // CIS
