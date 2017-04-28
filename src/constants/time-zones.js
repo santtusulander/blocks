@@ -1880,13 +1880,6 @@ export const TIME_ZONES = {
     }
   ],
 
-  "UTC": [
-    {
-      "value": "UTC",
-      "label": "UTC"
-    }
-  ],
-
   "Manual Offsets": [
     {
       "value": "UTC-12",

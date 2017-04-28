@@ -58,9 +58,16 @@ class Select extends Component {
   }
 
   getSelected() {
-    return this.props.options.find((option) => {
+    const selected = this.props.options.find((option) => {
       return this.getOptionValue(option) === this.props.value
     })
+
+    // Autoselect first option item 
+    if (this.props.autoselectFirst && !selected) {
+      return this.props.options[0]
+    } else {
+      return selected
+    }
   }
 
   getSelectedItem() {
@@ -114,6 +121,7 @@ class Select extends Component {
 }
 Select.displayName = 'Select'
 Select.propTypes = {
+  autoselectFirst: PropTypes.bool,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.object]),

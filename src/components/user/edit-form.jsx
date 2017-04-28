@@ -508,6 +508,7 @@ class UserEditForm extends React.Component {
               name="timezone"
               component={FieldFormGroupSelect}
               options={TIME_ZONES[this.state.continent]}
+              autoselectFirst={true}
             />
           </Col>
         </Row>
