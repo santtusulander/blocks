@@ -1,14 +1,11 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.autoMockOff()
-const ContentTransition = require('../content.jsx')
+jest.unmock('../content.jsx')
+import ContentTransition from '../content.jsx'
 
 describe('ContentTransition', () => {
   it('should exist', () => {
-    let content = TestUtils.renderIntoDocument(
-      <ContentTransition location={{pathname: 'path'}}><div /></ContentTransition>
-    );
-    expect(TestUtils.isCompositeComponent(content)).toBeTruthy();
+    expect(shallow(<ContentTransition location={{pathname: 'path'}}><div /></ContentTransition>)).toBeTruthy();
   })
 })

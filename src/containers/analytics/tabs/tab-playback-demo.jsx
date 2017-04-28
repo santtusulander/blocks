@@ -4,11 +4,9 @@ import { connect } from 'react-redux'
 
 import AnalysisPlaybackDemo from '../../../components/analysis/playback-demo.jsx'
 
-class AnalyticsTabPlaybackDemo extends React.Component {
+const AnalyticsTabPlaybackDemo = ({ filters }) => {
 
-  render() {
-    return <AnalysisPlaybackDemo activeVideo={this.props.filters.get('video')}/>
-  }
+  return (<AnalysisPlaybackDemo activeVideo={filters.get('video')}/>)
 }
 
 AnalyticsTabPlaybackDemo.displayName = "AnalyticsTabPlaybackDemo"
