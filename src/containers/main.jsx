@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Map, List } from 'immutable'
+import { is, Map, List } from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as uiActionCreators from '../redux/modules/ui'
@@ -67,7 +67,7 @@ export class Main extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.fetchData(nextProps.params)
+    !is(Map(this.props.params), Map(nextProps.params)) && this.fetchData(nextProps.params)
   }
 
   fetchData(params) {
