@@ -20,7 +20,6 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
 import { buildReduxId } from '../../../redux/util'
 
@@ -32,7 +31,7 @@ import RoutingDaemonFormContainer from './routing-daemon-modal'
 
 import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
-import checkPermissions from '../../../util/permissions'
+import { checkUserPermissions } from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 class PodFormContainer extends React.Component {
@@ -445,7 +444,6 @@ const mapStateToProps = (state, ownProps) => {
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
 
-  const roles = getRoles(state)
   const currentUser = getCurrentUser(state)
 
   const edit = !!ownProps.podId
@@ -484,7 +482,7 @@ const mapStateToProps = (state, ownProps) => {
     hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_POD),
     pop,
     pod,
 

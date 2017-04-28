@@ -12,6 +12,7 @@ import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entitie
 import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupsById } from '../../../redux/modules/entities/groups/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import { isUdnAdmin } from '../../../redux/modules/user'
@@ -192,10 +193,8 @@ GroupFormContainer.defaultProps = {
 
 /* istanbul ignore next */
 const  mapStateToProps = (state, ownProps) => {
-  const { user } = state
   const { groupId, params: { account } } = ownProps
-  const currentUser = user.get('currentUser')
-  const currentUserPermissions = user.get('currentUserPermissions')
+  const currentUser = getCurrentUser(state)
 
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = getAccountById(state, account)

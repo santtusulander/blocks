@@ -26,7 +26,6 @@ const permissionChecker = (permission /*, store*/) => user => {
     return true
   }
   return checkUserPermissions(
-    //getRoles(store.getState()),
     user,
     permission
   )

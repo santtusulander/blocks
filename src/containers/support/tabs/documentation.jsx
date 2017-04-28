@@ -98,10 +98,10 @@ class SupportTabDocumentation extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   return {
-    currentUserRole: getCurrentUser(state).get('roles').get(0),
+    currentUserRole: currentUser.get('roles').get(0),
     locale: currentUser && currentUser.get('locale')
   }
 }

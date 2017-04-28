@@ -15,7 +15,6 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
@@ -24,7 +23,7 @@ import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
-import checkPermissions from '../../../util/permissions'
+import {checkUserPermissions} from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 /**
@@ -198,7 +197,6 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   })
   const nodeValues = getNodeValues(nodes)
 
-  const roles = getRoles(state)
   const currentUser = getCurrentUser(state)
 
   const initialValues = {}
@@ -208,7 +206,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 
   return {
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_NODE),
     subTitle: getSubtitle(state, params),
     nodes,
     initialValues,
