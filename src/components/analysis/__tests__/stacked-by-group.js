@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
+jest.unmock('../../shared/tooltips/tooltip')
 jest.unmock('../stacked-by-group.jsx')
 import AnalysisStackedByGroup from '../stacked-by-group.jsx'
 
@@ -33,8 +34,8 @@ describe('AnalysisStackedByGroup', () => {
       <AnalysisStackedByGroup className="foo" width={400} height={200} padding={10}
         datasets={fakeData}/>
     )
-    let div = TestUtils.findRenderedDOMComponentWithTag(stacks, 'div')
-    expect(ReactDOM.findDOMNode(div).className).toContain('foo')
+    let div = TestUtils.findRenderedDOMComponentWithClass(stacks, 'foo')
+    expect(div).toBeDefined()
   })
 
   it('should show loading message if there is no width or data', () => {
