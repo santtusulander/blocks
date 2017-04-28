@@ -652,8 +652,7 @@ class Network extends React.Component {
       pops,
       pods,
       nodes,
-      currentUser,
-      roles
+      currentUser
     } = this.props
 
     let deleteModalProps = null

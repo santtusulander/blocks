@@ -5,7 +5,6 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
 import { getCurrentUser } from '../../redux/modules/user'

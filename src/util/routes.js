@@ -1,5 +1,5 @@
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
-import checkPermissions, {checkUserPermissions} from './permissions'
+import {checkUserPermissions} from './permissions'
 import routes from '../constants/routes'
 import {
   VIEW_CONTENT_PROPERTIES,

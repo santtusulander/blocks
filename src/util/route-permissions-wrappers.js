@@ -5,7 +5,6 @@ import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-pe
 import { checkUserPermissions } from './permissions'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
 
-import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../redux/modules/user'
