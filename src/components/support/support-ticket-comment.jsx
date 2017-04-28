@@ -6,26 +6,18 @@ import { formatDate } from '../../util/helpers'
 /* TODO: uncomment when this tab will be implemented */
 /* eslint-disable react-intl/string-is-marked-for-translation */
 
-class SupportTicketComment extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    const { className, comment } = this.props
-
-    return (
-      <div className={classNames('support-ticket-comment', className)}>
-        <div className="support-ticket-comment__header">
-          <span className="support-ticket-comment__author">{comment.get('author_id')}</span>
-          <span className="support-ticket-comment__created"> - {formatDate(comment.get('created_at'), 'MM/DD/YYYY hh:mm a')}</span>
-        </div>
-        <div className="support-ticket-comment__body">
-          {comment.get('body')}
-        </div>
+const SupportTicketComment = (props) => {
+  return (
+    <div className={classNames('support-ticket-comment', props.className)}>
+      <div className="support-ticket-comment__header">
+        <span className="support-ticket-comment__author">{props.comment.get('author_id')}</span>
+        <span className="support-ticket-comment__created"> - {formatDate(props.comment.get('created_at'), 'MM/DD/YYYY hh:mm a')}</span>
       </div>
-    )
-  }
+      <div className="support-ticket-comment__body">
+        {props.comment.get('body')}
+      </div>
+    </div>
+  )
 }
 
 SupportTicketComment.displayName = "SupportTicketComment"
