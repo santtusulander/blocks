@@ -3,8 +3,7 @@ import { Provider } from 'react-redux'
 import { Router, browserHistory } from 'react-router'
 
 import { LogPageView } from './util/google-analytics'
-import AppRoutes from './routes'
-//import Login from './containers/login'
+import appRoutes from './routes'
 import ConnectedIntlProvider from './decorators/connected-intl-provider'
 
 
@@ -13,14 +12,12 @@ const Root = ({ store }) => {
     <Provider store={store}>
       <ConnectedIntlProvider>
         <Router onUpdate={LogPageView} history={browserHistory}>
-          { AppRoutes }
-          {/* <Route path="/login" component={Login}/> */}
+          { appRoutes }
         </Router>
       </ConnectedIntlProvider>
     </Provider>
   )
 }
-
 
 Root.displayName = "Root"
 Root.propTypes = {
