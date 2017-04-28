@@ -18,7 +18,6 @@ import { getById as getGroupById } from '../../redux/modules/entities/groups/sel
 import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../../redux/modules/user'
 
@@ -86,7 +85,7 @@ export class Group extends React.Component {
   render() {
     const params = this.props.params
     const { brand, account, group } = params
-    const { activeAccount, activeGroup, roles, currentUser } = this.props
+    const { activeAccount, activeGroup, currentUser } = this.props
 
     const breadcrumbs = [
       {
@@ -98,7 +97,7 @@ export class Group extends React.Component {
       }
     ]
 
-    const storagePermission = getStoragePermissions(roles, currentUser)
+    const storagePermission = getStoragePermissions(currentUser)
 
     return (
       <ContentItems
@@ -145,6 +144,7 @@ Group.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
   createProperty: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   deleteProperty: PropTypes.func,
   fetchGroupData: PropTypes.func,
   fetchMetricsData: PropTypes.func,
@@ -152,21 +152,18 @@ Group.propTypes = {
   fetchingMetrics: PropTypes.bool,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 Group.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
-  roles: Map(),
   sortValuePath: List(),
   storages: List(),
-  user: Map()
+  currentUser: Map()
 }
 
 /* istanbul ignore next */
@@ -179,7 +176,6 @@ const mapStateToProps = (state, { params: { account, group } }) => {
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group),
     storages: getStoragesByGroup(state, group),
-    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,
