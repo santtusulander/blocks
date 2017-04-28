@@ -1,52 +1,40 @@
-import React, { PropTypes, Component } from 'react'
-import { connect } from 'react-redux'
-
+import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
-
-import SidePanel from '../../../components/shared/side-panel'
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
+import SidePanel from '../../../components/shared/side-panel'
 import * as dnsActionCreators from '../../../redux/modules/dns'
-
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
-
 import { parseResponseError } from '../../../redux/util'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
 
-class DnsDomainEditFormContainer  extends Component {
-  constructor(props) {
-    super(props)
-  }
+const DnsDomainEditFormContainer = ({ edit, fetching, initialValues, saveDomain, closeModal }) => {
+  const title = edit
+    ? <FormattedMessage id='portal.account.domainForm.editDomain.title' />
+    : <FormattedMessage id='portal.account.domainForm.newDomain.title' />
 
-  render() {
-    const { edit, fetching, initialValues, saveDomain, closeModal } = this.props
+  const subTitle = initialValues && initialValues.name ? initialValues.name : ''
 
-    const title = edit
-      ? <FormattedMessage id='portal.account.domainForm.editDomain.title' />
-      : <FormattedMessage id='portal.account.domainForm.newDomain.title' />
+  return (
+    <SidePanel
+      show={true}
+      title={title}
+      subTitle={subTitle}
+      cancel={() => closeModal()}
+    >
 
-    const subTitle = initialValues && initialValues.name ? initialValues.name : ''
+      <DnsDomainEditForm
+        edit={edit}
+        fetching={fetching}
+        initialValues={initialValues}
+        onSave={(values) => saveDomain(edit, values)}
+        onCancel={() => closeModal()}
+      />
 
-    return (
-      <SidePanel
-        show={true}
-        title={title}
-        subTitle={subTitle}
-        cancel={() => closeModal()}
-      >
-
-        <DnsDomainEditForm
-          edit={edit}
-          fetching={fetching}
-          initialValues={initialValues}
-          onSave={(values) => saveDomain(edit, values)}
-          onCancel={() => closeModal()}
-        />
-
-      </SidePanel>
-    )
-  }
+    </SidePanel>
+  )
 }
 
 DnsDomainEditFormContainer.displayName = "DnsDomainEditFormContainer"

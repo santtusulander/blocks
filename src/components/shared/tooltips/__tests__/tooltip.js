@@ -1,72 +1,32 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.unmock('../tooltip.jsx');
 import Tooltip from '../tooltip.jsx'
 
 describe('Tooltip', function() {
-  it('uses the x / y coordinates', () => {
-    let tooltip = TestUtils.renderIntoDocument(
-      <Tooltip x={100} y={200} />
-    );
+  let subject = null
 
-    // Verify that it uses the coordinates
-    let container = TestUtils.findRenderedDOMComponentWithTag(
-      tooltip, 'div');
-    expect(ReactDOM.findDOMNode(container).style.top)
-      .toEqual('200px');
-    expect(ReactDOM.findDOMNode(container).style.left)
-      .toEqual('100px');
-  });
+  beforeEach(() => {
+    subject = (className = 'test', child = (<div></div>), x = 100, y = 200, hidden = false) => {
+      return shallow(<Tooltip className={className} x={x} y={y} hidden={hidden}> {child} </Tooltip>)
+    }
+  })
 
   it('can be hidden', () => {
-    let tooltip = TestUtils.renderIntoDocument(
-      <Tooltip hidden={true} />
-    );
+    expect(subject('test', <div></div>, 100, 200, true).find('.hidden').length).toBe(1)
+  })
 
-    // Verify that it has the hidden class
-    let container = TestUtils.findRenderedDOMComponentWithTag(
-      tooltip, 'div');
-    expect(ReactDOM.findDOMNode(container).className)
-      .toContain('hidden');
-  });
 
   it('can be shown', () => {
-    let tooltip = TestUtils.renderIntoDocument(
-      <Tooltip hidden={false} />
-    );
-
-    // Verify that it does not have the hidden class
-    let container = TestUtils.findRenderedDOMComponentWithTag(
-      tooltip, 'div');
-    expect(ReactDOM.findDOMNode(container).className)
-      .not.toContain('hidden');
-  });
+    expect(subject('test', <div></div>, 100, 200, false).find('.hidden').length).toBe(0)
+  })
 
   it('can be passed a custom css class', () => {
-    let tooltip = TestUtils.renderIntoDocument(
-      <Tooltip className="aaa" />
-    );
-
-    // Verify that it has the passed class
-    let container = TestUtils.findRenderedDOMComponentWithTag(
-      tooltip, 'div');
-    expect(ReactDOM.findDOMNode(container).className)
-      .toContain('aaa');
-  });
+    expect(subject('test', <div></div>, 100, 200, false).find('.test').length).toBe(1)
+  })
 
   it('renders a child', () => {
-    let tooltip = TestUtils.renderIntoDocument(
-      <Tooltip>
-        <span className="test">Test</span>
-      </Tooltip>
-    );
-
-    // Verify that it has the child element
-    let child = TestUtils.findRenderedDOMComponentWithClass(
-      tooltip, 'test');
-    expect(ReactDOM.findDOMNode(child).textContent)
-      .toEqual('Test');
-  });
-});
+    expect(subject('test', <div className='child'></div>, 100, 200, false).find('.child').length).toBe(1)
+  })
+})
