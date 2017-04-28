@@ -4,7 +4,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
-
+import { formatDate } from '../../../util/helpers'
 import Tooltip from '../../shared/tooltips/tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
@@ -22,7 +22,7 @@ const getExtent = (datasets, key) => {
 }
 
 const configureTooltip = (date, positionVal, height, width, formatY, xScale, yScale, actualVal, formatter) => {
-  const formattedDate = moment.utc(date).format('MMM D H:mm')
+  const formattedDate = formatDate(date, 'MMM D H:mm')
   const val = actualVal || 0
   const formattedValue = formatY(val)
   const text = formatter ?
@@ -100,7 +100,7 @@ class AnalysisByTime extends React.Component {
           const formatter = dataset.xAxisFormatter ?
             (date, val) => {
               const dateMap = Immutable.fromJS({timestamp: date})
-              const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+              const formattedDate = formatDate(dataset.xAxisFormatter(dateMap), 'MMM D H:mm')
               const formattedValue = this.formatY(val)
               return `${formattedDate} ${formattedValue}`
             }

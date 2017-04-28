@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react'
 import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
 import {
@@ -34,6 +33,7 @@ import * as PERMISSIONS from '../../constants/permissions'
 import checkPermissions from '../../util/permissions'
 import PROVIDER_TYPES from '../../constants/provider-types'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
 
 
 export class Brand extends React.Component {
@@ -214,8 +214,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
 
   const metricsOpts = {
-    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('day').format('X')
+    startDate: startOfLast28().format('X'),
+    endDate: endOfThisDay().format('X')
   }
 
   return {

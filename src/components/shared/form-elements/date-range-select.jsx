@@ -9,6 +9,7 @@ import DateRanges, {
    startOfLast28, startOfLastWeek, startOfThisWeek
 } from '../../../constants/date-ranges'
 
+import { formatMoment } from '../../../util/helpers'
 import IconCalendar from '../icons/icon-calendar'
 import IconSelectCaret from '../icons/icon-select-caret'
 
@@ -177,8 +178,8 @@ class DateRangeSelect extends React.Component {
       startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
       dateRange = this.constructActiveDateRange(DateRanges.LAST_28)
     } else {
-      const startDate = start.format('MM/DD/YYYY')
-      const endDate = end.format('MM/DD/YYYY')
+      const startDate = formatMoment(start, 'MM/DD/YYYY')
+      const endDate = formatMoment(end, 'MM/DD/YYYY')
       dateRange = this.constructActiveDateRange(DateRanges.CUSTOM_TIMERANGE, startDate + (startDate !== endDate ? ` - ${endDate}` : ''))
     }
     return dateRange

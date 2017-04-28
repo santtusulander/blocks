@@ -3,6 +3,7 @@ import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'
+import { formatMoment } from '../../../util/helpers'
 
 import MonthPicker from './month-picker'
 import IconCalendar from '../icons/icon-calendar'
@@ -19,7 +20,7 @@ export class CustomDatePicker extends React.Component {
       dateRangeType: 'day',
       forceOpen: false,
       open: false,
-      value: props.startDate.format('MM/DD/YYYY')
+      value: formatMoment(props.startDate, 'MM/DD/YYYY')
     }
 
     this.isForceOpen = false
@@ -53,7 +54,7 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleMonthChange(startDate, endDate) {
-    const monthValue = `${moment().month(startDate.get('month')).format("MMMM")} ${startDate.get('year')}`
+    const monthValue = `${formatMoment(moment().month(startDate.get('month')), 'MMMM')} ${startDate.get('year')}`
 
     this.props.changeDateRange(startDate, endDate)
     this.setState({

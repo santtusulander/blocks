@@ -23,6 +23,8 @@ import Tooltip from '../../../components/shared/tooltips/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import { endOfThisDay, startOfLast28 } from '../../../constants/date-ranges'
 
+import { formatMoment } from '../../../util/helpers'
+
 import {
   formatBitsPerSecond,
   getCISname
@@ -304,9 +306,8 @@ class PropertySummary extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
-      const formattedDate = moment(date)
-        .subtract(dateRange.asDays(), 'days')
-        .format('MMM D H:mm')
+      const formattedDate = formatMoment(moment(date)
+        .subtract(dateRange.asDays(), 'days'), 'MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
     }
@@ -367,9 +368,9 @@ class PropertySummary extends React.Component {
           <Col xs={4} className="kpi">
             <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
-              {moment(
+              {formatMoment(moment(
                 activeConfig.get('configuration_status').get('deployment_date'), 'X'
-              ).format('M/D/YYYY, h:mma')}
+              ), 'M/D/YYYY, h:mma')}
             </h3>
           </Col>
         </Row>
@@ -438,7 +439,7 @@ class PropertySummary extends React.Component {
             y={-30}
             hidden={false}>
             <div className="tooltip-header">
-              <b>{moment(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
+              <b>{formatMoment(moment(this.state.activeSlice.get('timestamp'), 'X'), 'MMM D, ddd')}</b>
             </div>
             <div>
               <FormattedMessage id="portal.content.property.summary.peak.label"/>

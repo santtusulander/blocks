@@ -342,8 +342,8 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @param format
  * @returns {*}
  */
-export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY', timezone = 'GMT') {
-  return moment.unix(unix).tz(timezone).format(format)
+export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+  return moment.unix(unix).format(format)
 }
 
 /**
@@ -362,9 +362,20 @@ export function unixTimestampToDate(unix) {
  * @param format
  * @returns {*}
  */
-export function formatDate(date, format = 'MM/DD/YYYY', timezone = 'GMT') {
-  return moment(date).tz(timezone).format(format)
+export function formatDate(date, format = 'MM/DD/YYYY') {
+  return moment(date).format(format)
 }
+
+/**
+ * Format a moment object to desired format
+ * @param moment obj
+ * @param format
+ * @returns {*}
+ */
+export function formatMoment(momentObj, format = 'MM/DD/YYYY') {
+  return momentObj.format(format)
+}
+
 
 
 export function filterAccountsByUserName (accounts) {

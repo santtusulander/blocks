@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import d3 from 'd3'
+import { formatDate } from '../../util/helpers'
 
 const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}) => {
   const hourTicks = showHours ? xScale.ticks(9) : []
@@ -27,7 +28,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
         return (
           <g key={i}>
             <text x={xScale(tick)} y={height -  1.5 * padding} className="x-axis">
-              {moment.utc(tick).format('HH[:]mm')}
+              {formatDate(tick, 'HH[:]mm')}
             </text>
           </g>
         )
@@ -36,7 +37,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
         return (
           <g key={i}>
             <text x={xScale(tick)} y={height - padding} className="x-axis">
-              {moment.utc(tick).format('D')}
+              {formatDate(tick, 'D')}
             </text>
           </g>
         )
@@ -47,7 +48,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
             <g key={i}>
               <text x={xScale(tick)}
                 y={height - (padding / 2)}>
-                {moment.utc(tick).format('MMMM')}
+                {formatDate(tick, 'MMMM')}
               </text>
             </g>
           )

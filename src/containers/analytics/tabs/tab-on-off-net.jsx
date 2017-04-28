@@ -47,8 +47,8 @@ class AnalyticsTabOnOffNet extends React.Component {
     onOffOpts.granularity = 'day'
 
     const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
+    onOffTodayOpts.startDate = moment().startOf('day').format('X'),
+    onOffTodayOpts.endDate = moment().format('X')
 
     this.props.trafficActions.fetchOnOffNet(onOffOpts)
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
