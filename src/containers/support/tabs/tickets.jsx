@@ -33,6 +33,9 @@ import { FormattedMessage } from 'react-intl'
 
 
 // Most of the code in here has been disabled until we get Zendesk integration working
+/* TODO: uncomment when this tab will be implemented */
+/* eslint-disable react/prefer-stateless-function */
+
 class SupportTabTickets extends React.Component {
   // constructor(props) {
   //   super(props)

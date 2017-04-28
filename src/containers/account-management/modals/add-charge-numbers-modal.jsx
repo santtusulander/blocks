@@ -10,60 +10,54 @@ import { getRegionsInfo } from '../../../redux/modules/service-info/selectors'
 import { getServiceById, getServiceByOptionId } from '../../../util/services-helpers'
 import { MEDIA_DELIVERY_SERVICE_ID } from '../../../constants/service-permissions'
 
-class AddChargeNumbersModal extends React.Component {
-  constructor(props) {
-    super(props)
+const AddChargeNumbersModal = ({ activeServiceItem, onSubmit, onDisable, onCancel, isEnabled,
+                                 servicesInfo, show, initialValues, regionsInfo }) => {
+  let itemDetails = Map()
+  let isService = null
+  let hasFlowDirection = null
+  let serviceInfoItem = null
+
+  if (activeServiceItem.size) {
+    isService = activeServiceItem.has('service_id')
+    hasFlowDirection = isService && activeServiceItem.get('service_id') === MEDIA_DELIVERY_SERVICE_ID
+    serviceInfoItem = isService
+                      ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
+                      : getServiceByOptionId(servicesInfo, activeServiceItem.get('option_id'))
+    itemDetails = isService
+                  ? serviceInfoItem
+                  : serviceInfoItem.get('options').find(item => item.get('id') === activeServiceItem.get('option_id'))
   }
 
-  render() {
-    const { activeServiceItem, onSubmit, onDisable, onCancel, servicesInfo, show, initialValues, regionsInfo } = this.props
-    let itemDetails = Map()
-    let isService = null
-    let hasFlowDirection = null
-    let serviceInfoItem = null
+  const subTitle = isService
+                  ? <FormattedMessage id="portal.account.chargeNumbersForm.service.title"/>
+                  : <FormattedMessage id="portal.account.chargeNumbersForm.option.title"/>
 
-    if (activeServiceItem.size) {
-      isService = activeServiceItem.has('service_id')
-      hasFlowDirection = isService && activeServiceItem.get('service_id') === MEDIA_DELIVERY_SERVICE_ID
-      serviceInfoItem = isService
-                        ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
-                        : getServiceByOptionId(servicesInfo, activeServiceItem.get('option_id'))
-      itemDetails = isService
-                    ? serviceInfoItem
-                    : serviceInfoItem.get('options').find(item => item.get('id') === activeServiceItem.get('option_id'))
-    }
-
-    const subTitle = isService
-                    ? <FormattedMessage id="portal.account.chargeNumbersForm.service.title"/>
-                    : <FormattedMessage id="portal.account.chargeNumbersForm.option.title"/>
-
-    return (
-      <div>
-        { activeServiceItem.size &&
-          <SidePanel
-            show={show}
-            title={itemDetails.get('name')}
-            subTitle={subTitle}
-            cancel={onCancel}
-            overlapping={true}
-          >
-            <ChargeNumbersForm
-              initialValues={initialValues}
-              activeServiceItem={activeServiceItem}
-              hasFlowDirection={hasFlowDirection}
-              isEnabled={this.props.isEnabled}
-              hasRegionalBilling={itemDetails.get('supports_regional_billing')}
-              hasGlobalBilling={itemDetails.get('supports_global_billing')}
-              onCancel={onCancel}
-              onDisable={onDisable}
-              onSubmit={onSubmit}
-              regionsInfo={serviceInfoItem.get('regions').size ? serviceInfoItem.get('regions') : regionsInfo}
-            />
-          </SidePanel>
-        }
-      </div>
-    )
-  }
+  return (
+    <div>
+      { activeServiceItem.size &&
+        <SidePanel
+          show={show}
+          title={itemDetails.get('name')}
+          subTitle={subTitle}
+          cancel={onCancel}
+          overlapping={true}
+        >
+          <ChargeNumbersForm
+            initialValues={initialValues}
+            activeServiceItem={activeServiceItem}
+            hasFlowDirection={hasFlowDirection}
+            isEnabled={isEnabled}
+            hasRegionalBilling={itemDetails.get('supports_regional_billing')}
+            hasGlobalBilling={itemDetails.get('supports_global_billing')}
+            onCancel={onCancel}
+            onDisable={onDisable}
+            onSubmit={onSubmit}
+            regionsInfo={serviceInfoItem.get('regions').size ? serviceInfoItem.get('regions') : regionsInfo}
+          />
+        </SidePanel>
+      }
+    </div>
+  )
 }
 
 AddChargeNumbersModal.defaultProps = {

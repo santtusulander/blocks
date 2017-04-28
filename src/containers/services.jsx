@@ -1,49 +1,39 @@
 import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-
+import { FormattedMessage } from 'react-intl'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
 
 import Content from '../components/shared/layout/content'
 import ServicesPageHeader from '../components/services/services-page-header'
-import { FormattedMessage } from 'react-intl'
 
-export class Services extends React.Component {
-  constructor(props) {
-    super (props);
-  }
+const Services = ({ activeAccount, params }) => {
 
-  render() {
-
-    const {activeAccount } = this.props;
-
-    return (
-      <Content>
-        <ServicesPageHeader
-          params={this.props.params}
-          activeAccount={activeAccount.get ('name')}/>
-        <p className='text-center'>
-          <FormattedMessage tagName="tspan" id="portal.services.comingSoon.text"/>
-        </p>
-      </Content>
-    )
-  }
+  return (
+    <Content>
+      <ServicesPageHeader
+        params={params}
+        activeAccount={activeAccount.get ('name')}/>
+      <p className='text-center'>
+        <FormattedMessage tagName="tspan" id="portal.services.comingSoon.text"/>
+      </p>
+    </Content>
+  )
 }
 
 Services.displayName = 'Services'
-
 Services.propTypes = {
   activeAccount: PropTypes.instanceOf (Map),
   params: PropTypes.object
 }
-
 Services.defaultProps = {
   activeAccount: Map ()
 }
+
 function mapStateToProps(state, ownProps) {
   return {
     activeAccount: getAccountById(state, ownProps.params.account)
-  };
+  }
 }
 
 export default connect (mapStateToProps, null) (Services)
