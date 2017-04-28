@@ -5,6 +5,8 @@ import d3 from 'd3'
 import ContentItemChart from '../../components/content/content-item-chart'
 import ContentItemList from '../../components/content/content-item-list'
 
+import { getCurrentUser } from '../../redux/modules/user'
+
 import {
   getById as getPropertyById,
   getPropertyMetricsById,
@@ -12,21 +14,18 @@ import {
   getTotalTraffics
 } from '../../redux/modules/entities/properties/selectors'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
-
 import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 
 const PropertyItemContainer = props => {
 
   const { published_host_id } = props.entity ? props.entity.toJS() : {}
-  const { entityMetrics, dailyTraffic, totalTraffics, params, roles, user } = props
+  const { entityMetrics, dailyTraffic, totalTraffics, params, currentUser } = props
 
   const analyticsURLBuilder = (property) => {
     return getAnalyticsUrlFromParams(
       {...props.params, property},
-      user.get('currentUser'),
-      roles
+      currentUser
     )
   }
 
@@ -114,13 +113,12 @@ const PropertyItemContainer = props => {
 PropertyItemContainer.displayName = 'PropertyItemContainer'
 
 PropertyItemContainer.propTypes = {
+  currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(Map),
   entity: PropTypes.object,
   entityMetrics: PropTypes.object,
   params: PropTypes.object,
-  roles: PropTypes.instanceOf(Map),
   totalTraffics: PropTypes.instanceOf(List),
-  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 
@@ -145,8 +143,7 @@ const makeMapStateToProps = () => {
       entityMetrics: getPropertyMetricsById(state, propertyId),
       dailyTraffic: getPropertyDailyTrafficById(state, propertyId),
       totalTraffics: getTotalTraffics(state),
-      user: state.user,
-      roles: getRoles(state)
+      user: getCurrentUser(state)
     }
   }
 

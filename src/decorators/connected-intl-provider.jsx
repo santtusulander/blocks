@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
+import { getCurrentUser } from '../redux/modules/user'
+
 import MESSAGES_EN from '../locales/en'
 import MESSAGES_ZH from '../locales/zh'
 import MESSAGES_ES from '../locales/es'
@@ -21,7 +23,7 @@ const messages= {
 }
 
 function mapStateToProps(state) {
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
   const locale = currentUser.get('locale') ? currentUser.get('locale').split('-')[0] : 'en'
 
   return {
