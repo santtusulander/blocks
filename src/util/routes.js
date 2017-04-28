@@ -129,9 +129,12 @@ export function getSecurityUrl(linkType, val, params) {
 }
 
 export function getAnalyticsUrlFromParams(params, currentUser) {
-  const allowedTab = analyticsTabConfig.find(tab =>
-     checkUserPermissions(currentUser, tab.get('permission')
-  ))
+  const allowedTab = analyticsTabConfig.find(tab => {
+    const permissionToCheck = tab.get('permission')
+    console.log(permissionToCheck);
+    return checkUserPermissions(currentUser, permissionToCheck)
+  })
+
   const landingTab = allowedTab ? allowedTab.get('key') : ''
   const { brand, account, group, property } = params,
     baseUrl = getRoute('analytics')

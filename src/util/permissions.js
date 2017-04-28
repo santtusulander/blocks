@@ -272,42 +272,42 @@ export const getLocationPermissions = (user) => ({
   modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_LOCATION)
 })
 
-export const getNetworkPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NETWORK),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NETWORK),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NETWORK),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NETWORK)
+export const getNetworkPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_NETWORK),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_NETWORK),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_NETWORK),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_NETWORK)
 })
 
-export const getPOPPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POP),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POP),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POP),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POP)
+export const getPOPPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_POP),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_POP),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_POP),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_POP)
 })
 
-export const getPODPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POD),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POD),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POD),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POD)
+export const getPODPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_POD),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_POD),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_POD),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_POD)
 })
 
-export const getFootprintsPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_FOOTPRINT),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_FOOTPRINT),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_FOOTPRINT),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_FOOTPRINT)
+export const getFootprintsPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_FOOTPRINT),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_FOOTPRINT),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_FOOTPRINT),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_FOOTPRINT)
 })
 
-export const getNODEPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NODE),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NODE),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NODE),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NODE)
+export const getNODEPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_NODE),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_NODE),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_NODE),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_NODE)
 })
 
-export const getStoragePermissions = (roles, user) => ({
+export const getStoragePermissions = (user) => ({
   viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_STORAGE),
   viewAnalyticAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
   listAllowed: checkUserPermissions(user, PERMISSIONS.LIST_STORAGE),
