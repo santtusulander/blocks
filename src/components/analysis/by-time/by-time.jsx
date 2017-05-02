@@ -174,7 +174,7 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.dataSets.some(dataset => dataset.label) ? 2 : 1)
       ]);
 
-    const xScale = d3.time.scale.utc()
+    const xScale = d3.time.scale()
       .domain([startDate, endDate])
       .range([
         this.props.padding * (this.props.axes ? 3 : 1),
@@ -182,7 +182,7 @@ class AnalysisByTime extends React.Component {
       ])
 
     if (!this.props.noXNice) {
-      xScale.nice(d3.time.day.utc, 1)
+      xScale.nice(d3.time.day, 1)
     }
 
     const trafficLine = d3.svg.line()
