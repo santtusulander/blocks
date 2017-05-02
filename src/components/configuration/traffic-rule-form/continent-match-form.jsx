@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import continentsList from '../../../constants/continents'
 import { checkForErrors } from '../../../util/helpers'
@@ -11,9 +12,7 @@ import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 const validate = ({ continent }) => checkForErrors({ continent })
 
-const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
-
-  const options = continentsList.map(({ id, labelId }) => ({ id, label: intl.formatMessage({ id: labelId }) }))
+const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl, continentOptions }) => {
 
   const saveMatch = values => {
     const labelText = values.continent.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
@@ -32,7 +31,7 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
         component={Typeahead}
         multiple={true}
         placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.continent.input.placeholder" })}
-        options={options}
+        options={continentOptions}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.continent" />}/>
       <FormFooterButtons>
         <Button
@@ -57,6 +56,7 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
 
 ContinentMatchForm.displayName = 'ContinentMatchForm'
 ContinentMatchForm.propTypes = {
+  continentOptions: PropTypes.array,
   handleSubmit: PropTypes.func,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
@@ -66,6 +66,42 @@ ContinentMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-const Form = reduxForm({ form: 'continent-traffic-match', validate })(injectIntl(ContinentMatchForm))
+const stateToProps = (state, { intl, initialValues }) => {
+
+  const rules = formValueSelector('gtmForm')(state, 'rules') || []
+  const existingOptions = []
+
+  rules.forEach((rule => {
+
+    rule.matchArray.forEach(match => {
+
+      if (match.matchType === 'continent') {
+
+        existingOptions.push(...match.values.continent.map(continentMatch => continentMatch.id))
+
+      }
+    })
+  }))
+
+  const continentOptions = continentsList.reduce((options, continent) => {
+
+    const initialValuesHasValue = initialValues.continent.some(({ id }) => id === continent.id)
+    if (!existingOptions.includes(continent.id) || initialValuesHasValue) {
+
+      options.push({
+        id: continent.id,
+        label: intl.formatMessage({ id: continent.labelId })
+      })
+    }
+
+    return options
+  }, [])
+
+  return {
+    continentOptions
+  }
+}
+
+const Form = injectIntl(connect(stateToProps)(reduxForm({ form: 'continent-traffic-match', validate })(ContinentMatchForm)))
 Form.defaultProps = { initialValues: { continent: [] } }
 export default Form
