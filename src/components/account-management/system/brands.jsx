@@ -11,17 +11,15 @@ const fakeBrands = [
 ]
 
 
-class AccountManagementSystemBrands extends React.Component {
-  render() {
-    return (
-      <PageContainer>
-        <BrandList {...this.props} brands={fakeBrands} />
-      </PageContainer>
-    )
-  }
+const AccountManagementSystemBrands = (props) => {
+  return (
+    <PageContainer>
+      <BrandList {...props} brands={fakeBrands} />
+    </PageContainer>
+  )
 }
 
 AccountManagementSystemBrands.displayName = 'AccountManagementSystemBrands'
 AccountManagementSystemBrands.propTypes = {}
 
-module.exports = AccountManagementSystemBrands
+export default AccountManagementSystemBrands

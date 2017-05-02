@@ -1,5 +1,5 @@
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
-import checkPermissions from './permissions'
+import {checkUserPermissions} from './permissions'
 import routes from '../constants/routes'
 import {
   VIEW_CONTENT_PROPERTIES,
@@ -128,10 +128,12 @@ export function getSecurityUrl(linkType, val, params) {
   }
 }
 
-export function getAnalyticsUrlFromParams(params, currentUser, roles) {
-  const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
-    roles, currentUser, tab.get('permission')
-  ))
+export function getAnalyticsUrlFromParams(params, currentUser) {
+  const allowedTab = analyticsTabConfig.find(tab => {
+    const permissionToCheck = tab.get('permission')
+    return checkUserPermissions(currentUser, permissionToCheck)
+  })
+
   const landingTab = allowedTab ? allowedTab.get('key') : ''
   const { brand, account, group, property } = params,
     baseUrl = getRoute('analytics')
@@ -150,10 +152,10 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   }
 }
 
-export function getContentUrlFromParams(params, currentUser, roles) {
+export function getContentUrlFromParams(params, currentUser) {
   const { brand, account, group, property } = params,
-    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES),
-    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
+    canListProperties = checkUserPermissions(currentUser, VIEW_CONTENT_PROPERTIES),
+    canViewAccountDetail = checkUserPermissions(currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (property) {
     return getRoute('contentProperty', params)
@@ -252,9 +254,9 @@ export function getDashboardUrlFromParams(params) {
   }
 }
 
-export function getNetworkUrlFromParams(params, currentUser, roles) {
+export function getNetworkUrlFromParams(params, currentUser) {
   const { brand, account, group } = params,
-    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
+    canViewAccountDetail = checkUserPermissions(currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
     if (group) {

@@ -23,6 +23,7 @@ import * as userActionCreators from '../../redux/modules/user'
 import * as uiActionCreators from '../../redux/modules/ui'
 
 import { parseResponseError } from '../../redux/util'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import accountActionCreators from '../../redux/modules/entities/accounts/actions'
 import { getByBrand, getById as getAccountById} from '../../redux/modules/entities/accounts/selectors'
@@ -499,7 +500,7 @@ export class AccountManagement extends Component {
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
             disableDelete={String(this.state.groupToUpdate.get('id')) === String(this.props.params.group)}
-            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            locationPermissions={getLocationPermissions(childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.hideGroupModal()}
@@ -512,7 +513,7 @@ export class AccountManagement extends Component {
           <EntityEdit
             type='group'
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
-            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            locationPermissions={getLocationPermissions(childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.hideGroupModal()}
@@ -568,7 +569,7 @@ function mapStateToProps(state, ownProps) {
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
     users: state.user.get('allUsers'),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

@@ -23,7 +23,8 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
+import { getCurrentUser } from '../../redux/modules/user'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -41,7 +42,7 @@ import ContentItems from '../../components/content/content-items'
 
 import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
-import checkPermissions, { getLocationPermissions } from '../../util/permissions'
+import { checkUserPermissions, getLocationPermissions } from '../../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
@@ -169,7 +170,7 @@ export class Account extends React.Component {
   render() {
 
     const { brand, account } = this.props.params
-    const { accountManagementModal, activeAccount, activeGroup, roles, user } = this.props
+    const { accountManagementModal, activeAccount, activeGroup, currentUser } = this.props
 
     const nextPageURLBuilder = (groupID) => {
       if ((activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) || (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)) {
@@ -181,14 +182,12 @@ export class Account extends React.Component {
     const analyticsURLBuilder = (group) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, group},
-        user.get('currentUser'),
-        roles
+        currentUser,
       )
     }
 
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
     const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
-    const currentUser = user.get('currentUser')
     const selectionDisabled = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
 
     let deleteModalProps = null
@@ -225,8 +224,8 @@ export class Account extends React.Component {
           fetchingMetrics={this.props.fetchingMetrics}
           headerText={{ summary: headerText, label: breadcrumbs[0].label }}
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
-          isAllowedToConfigure={checkPermissions(roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
-          locationPermissions={getLocationPermissions(roles, this.props.user.get('currentUser'))}
+          isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP)}
+          locationPermissions={getLocationPermissions(currentUser)}
           metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
           selectionStartTier="group"
@@ -259,6 +258,7 @@ Account.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
   createGroup: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
@@ -268,7 +268,6 @@ Account.propTypes = {
   oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   toggleDeleteConfirmationModal: PropTypes.func,
@@ -284,7 +283,6 @@ Account.defaultProps = {
   dailyTraffic: List(),
   groups: List(),
   metrics: List(),
-  roles: Map(),
   sortValuePath: List(),
   user: Map()
 }
@@ -297,13 +295,14 @@ const mapStateToProps = (state, ownProps) => {
     accountManagementModal: state.ui.get('accountManagementModal'),
     activeAccount: getAccountById(state, account),
 
+    currentUser: getCurrentUser(state),
+
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
     groups: getGroupsByAccount(state, account),
 
     metrics: state.metrics.get('groupMetrics'),
-    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

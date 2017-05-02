@@ -477,7 +477,15 @@ export function userIsCloudProvider(user) {
 }
 
 export function userHasRole(user, roleToFind) {
-  const userRoles = user.get('roles').toJS()
+
+  const userRolesMap = user && user.get('roles')
+
+  //Just to be safe, without this check throws an error sometimes if user is undefined
+  if (!userRolesMap) {
+    return false
+  }
+
+  const userRoles = userRolesMap.toJS()
   const mapping = fromJS(ROLES_MAPPING)
 
   for (const roleId of userRoles) {
@@ -494,6 +502,7 @@ export function userHasRole(user, roleToFind) {
   }
 
   return false
+
 }
 
 export function accountIsServiceProviderType(account) {

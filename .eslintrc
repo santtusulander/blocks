@@ -257,5 +257,6 @@
     "import/default": 2,
     "import/export": 2,
     "react-intl/string-is-marked-for-translation": 2,
+    "react/prefer-stateless-function": [2]
   }
 }

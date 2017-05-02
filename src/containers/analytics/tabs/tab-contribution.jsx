@@ -11,6 +11,8 @@ import * as filterActionCreators from '../../../redux/modules/filters'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { buildAnalyticsOptsForContribution, changedParamsFiltersQS, userIsCloudProvider } from '../../../util/helpers.js'
 import { getById as getActiveAccount } from '../../../redux/modules/entities/accounts/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
+
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
@@ -180,7 +182,7 @@ function mapStateToProps(state, ownProps) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     filterOptions: state.filters.get('filterOptions')
   }
 }

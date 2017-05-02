@@ -9,6 +9,7 @@ import PROVIDER_TYPES from '../../../constants/provider-types.js'
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
+import { getCurrentUser } from '../../../redux/modules/user'
 import { buildAnalyticsOpts, changedParamsFiltersQS } from '../../../util/helpers.js'
 import { userHasRole } from '../../../util/helpers'
 
@@ -106,7 +107,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     fetching: state.traffic.get('fetching'),
     filters: state.filters.get('filters'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),

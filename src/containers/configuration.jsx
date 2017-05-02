@@ -18,12 +18,12 @@ import * as uiActionCreators from '../redux/modules/ui'
 import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
-import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+import { getCurrentUser } from '../redux/modules/user'
 
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
-import checkPermissions, { getStoragePermissions } from '../util/permissions'
+import { checkUserPermissions, getStoragePermissions } from '../util/permissions'
 import { hasService, formatMoment } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
@@ -107,11 +107,11 @@ export class Configuration extends React.Component {
   }
 
   isReadOnly() {
-    return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_PROPERTY)
+    return !checkUserPermissions(this.props.currentUser, MODIFY_PROPERTY)
   }
 
   isAdvancedTabReadOnly() {
-    return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_ADVANCED)
+    return !checkUserPermissions(this.props.currentUser, MODIFY_ADVANCED)
   }
 
   hasSecurityServicePermission() {
@@ -508,7 +508,6 @@ Configuration.propTypes = {
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),
@@ -527,21 +526,19 @@ function mapStateToProps(state, ownProps) {
   const activeGroup = getGroupById(state, ownProps.params.group) || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
-  const roles = getRoles(state)
-  const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const storagePermission = getStoragePermissions(getCurrentUser(state))
   const isGTMFormDirty = isDirty('gtmForm')
   const isAdvancedFormDirty = isDirty('advancedForm')
 
   return {
     activeHost: state.host.get('activeHost'),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     storages: getByGroup(state, activeGroup.get('id')),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),
     policyActiveMatch: state.ui.get('policyActiveMatch'),
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
-    roles: roles,
     groupHasStorageService,
     groupHasGTMService,
     storagePermission,

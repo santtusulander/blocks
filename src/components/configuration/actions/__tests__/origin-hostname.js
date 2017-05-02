@@ -1,6 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
+jest.unmock('../../../shared/page-elements/input-connector')
 jest.unmock('../origin-hostname.jsx')
 import OriginHostname from '../origin-hostname.jsx'
 

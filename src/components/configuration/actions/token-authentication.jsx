@@ -139,8 +139,7 @@ export class TokenAuth extends React.Component {
       className: 'token-auth-sample-dialog',
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
       children: this.renderSampleOutputDialogChildren(this.props.tokenValues),
-      okButton: true,
-      cancelButton: true,
+      closeButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog()
       // UDNP-3305 this part should be uncommented whenever we have the sample codes
       // auxiliaryButton: {

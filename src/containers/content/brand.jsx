@@ -14,6 +14,7 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import * as accountActionCreators from '../../redux/modules/account'
 
@@ -30,7 +31,7 @@ import {
 import ContentItems from '../../components/content/content-items'
 
 import * as PERMISSIONS from '../../constants/permissions'
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 import PROVIDER_TYPES from '../../constants/provider-types'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
@@ -45,12 +46,12 @@ export class Brand extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    const { fetchData, metrics, accounts, dailyTraffic, roles, user } = this.props;
+    const { fetchData, metrics, accounts, dailyTraffic, currentUser } = this.props;
     fetchData(
       metrics,
       accounts,
       dailyTraffic,
-      checkPermissions(roles, user.get('currentUser'), PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+      checkUserPermissions(currentUser, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     )
   }
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
@@ -86,15 +87,13 @@ export class Brand extends React.Component {
       fetchingMetrics,
       metrics,
       params,
-      roles,
       sortDirection,
       sortValuePath,
       viewingChart,
-      user,
+      currentUser,
       uiActions } = this.props
 
     // Only UDN admins can see list of all accounts
-    const currentUser = user.get('currentUser')
     const showAccountList = activeAccount && activeAccount.isEmpty() && userIsCloudProvider(currentUser)
     const contentItems = showAccountList
                       ? accounts
@@ -116,8 +115,7 @@ export class Brand extends React.Component {
     const analyticsURLBuilder = (...account) => {
       return getAnalyticsUrlFromParams(
         {...this.props.params, account},
-        user.get('currentUser'),
-        roles
+        currentUser
       )
     }
     return (
@@ -135,7 +133,7 @@ export class Brand extends React.Component {
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
-        isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
+        isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
@@ -145,7 +143,7 @@ export class Brand extends React.Component {
         sortValuePath={sortValuePath}
         toggleChartView={uiActions.toggleChartView}
         type={CONTENT_ITEMS_TYPES.ACCOUNT}
-        user={user}
+        user={currentUser}
         viewingChart={viewingChart}
         fetchItem={(id) => {
           /*eslint-disable no-console */
@@ -162,6 +160,7 @@ Brand.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   createAccount: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
@@ -170,12 +169,10 @@ Brand.propTypes = {
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
   updateAccount: PropTypes.func,
-  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 
@@ -184,8 +181,7 @@ Brand.defaultProps = {
   activeAccount: Map(),
   dailyTraffic: List(),
   metrics: List(),
-  roles: Map(),
-  user: Map()
+  currentUser: Map()
 }
 
 /* istanbul ignore next */
@@ -201,7 +197,7 @@ const mapStateToProps = (state, ownProps) => {
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),
-    user: state.user
+    currentUser: getCurrentUser(state)
   };
 }
 
