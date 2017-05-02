@@ -2,7 +2,8 @@
 import React, { PropTypes } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
-import { Field, FieldArray } from 'redux-form'
+import { connect } from 'react-redux'
+import { Field, FieldArray, formValueSelector } from 'redux-form'
 import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
@@ -21,8 +22,12 @@ const conditionOptions = [
   ['and', <FormattedMessage id="portal.configuration.condition.and" />]
 ]
 
-const validate = ({ name }) => {
-  return checkForErrors({ name })
+const validate = existingRuleNames => ({ name }) => {
+
+  const conditions = {
+    name: { condition: existingRuleNames.includes(name), errorText: 'Already in use' }
+  }
+  return checkForErrors({ name }, conditions)
 }
 
 /**
@@ -161,4 +166,19 @@ RuleForm.propTypes = {
   onSubmit: PropTypes.func
 }
 
-export default reduxForm({ form: 'traffic-rule-form', validate })(keyStrokeSupport(RuleForm))
+const stateToProps = (state, { initialValues = {} }) => {
+  const rules = formValueSelector('gtmForm')(state, 'rules') || []
+
+  const existingRuleNames = rules.reduce((aggregate, rule) => {
+    if (rule.name !== initialValues.name) {
+      aggregate.push(rule.name)
+    }
+    return aggregate
+  }, [])
+
+  return {
+    validate: validate(existingRuleNames)
+  }
+}
+
+export default connect(stateToProps)(reduxForm({ form: 'traffic-rule-form', validate })(keyStrokeSupport(RuleForm)))
