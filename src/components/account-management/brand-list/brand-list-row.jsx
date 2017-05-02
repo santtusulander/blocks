@@ -1,5 +1,4 @@
 import React from 'react'
-import moment from 'moment'
 
 import ActionButtons from '../../shared/action-buttons.jsx'
 import BrandlistUsedBy from './brand-list-used-by'
