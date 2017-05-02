@@ -77,6 +77,7 @@ FieldFormGroupAsnLookup.propTypes = {
   intl: PropTypes.object,
   multiple: PropTypes.bool,
   name: PropTypes.string,
+  validation: PropTypes.func,
   withoutLabel: PropTypes.bool
 }
 
