@@ -9,6 +9,8 @@ import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { getByAccount as getGroupByAccount } from '../../../redux/modules/entities/groups/selectors'
+
 import { parseResponseError } from '../../../redux/util'
 
 import ModalWindow from '../../../components/shared/modal'
@@ -173,7 +175,7 @@ function mapStateToProps(state, ownProps) {
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
-    groups: state.group.get('allGroups'),
+    groups: getGroupByAccount(state, ownProps.params.account),
     isFetching: state.security.get('fetching'),
     sslCertificates: state.security.get('sslCertificates').filter(cert =>
       ownProps.params.group && cert.get('group') === Number(ownProps.params.group)
