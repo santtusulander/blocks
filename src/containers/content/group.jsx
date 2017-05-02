@@ -18,8 +18,8 @@ import { getById as getGroupById } from '../../redux/modules/entities/groups/sel
 import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import { fetchMetrics as fetchStorageMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 
@@ -28,7 +28,7 @@ import ContentItems from '../../components/content/content-items'
 import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
-import checkPermissions, {getStoragePermissions} from '../../util/permissions'
+import { checkUserPermissions, getStoragePermissions } from '../../util/permissions'
 import { getAnalyticsUrlFromParams } from '../../util/routes'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
@@ -85,7 +85,7 @@ export class Group extends React.Component {
   render() {
     const params = this.props.params
     const { brand, account, group } = params
-    const { activeAccount, activeGroup, roles, user } = this.props
+    const { activeAccount, activeGroup, currentUser } = this.props
 
     const breadcrumbs = [
       {
@@ -97,7 +97,7 @@ export class Group extends React.Component {
       }
     ]
 
-    const storagePermission = getStoragePermissions(roles, user.get('currentUser'))
+    const storagePermission = getStoragePermissions(currentUser)
 
     return (
       <ContentItems
@@ -120,21 +120,20 @@ export class Group extends React.Component {
         ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
         // TODO: We need to use published_hosts permissions from the north API
         // instead of groups permissions, but they dont exist yet.
-        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
+        isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP)}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
         type={CONTENT_ITEMS_TYPES.PROPERTY}
-        user={this.props.user}
-        roles={this.props.roles}
+        user={currentUser}
         storagePermission={storagePermission}
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
         hideInfoDialog={this.props.uiActions.hideInfoDialog}
 
         showAnalyticsLink={true}
-        analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, user, roles)}
+        analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, currentUser)}
       />
     )
   }
@@ -145,6 +144,7 @@ Group.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
   createProperty: PropTypes.func,
+  currentUser: PropTypes.instanceOf(Map),
   deleteProperty: PropTypes.func,
   fetchGroupData: PropTypes.func,
   fetchMetricsData: PropTypes.func,
@@ -152,21 +152,18 @@ Group.propTypes = {
   fetchingMetrics: PropTypes.bool,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
-  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 Group.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
-  roles: Map(),
   sortValuePath: List(),
   storages: List(),
-  user: Map()
+  currentUser: Map()
 }
 
 /* istanbul ignore next */
@@ -174,11 +171,11 @@ const mapStateToProps = (state, { params: { account, group } }) => {
   return {
     activeAccount: getAccountById(state, account),
     activeGroup: getGroupById(state, group),
+    currentUser: getCurrentUser(state),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group),
     storages: getStoragesByGroup(state, group),
-    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

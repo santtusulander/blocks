@@ -129,6 +129,8 @@ permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'create', 'allowed'])
 permissionMapping[PERMISSIONS.MODIFY_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_USER] =
+  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed'])
 
 // Users Roles
 permissionMapping[PERMISSIONS.MODIFY_ROLE] =
@@ -263,55 +265,55 @@ permissionMapping[PERMISSIONS.VIEW_FOOTPRINT] =
   (role) => role.getIn([ 'north', 'footprints', 'show', 'allowed'])
 
 
-export const getLocationPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_LOCATION),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_LOCATION),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_LOCATION),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_LOCATION)
+export const getLocationPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_LOCATION),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_LOCATION),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_LOCATION),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_LOCATION)
 })
 
-export const getNetworkPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NETWORK),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NETWORK),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NETWORK),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NETWORK)
+export const getNetworkPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_NETWORK),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_NETWORK),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_NETWORK),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_NETWORK)
 })
 
-export const getPOPPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POP),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POP),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POP),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POP)
+export const getPOPPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_POP),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_POP),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_POP),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_POP)
 })
 
-export const getPODPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POD),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POD),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POD),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POD)
+export const getPODPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_POD),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_POD),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_POD),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_POD)
 })
 
-export const getFootprintsPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_FOOTPRINT),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_FOOTPRINT),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_FOOTPRINT),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_FOOTPRINT)
+export const getFootprintsPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_FOOTPRINT),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_FOOTPRINT),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_FOOTPRINT),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_FOOTPRINT)
 })
 
-export const getNODEPermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NODE),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NODE),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NODE),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NODE)
+export const getNODEPermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_NODE),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_NODE),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_NODE),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_NODE)
 })
 
-export const getStoragePermissions = (roles, user) => ({
-  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_STORAGE),
-  viewAnalyticAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
-  listAllowed: checkPermissions(roles, user, PERMISSIONS.LIST_STORAGE),
-  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_STORAGE),
-  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_STORAGE),
-  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_STORAGE)
+export const getStoragePermissions = (user) => ({
+  viewAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_STORAGE),
+  viewAnalyticAllowed: checkUserPermissions(user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
+  listAllowed: checkUserPermissions(user, PERMISSIONS.LIST_STORAGE),
+  createAllowed: checkUserPermissions(user, PERMISSIONS.CREATE_STORAGE),
+  deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_STORAGE),
+  modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_STORAGE)
 })
 
 /**
@@ -322,38 +324,29 @@ export const getStoragePermissions = (roles, user) => ({
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-  const userRoles = user && user.size > 0 && user.get('roles')
-  if (!userRoles) {
+  /*eslint-disable no-console */
+  console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
+  /*eslint-enble no-console */
+
+  return checkUserPermissions(user, permission)
+}
+
+/**
+ * checkUserPermissons check if user has permission
+ * @param  {Map} user currentUser (merged with permissions - Map (usually from redux - currentUserPermissions))
+ * @param  {String} permissionToCheck
+ * @return {Boolean}
+ */
+export const checkUserPermissions = (user, permissionToCheck) => {
+  const userPermissions = user && user.get('permissions')
+  const userRoles = user && user.get('roles')
+
+  if (!(userPermissions && userRoles)) {
     return false
   }
 
   return userRoles.some(roleId => {
-
-    const role = roles && roles.get(String(roleId))
-    if (role) {
-      return permissionMapping[permission](role, roleId)
-    }
-
-    return false
+    return permissionMapping[permissionToCheck](userPermissions, roleId)
   })
-}
-
-/**
- * checkUserPermissons
- * @param  {[type]} user              [description]
- * @param  {[type]} userPermissions   [description]
- * @param  {[type]} permissionToCheck [description]
- * @return {[type]}                   [description]
- */
-export const checkUserPermission = (user, userPermissions, permissionToCheck) => {
-  const userRoles = user && user.size > 0 && user.get('roles')
-  if (!userRoles || !userPermissions) {
-    return false
-  }
-
-  //get first roleId
-  const [roleId] = userRoles
-
-  return !!permissionMapping[permissionToCheck](userPermissions, roleId)
 
 }

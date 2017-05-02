@@ -1,23 +1,20 @@
 import React from 'react'
 import classNames from 'classnames'
 
-class SupportToolPanel extends React.Component {
-  render() {
-    const {active, body, className, icon, onClick, title} = this.props
-    return (
-      <div
-        className={classNames(
-          'support-tool-panel text-center',
-          {'active': active},
-          className
-        )}
-        onClick={onClick}>
-        {icon}
-        <h2>{title}</h2>
-        <p>{body}</p>
-      </div>
-    )
-  }
+const SupportToolPanel = ({ active, body, className, icon, onClick, title }) => {
+  return (
+    <div
+      className={classNames(
+        'support-tool-panel text-center',
+        {'active': active},
+        className
+      )}
+      onClick={onClick}>
+      {icon}
+      <h2>{title}</h2>
+      <p>{body}</p>
+    </div>
+  )
 }
 
 SupportToolPanel.displayName = 'SupportToolPanel'

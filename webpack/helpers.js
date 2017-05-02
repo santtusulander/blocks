@@ -35,6 +35,12 @@ module.exports = {
       favicon: 'src/assets/icons/favicon.ico',
       filename: 'downtime_scheduled.html'
     }),
+    new HtmlWebpackPlugin({
+      inject: false,
+      template: 'src/500.html',
+      favicon: 'src/assets/icons/favicon.ico',
+      filename: '500.html'
+    }),
     new CopyWebpackPlugin([
       {from: 'src/assets/iata-codes.json', to: 'assets/iata-codes'},
       {from: 'src/assets/img/logo-udn-dark.png', to: 'assets/img'},

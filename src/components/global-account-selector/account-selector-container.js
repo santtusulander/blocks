@@ -5,8 +5,9 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
+import { getCurrentUser } from '../../redux/modules/user'
 
 import { getGroups, getBrands, getAccounts, getGroupForPropertyConfig } from './menu-selectors'
 
@@ -16,7 +17,7 @@ import {
   VIEW_CONTENT_PROPERTIES,
   LIST_STORAGE } from '../../constants/permissions'
 
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 
 import DrillableMenu from '../drillable-menu/menu'
 
@@ -29,7 +30,7 @@ import DrillableMenu from '../drillable-menu/menu'
  * @param  {[type]}  permission  permission to check against
  * @return Boolean
  */
-const permissionCheck = (levels, user, roles) => permission => {
+const permissionCheck = (levels, user) => permission => {
   let hasLevel = false
 
   switch (permission) {
@@ -48,7 +49,7 @@ const permissionCheck = (levels, user, roles) => permission => {
       break
   }
 
-  return hasLevel && checkPermissions(roles, user, permission)
+  return hasLevel && checkUserPermissions(user, permission)
 }
 
 /**
@@ -62,9 +63,9 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
   return {
     dispatch,
-    fetchData: (user, roles) => {
+    fetchData: (user) => {
 
-      const shouldFetch = permissionCheck(levels, user, roles)
+      const shouldFetch = permissionCheck(levels, user)
 
       return Promise.all([
 
@@ -92,7 +93,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   */
 const accountSelectorStateToProps = (state, { params: { storage, property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
-  const canView = permissionCheck(levels, state.user.get('currentUser'), getRoles(state))
+  const canView = permissionCheck(levels, getCurrentUser(state))
 
   const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
   const canViewAccount = canView(VIEW_CONTENT_GROUPS)
@@ -141,8 +142,8 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
 
   return {
     dispatch,
-    fetchData: (user, roles) => {
-      const shouldFetch = permissionCheck([ 'group' ], user, roles)
+    fetchData: (user) => {
+      const shouldFetch = permissionCheck([ 'group' ], user)
 
       return Promise.all([
         shouldFetch(VIEW_CONTENT_GROUPS) && dispatch(groupActions.fetchOne(params)),
@@ -160,7 +161,7 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
  */
 const propertyConfigStateToProps = (state, { params }) => {
 
-  const canView = permissionCheck([ 'group' ], state.user.get('currentUser'), getRoles(state))
+  const canView = permissionCheck([ 'group' ], getCurrentUser(state))
 
   const tree = []
 

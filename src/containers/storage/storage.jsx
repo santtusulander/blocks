@@ -24,6 +24,7 @@ import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actio
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 import { buildReduxId, parseResponseError } from '../../redux/util'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
 
@@ -341,7 +342,7 @@ const mapStateToProps = (state, ownProps) => {
     accountManagementModal: state.ui.get('accountManagementModal'),
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     storageAccessToken: state.user.get('storageAccessToken'),
     filters,
     group: state.group.get('activeGroup'),

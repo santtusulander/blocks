@@ -2,12 +2,13 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY, GTM_SERVICE_ID } from '../constants/service-permissions'
-import checkPermissions from './permissions'
+import { checkUserPermissions } from './permissions'
 import { getById as getAccountById } from '../redux/modules/entities/accounts/selectors'
 
-import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
+import { getCurrentUser } from '../redux/modules/user'
+
 import { getServicePermissions } from '../util/services-helpers'
 
 import {
@@ -20,26 +21,24 @@ import {
  } from '../util/helpers'
 
 const authSelector = (state, props) => {
-  const user = state.user.get('currentUser')
+  const user = getCurrentUser(state)
   return {
     user,
     userHasActiveAccount: !props.params.account || Number(props.params.account) === user.get('account_id')
   }
 }
 
-const permissionChecker = (permission, store) => ({ user, userHasActiveAccount }) => {
+const permissionChecker = permission => ({ user, userHasActiveAccount }) => {
   if (!permission) {
     return true
   }
 
-  const roles = getRoles(store.getState())
+  if (checkUserPermissions(user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)) {
 
-  if (checkPermissions(roles, user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)) {
-
-    return checkPermissions(roles, user, permission)
+    return checkUserPermissions(user, permission)
 
   } else {
-    return userHasActiveAccount && checkPermissions(roles, user, permission)
+    return userHasActiveAccount && checkUserPermissions(user, permission)
   }
 }
 
@@ -63,7 +62,7 @@ export const UserCanListAccounts = store => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
-      const currentUser = state.user.get('currentUser')
+      const currentUser = getCurrentUser(state)
       const path = ownProps.location.pathname.replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
     },
@@ -77,7 +76,7 @@ export const UserCanManageAccounts = store => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
-      const currentUser = state.user.get('currentUser')
+      const currentUser = getCurrentUser(state)
       const path = ownProps.location.pathname.replace(/\/accounts$/, '')
         .replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
@@ -92,7 +91,7 @@ export const UserCanTicketAccounts = store => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
-      const currentUser = state.user.get('currentUser')
+      const currentUser = getCurrentUser(state)
       const path = ownProps.location.pathname.replace(/\/tickets$/, '')
         .replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
@@ -108,9 +107,8 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const fallback = allTabs.find(([perm]) => {
-        return checkPermissions(
-          getRoles(state),
-          state.user.get('currentUser'),
+        return checkUserPermissions(
+          getCurrentUser(state),
           perm
         )
       })

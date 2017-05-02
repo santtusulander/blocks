@@ -47,6 +47,7 @@ const loginAxios = axios.create()
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
+  currentUserPermissions: Map(),
   fetching: false,
   loggedIn: false,
   username: null,
@@ -192,7 +193,7 @@ export function userTokenChecked(state, action) {
 
     //Set keys toLowerCase to provide compability with the old permissionMapping
     const compatPermissions = Object.keys(action.payload.currentUserPermissions).reduce((acc, val) => {
-      acc[val.toLowerCase()] = action.payload.currentUserPermissions[val]
+      acc[val.toLowerCase()] = action.payload.currentUserPermissions[val].permissions.resources
 
       return acc;
     }, {})
@@ -560,4 +561,15 @@ export const isUdnAdmin = (state) => {
   }
 
   return false
+}
+
+
+
+//Selector for user
+
+export const getCurrentUser = (state) => {
+  const currentUser = state.user.get('currentUser')
+  const currentUserPermissions = state.user.get('currentUserPermissions')
+
+  return currentUser.merge({permissions: currentUserPermissions})
 }

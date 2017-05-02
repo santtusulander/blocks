@@ -13,6 +13,7 @@ import { parseResponseError } from '../../../redux/util'
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
@@ -316,7 +317,7 @@ NetworkLocationFormContainer.propTypes = {
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const selector = formValueSelector('networkLocationForm')
   let values = {}

@@ -1,26 +1,16 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import { FormattedMessage } from 'react-intl';
-import { bindActionCreators } from 'redux'
 import { Checkbox } from 'react-bootstrap'
 
-import * as uiActionCreators from '../../../redux/modules/ui'
-
-
-class FilterIncludeComparison extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <Checkbox
-        className="comparison-filter"
-        checked={this.props.includeComparison}
-        onChange={() => this.props.toggleComparison(!this.props.includeComparison)}>
-        <FormattedMessage id="portal.analysis.filters.includeComparison.label" />
-      </Checkbox>
-    );
-  }
+const FilterIncludeComparison = (props) => {
+  return (
+    <Checkbox
+      className="comparison-filter"
+      checked={props.includeComparison}
+      onChange={() => props.toggleComparison(!props.includeComparison)}>
+      <FormattedMessage id="portal.analysis.filters.includeComparison.label" />
+    </Checkbox>
+  )
 }
 
 FilterIncludeComparison.displayName = 'FilterIncludeComparison'
@@ -29,9 +19,4 @@ FilterIncludeComparison.propTypes = {
   toggleComparison: React.PropTypes.func
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
-  }
-}
-export default connect(null, mapDispatchToProps)(FilterIncludeComparison)
+export default FilterIncludeComparison
