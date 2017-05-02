@@ -108,12 +108,14 @@ const stateToProps = (state) => {
   }))
 
   const checkIfExists = (value, allCidrs = [], initialValues) => {
-    const initialValuesHasValue = initialValues.ipv4_cidr_prefix.some(({ label }) => label === value.label)
+    
+    const isInInitialValues = initialValues.ipv4_cidr_prefix.some(({ label }) => label === value.label)
     allCidrs = allCidrs.map(cidrValue => cidrValue.label)
     let occurrencesInForm = 0
+
     //Check if any of the existing rules contain this value
     for (const existing of existingValues) {
-      if (!initialValuesHasValue && existing === value.label) {
+      if (!isInInitialValues && existing === value.label) {
         return true
       }
     }

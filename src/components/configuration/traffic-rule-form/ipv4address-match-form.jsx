@@ -106,13 +106,14 @@ const stateToProps = (state) => {
   }))
 
   const checkIfExists = (value, allAddresses = [], initialValues) => {
-    
-    const initialValuesHasValue = initialValues.ipv4_address.some(({ label }) => label === value.label)
+
+    const isInInitialValues = initialValues.ipv4_address.some(({ label }) => label === value.label)
     allAddresses = allAddresses.map(ipv4Value => ipv4Value.label)
     let occurrencesInForm = 0
+    
     //Check if any of the existing rules contain this value
     for (const existing of existingValues) {
-      if (!initialValuesHasValue && existing === value.label) {
+      if (!isInInitialValues && existing === value.label) {
         return true
       }
     }

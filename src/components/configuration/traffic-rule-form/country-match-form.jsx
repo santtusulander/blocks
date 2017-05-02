@@ -72,6 +72,7 @@ const stateToProps = (state, { initialValues }) => {
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingOptions = []
 
+  //create an array of all existing country matches
   rules.forEach((rule => {
 
     rule.matchArray.forEach(match => {
@@ -84,10 +85,11 @@ const stateToProps = (state, { initialValues }) => {
     })
   }))
 
+  //create available country options, excluding those that already exist.
   const countryOptions = countriesList.reduce((options, { id, label }) => {
 
-    const initialValuesHasValue = initialValues.country.some((initialCountry) => initialCountry.id === id)
-    if (!existingOptions.includes(id) || initialValuesHasValue) {
+    const isInInitialValues = initialValues.country.some((initialCountry) => initialCountry.id === id)
+    if (!existingOptions.includes(id) || isInInitialValues) {
 
       options.push({ id, label })
     }

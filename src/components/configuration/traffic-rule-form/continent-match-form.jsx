@@ -71,6 +71,7 @@ const stateToProps = (state, { intl, initialValues }) => {
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingOptions = []
 
+  //create an array of all existing conntinent matches
   rules.forEach((rule => {
 
     rule.matchArray.forEach(match => {
@@ -83,10 +84,11 @@ const stateToProps = (state, { intl, initialValues }) => {
     })
   }))
 
+  //create available continent options, excluding those that already exist.
   const continentOptions = continentsList.reduce((options, continent) => {
 
-    const initialValuesHasValue = initialValues.continent.some(({ id }) => id === continent.id)
-    if (!existingOptions.includes(continent.id) || initialValuesHasValue) {
+    const isInInitialValues = initialValues.continent.some(({ id }) => id === continent.id)
+    if (!existingOptions.includes(continent.id) || isInInitialValues) {
 
       options.push({
         id: continent.id,

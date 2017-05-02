@@ -79,10 +79,10 @@ const stateToProps = (state) => {
 
   const checkIfExists = (value, initialValues) => {
 
-    const initialValuesHasValue = initialValues.asn.some(({ id }) => Number(id) === value.id)
+    const isInInitialValues = initialValues.asn.some(({ id }) => Number(id) === value.id)
     //Check if any of the existing rules contain this value
     for (const existing of existingValues) {
-      if (!initialValuesHasValue && existing === value.id) {
+      if (!isInInitialValues && existing === value.id) {
         return true
       }
     }
