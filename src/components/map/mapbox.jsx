@@ -2,7 +2,6 @@ import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
-
 // import Typeahead from '../shared/form-elements/typeahead'
 
 import {
@@ -41,7 +40,6 @@ class Mapbox extends React.Component {
 
     this.onPageScroll = this.onPageScroll.bind(this)
     this.onZoom = this.onZoom.bind(this)
-    this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
     this.onStyleLoaded = this.onStyleLoaded.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
