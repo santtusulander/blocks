@@ -40,6 +40,12 @@ class Mapbox extends React.Component {
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
+    this.onZoom = this.onZoom.bind(this)
+    this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
+    this.onStyleLoaded = this.onStyleLoaded.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
+    this.resetZoom = this.resetZoom.bind(this)
   }
 
   componentDidMount() {
@@ -648,11 +654,11 @@ class Mapbox extends React.Component {
         zoom={[this.state.zoom]}
         minZoom={MAPBOX_ZOOM_MIN}
         maxZoom={MAPBOX_ZOOM_MAX}
-        onZoom={this.onZoom.bind(this)}
-        onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
-        onStyleLoad={this.onStyleLoaded.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}
-        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
+        onZoom={this.onZoom}
+        onZoomEnd={this.getCitiesOnZoomDrag}
+        onStyleLoad={this.onStyleLoaded}
+        onMouseMove={this.onMouseMove}
+        onDragEnd={this.getCitiesOnZoomDrag}
         dragRotate={false}>
 
         {/*
@@ -710,7 +716,7 @@ class Mapbox extends React.Component {
               }}/>
             <div
               className="map-zoom-reset"
-              onClick={this.resetZoom.bind(this)}>
+              onClick={this.resetZoom}>
               <IconGlobe width={32} height={32} />
             </div>
             {isFetchingCityData && <LoadingSpinnerSmall />}
