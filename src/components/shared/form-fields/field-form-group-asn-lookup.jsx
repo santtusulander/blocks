@@ -56,6 +56,7 @@ class FieldFormGroupAsnLookup extends Component {
         className='asn-lookup'
         asyncMode={true}
         useCache={false}
+        validation={this.props.validation}
         component={FieldFormGroupTypeahead}
         multiple={this.props.multiple}
         minLength={ASN_STARTING_SEARCH_COUNT}
