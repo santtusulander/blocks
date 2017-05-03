@@ -387,7 +387,7 @@ export class AccountManagementAccountUsers extends Component {
 
     const paginationProps = {
       activePage: parseInt(this.props.location.query.page)|| 1,
-      items: Math.floor(totalCount / PAGE_SIZE),
+      items: Math.ceil(totalCount / PAGE_SIZE),
       onSelect: this.onActivePageChange,
       maxButtons: MAX_PAGINATION_ITEMS,
       boundaryLinks: true,
