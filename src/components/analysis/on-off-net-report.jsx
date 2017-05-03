@@ -34,6 +34,7 @@ class AnalysisOnOffNetReport extends React.Component {
 
     this.measureContainersTimeout = null
   }
+
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
@@ -42,15 +43,18 @@ class AnalysisOnOffNetReport extends React.Component {
     }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
     clearTimeout(this.measureContainersTimeout)
   }
+
   measureContainers() {
     this.setState({
       stacksWidth: this.refs.stacksHolder && this.refs.stacksHolder.clientWidth
     })
   }
+
   changeSort(column, direction, sortFunc) {
     this.setState({
       sortBy: column,
@@ -58,6 +62,7 @@ class AnalysisOnOffNetReport extends React.Component {
       sortFunc: sortFunc
     })
   }
+
   sortedData(data, sortBy, sortDir) {
     let sortFunc = ''
     if (this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
@@ -96,12 +101,13 @@ class AnalysisOnOffNetReport extends React.Component {
     }
     return sortFunc
   }
+
   render() {
     const stats = this.props.onOffStats
     const statsToday = this.props.onOffStatsToday
 
     let chart = null
-    const details = stats.get('detail')
+    const details = stats && stats.get('detail')
 
     const onNet = details && details.map(datapoint => {
       return {
