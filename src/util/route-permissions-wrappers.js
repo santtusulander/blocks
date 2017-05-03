@@ -20,11 +20,11 @@ import {
   accountIsCloudProviderType
  } from '../util/helpers'
 
-const authSelector = (state, props) => {
+const authSelector = (state, { params }) => {
   const user = getCurrentUser(state)
   return {
     user,
-    userHasActiveAccount: !props.params.account || Number(props.params.account) === user.get('account_id')
+    userHasActiveAccount: !params.account || Number(params.account) === user.get('account_id')
   }
 }
 
@@ -50,30 +50,30 @@ const servicePermissionChecker = (permission) => permissions => {
   return permissions.contains(permission)
 }
 
-export const UserHasPermission = (permission, store) => UserAuthWrapper({
+export const UserHasPermission = (permission) => UserAuthWrapper({
   authSelector: authSelector,
   failureRedirectPath: '/',
   wrapperDisplayName: 'UserHasPermission',
-  predicate: permissionChecker(permission, store),
+  predicate: permissionChecker(permission),
   allowRedirectBack: false
 })(props => props.children)
 
-export const UserCanListAccounts = store => {
-  return UserAuthWrapper({
+export const UserCanListAccounts =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
+      console.log('assddsadsasdads');
       const currentUser = getCurrentUser(state)
       const path = ownProps.location.pathname.replace(/\/$/, '')
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanListAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
-}
 
-export const UserCanManageAccounts = store => {
-  return UserAuthWrapper({
+export const UserCanManageAccounts =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const currentUser = getCurrentUser(state)
@@ -82,13 +82,12 @@ export const UserCanManageAccounts = store => {
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanManageAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
-}
 
-export const UserCanTicketAccounts = store => {
-  return UserAuthWrapper({
+export const UserCanTicketAccounts =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const currentUser = getCurrentUser(state)
@@ -97,12 +96,11 @@ export const UserCanTicketAccounts = store => {
       return `${path}/${currentUser.get('account_id')}`
     },
     wrapperDisplayName: 'UserCanTicketAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
-}
 
-export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
+export const UserCanViewAnalyticsTab = (permission, allTabs) => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
@@ -122,13 +120,13 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
       }
     },
     wrapperDisplayName: 'UserCanViewAnalyticsTab',
-    predicate: permissionChecker(permission, store),
+    predicate: permissionChecker(permission),
     allowRedirectBack: false
   })
 }
 
-export const UserCanViewDns = (store) => {
-  return UserAuthWrapper({
+export const UserCanViewDns =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/dns/, 'accounts')
@@ -136,39 +134,37 @@ export const UserCanViewDns = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'UserCanViewDns',
-    predicate: permissionChecker(PERMISSIONS.VIEW_DNS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_DNS),
     allowRedirectBack: false
   })
-}
 
-export const UserCanViewHosts = (store) => {
-  return UserAuthWrapper({
+export const UserCanViewHosts =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/$/, '')
       return path.substr(0, path.lastIndexOf('/'))
     },
     wrapperDisplayName: 'UserCanViewHosts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_PROPERTIES, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_PROPERTIES),
     allowRedirectBack: false
   })
-}
 
-export const UserCanViewAccountDetail = (store) => {
-  return UserAuthWrapper({
+
+export const UserCanViewAccountDetail =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const pathname = ownProps.location.pathname
       return `${pathname}/groups`
     },
     wrapperDisplayName: 'UserCanViewAccountDetail',
-    predicate: permissionChecker(PERMISSIONS.VIEW_ACCOUNT_DETAIL, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_ACCOUNT_DETAIL),
     allowRedirectBack: false
   })
-}
 
-export const CanViewConfigurationSecurity = (store) => {
-  return UserAuthWrapper({
+export const CanViewConfigurationSecurity =
+  UserAuthWrapper({
     authSelector: (state, ownProps) => {
       const activeGroup = getGroupById(state, ownProps.params.group)
 
@@ -180,13 +176,12 @@ export const CanViewConfigurationSecurity = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'CanViewConfigurationSecurity',
-    predicate: servicePermissionChecker(MEDIA_DELIVERY_SECURITY, store),
+    predicate: servicePermissionChecker(MEDIA_DELIVERY_SECURITY),
     allowRedirectBack: false
   })
-}
 
-export const CanViewStorageSummary = (store) => {
-  return UserAuthWrapper({
+export const CanViewStorageSummary =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/storage\/\w+/, '')
@@ -194,13 +189,12 @@ export const CanViewStorageSummary = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'CanViewStorageSummary',
-    predicate: permissionChecker(PERMISSIONS.VIEW_STORAGE, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_STORAGE),
     allowRedirectBack: false
   })
-}
 
-export const CanViewStorageTab = (store) => {
-  return UserAuthWrapper({
+export const CanViewStorageTab =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/storage$/, '')
@@ -208,10 +202,9 @@ export const CanViewStorageTab = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'CanViewStorageTab',
-    predicate: permissionChecker(PERMISSIONS.LIST_STORAGE, store),
+    predicate: permissionChecker(PERMISSIONS.LIST_STORAGE),
     allowRedirectBack: false
   })
-}
 
 export const UserCanViewGTM = UserAuthWrapper({
   authSelector: (state, ownProps) => {
@@ -235,8 +228,8 @@ export const UserCanViewGTM = UserAuthWrapper({
   allowRedirectBack: false
 })
 
-export const UserCanViewAdvancedTab = (store) => {
-  return UserAuthWrapper({
+export const UserCanViewAdvancedTab =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/advanced$/, '')
@@ -244,33 +237,33 @@ export const UserCanViewAdvancedTab = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'CanViewAdvancedTab',
-    predicate: permissionChecker(PERMISSIONS.VIEW_ADVANCED, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_ADVANCED),
     allowRedirectBack: false
   })
-}
 
-export const AccountCanViewProperties = UserAuthWrapper({
-  authSelector: (state, ownProps) => {
-    const account =
-      getAccountById(state, ownProps.params.account)
-    return {
-      account,
-      accountId: ownProps.params.account
-    }
+export const AccountCanViewProperties =
+  UserAuthWrapper({
+    authSelector: (state, ownProps) => {
+      const account =
+        getAccountById(state, ownProps.params.account)
+      return {
+        account,
+        accountId: ownProps.params.account
+      }
 
-  },
-  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
-  wrapperDisplayName: 'AccountCanViewProperties',
-  predicate: ({account}) => {
-    if (!account) {
-      return true
-    } else {
-      return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
-    }
-  },
-  failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/properties/, 'i'), '')
-    return redirectPath
-  },
-  allowRedirectBack: false
-})
+    },
+    authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
+    wrapperDisplayName: 'AccountCanViewProperties',
+    predicate: ({account}) => {
+      if (!account) {
+        return true
+      } else {
+        return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
+      }
+    },
+    failureRedirectPath: (state, ownProps) => {
+      const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/properties/, 'i'), '')
+      return redirectPath
+    },
+    allowRedirectBack: false
+  })
