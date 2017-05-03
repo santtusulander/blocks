@@ -471,6 +471,7 @@
   "portal.policy.edit.matchesSelection.header.text": "Header",
   "portal.policy.edit.matchesSelection.cookie.text": "Cookie",
   "portal.policy.edit.matchesSelection.fileExtension.text": "File Extension",
+  "portal.policy.edit.matchesSelection.fileExtensions.text": "File Extensions",
   "portal.policy.edit.matchesSelection.fileName.text": "File Name",
   "portal.policy.edit.matchesSelection.fileType.text": "File Type",
   "portal.policy.edit.matchesSelection.responseCode.text": "Response Code",
