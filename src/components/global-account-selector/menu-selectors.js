@@ -162,6 +162,7 @@ export const getBrands = (state, canView) => {
     id: 'udn',
     name: 'UDN Admin',
     nodeInfo: {
+      entityType: 'brand',
       headerSubtitle,
       nodes
     }
