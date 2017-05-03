@@ -178,6 +178,7 @@ $search-input-left-padding: em(36px, $search-font-size);
       }
 
       .header-search-input {
+        float: none;
         width: 100%;
         padding: $search-input-vertical-padding $search-input-vertical-padding $search-input-vertical-padding $search-input-left-padding;
         font-size: rem($search-font-size);
