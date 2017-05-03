@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 
 import { List, Map } from 'immutable'
-import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -25,11 +24,10 @@ import {
 } from '../../../redux/modules/entities/locations/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
-
+import { getCurrentUser } from '../../../redux/modules/user'
 import { buildReduxId, parseResponseError } from '../../../redux/util'
 
-import checkPermissions from '../../../util/permissions'
+import {checkUserPermissions} from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 import SidePanel from '../../../components/shared/side-panel'
@@ -38,6 +36,7 @@ import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
+import { formatUnixTimestamp } from '../../../util/helpers'
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -182,8 +181,8 @@ class PopFormContainer extends Component {
 
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
-                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
+                                                    createdDate: formatUnixTimestamp(initialValues.createdDate, NETWORK_DATE_FORMAT),
+                                                    updatedDate: formatUnixTimestamp(initialValues.updatedDate, NETWORK_DATE_FORMAT)
                                                   }} />) : ''
 
     return (
@@ -260,8 +259,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
-  const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 
@@ -287,7 +285,7 @@ const mapStateToProps = (state, ownProps) => {
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_POP),
 
     initialValues: {
       id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,

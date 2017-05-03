@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 jest.unmock('../action-buttons.jsx')
 import ActionButtons from '../action-buttons.jsx'
 
-describe('UserList', () => {
+describe('ActionButtons', () => {
 
   it('should exist', () => {
     const links = shallow(<ActionButtons/>)

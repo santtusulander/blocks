@@ -437,7 +437,7 @@ class ContentItems extends React.Component {
     })
 
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
-    const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
+    const isCloudProvider = userIsCloudProvider(user)
     const toggleView = (type) => {
       return type ? this.props.toggleChartView : () => {/*no-op*/}
     }
@@ -608,7 +608,7 @@ class ContentItems extends React.Component {
             <EntityEdit
               type='account'
               entityToUpdate={this.state.itemToEdit}
-              currentUser={this.props.user.get('currentUser')}
+              currentUser={user}
               onCancel={this.hideModal}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
             />

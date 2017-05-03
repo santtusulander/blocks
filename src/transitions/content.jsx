@@ -1,27 +1,22 @@
 import React from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-export class ContentTransition extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <ReactCSSTransitionGroup
-        component="div"
-        className="content-transition"
-        transitionName="content-transition"
-        transitionEnterTimeout={400}
-        transitionLeaveTimeout={250}
-        transitionAppear={true}
-        transitionAppearTimeout={400}
-      >
-        {React.cloneElement(this.props.children, {
-          key: this.props.location.pathname
-        })}
-      </ReactCSSTransitionGroup>
-    )
-  }
+const ContentTransition = (props) => {
+  return (
+    <ReactCSSTransitionGroup
+      component="div"
+      className="content-transition"
+      transitionName="content-transition"
+      transitionEnterTimeout={400}
+      transitionLeaveTimeout={250}
+      transitionAppear={true}
+      transitionAppearTimeout={400}
+    >
+      {React.cloneElement(props.children, {
+        key: props.location.pathname
+      })}
+    </ReactCSSTransitionGroup>
+  )
 }
 
 ContentTransition.displayName = 'ContentTransition'
@@ -30,4 +25,4 @@ ContentTransition.propTypes = {
   location: React.PropTypes.object
 }
 
-module.exports = ContentTransition
+export default ContentTransition

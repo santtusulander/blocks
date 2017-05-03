@@ -19,7 +19,7 @@ import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 import { getDashboardUrl } from '../util/routes'
 
-import checkPermissions from '../util/permissions'
+import { checkUserPermissions } from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -38,6 +38,7 @@ import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+import { getCurrentUser } from '../redux/modules/user'
 
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
@@ -139,8 +140,8 @@ export class Dashboard extends React.Component {
          * @type {[Promise]}
          */
         const fetchStorageData =
-          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+          checkUserPermissions(this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+          checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
           accountIsContentProviderType(this.props.activeAccount) &&
 
           this.props.fetchGroups(params).then((response) => {
@@ -472,8 +473,7 @@ Dashboard.propTypes = {
 }
 
 Dashboard.contextTypes = {
-  currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(Map)
+  currentUser: PropTypes.instanceOf(Map)
 }
 
 Dashboard.defaultProps = {
@@ -492,7 +492,7 @@ const mapStateToProps = (state, { params: { account } }) => {
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
-    user: state.user.get('currentUser'),
+    user: getCurrentUser(state),
     theme: state.ui.get('theme'),
     mapBounds: state.mapbox.get('mapBounds'),
     cityData: state.traffic.get('byCity')

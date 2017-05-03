@@ -179,23 +179,20 @@ AddHost.propTypes = {
   ...reduxFormPropTypes
 }
 
-function mapStateToProps(state, ownProps) {
-  const enabledServices = ownProps.activeGroup.get('services') || Immutable.List()
-  let hasVODSupport = false
-  let hasMDSupport = false
+const mapStateToProps = (state, ownProps) => {
+  const enabledServices = ownProps.activeGroup && ownProps.activeGroup.get('services')
 
-  enabledServices.forEach((service) => {
-    const serviceId = service.get('service_id')
-    if (serviceId === VOD_STREAMING_SERVICE_ID) {
-      hasVODSupport = true
-    } else if (serviceId === MEDIA_DELIVERY_SERVICE_ID) {
-      hasMDSupport = true
-    }
+  const hasVODSupport = enabledServices && enabledServices.some((service) => {
+    return service.get('service_id') === VOD_STREAMING_SERVICE_ID
+  })
+
+  const hasMDSupport = enabledServices && enabledServices.some((service) => {
+    return service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID
   })
 
   return {
-    hasVODSupport: hasVODSupport,
-    hasMDSupport: hasMDSupport
+    hasVODSupport,
+    hasMDSupport
   };
 }
 

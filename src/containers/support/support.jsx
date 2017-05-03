@@ -5,6 +5,7 @@ import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/shared/layout/page-container'
@@ -98,7 +99,7 @@ Support.defaultProps = {
 function mapStateToProps(state, ownProps) {
   return {
     activeAccount: getAccountById(state, ownProps.params.account),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 

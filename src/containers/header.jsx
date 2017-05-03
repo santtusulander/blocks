@@ -35,7 +35,6 @@ class Header extends React.Component {
       activeGroup,
       fetching,
       pathname,
-      roles,
       router,
       user,
       params
@@ -58,7 +57,6 @@ class Header extends React.Component {
               activeGroup={activeGroup}
               params={params}
               pathname={pathname}
-              roles={roles}
               router={router}
               user={user}
             />
@@ -99,7 +97,6 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
-  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object,
   theme: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map)

@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import moment from 'moment'
 
 import {
   getAnalyticsUrl,
@@ -36,6 +35,7 @@ import {
 } from '../../constants/network'
 
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
 import * as PERMISSIONS from '../../constants/permissions'
 
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -61,9 +61,8 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
-
 import { buildReduxId, parseResponseError } from '../../redux/util'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import Content from '../../components/shared/layout/content'
 import PageContainer from '../../components/shared/layout/page-container'
@@ -81,7 +80,7 @@ import EditNodeContainer from './modals/edit-node-modal'
 import EntityEdit from '../../components/account-management/entity-edit'
 
 import { sortByKey } from '../../util/helpers'
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 
 class Network extends React.Component {
   constructor(props) {
@@ -653,8 +652,7 @@ class Network extends React.Component {
       pops,
       pods,
       nodes,
-      currentUser,
-      roles
+      currentUser
     } = this.props
 
     let deleteModalProps = null
@@ -710,7 +708,7 @@ class Network extends React.Component {
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
+              isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
             />
 
             <EntityList
@@ -741,7 +739,7 @@ class Network extends React.Component {
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
               creationPermission={PERMISSIONS.CREATE_GROUP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.VIEW_GROUP)}
+              isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.VIEW_GROUP)}
             />
 
             <EntityList
@@ -951,7 +949,6 @@ Network.propTypes = {
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
@@ -985,8 +982,7 @@ const mapStateToProps = (state, ownProps) => {
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
-    roles: getRoles(state),
-    currentUser: state.user.get('currentUser')
+    currentUser: getCurrentUser(state)
   };
 }
 
@@ -998,8 +994,8 @@ function mapDispatchToProps(dispatch, ownProps) {
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
-    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('day').format('X')
+    startDate: startOfLast28().format('X'),
+    endDate: endOfThisDay().format('X')
   }
   const accountMetricsOpts = Object.assign({
     list_children: false

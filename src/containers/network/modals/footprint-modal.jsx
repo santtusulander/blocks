@@ -12,6 +12,7 @@ import { parseResponseError } from '../../../redux/util'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
@@ -211,7 +212,7 @@ const mapStateToProps = (state, ownProps) => {
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
 
   const roles = getRoles(state)
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
 
   const defaultValues = {
     addFootprintMethod: 'manual',
