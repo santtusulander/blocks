@@ -4,7 +4,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
-
+import { formatDate } from '../../../util/helpers'
 import Tooltip from '../../shared/tooltips/tooltip'
 import Legend from './legend'
 import TimeAxisLabels from '../time-axis-labels'
@@ -22,7 +22,7 @@ const getExtent = (datasets, key) => {
 }
 
 const configureTooltip = (date, positionVal, height, width, formatY, xScale, yScale, actualVal, formatter) => {
-  const formattedDate = moment.utc(date).format('MMM D H:mm')
+  const formattedDate = formatDate(date, 'MMM D H:mm')
   const val = actualVal || 0
   const formattedValue = formatY(val)
   const text = formatter ?
@@ -100,7 +100,7 @@ class AnalysisByTime extends React.Component {
           const formatter = dataset.xAxisFormatter ?
             (date, val) => {
               const dateMap = Immutable.fromJS({timestamp: date})
-              const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+              const formattedDate = formatDate(dataset.xAxisFormatter(dateMap), 'MMM D H:mm')
               const formattedValue = this.formatY(val)
               return `${formattedDate} ${formattedValue}`
             }
@@ -174,7 +174,7 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.dataSets.some(dataset => dataset.label) ? 2 : 1)
       ]);
 
-    const xScale = d3.time.scale.utc()
+    const xScale = d3.time.scale()
       .domain([startDate, endDate])
       .range([
         this.props.padding * (this.props.axes ? 3 : 1),
@@ -182,7 +182,7 @@ class AnalysisByTime extends React.Component {
       ])
 
     if (!this.props.noXNice) {
-      xScale.nice(d3.time.day.utc, 1)
+      xScale.nice(d3.time.day, 1)
     }
 
     const trafficLine = d3.svg.line()
@@ -203,8 +203,8 @@ class AnalysisByTime extends React.Component {
     const slices = []
     if (this.props.sliceGranularity) {
       slices.push(startDate)
-      while (slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
-        slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
+      while (slices[0] < moment(endDate).startOf(this.props.sliceGranularity).toDate()) {
+        slices.unshift(moment(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
 
@@ -292,7 +292,7 @@ class AnalysisByTime extends React.Component {
           }
           {slices.map((slice, i) => {
             const startX = xScale(slice)
-            const endX = xScale(moment.utc(slice).endOf(this.props.sliceGranularity))
+            const endX = xScale(moment(slice).endOf(this.props.sliceGranularity))
             return (
               <polygon key={i} className="slice"
                 onClick={() => {

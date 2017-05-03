@@ -1,7 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
-import moment from 'moment'
 
 import { analyticsBase, qsBuilder, BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
 import {
@@ -9,7 +8,7 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
-import DateRanges from '../../constants/date-ranges'
+import DateRanges, { startOfThisMonth, endOfThisDay, startOfThisDay } from '../../constants/date-ranges'
 
 import {
   getAnalysisStatusCodes,
@@ -18,12 +17,12 @@ import {
 
 export const defaultFilters =  Immutable.fromJS({
   dateRange: {
-    startDate: moment().utc().startOf('month'),
-    endDate: moment().utc().endOf('day')
+    startDate: startOfThisMonth(),
+    endDate: endOfThisDay()
   },
   customDateRange: {
-    startDate: moment().utc().startOf('day'),
-    endDate: moment().utc().endOf('day')
+    startDate: startOfThisDay(),
+    endDate: endOfThisDay()
   },
   includeComparison: false,
   dateRangeLabel: DateRanges.MONTH_TO_DATE,

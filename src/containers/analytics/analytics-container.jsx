@@ -8,7 +8,7 @@ import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
-import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+import { getCurrentUser } from '../../redux/modules/user'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
 import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
@@ -19,7 +19,7 @@ import PageContainer from '../../components/shared/layout/page-container'
 import Content from '../../components/shared/layout/content'
 
 import { getTabName, userIsServiceProvider, accountIsServiceProviderType } from '../../util/helpers.js'
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
@@ -99,8 +99,8 @@ class AnalyticsContainer extends React.Component {
     const brandChanged = params.brand !== this.props.params.brand
     const accountChanged = params.account !== this.props.params.account
     const groupChanged = params.group !== this.props.params.group
-    if ((brandChanged || refresh) && checkPermissions(
-      this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+    if ((brandChanged || refresh) && checkUserPermissions(
+      this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
     }
@@ -233,7 +233,6 @@ AnalyticsContainer.propTypes = {
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   propertyActions: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.Map),
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 
@@ -249,8 +248,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
-    roles: getRoles(state),
-    user: state.user.get('currentUser')
+    user: getCurrentUser(state)
   }
 }
 

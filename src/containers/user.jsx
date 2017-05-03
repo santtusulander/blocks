@@ -11,6 +11,7 @@ import { parseResponseError } from '../redux/util'
 
 import roleNameActions from '../redux/modules/entities/role-names/actions'
 import { getById as getRoleNameById } from '../redux/modules/entities/role-names/selectors'
+import { getCurrentUser } from '../redux/modules/user'
 
 import PageContainer from '../components/shared/layout/page-container'
 import PageHeader from '../components/shared/layout/page-header'
@@ -125,7 +126,7 @@ User.defaultProps = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state) => {
-  const currentUser = state.user.get('currentUser')
+  const currentUser = getCurrentUser(state)
   const currentUserPrimaryRoleId = currentUser && currentUser.get('roles').first()
   const currentUserRoleName = currentUserPrimaryRoleId && getRoleNameById(state, currentUserPrimaryRoleId) ? getRoleNameById(state, currentUserPrimaryRoleId).get('name') : ''
 

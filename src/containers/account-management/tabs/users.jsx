@@ -28,6 +28,7 @@ import groupsActions from '../../../redux/modules/entities/groups/actions'
 //import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+import { getCurrentUser } from '../../../redux/modules/user'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
@@ -99,7 +100,7 @@ export class AccountManagementAccountUsers extends Component {
     const {sortBy, sortOrder, filterBy, filterValue} = location.query
     const page = location.query.page ? location.query.page : 1
 
-    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue})
+    this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     this.props.fetchRoleNames()
     this.props.fetchServiceTitle({id: 'UI'})
 
@@ -110,12 +111,11 @@ export class AccountManagementAccountUsers extends Component {
     const {brand, account} = nextProps.params
     const {page, sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
 
-    //if brand, account or sort has changed -> refetch
+    //if brand, account or pagination/sort has changed -> refetch
     if (brand !== this.props.params.brand
       || account !== this.props.params.account
       || paginationChanged(this.props.location, nextProps.location)) {
 
-      //TODO: UDNP-3513 Should reset pagination
       this.props.fetchUsers({brand, account, page, sortBy, sortOrder, filterBy, filterValue, forceReload: true})
     }
 
@@ -628,7 +628,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
-    currentUser: state.user.get('currentUser'),
+    currentUser: getCurrentUser(state),
     permissions: getAllPermissions(state),
     paginationMeta: getPaginationMeta(state, 'user'),
     permissionServiceTitles: permissionTitles ? permissionTitles.get('resources'): List()

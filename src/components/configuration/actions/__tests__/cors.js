@@ -1,6 +1,8 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 import TestUtils from 'react-addons-test-utils'
 
+jest.unmock('../../../shared/page-elements/input-connector')
 jest.unmock('../cors.jsx')
 import Cors from '../cors.jsx'
 
@@ -11,11 +13,16 @@ function intlMaker() {
 }
 
 describe('Cors', () => {
+  let subject = null
+
+  beforeEach(() => {
+    subject = () => {
+      return shallow(<Cors intl={intlMaker()} />)
+    }
+  })
+
   it('should exist', () => {
-    let cors = TestUtils.renderIntoDocument(
-      <Cors intl={intlMaker()} />
-    );
-    expect(TestUtils.isCompositeComponent(cors)).toBeTruthy();
+    expect(subject()).toBeTruthy();
   })
 
   it('should update the parameters as changes happen', () => {
