@@ -74,6 +74,19 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         background-color: rgba($black, 0.1);
       }
 
+      .active-node-link:hover {
+        cursor: pointer;
+
+        .light-theme & {
+          color: $black;
+        }
+
+        .dark-theme & {
+          color: $white;
+        }
+
+      }
+
       a {
         width: $back-caret-width;
         margin-right: -2px;
