@@ -90,12 +90,19 @@ export class DrillableMenu extends Component {
     if (nodeToView) {
 
       const { parentNodeId, labelKey = 'name', nodeInfo } = nodeToView
+
+      // If the current active entity within the Menu is not the same as in the app.
+      // i.e. the user has drilled to a different entity since the Menu mounted.
+      const activeNodeDirty = String(this.props.activeNode) !== String(this.state.activeNode)
+      const goToActive = () => this.props.onItemClick(nodeToView)
+
       return (
           <Dropdown.Menu>
             <DrillableMenuHeader
               fetching={this.props.fetching}
               parentId={parentNodeId}
               subtitle={nodeInfo.headerSubtitle}
+              goToActive={(this.props.alwaysActiveTitle || activeNodeDirty) && goToActive}
               goToParent={this.changeActiveNode}
               searchValue={this.state.search}
               onSearchChange={this.onSearchChange}
@@ -135,6 +142,7 @@ DrillableMenu.contextTypes = {
 }
 DrillableMenu.propTypes = {
   activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+  alwaysActiveTitle: PropTypes.bool,
   children: PropTypes.node,
   dispatch: PropTypes.func,
   fetchData: PropTypes.func,
