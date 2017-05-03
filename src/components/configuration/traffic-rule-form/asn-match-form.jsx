@@ -60,7 +60,8 @@ const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, i
   )
 }
 
-const stateToProps = (state) => {
+/* istanbul ignore next */
+const mapStateToProps = (state) => {
 
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingValues = []
@@ -108,4 +109,4 @@ ASNMatchForm.propTypes = {
 
 const Form = reduxForm({ form: 'asn-traffic-match', validate })(ASNMatchForm)
 Form.defaultProps = { initialValues: { asn: [] } }
-export default connect(stateToProps)(Form)
+export default connect(mapStateToProps)(Form)

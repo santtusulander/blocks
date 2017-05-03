@@ -90,7 +90,8 @@ IPv4CIDRMatchForm.propTypes = {
   ...propTypes
 }
 
-const stateToProps = (state) => {
+/* istanbul ignore next */
+const mapStateToProps = (state) => {
 
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingValues = []
@@ -108,7 +109,7 @@ const stateToProps = (state) => {
   }))
 
   const checkIfExists = (value, allCidrs = [], initialValues) => {
-    
+
     const isInInitialValues = initialValues.ipv4_cidr_prefix.some(({ label }) => label === value.label)
     allCidrs = allCidrs.map(cidrValue => cidrValue.label)
     let occurrencesInForm = 0
@@ -139,4 +140,4 @@ const stateToProps = (state) => {
 
 const Form = reduxForm({ form: 'ipv4_cidr_prefix-traffic-match' })(injectIntl(IPv4CIDRMatchForm))
 Form.defaultProps = { initialValues: { ipv4_cidr_prefix: [] } }
-export default connect(stateToProps)(Form)
+export default connect(mapStateToProps)(Form)

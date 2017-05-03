@@ -88,7 +88,8 @@ IPv4AddressMatchForm.propTypes = {
   ...propTypes
 }
 
-const stateToProps = (state) => {
+/* istanbul ignore next */
+const mapStateToProps = (state) => {
 
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingValues = []
@@ -110,7 +111,7 @@ const stateToProps = (state) => {
     const isInInitialValues = initialValues.ipv4_address.some(({ label }) => label === value.label)
     allAddresses = allAddresses.map(ipv4Value => ipv4Value.label)
     let occurrencesInForm = 0
-    
+
     //Check if any of the existing rules contain this value
     for (const existing of existingValues) {
       if (!isInInitialValues && existing === value.label) {
@@ -137,4 +138,4 @@ const stateToProps = (state) => {
 
 const Form = reduxForm({ form: 'ipv4_address-traffic-match' })(injectIntl(IPv4AddressMatchForm))
 Form.defaultProps = { initialValues: { ipv4_address: [] } }
-export default connect(stateToProps)(Form)
+export default connect(mapStateToProps)(Form)

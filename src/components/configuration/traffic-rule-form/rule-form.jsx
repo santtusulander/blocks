@@ -166,7 +166,8 @@ RuleForm.propTypes = {
   onSubmit: PropTypes.func
 }
 
-const stateToProps = (state, { initialValues = {} }) => {
+/* istanbul ignore next */
+const mapStateToProps = (state, { initialValues = {} }) => {
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
 
   const existingRuleNames = rules.reduce((aggregate, rule) => {
@@ -181,4 +182,4 @@ const stateToProps = (state, { initialValues = {} }) => {
   }
 }
 
-export default connect(stateToProps)(reduxForm({ form: 'traffic-rule-form', validate })(keyStrokeSupport(RuleForm)))
+export default connect(mapStateToProps)(reduxForm({ form: 'traffic-rule-form', validate })(keyStrokeSupport(RuleForm)))

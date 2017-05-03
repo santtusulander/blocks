@@ -66,8 +66,8 @@ CountryMatchForm.propTypes = {
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
-
-const stateToProps = (state, { initialValues }) => {
+/* istanbul ignore next */
+const mapStateToProps = (state, { initialValues }) => {
 
   const rules = formValueSelector('gtmForm')(state, 'rules') || []
   const existingOptions = []
@@ -102,6 +102,6 @@ const stateToProps = (state, { initialValues }) => {
   }
 }
 
-const Form = connect(stateToProps)(reduxForm({ form: 'country-traffic-match', validate })(injectIntl(CountryMatchForm)))
+const Form = connect(mapStateToProps)(reduxForm({ form: 'country-traffic-match', validate })(injectIntl(CountryMatchForm)))
 Form.defaultProps = { initialValues: { country: [] } }
 export default Form
