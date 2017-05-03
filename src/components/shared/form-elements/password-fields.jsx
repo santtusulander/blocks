@@ -241,8 +241,7 @@ export class PasswordFields extends Component {
     )
 
     const confirmationField = (
-      <FormGroup>
-        {confirmErrorTooltip}
+      <FormGroup className="has-login-label">
         <InputGroup className={confirmWrapperClassName}>
           {stackedPassword &&
             <InputGroup.Addon>
@@ -265,6 +264,7 @@ export class PasswordFields extends Component {
             </a>
           </InputGroup.Addon>
         </InputGroup>
+        {confirmErrorTooltip}
       </FormGroup>
     )
 
