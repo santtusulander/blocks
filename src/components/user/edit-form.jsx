@@ -277,11 +277,6 @@ class UserEditForm extends React.Component {
       continentOptions.push({ value: key, label: key })
     }
 
-
-    // timeZoneOptions = TIME_ZONES.find(item => {
-    //   return item.group === continent
-    // }).zones
-
     return (
       <form className="form-horizontal user-profile-edit-form" onSubmit={handleSubmit(this.onSubmit)}>
 
