@@ -18,10 +18,10 @@ export const WILDCARD_REGEXP = '.*';
 // NOTE: OK, so this RegExp is pretty nuts.
 // Basically, what it does is allow us to grab a list of file extensions from a
 // different RegExp string returned by the server.
-// An example input string: (.*)\\.(aif|aiff)
+// An example input string: (.*)\.(aif|aiff)
 // We need to get the aif|aiff part of that string.
 export const FILE_EXTENSION_REGEXP = /\(\.\*\)(?:\\)?\\\.\((.*)\)/
-export const FILE_EXTENSION_CASE_START = '(.*)\\\\.('
+export const FILE_EXTENSION_CASE_START = '(.*)\\.('
 export const FILE_EXTENSION_CASE_END = ')'
 export const FILE_EXTENSION_DEFAULT_CASE = FILE_EXTENSION_CASE_START + FILE_EXTENSION_CASE_END
 
@@ -142,6 +142,9 @@ export function filterActionIsTokenAuth(sets) {
 const parseConditions = (items, path) => {
   return items ? items.map((item, i) => {
     const value = (item.get('value') && item.get('value').size >= 0) ? item.get('value').toJS() : item.get('value')
+    const name = matchIsFileExtension(item)
+                 ? <FormattedMessage id="portal.policy.edit.matchesSelection.fileExtensions.text"/>
+                 : getConditionName(item.get('field'))
 
     return {
       field: item.get('field'),
@@ -149,7 +152,7 @@ const parseConditions = (items, path) => {
       filterType: getMatchFilterType(item),
       values: (Array.isArray(value)) ? value : [value],
       path: path.concat([i]),
-      name: getConditionName(item.get('field'))
+      name
     }
   }).toJS() : []
 }
