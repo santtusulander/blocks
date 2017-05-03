@@ -188,7 +188,7 @@ class AnalysisOnOffNetReport extends React.Component {
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
     }
-    const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
+    const sortedStats = details && this.sortedData(details, this.state.sortBy, this.state.sortDir)
 
     /* Get values for KPIs */
     const dataKey = this.props.onOffFilter.get(0) === 'off' ? 'net_off' : 'net_on'
@@ -293,7 +293,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {sortedStats.map((day, i) => {
+                {sortedStats && sortedStats.map((day, i) => {
                   return (
                     <tr key={i}>
                       <td>{formatDate(day.get('timestamp'), 'MM/DD/YYYY')}</td>
