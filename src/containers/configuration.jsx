@@ -132,8 +132,8 @@ export class Configuration extends React.Component {
     )
   }
   /**
-   * If URL has parameters for editing/deleting a policy, this function can be called to
-   * strip away those parameters.
+   * If URL has parameters for editing/deleting a policy, this function can be called
+   * to strip away those parameters.
    */
   cancelEditPolicyRoute() {
     const { params, router } = this.props
