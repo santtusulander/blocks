@@ -93,7 +93,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
         const traffic_split_targets = [
           {
             percent: String(100 - rule.policyWeight),
-            cname: values.cdnName,
+            cname: values.cName,
             ttl: String(values.ttl)
           },
           {
@@ -160,7 +160,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     const gtmConfig = {
       rules: this.generateSubmittableRules(values),
-      title: values.cName,
+      title: values.cdnName,
       customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
       policy_name: propertyId,
       customer_id: customerId

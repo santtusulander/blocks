@@ -24,7 +24,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
 
   if (gtmConfig && gtmConfig.size) {
 
-    let thirdPartyCDNName = undefined
+    let thirdPartyCName = undefined
     let amountServedByUDN = '50'
     const asnMatches = gtmConfig.get('asns') || List()
     let ttl = 0
@@ -97,7 +97,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
               amountServedByUDN = target.percent
 
             } else {
-              thirdPartyCDNName = target.cname
+              thirdPartyCName = target.cname
             }
 
           })
@@ -127,8 +127,8 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
     return {
       GTMToggle: true,
       ttl,
-      cdnName: thirdPartyCDNName,
-      cName: gtmConfig.get('title'),
+      cdnName: gtmConfig.get('title'),
+      cName: thirdPartyCName,
       ROWToggle: rowServedByThirdParty,
       rules: rulesArray
     }

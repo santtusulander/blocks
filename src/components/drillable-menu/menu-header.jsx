@@ -4,7 +4,7 @@ import { FormControl } from 'react-bootstrap'
 
 import IconArrowLeft from '../shared/icons/icon-arrow-left'
 
-const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent, fetching, intl }) => {
+const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent, fetching, intl, goToActive }) => {
 
   const handleParentCaretClick = event => {
     event.nativeEvent.stopImmediatePropagation()
@@ -20,7 +20,9 @@ const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, 
           </a>
         }
         <div>
-          <h3>{activeNodeName}</h3>
+          {goToActive
+            ? <h3 className="active-node-link" onClick={goToActive}>{activeNodeName}</h3>
+            : <h3>{activeNodeName}</h3>}
 
           {!fetching && subtitle
             ? <span>{subtitle}</span>
@@ -44,6 +46,7 @@ DrillableMenuHeader.displayName = 'DrillableMenuHeader'
 DrillableMenuHeader.propTypes = {
   activeNodeName: PropTypes.string,
   fetching: PropTypes.bool,
+  goToActive: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   goToParent: PropTypes.func,
   intl: PropTypes.object,
   onSearchChange: PropTypes.func,
