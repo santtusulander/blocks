@@ -90,4 +90,19 @@ describe('AnalysisOnOffNetReport', () => {
     expect(summaryBoxes.at(0).find('p').text()).toContain('123')
     expect(summaryBoxes.at(1).find('p').text()).toContain('500000')
   });
+
+  it('should not show summary stats when onOffStats and onOffStatsToday are not passed', () => {
+    let analysisOnOffNetReport = shallow(
+      <AnalysisOnOffNetReport
+        dateRange={Immutable.Map({startDate: new Date(), endDate: new Date()})}
+        dateRangeLabel='Label'
+        fetching={false}
+        intl={intlMaker()}/>
+    )
+
+    let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
+
+    expect(summaryBoxes.at(0).find('p').text()).not.toContain('123')
+    expect(summaryBoxes.at(1).find('p').text()).not.toContain('500000')
+  })
 })
