@@ -112,6 +112,7 @@
   "portal.configuration.traffic.rules.match.asn.modal.subtitle": "Specify all ASN's that should be matched",
 
   "portal.configuration.traffic.rules.match.ipv4address.input.error": "Some of the values you entered could not be resolved as IPv4 addresses.",
+  "portal.configuration.traffic.rules.match.input.value.exists.error": "A value you entered already exists",
 
   "portal.configuration.traffic.rules.match.continent": "Continent",
   "portal.configuration.traffic.rules.match.country": "Country",
