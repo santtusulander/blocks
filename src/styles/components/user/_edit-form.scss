@@ -27,6 +27,17 @@
     .dropdown {
       min-width: 144px;
     }
+
+    .col-xs-3+.col-xs-2 {
+      width: 215px;
+    }
+  }
+
+  .time-zone {
+    .dropdown-menu {
+      z-index: $zindex-dropdown-menu;
+      max-height: 195px;
+    }
   }
 
   .select-box-tooltip {

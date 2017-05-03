@@ -491,7 +491,7 @@ class UserEditForm extends React.Component {
         <hr/>
 
         {/* TIME ZONE */}
-        <Row>
+        <Row className="time-zone">
           <ControlLabel className="col-xs-2">
             <FormattedMessage id="portal.user.edit.timeZone.text"/>
           </ControlLabel>
