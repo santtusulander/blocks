@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import moment from 'moment'
 
 import {
   getAnalyticsUrl,
@@ -36,6 +35,7 @@ import {
 } from '../../constants/network'
 
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
 import * as PERMISSIONS from '../../constants/permissions'
 
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -994,8 +994,8 @@ function mapDispatchToProps(dispatch, ownProps) {
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
-    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('day').format('X')
+    startDate: startOfLast28().format('X'),
+    endDate: endOfThisDay().format('X')
   }
   const accountMetricsOpts = Object.assign({
     list_children: false

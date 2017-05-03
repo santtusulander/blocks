@@ -22,6 +22,9 @@ import AnalysisByTime from '../../../components/analysis/by-time'
 import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
 import Tooltip from '../../../components/shared/tooltips/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import { endOfThisDay, startOfLast28 } from '../../../constants/date-ranges'
+
+import { formatMoment } from '../../../util/helpers'
 
 import {
   formatBitsPerSecond,
@@ -31,16 +34,13 @@ import {
 import DateRanges from '../../../constants/date-ranges'
 import { paleblue } from "../../../constants/colors";
 
-const endOfThisDay = () => moment().utc().endOf('day')
-const startOfLast28 = () => endOfThisDay().endOf('day').add(1, 'second').subtract(28, 'days')
-
 // default dates to last 28 days
 function safeMomentStartDate(date) {
-  return date ? moment.utc(date, 'X') : startOfLast28()
+  return date ? moment(date, 'X') : startOfLast28()
 }
 
 function safeMomentEndDate(date) {
-  return date ? moment.utc(date, 'X') : endOfThisDay()
+  return date ? moment(date, 'X') : endOfThisDay()
 }
 
 function safeFormattedStartDate(date) {
@@ -251,8 +251,8 @@ class PropertySummary extends React.Component {
   hoverSlice(date, x1, x2) {
     if (date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
-        .find(day => moment.utc(day.get('timestamp'), 'X')
-          .isSame(moment.utc(date), 'day'))
+        .find(day => moment(day.get('timestamp'), 'X')
+          .isSame(moment(date), 'day'))
       const xPos = (((x1 + x2) / 2) - 100)
       this.setState({
         activeSlice: activeSlice,
@@ -264,7 +264,7 @@ class PropertySummary extends React.Component {
   }
 
   selectSlice(date) {
-    this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
+    this.changeDateRange(moment(date), moment(date).endOf('day'))
   }
 
   render() {
@@ -307,9 +307,8 @@ class PropertySummary extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
-      const formattedDate = moment.utc(date)
-        .subtract(dateRange.asDays(), 'days')
-        .format('MMM D H:mm')
+      const formattedDate = formatMoment(moment(date)
+        .subtract(dateRange.asDays(), 'days'), 'MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
     }
@@ -341,7 +340,7 @@ class PropertySummary extends React.Component {
         label: <FormattedMessage id="portal.content.property.summary.comparisonPeriod.label"/>,
         line: false,
         stackedAgainst: false,
-        xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
+        xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
       })
     }
 
@@ -370,9 +369,9 @@ class PropertySummary extends React.Component {
           <Col xs={4} className="kpi">
             <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
-              {moment(
+              {formatMoment(moment(
                 activeConfig.get('configuration_status').get('deployment_date'), 'X'
-              ).format('M/D/YYYY, h:mma')}
+              ), 'M/D/YYYY, h:mma')}
             </h3>
           </Col>
         </Row>
@@ -441,7 +440,7 @@ class PropertySummary extends React.Component {
             y={-30}
             hidden={false}>
             <div className="tooltip-header">
-              <b>{moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
+              <b>{formatMoment(moment(this.state.activeSlice.get('timestamp'), 'X'), 'MMM D, ddd')}</b>
             </div>
             <div>
               <FormattedMessage id="portal.content.property.summary.peak.label"/>

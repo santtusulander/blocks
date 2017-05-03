@@ -343,7 +343,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @returns {*}
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
-  return moment.unix(unix).isValid() ? moment.unix(unix).utc().format(format) : formatDate(unix, format)
+  return moment.unix(unix).format(format)
 }
 
 /**
@@ -353,7 +353,7 @@ export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
  * @returns {moment}
  */
 export function unixTimestampToDate(unix) {
-  return moment.unix(unix).utc().isValid() ? moment.unix(unix).utc() : undefined
+  return moment.unix(unix).isValid() ? moment.unix(unix) : undefined
 }
 
 /**
@@ -363,8 +363,19 @@ export function unixTimestampToDate(unix) {
  * @returns {*}
  */
 export function formatDate(date, format = 'MM/DD/YYYY') {
-  return moment(date).utc().format(format)
+  return moment(date).format(format)
 }
+
+/**
+ * Format a moment object to desired format
+ * @param moment obj
+ * @param format
+ * @returns {*}
+ */
+export function formatMoment(momentObj, format = 'MM/DD/YYYY') {
+  return momentObj.format(format)
+}
+
 
 
 export function filterAccountsByUserName (accounts) {

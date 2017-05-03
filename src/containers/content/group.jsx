@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -27,6 +26,7 @@ import ContentItems from '../../components/content/content-items'
 
 import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import { startOfLast28, endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 
 import { checkUserPermissions, getStoragePermissions } from '../../util/permissions'
 import { getAnalyticsUrlFromParams } from '../../util/routes'
@@ -191,8 +191,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   const metricsOpts = {
     account: account,
     group: group,
-    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('day').format('X')
+    startDate: startOfLast28().format('X'),
+    endDate: endOfThisDay().format('X')
   }
 
   const fetchGroupData = () => {
@@ -210,7 +210,7 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     return Promise.all([
       metricsActions.fetchHostMetrics(metricsOpts),
       metricsActions.fetchDailyHostTraffic(metricsOpts),
-      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: moment().utc().startOf('month').format('X') }))
+      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: startOfThisMonth().format('X') }))
     ])
   }
 

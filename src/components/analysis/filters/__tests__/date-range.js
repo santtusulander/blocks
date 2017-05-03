@@ -29,15 +29,15 @@ describe('FilterDateRange', () => {
     const onFilterChangeMock = jest.fn()
     let props = {
       includeComparison: true,
-      startDate: moment.utc(),
-      endDate: moment.utc().add(2, 'months'),
+      startDate: moment(),
+      endDate: moment().add(2, 'months'),
       onFilterChange: onFilterChangeMock
     }
 
     component.setProps(props)
     expect(onFilterChangeMock.mock.calls.length).toEqual(0)
 
-    props.endDate = moment.utc().add(5, 'months')
+    props.endDate = moment().add(5, 'months')
     component.setProps(props)
     expect(onFilterChangeMock.mock.calls.length).toEqual(1)
   })

@@ -24,13 +24,12 @@ import { getCurrentUser } from '../redux/modules/user'
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import { checkUserPermissions, getStoragePermissions } from '../util/permissions'
-import { hasService } from '../util/helpers'
+import { hasService, formatMoment, hasOption } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
 
-import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
-import { STORAGE_SERVICE_ID, GTM_SERVICE_ID } from '../constants/service-permissions'
+import { STORAGE_SERVICE_ID, GTM_SERVICE_ID, MEDIA_DELIVERY_SECURITY_OPTION_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
@@ -74,7 +73,6 @@ export class Configuration extends React.Component {
     this.togglePublishModal = this.togglePublishModal.bind(this)
     this.toggleVersionModal = this.toggleVersionModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-    this.hasSecurityServicePermission = this.hasSecurityServicePermission.bind(this)
     this.notificationTimeout = null
   }
   componentWillMount() {
@@ -114,10 +112,6 @@ export class Configuration extends React.Component {
     return !checkUserPermissions(this.props.currentUser, MODIFY_ADVANCED)
   }
 
-  hasSecurityServicePermission() {
-    return this.props.servicePermissions.contains(MEDIA_DELIVERY_SECURITY)
-  }
-
   // allows changing multiple values while only changing state once
   // this is mostly useful for the enable SSL button in the security tab
   changeValues(values) {
@@ -138,8 +132,8 @@ export class Configuration extends React.Component {
     )
   }
   /**
-   * If URL has parameters for editing/deleting a policy, this function can be called to
-   * strip away those parameters.
+   * If URL has parameters for editing/deleting a policy, this function can be called
+   * to strip away those parameters.
    */
   cancelEditPolicyRoute() {
     const { params, router } = this.props
@@ -270,6 +264,7 @@ export class Configuration extends React.Component {
       children,
       isGTMFormDirty,
       groupHasGTMService,
+      groupHasMDSecurity,
       isAdvancedFormDirty } = this.props
 
     if (this.props.fetching && (!activeHost || !activeHost.size)
@@ -295,12 +290,12 @@ export class Configuration extends React.Component {
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
-            updateMoment.format('MMM, D YYYY'),
-            updateMoment.format('h:mm a')
+            formatMoment(updateMoment, 'MMM, D YYYY'),
+            formatMoment(updateMoment, 'h:mm a')
           ]}
           pageHeaderDetailsDeployed={[
-            deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('h:mm a'),
+            formatMoment(deployMoment, 'MMM, D YYYY'),
+            formatMoment(deployMoment, 'h:mm a'),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector
@@ -360,7 +355,7 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          {this.hasSecurityServicePermission() &&
+          {groupHasMDSecurity &&
             <li data-eventKey='security' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
               <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
@@ -498,6 +493,7 @@ Configuration.propTypes = {
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupHasGTMService: React.PropTypes.bool,
+  groupHasMDSecurity: React.PropTypes.bool,
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
@@ -510,7 +506,6 @@ Configuration.propTypes = {
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
-  servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
   storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List),
@@ -518,7 +513,6 @@ Configuration.propTypes = {
 }
 Configuration.defaultProps = {
   activeHost: Immutable.Map(),
-  servicePermissions: Immutable.List(),
   sslCertificates: Immutable.List()
 }
 
@@ -527,6 +521,8 @@ function mapStateToProps(state, ownProps) {
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const storagePermission = getStoragePermissions(getCurrentUser(state))
+  const groupHasMDSecurity = hasOption(activeGroup, MEDIA_DELIVERY_SECURITY_OPTION_ID)
+
   const isGTMFormDirty = isDirty('gtmForm')
   const isAdvancedFormDirty = isDirty('advancedForm')
 
@@ -542,7 +538,7 @@ function mapStateToProps(state, ownProps) {
     groupHasStorageService,
     groupHasGTMService,
     storagePermission,
-    servicePermissions: state.group.get('servicePermissions'),
+    groupHasMDSecurity,
     sslCertificates: state.security.get('sslCertificates'),
     isGTMFormDirty: isGTMFormDirty(state),
     isAdvancedFormDirty: isAdvancedFormDirty(state)
