@@ -62,7 +62,7 @@ class Select extends Component {
       return this.getOptionValue(option) === this.props.value
     })
 
-    // Autoselect first option item 
+    // Autoselect first option item
     if (this.props.autoselectFirst && !selected) {
       return this.props.options[0]
     } else {
@@ -137,7 +137,8 @@ Select.propTypes = {
 Select.defaultProps = {
   options: [],
   disabled: false,
-  emptyLabel: <FormattedMessage id="portal.select.emptyLabel"/>
+  emptyLabel: <FormattedMessage id="portal.select.emptyLabel"/>,
+  autoselectFirst: false
 }
 
 export default Select
