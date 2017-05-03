@@ -254,15 +254,12 @@ class ContentItems extends React.Component {
     }
   }
 
-  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
-    this.props.fetchItem(id)
-      .then((response) => {
-        this.setState({
-          showModal: true,
-          itemToEdit: Immutable.fromJS(response.payload)
-        })
-      })
+    const item = this.props.fetchItem(id)
+    this.setState({
+      showModal: true,
+      itemToEdit: item
+    })
   }
   addItem() {
     this.setState({
