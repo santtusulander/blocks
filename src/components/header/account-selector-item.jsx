@@ -39,7 +39,11 @@ function AccountSelectorItem({ activeAccount, router, params }) {
   return (
     <li className="header__account-selector">
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <AccountSelector params={params} levels={[ 'brand' ]} onItemClick={onItemClick}>
+        <AccountSelector
+          alwaysActiveTitle={true}
+          params={params}
+          levels={[ 'brand' ]}
+          onItemClick={onItemClick}>
           <div className="btn btn-link dropdown-toggle header-toggle">
             <TruncatedTitle content={activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
             <IconCaretDown />
