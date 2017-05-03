@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map, List } from 'immutable'
 import { withRouter } from 'react-router'
-import moment from 'moment'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
@@ -37,6 +36,7 @@ import StorageContents from '../../components/storage/storage-contents'
 
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
+import { endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 
 import { getContentUrl } from '../../util/routes.js'
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
@@ -79,8 +79,8 @@ class Storage extends Component {
         group: group,
         ingest_point: storage,
         list_children: false,
-        startDate: moment().utc().startOf('month').format('X'),
-        endDate: moment.utc().endOf('day').format('X')
+        startDate: startOfThisMonth().format('X'),
+        endDate: endOfThisDay().format('X')
       }
 
       this.props.fetchStorageMetrics({...metricsOpts})

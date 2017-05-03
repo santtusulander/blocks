@@ -7,7 +7,7 @@ import TimePicker from '../time-picker.jsx'
 
 describe('TimePicker', () => {
   it('should exist', () => {
-    const timePicker = shallow(<TimePicker time={moment().utc()} />)
+    const timePicker = shallow(<TimePicker time={moment()} />)
 
     expect(timePicker.find('.time-picker').length).toBe(1)
   });

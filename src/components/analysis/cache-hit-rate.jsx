@@ -1,6 +1,5 @@
 import React from 'react'
 import numeral from 'numeral'
-import moment from 'moment'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
@@ -11,6 +10,8 @@ import SectionContainer from '../shared/layout/section-container'
 import AnalysisByTime from './by-time'
 import TableSorter from '../shared/table-sorter'
 import { paleblue } from '../../constants/colors'
+import { formatDate } from '../../util/helpers'
+
 // import Select from '../shared/form-elements/select'
 
 class AnalysisCacheHitRate extends React.Component {
@@ -60,14 +61,14 @@ class AnalysisCacheHitRate extends React.Component {
     const data = detail.map(datapoint => {
       const timestamp = datapoint.get('timestamp')
       return {
-        formattedDate: moment(timestamp).format('MM/DD/YYYY'),
+        formattedDate: formatDate(timestamp, 'MM/DD/YYYY'),
         chit_ratio: datapoint.get('chit_ratio'),
         name: timestamp.getDate()
       }
     })
 
     const secondaryXAxisTick = detail.map(datapoint =>
-      moment(datapoint.get('timestamp')).format('MMM')
+      formatDate(datapoint.get('timestamp'), 'MMM')
     )
 
     if (this.state.chartType === 'column') {
@@ -143,7 +144,7 @@ class AnalysisCacheHitRate extends React.Component {
               {sortedStats.map((day, i) => {
                 return (
                   <tr key={i}>
-                    <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                    <td>{formatDate(day.get('timestamp'), 'MM/DD/YYYY')}</td>
                     <td>{numeral(day.get('chit_ratio') / 100).format('0%')}</td>
                   </tr>
                 )
