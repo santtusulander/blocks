@@ -24,13 +24,12 @@ import { getById as getGroupById } from '../redux/modules/entities/groups/select
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
-import { hasService } from '../util/helpers'
+import { hasService, hasOption } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
 
-import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, serviceTypes } from '../constants/configuration'
-import { STORAGE_SERVICE_ID, GTM_SERVICE_ID } from '../constants/service-permissions'
+import { STORAGE_SERVICE_ID, GTM_SERVICE_ID, MEDIA_DELIVERY_SECURITY_OPTION_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/shared/layout/page-container'
 import Sidebar from '../components/shared/layout/section-header'
@@ -74,7 +73,6 @@ export class Configuration extends React.Component {
     this.togglePublishModal = this.togglePublishModal.bind(this)
     this.toggleVersionModal = this.toggleVersionModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-    this.hasSecurityServicePermission = this.hasSecurityServicePermission.bind(this)
     this.notificationTimeout = null
   }
   componentWillMount() {
@@ -112,10 +110,6 @@ export class Configuration extends React.Component {
 
   isAdvancedTabReadOnly() {
     return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_ADVANCED)
-  }
-
-  hasSecurityServicePermission() {
-    return this.props.servicePermissions.contains(MEDIA_DELIVERY_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -270,6 +264,7 @@ export class Configuration extends React.Component {
       children,
       isGTMFormDirty,
       groupHasGTMService,
+      groupHasMDSecurity,
       isAdvancedFormDirty } = this.props
 
     if (this.props.fetching && (!activeHost || !activeHost.size)
@@ -360,7 +355,7 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          {this.hasSecurityServicePermission() &&
+          {groupHasMDSecurity &&
             <li data-eventKey='security' className={classNames({ disabled: isAdvancedFormDirty || isGTMFormDirty })}>
               <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
@@ -498,6 +493,7 @@ Configuration.propTypes = {
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupHasGTMService: React.PropTypes.bool,
+  groupHasMDSecurity: React.PropTypes.bool,
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
@@ -529,6 +525,7 @@ function mapStateToProps(state, ownProps) {
   const groupHasGTMService = hasService(activeGroup, GTM_SERVICE_ID)
   const roles = getRoles(state)
   const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
+  const groupHasMDSecurity = hasOption(activeGroup, MEDIA_DELIVERY_SECURITY_OPTION_ID)
   const isGTMFormDirty = isDirty('gtmForm')
   const isAdvancedFormDirty = isDirty('advancedForm')
 
@@ -545,7 +542,7 @@ function mapStateToProps(state, ownProps) {
     groupHasStorageService,
     groupHasGTMService,
     storagePermission,
-    servicePermissions: state.group.get('servicePermissions'),
+    groupHasMDSecurity,
     sslCertificates: state.security.get('sslCertificates'),
     isGTMFormDirty: isGTMFormDirty(state),
     isAdvancedFormDirty: isAdvancedFormDirty(state)
