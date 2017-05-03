@@ -18,10 +18,10 @@ export const WILDCARD_REGEXP = '.*';
 // NOTE: OK, so this RegExp is pretty nuts.
 // Basically, what it does is allow us to grab a list of file extensions from a
 // different RegExp string returned by the server.
-// An example input string: (.*)\\.(aif|aiff)
+// An example input string: (.*)\.(aif|aiff)
 // We need to get the aif|aiff part of that string.
 export const FILE_EXTENSION_REGEXP = /\(\.\*\)(?:\\)?\\\.\((.*)\)/
-export const FILE_EXTENSION_CASE_START = '(.*)\\\\.('
+export const FILE_EXTENSION_CASE_START = '(.*)\\.('
 export const FILE_EXTENSION_CASE_END = ')'
 export const FILE_EXTENSION_DEFAULT_CASE = FILE_EXTENSION_CASE_START + FILE_EXTENSION_CASE_END
 
