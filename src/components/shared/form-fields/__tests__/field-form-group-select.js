@@ -8,7 +8,7 @@ describe('FieldFormGroupSelect', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (addonAfter = '', addonBefore = '', error = '', label = '', addonAfterLabel = '') => {
+    subject = (addonAfter = '', addonBefore = '', error = '', label = '', addonAfterLabel = '', autoselectFirst = false) => {
       const props = {
         addonBefore,
         addonAfter,
@@ -20,7 +20,8 @@ describe('FieldFormGroupSelect', () => {
         },
         input: {
           name: 'name'
-        }
+        },
+        autoselectFirst
       }
 
       return shallow(
