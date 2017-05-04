@@ -5,9 +5,13 @@ import Immutable from 'immutable'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import {
-  getAnalyticsUrl,
-  getContentUrl,
-  getUrl
+  getAnalyticsUrlFromParams,
+  getContentUrlFromParams,
+  getSecurityUrlFromParams,
+  getDashboardUrlFromParams,
+  getServicesUrlFromParams,
+  getSupportUrlFromParams,
+  getAccountManagementUrlFromParams
 } from '../../util/routes.js'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
@@ -19,20 +23,22 @@ function AccountSelectorItem({ activeAccount, router, params }) {
   const activeAccountNameNoPlaceholder = params.account ? activeAccount.get('name') : ''
 
   const onItemClick = ({ nodeInfo, id }) => {
-    const parametersToBuildRoute = [nodeInfo.entityType, id, nodeInfo.parents]
+    const parametersToBuildRoute = { [nodeInfo.entityType]: id, ...nodeInfo.parents }
 
     if (router.isActive('/content') || router.isActive('/network')) {
-      router.push(getContentUrl(...parametersToBuildRoute))
+      router.push(getContentUrlFromParams(parametersToBuildRoute))
     } else if (router.isActive('/analysis')) {
-      router.push(getAnalyticsUrl(...parametersToBuildRoute))
+      router.push(getAnalyticsUrlFromParams(parametersToBuildRoute))
     } else if (router.isActive('/account-management')) {
-      router.push(getUrl('/account-management', ...parametersToBuildRoute))
+      router.push(getAccountManagementUrlFromParams(parametersToBuildRoute))
     } else if (router.isActive('/security')) {
-      router.push(getUrl('/security', ...parametersToBuildRoute))
+      router.push(getSecurityUrlFromParams(parametersToBuildRoute))
     } else if (router.isActive('/support')) {
-      router.push(getUrl('/support', ...parametersToBuildRoute))
+      router.push(getSupportUrlFromParams(parametersToBuildRoute))
     } else if (router.isActive('/dashboard')) {
-      router.push(getUrl('/dashboard', ...parametersToBuildRoute))
+      router.push(getDashboardUrlFromParams(parametersToBuildRoute))
+    } else if (router.isActive('/services')) {
+      router.push(getServicesUrlFromParams(parametersToBuildRoute))
     }
   }
 

@@ -92,7 +92,7 @@ import User from './containers/user'
 
 import ContentTransition from './transitions/content'
 
-import { getRoute } from './util/routes'
+import { getRoute, getDashboardUrlFromParams, getContentUrlFromParams } from './util/routes'
 
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
@@ -185,8 +185,7 @@ const AccountIsSP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/network\//, 'i'), '/content/')
-    return redirectPath
+    return getContentUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
@@ -213,8 +212,7 @@ const AccountIsCP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
-    return redirectPath
+    return getDashboardUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
