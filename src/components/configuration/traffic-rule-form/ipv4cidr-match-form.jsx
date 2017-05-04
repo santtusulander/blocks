@@ -20,6 +20,7 @@ const validate = checkIfExists => ({ ipv4_cidr_prefix }, { initialValues }) => {
     if (!isValidIPv4Cidr(value.label)) {
       return { ipv4_cidr_prefix: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.input.error" /> }
     }
+
     if (checkIfExists(value, ipv4_cidr_prefix, initialValues)) {
       return { ipv4_cidr_prefix: <FormattedMessage id="portal.configuration.traffic.rules.match.input.value.exists.error" /> }
     }
