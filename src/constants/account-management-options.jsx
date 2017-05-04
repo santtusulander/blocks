@@ -28,7 +28,7 @@ export const ACCOUNT_TYPE_OPTIONS = FILTERED_ACCOUNT_TYPES.map(e => {
 });
 
 export const SERVICE_TYPES = [
-  { value: 101, label: <FormattedMessage id="portal.services.serviceTypes.networkPartnerOnNet.text"/>, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { value: 101, label: <FormattedMessage id="portal.configuration.details.serviceType.networkPartnerOnNet"/>, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
   { value: 1, label: <FormattedMessage id="portal.configuration.details.serviceType.large"/>, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
 ]
 
