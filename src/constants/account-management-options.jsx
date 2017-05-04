@@ -28,12 +28,12 @@ export const ACCOUNT_TYPE_OPTIONS = FILTERED_ACCOUNT_TYPES.map(e => {
 });
 
 export const SERVICE_TYPES = [
-  { value: 101, label: 'UDN Network Partner - On-Net', accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
-  { value: 1, label: 'Media Delivery', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
+  { value: 101, label: <FormattedMessage id="portal.configuration.details.serviceType.networkPartnerOnNet"/>, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { value: 1, label: <FormattedMessage id="portal.configuration.details.serviceType.large"/>, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
 ]
 
 export const BRANDS = [
-  { id: 'udn', brandName: 'UDN' }
+  { id: 'udn', brandName: <FormattedMessage id="portal.UDN.text"/> }
 ]
 
 export const BRAND_OPTIONS = BRANDS.map(e => {
