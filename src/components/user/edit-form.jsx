@@ -135,7 +135,8 @@ class UserEditForm extends React.Component {
       phone_country_code: values.phone_country_code,
       phone_number: values.phone_number,
       locale: values.language,
-      timezone: values.timezone
+      timezone: values.timezone,
+      date_format: values.date_format
     }
 
     //handle 2FA,  add method if ON
@@ -476,7 +477,7 @@ class UserEditForm extends React.Component {
           </Col>
           <Col xs={1}>
             <Field
-              name="date-format"
+              name="date_format"
               component={FieldFormGroupSelect}
               options={DATE_FORMAT_OPTIONS}
             />
