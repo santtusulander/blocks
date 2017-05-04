@@ -22,9 +22,8 @@ import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_DEFAULT_AUTH_METHOD,
          LANGUAGE_OPTIONS,
          DATE_FORMAT_OPTIONS
-        } from '../../constants/user.js'
-
-import '../../styles/components/user/_edit-form.scss'
+        } from '../../constants/user'
+import { TIME_ZONES } from '../../constants/time-zones'
 
 import { isValidPhoneNumber } from '../../util/validators'
 
@@ -91,7 +90,8 @@ class UserEditForm extends React.Component {
 
     this.state = {
       recoveryKey: '',
-      showRecoveryKeyModal: false
+      showRecoveryKeyModal: false,
+      continent: props.initialValues.continent
     }
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -99,6 +99,7 @@ class UserEditForm extends React.Component {
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.toggleRecoveryKeyModal = this.toggleRecoveryKeyModal.bind(this)
     this.copyToClipboard = this.copyToClipboard.bind(this)
+    this.onContinentChange = this.onContinentChange.bind(this)
   }
 
   componentWillUpdate(nextProps) {
@@ -119,6 +120,10 @@ class UserEditForm extends React.Component {
     }
   }
 
+  onContinentChange(e, value) {
+    this.setState({continent: value})
+  }
+
   onSubmit(values) {
     //strip out unneeded values
     const {tfa_toggle, tfa} = values;
@@ -129,7 +134,8 @@ class UserEditForm extends React.Component {
       last_name: values.last_name,
       phone_country_code: values.phone_country_code,
       phone_number: values.phone_number,
-      locale: values.language
+      locale: values.language,
+      timezone: values.timezone
     }
 
     //handle 2FA,  add method if ON
@@ -257,16 +263,19 @@ class UserEditForm extends React.Component {
       handleSubmit,
       intl,
       invalid,
-      initialValues: {
-        email
-      },
+      initialValues: { email },
       resetForm,
       submitting,
       tfa,
       tfa_toggle,
       initialTfa
     } = this.props
+
     const showSaveBar = this.props.dirty
+    const continentOptions = []
+    for (const key in TIME_ZONES) {
+      continentOptions.push({ value: key, label: key })
+    }
 
     return (
       <form className="form-horizontal user-profile-edit-form" onSubmit={handleSubmit(this.onSubmit)}>
@@ -470,6 +479,31 @@ class UserEditForm extends React.Component {
               name="date-format"
               component={FieldFormGroupSelect}
               options={DATE_FORMAT_OPTIONS}
+            />
+          </Col>
+        </Row>
+
+        <hr/>
+
+        {/* TIME ZONE */}
+        <Row className="time-zone">
+          <ControlLabel className="col-xs-2">
+            <FormattedMessage id="portal.user.edit.timeZone.text"/>
+          </ControlLabel>
+          <Col xs={3}>
+            <Field
+              name="continent"
+              component={FieldFormGroupSelect}
+              options={continentOptions}
+              onChange={this.onContinentChange}
+            />
+          </Col>
+          <Col xs={3}>
+            <Field
+              name="timezone"
+              component={FieldFormGroupSelect}
+              options={TIME_ZONES[this.state.continent]}
+              autoselectFirst={true}
             />
           </Col>
         </Row>
