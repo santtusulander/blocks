@@ -51,9 +51,9 @@ export const ROLES_MAPPING = [
 ]
 
 export const FLOW_DIRECTION_TYPES = [
-  { value: 'egress', label: <FormattedMessage id="portal.account.chargeNumbersForm.egress.title"/> },
-  { value: 'midgress', label: <FormattedMessage id="portal.account.chargeNumbersForm.midgress.title"/> },
-  { value: 'ingress', label: <FormattedMessage id="portal.account.chargeNumbersForm.ingress.title"/> }
+  { value: 'egress', label: <FormattedMessage id="portal.account.chargeNumbersForm.egress.title"/>, disabled: true },
+  { value: 'midgress', label: <FormattedMessage id="portal.account.chargeNumbersForm.midgress.title"/>, disabled: false },
+  { value: 'ingress', label: <FormattedMessage id="portal.account.chargeNumbersForm.ingress.title"/>, disabled: true }
 ]
 
 export const DNS_MIN_REFRESH = 0

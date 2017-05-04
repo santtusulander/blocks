@@ -66,7 +66,7 @@ export function getDefaultService (service_id) {
   const defaultObj = {
     service_id,
     billing_meta: {
-      flow_direction: []
+      flow_direction: ['egress']
     },
     options: []
   }
