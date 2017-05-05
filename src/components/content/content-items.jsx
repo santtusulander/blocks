@@ -552,8 +552,7 @@ class ContentItems extends Component {
                 }
 
                 {/* OTHER ContentItems (brand / accouts / groups) */}
-                { /*properties.isEmpty() && storages.isEmpty() && */
-                getPage(contentItems.sort(sortContent(this.getCustomSortPath('content'), sortDirection)), currentPage, PAGE_SIZE)
+                { getPage(contentItems.sort(sortContent(this.getCustomSortPath('content'), sortDirection)), currentPage, PAGE_SIZE)
                       .map(item => {
                         // console.log(content.toJS());
                         // const item = content.get('item')
