@@ -11,7 +11,7 @@ const NotFoundPage = ({ history }) => {
       <div className="main-content downtime-content not-found-page-container">
         <div className="text-center">
           <div className="not-found-img" />
-          <p><FormattedMessage id="portal.notFound.pageNotFound.text"/></p>
+          <h2><FormattedMessage id="portal.notFound.pageNotFound.text"/></h2>
           <Button bsStyle="primary" onClick={history.goBack}><FormattedMessage id="portal.button.goBack"/></Button>
         </div>
       </div>
