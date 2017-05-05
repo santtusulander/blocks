@@ -11,6 +11,8 @@ import { getCurrentUser } from '../redux/modules/user'
 
 import { getServicePermissions } from '../util/services-helpers'
 
+import { getRoute } from '../util/routes'
+
 import {
   hasService
 } from '../util/helpers'
@@ -20,26 +22,15 @@ import {
   accountIsCloudProviderType
  } from '../util/helpers'
 
-const authSelector = (state, { params }) => {
-  const user = getCurrentUser(state)
-  return {
-    user,
-    userHasActiveAccount: !params.account || Number(params.account) === user.get('account_id')
-  }
-}
-
-const permissionChecker = permission => ({ user, userHasActiveAccount }) => {
+const authSelector = state => getCurrentUser(state)
+const permissionChecker = (permission) => user => {
   if (!permission) {
     return true
   }
-
-  if (checkUserPermissions(user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)) {
-
-    return checkUserPermissions(user, permission)
-
-  } else {
-    return userHasActiveAccount && checkUserPermissions(user, permission)
-  }
+  return checkUserPermissions(
+    user,
+    permission
+  )
 }
 
 const servicePermissionChecker = (permission) => permissions => {
@@ -58,45 +49,21 @@ export const UserHasPermission = (permission) => UserAuthWrapper({
   allowRedirectBack: false
 })(props => props.children)
 
-export const UserCanListAccounts =
+export const UserCanListAccounts = (failureRoute) =>
   UserAuthWrapper({
-    authSelector: authSelector,
+    authSelector: (state, { params }) => ({ user: getCurrentUser(state), params }),
     failureRedirectPath: (state, ownProps) => {
-      console.log('assddsadsasdads');
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
+
+      return getRoute(failureRoute, { ...ownProps.params, account: getCurrentUser(state).get('account_id') })
+
     },
     wrapperDisplayName: 'UserCanListAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
-    allowRedirectBack: false
-  })
+    predicate: ({ user, params }) => {
 
-export const UserCanManageAccounts =
-  UserAuthWrapper({
-    authSelector: authSelector,
-    failureRedirectPath: (state, ownProps) => {
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/accounts$/, '')
-        .replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
-    },
-    wrapperDisplayName: 'UserCanManageAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
-    allowRedirectBack: false
-  })
+      const userHasAccount = String(user.get('account_id')) === params.account
 
-export const UserCanTicketAccounts =
-  UserAuthWrapper({
-    authSelector: authSelector,
-    failureRedirectPath: (state, ownProps) => {
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/tickets$/, '')
-        .replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
+      return user.size <= 1 || checkUserPermissions(user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS) || userHasAccount
     },
-    wrapperDisplayName: 'UserCanTicketAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
 
