@@ -13,6 +13,7 @@ import FieldFormGroupSelect from '../../shared/form-fields/field-form-group-sele
 import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
 
 import { secondsToUnit, unitFromSeconds, secondsFromUnit } from '../helpers'
+import { MIN_TTL, MAX_TTL } from '../../../constants/configuration'
 
 const ttlUnitOptions = [
   {value: 'seconds', label: <FormattedMessage id="portal.units.seconds"/>},
@@ -28,7 +29,19 @@ const sourceOptions = [
   {value: 'origin', label: <FormattedMessage id="portal.policy.edit.negativeCache.source.origin"/>}
 ]
 
+const DEFAULT_TTL = 10
 const sourceDefaultValue = 'local,cluster,origin'
+
+const validate = ({ cacheable, ttlValue, ttlUnit }) => {
+  const errors = {}
+  const max_age = secondsFromUnit(ttlValue, ttlUnit)
+
+  if (cacheable && (!max_age && max_age !== null)) {
+    errors.ttlValue = <FormattedMessage id="portal.policy.edit.matcher.required.error" />
+  }
+
+  return errors
+}
 
 class NegativeCache extends React.Component {
   constructor(props) {
@@ -44,7 +57,7 @@ class NegativeCache extends React.Component {
     this.props.change('source', set.get('source', sourceDefaultValue))
     this.props.change('body', set.get('body', ''))
 
-    const ttl = set.get('max_age', 0)
+    const ttl = set.get('max_age', DEFAULT_TTL)
     const ttlUnit = unitFromSeconds(ttl)
     const ttlValue = secondsToUnit(ttl, ttlUnit)
 
@@ -57,7 +70,7 @@ class NegativeCache extends React.Component {
 
     if ((typeof this.props.isCacheable !== 'undefined') && (this.props.isCacheable !== isCacheable)) {
       this.props.change('source', sourceDefaultValue)
-      this.props.change('ttlValue', 0)
+      this.props.change('ttlValue', DEFAULT_TTL)
       this.props.change('ttlUnit', 'seconds')
       this.props.change('body', '')
     }
@@ -133,7 +146,8 @@ class NegativeCache extends React.Component {
                 <Field
                   name="ttlValue"
                   component={FieldFormGroupNumber}
-                  min={0}
+                  min={MIN_TTL}
+                  max={MAX_TTL}
                   disabled={!isCacheable}
                 />
               </Col>
@@ -203,7 +217,8 @@ NegativeCache.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'negative-cache-form'
+  form: 'negative-cache-form',
+  validate
 })(NegativeCache)
 
 const cacheFormSelector = formValueSelector('negative-cache-form')
