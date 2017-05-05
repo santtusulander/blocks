@@ -14,7 +14,7 @@ describe('StackedByTimeSummary', () => {
   let subject, error, props = null
 
   beforeEach(() => {
-    subject = () => {
+    subject = (customProps = {}) => {
       props = {
         dataKey: "bytes",
         datasetAArray: [
@@ -55,7 +55,15 @@ describe('StackedByTimeSummary', () => {
         datasetAUnit: "%",
         datasetAValue: "71",
         totalDatasetUnit: "TB",
-        totalDatasetValue: "446"
+        totalDatasetValue: "446",
+        datasetACalculatedUnit: "%",
+        datasetACalculatedValue: 1,
+        datasetBCalculatedUnit: "%",
+        datasetBCalculatedValue: 1,
+        datasetBLabel: "Off-Net",
+        datasetBUnit: "%",
+        datasetBValue: "3",
+        ...customProps
       }
       return shallow(<StackedByTimeSummary {...props} />)
     }
@@ -63,5 +71,85 @@ describe('StackedByTimeSummary', () => {
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
+  })
+
+  it('should reflect dataset A', () => {
+    const customProps = {
+      datasetALabel: "On-Net",
+      datasetAUnit: "%",
+      datasetAValue: "71"
+    }
+    expect(subject(customProps).find('.dataset-a').length).toBe(1)
+  })
+
+  it('should reflect dataset B', () => {
+    const customProps = {
+      datasetBLabel: "On-Net",
+      datasetBUnit: "%",
+      datasetBValue: "71",
+      datasetBArray: [1,2]
+    }
+    expect(subject(customProps).find('.dataset-b').length).toBe(1)
+  })
+
+  it('should reflect calculated value for dataset A', () => {
+    const customProps = {
+      datasetALabel: "On-Net",
+      datasetAUnit: "%",
+      datasetAValue: "71",
+      datasetACalculatedUnit: "TB",
+      datasetACalculatedValue: 22
+    }
+    expect(subject(customProps).find('.suffix').length).toBe(3)
+  })
+
+  it('should reflect calculated value for dataset B', () => {
+    const customProps = {
+      datasetBLabel: "On-Net",
+      datasetBUnit: "%",
+      datasetBValue: "71",
+      datasetBArray: [1,2],
+      datasetBCalculatedUnit: "TB",
+      datasetBCalculatedValue: 22
+    }
+    expect(subject(customProps).find('.suffix').length).toBe(5)
+  })
+
+  it('should reflect optional dataset A', () => {
+    const customProps = {
+      optionalDatasetACalculatedUnit: "TB",
+      optionalDatasetACalculatedValue: 5,
+      optionalDatasetALabel: "Label",
+      optionalDatasetAUnit: "%",
+      optionalDatasetAValue: "23"
+    }
+    expect(subject(customProps).find('.optional-dataset-a').length).toBe(1)
+  })
+
+  it('should reflect optional dataset B', () => {
+    const customProps = {
+      optionalDatasetBCalculatedUnit: "%",
+      optionalDatasetBCalculatedValue: 5,
+      optionalDatasetBLabel: "Label 2",
+      optionalDatasetBUnit: "TB",
+      optionalDatasetBValue: "32"
+    }
+    expect(subject(customProps).find('.optional-dataset-b').length).toBe(1)
+  })
+
+  it('should reflect optional dataset A & B', () => {
+    const customProps = {
+      optionalDatasetACalculatedUnit: "TB",
+      optionalDatasetACalculatedValue: 5,
+      optionalDatasetALabel: "Label",
+      optionalDatasetAUnit: "%",
+      optionalDatasetAValue: "23",
+      optionalDatasetBCalculatedUnit: "%",
+      optionalDatasetBCalculatedValue: 5,
+      optionalDatasetBLabel: "Label 2",
+      optionalDatasetBUnit: "TB",
+      optionalDatasetBValue: "32"
+    }
+    expect(subject(customProps).find('.optional-dataset-border').length).toBe(1)
   })
 })
