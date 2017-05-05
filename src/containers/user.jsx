@@ -88,7 +88,8 @@ class User extends React.Component {
       tfa: currentUser.get('tfa'),
       changingPassword: false,
       language: currentUser.get('locale'),
-      continent: timezone && timezone.split('/')[0]
+      continent: timezone && timezone.split('/')[0],
+      date_format: currentUser.get('date_format')
     } : {}
 
     return (
