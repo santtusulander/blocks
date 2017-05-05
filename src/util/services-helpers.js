@@ -23,11 +23,10 @@ import {
   VOD_STREAMING_CONTENT_TARGETTING
 } from '../constants/service-permissions'
 
-
-export function getServicesIds (services = List()) {
+export function getServicesIds(services = List()) {
   const serv = services.toJS()
 
-  return fromJS(serv.map(({ service_id, options = [] }) => {
+  return fromJS(serv.map(({ service_id, options = []}) => {
     return {
       id: service_id,
       options: options.map(({option_id}) => option_id)
@@ -35,8 +34,8 @@ export function getServicesIds (services = List()) {
   }))
 }
 
-export function getServicesFromIds (servicesIds = []) {
-  return servicesIds.map(({ id, options = [] }) => {
+export function getServicesFromIds(servicesIds = []) {
+  return servicesIds.map(({ id, options = []}) => {
     return {
       service_id: id,
       options: options.map((option_id) => ({ option_id }))
@@ -44,25 +43,25 @@ export function getServicesFromIds (servicesIds = []) {
   })
 }
 
-export function getLocationTypeFromBillingMeta (meta) {
+export function getLocationTypeFromBillingMeta(meta) {
   return meta.regions && meta.regions.length ? REGION_LOCATION_TYPE : GLOBAL_LOCATION_TYPE
 }
 
-export function getServiceById (serviceInfo, id) {
+export function getServiceById(serviceInfo, id) {
   return serviceInfo ? serviceInfo.get(String(id)) : Map()
 }
 
-export function getOptionById (serviceInfo, id) {
+export function getOptionById(serviceInfo, id) {
   const options = serviceInfo ? fromJS(serviceInfo.map(item => item.get('options')).valueSeq().toJS()).flatten(1) : List()
 
   return options.find(item => item.get('id') === id)
 }
 
-export function getServiceByOptionId (serviceInfo, id) {
+export function getServiceByOptionId(serviceInfo, id) {
   return serviceInfo ? serviceInfo.find(service => service.get('options').find(option => option.get('id') === id)) : Map()
 }
 
-export function getDefaultService (service_id) {
+export function getDefaultService(service_id) {
   const defaultObj = {
     service_id,
     billing_meta: {
@@ -70,7 +69,7 @@ export function getDefaultService (service_id) {
     },
     options: []
   }
-  
+
   if (service_id !== MEDIA_DELIVERY_SERVICE_ID) {
     delete defaultObj.billing_meta.flow_direction
   }
@@ -78,14 +77,14 @@ export function getDefaultService (service_id) {
   return fromJS(defaultObj)
 }
 
-export function getDefaultOption (option_id) {
+export function getDefaultOption(option_id) {
   return fromJS({
     option_id,
     billing_meta: {}
   })
 }
 
-export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, groupServices) {
+export function getServiceOptionsForGroup(serviceOptionsInfo, accountServices, groupServices) {
   const accountServiceIds = getServicesIds(accountServices)
   const groupServiceIds = getServicesIds(groupServices)
 
@@ -106,7 +105,7 @@ export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, 
   }, [])
 }
 
-export function getServicePermissions (group) {
+export function getServicePermissions(group) {
   let servicePermissions = List()
   const services = group.get('services') || List()
   const mediaDeliveryService = services.find(service => service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID)
@@ -147,7 +146,7 @@ export function getServicePermissions (group) {
   return servicePermissions
 }
 
-export function getRegionsInfoOptions (regionsInfo) {
+export function getRegionsInfoOptions(regionsInfo) {
   return regionsInfo.map(region => ({
     value: region.get('region_code'),
     label: region.get('description')
