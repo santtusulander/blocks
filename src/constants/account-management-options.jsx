@@ -28,12 +28,12 @@ export const ACCOUNT_TYPE_OPTIONS = FILTERED_ACCOUNT_TYPES.map(e => {
 });
 
 export const SERVICE_TYPES = [
-  { value: 101, label: 'UDN Network Partner - On-Net', accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
-  { value: 1, label: 'Media Delivery', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
+  { value: 101, label: <FormattedMessage id="portal.configuration.details.serviceType.networkPartnerOnNet"/>, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] },
+  { value: 1, label: <FormattedMessage id="portal.configuration.details.serviceType.large"/>, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
 ]
 
 export const BRANDS = [
-  { id: 'udn', brandName: 'UDN' }
+  { id: 'udn', brandName: <FormattedMessage id="portal.UDN.text"/> }
 ]
 
 export const BRAND_OPTIONS = BRANDS.map(e => {
@@ -51,9 +51,9 @@ export const ROLES_MAPPING = [
 ]
 
 export const FLOW_DIRECTION_TYPES = [
-  { value: 'egress', label: <FormattedMessage id="portal.account.chargeNumbersForm.egress.title"/> },
-  { value: 'midgress', label: <FormattedMessage id="portal.account.chargeNumbersForm.midgress.title"/> },
-  { value: 'ingress', label: <FormattedMessage id="portal.account.chargeNumbersForm.ingress.title"/> }
+  { value: 'egress', label: <FormattedMessage id="portal.account.chargeNumbersForm.egress.title"/>, disabled: true },
+  { value: 'midgress', label: <FormattedMessage id="portal.account.chargeNumbersForm.midgress.title"/>, disabled: false },
+  { value: 'ingress', label: <FormattedMessage id="portal.account.chargeNumbersForm.ingress.title"/>, disabled: true }
 ]
 
 export const DNS_MIN_REFRESH = 0

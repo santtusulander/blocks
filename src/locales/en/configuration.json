@@ -112,6 +112,7 @@
   "portal.configuration.traffic.rules.match.asn.modal.subtitle": "Specify all ASN's that should be matched",
 
   "portal.configuration.traffic.rules.match.ipv4address.input.error": "Some of the values you entered could not be resolved as IPv4 addresses.",
+  "portal.configuration.traffic.rules.match.ipv4cidr.input.error": "Some of the values you entered could not be resolved as IPv4 CIDRs.",
   "portal.configuration.traffic.rules.match.input.value.exists.error": "A value you entered already exists",
 
   "portal.configuration.traffic.rules.match.continent": "Continent",
@@ -122,7 +123,7 @@
   "portal.configuration.traffic.rules.match.continent.input.placeholder": "Enter continent name",
   "portal.configuration.traffic.rules.match.country.input.placeholder": "Enter country name, 2-letter or 3-letter ISO code",
   "portal.configuration.traffic.rules.match.ipv4address.input.placeholder": "Enter IPv4 addresses, eg. 10.1.1.1",
-  "portal.configuration.traffic.rules.match.ipv4cidr.input.placeholder": "Enter IPv4 addresses in CIDR notation, eg. 10.1.1.1/24",
+  "portal.configuration.traffic.rules.match.ipv4cidr.input.placeholder": "Enter IPv4 addresses in CIDR notation, eg. 10.1.1.0/24",
 
   "portal.configuration.condition.and": "AND",
   "portal.configuration.condition.or": "OR",
@@ -163,6 +164,7 @@
   "portal.configuration.details.serviceType.text": "Service Type",
   "portal.configuration.details.serviceType.msd": "VOD Streaming",
   "portal.configuration.details.serviceType.large": "Media Delivery",
+  "portal.configuration.details.serviceType.networkPartnerOnNet": "UDN Network Partner - On-Net",
   "portal.configuration.details.useUDNOrigin.text": "Use UDN Origin",
   "portal.configuration.details.UDNOrigin.text": "UDN Origin (Storage)",
   "portal.configuration.details.deploymentMode.production": "Production",
