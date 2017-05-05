@@ -554,10 +554,8 @@ class ContentItems extends Component {
                 {/* OTHER ContentItems (brand / accouts / groups) */}
                 { getPage(contentItems.sort(sortContent(this.getCustomSortPath('content'), sortDirection)), currentPage, PAGE_SIZE)
                       .map(item => {
-                        // console.log(content.toJS());
-                        // const item = content.get('item')
                         const id = item.get('id')
-                        const isTrialHost = false //item.get('isTrialHost')
+                        const isTrialHost = false
                         const name = item.get('name')
                         const contentMetrics = item.get('metrics')
 
@@ -575,7 +573,7 @@ class ContentItems extends Component {
                             this.editItem(id)
                           } : null,
                           analyticsLink: this.props.analyticsURLBuilder(id),
-                          dailyTraffic: this.getDailyTraffic(item) /*content.get('dailyTraffic').*/.get('detail').reverse(),
+                          dailyTraffic: this.getDailyTraffic(item).get('detail').reverse(),
                           description: 'Desc',
                           delete: this.props.deleteItem,
                           primaryData: contentMetrics.get('traffic'),
