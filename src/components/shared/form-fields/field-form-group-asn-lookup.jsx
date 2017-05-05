@@ -38,7 +38,7 @@ class FieldFormGroupAsnLookup extends Component {
     fetchAsns(filterType, query)
       .then(asns => {
         const options = asns.map(item => ({
-          id: item.asn,
+          id: item.asn.toString(),
           label: formatASN(item)
         }))
 
