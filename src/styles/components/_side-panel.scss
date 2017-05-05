@@ -2,6 +2,7 @@
 // ===========
 $side-panel-width: rem(636px);
 $side-panel-narrow-width: rem(536px);
+$side-panel-vertical-padding: rem(11px);
 $side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
@@ -55,7 +56,7 @@ $side-panel-overlap-offset: rem(15px);
 
   .modal-body {
     height: calc(100vh - #{$side-panel-header-height + (2 * $side-panel-body-margin) + $side-panel-footer-height});
-    padding: 0 $side-panel-horizontal-padding;
+    padding: $side-panel-vertical-padding $side-panel-horizontal-padding;
     margin: $side-panel-body-margin 0 #{$side-panel-footer-height + $side-panel-body-margin};
     overflow: auto;
 
