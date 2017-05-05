@@ -21,10 +21,12 @@ import {
   checkChangeInBounds,
   getScore
 } from '../../util/mapbox-helpers.js'
-// import IconExpand from '../shared/icons/icon-expand';
+
 // import IconMinimap from '../shared/icons/icon-minimap';
+import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
+
 class Mapbox extends React.Component {
   constructor(props) {
     super(props)
@@ -40,6 +42,7 @@ class Mapbox extends React.Component {
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
+    this.goFullscreen = this.goFullscreen.bind(this)
   }
 
   componentDidMount() {
@@ -630,6 +633,11 @@ class Mapbox extends React.Component {
     this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
 
+  goFullscreen() {
+    this.state.map.getCanvas().webkitRequestFullScreen()
+    this.state.map.resize();
+  }
+
   render() {
     const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
@@ -691,11 +699,11 @@ class Mapbox extends React.Component {
         }
 
         <div className="map-controls">
-          {/*
-          <div className="control map-fullscreen">
-            <IconExpand width={32} height={32} />
-          </div>
-          */}
+          { this.props.fullScreen &&
+            <div className="control map-fullscreen" onClick={this.goFullscreen}>
+              <IconExpand width={32} height={32} />
+            </div>
+          }
           <div className="control map-zoom">
             <ZoomControl
               style={{
@@ -741,6 +749,7 @@ Mapbox.propTypes = {
   countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
+  fullScreen: React.PropTypes.bool,
   geoData: React.PropTypes.object.isRequired,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,
@@ -758,7 +767,8 @@ Mapbox.defaultProps = {
     setMapBounds: () => null,
     setMapZoom: () => null
   },
-  mapBounds: Immutable.Map()
+  mapBounds: Immutable.Map(),
+  fullScreen: false
 }
 
 export default Mapbox
