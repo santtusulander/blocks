@@ -274,3 +274,21 @@ export const startAccountFetching = createAction(ACCOUNT_METRICS_START_FETCH)
 export const startGroupFetching = createAction(GROUP_METRICS_START_FETCH)
 
 export const startHostFetching = createAction(HOST_METRICS_START_FETCH)
+
+/**
+ * getMetrics for a brand
+ * @param  {Object} state [description]
+ * @return {Map}       [description]
+ */
+export const getMetricsByBrand = (state /*, brand*/) => {
+  return state.metrics.get('accountMetrics')
+}
+
+/**
+ * getMetrics for an account
+ * @param  {Object} state [description]
+ * @return {Map}       [description]
+ */
+export const getMetricsByAccount = (state /*, account*/) => {
+  return state.metrics.get('groupMetrics')
+}

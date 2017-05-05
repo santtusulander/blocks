@@ -44,7 +44,8 @@ const fakeMetrics = Immutable.fromJS([
 const fakeItems = Immutable.fromJS([
   {
     id: 3,
-    name: 'aaa'
+    name: 'aaa',
+    metrics: {}
   }
 ])
 

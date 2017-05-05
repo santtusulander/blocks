@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import d3 from 'd3'
 import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 
-import Immutable from 'immutable'
+import { fromJS, is, List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl';
 
 import {
@@ -57,11 +57,9 @@ import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 import Paginator from '../shared/paginator/paginator'
 
-const rangeMin = 400
-const rangeMax = 500
-
-let trafficMin = 0
-let trafficMax = 0
+//Starburst sizes in pixels
+const TRAFFIC_SCALE_MIN = 400
+const TRAFFIC_SCALE_MAX = 500
 
 const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
@@ -80,7 +78,7 @@ const sortContent = (path, direction) => (item1, item2) => {
  * @param  {List} items
  * @param  {Number} page
  * @param  {Number} limit
- * @return {List} sliced list section
+ * @return {List} sliced list section/
  */
 const getPage = (items, page, limit) => {
   const offset = (page - 1) * limit
@@ -88,7 +86,7 @@ const getPage = (items, page, limit) => {
   return items.slice(offset, offset + limit)
 }
 
-class ContentItems extends React.Component {
+class ContentItems extends Component {
   constructor(props) {
     super(props);
 
@@ -98,6 +96,10 @@ class ContentItems extends React.Component {
       showStorageModal: false,
       itemToEdit: undefined
     }
+
+    this.trafficMin = 0;
+    this.trafficMax = 0;
+
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
     this.onItemAdd = this.onItemAdd.bind(this)
@@ -112,6 +114,7 @@ class ContentItems extends React.Component {
     this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.onActivePageChange = this.onActivePageChange.bind(this)
+    this.calculateMinMax = this.calculateMinMax.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -120,6 +123,28 @@ class ContentItems extends React.Component {
       label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
       handleClick: this.showStorageModal
     }]
+  }
+
+  componentDidMount() {
+    this.calculateMinMax(this.props.metrics)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //if contentItems changed recalculate min & max
+    if (!is(this.props.contentItems, nextProps.contentItems)) {
+      this.calculateMinMax(nextProps.contentItems)
+    }
+
+  }
+
+  calculateMinMax(contentItems) {
+    const totalTraffics = contentItems.map(val => {
+      return val.getIn(['metrics', 'totalTraffic']) || 0
+    })
+
+    this.trafficMin = Math.min(...totalTraffics)
+    this.trafficMax = Math.max(...totalTraffics)
+
   }
 
   /**
@@ -133,13 +158,9 @@ class ContentItems extends React.Component {
     })
   }
 
-  getMetrics(item) {
-    return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
-      null, Immutable.Map({ totalTraffic: 0 }))
-  }
   getDailyTraffic(item) {
     return this.props.dailyTraffic.find(traffic => traffic.get(this.props.type) === item.get('id'),
-      null, Immutable.fromJS({ detail: [] }))
+      null, fromJS({ detail: [] }))
   }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
@@ -152,14 +173,18 @@ class ContentItems extends React.Component {
     const [sortBy] = this.props.sortValuePath
     if (sortBy === 'item') {
       if (tag === 'storages') {
-        return Immutable.fromJS(['ingest_point_id'])
+        return fromJS(['ingest_point_id'])
       }
       if (tag === 'properties') {
-        return Immutable.fromJS(['published_host_id'])
+        return fromJS(['published_host_id'])
       }
+      if (tag === 'content') {
+        return fromJS(['name'])
+      }
+
     }
 
-    return Immutable.fromJS(['totalTraffic'])
+    return fromJS(['totalTraffic'])
   }
 
   showNotification(message) {
@@ -260,7 +285,7 @@ class ContentItems extends React.Component {
       .then((response) => {
         this.setState({
           showModal: true,
-          itemToEdit: Immutable.fromJS(response.payload)
+          itemToEdit: fromJS(response.payload)
         })
       })
   }
@@ -356,6 +381,7 @@ class ContentItems extends React.Component {
 
   render() {
     const {
+      contentItems,
       sortValuePath,
       sortDirection,
       headerText,
@@ -363,7 +389,6 @@ class ContentItems extends React.Component {
       activeGroup,
       activeAccount,
       analyticsURLBuilder,
-      fetchingMetrics,
       showAnalyticsLink,
       viewingChart,
       user,
@@ -375,7 +400,6 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
-
     const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
     const groupHasMediaDeliveryService = hasService(activeGroup, MEDIA_DELIVERY_SERVICE_ID)
@@ -383,23 +407,9 @@ class ContentItems extends React.Component {
     /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
     const modifyStorageAllowed = modifyAllowed && false
 
-    let trafficTotals = Immutable.List()
-
-    const contentItems = this.props.contentItems.map(item => {
-      const itemMetrics = this.getMetrics(item)
-      const itemDailyTraffic = this.getDailyTraffic(item)
-
-      if (!fetchingMetrics) {
-        trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
-      }
-
-      return Immutable.Map({
-        item: item,
-        metrics: itemMetrics,
-        dailyTraffic: itemDailyTraffic
-      })
-    })
-    .sort(sortContent(sortValuePath, sortDirection))
+    const trafficScale = d3.scale.linear()
+        .domain([this.trafficMin, this.trafficMax])
+        .range([TRAFFIC_SCALE_MIN, TRAFFIC_SCALE_MAX])
 
     const location = this.context.location
     const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
@@ -417,22 +427,14 @@ class ContentItems extends React.Component {
     }
 
 
-    if (!fetchingMetrics) {
-      trafficMin = Math.min(...trafficTotals)
-      trafficMax = Math.max(...trafficTotals)
-    }
     // If trafficMin === trafficMax, there's only one property or all properties
     // have identical metrics. In that case the amoebas will all get the minimum
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
-    trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
-
-    const trafficScale = d3.scale.linear()
-      .domain([trafficMin, trafficMax])
-      .range([rangeMin, rangeMax]);
+    this.trafficMin = (this.trafficMin === this.trafficMax) ? (this.trafficMin * 0.9) : this.trafficMin
 
     const foundSort = sortOptions.find(opt => {
-      return Immutable.is(opt.path, sortValuePath) &&
+      return is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
     })
 
@@ -550,51 +552,53 @@ class ContentItems extends React.Component {
                 }
 
                 {/* OTHER ContentItems (brand / accouts / groups) */}
-                { properties.isEmpty() && storages.isEmpty() && getPage(contentItems, currentPage, PAGE_SIZE).map(content => {
-                  const item = content.get('item')
-                  const id = item.get('id')
-                  const isTrialHost = item.get('isTrialHost')
-                  const name = item.get('name')
-                  const contentMetrics = content.get('metrics')
-                  const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
-                  const itemProps = {
-                    id,
-                    name,
-                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
-                    brightMode: isTrialHost,
-                    linkTo: this.props.nextPageURLBuilder(id, item),
-                    disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
-                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
-                    onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-                      this.editItem(id)
-                    } : null,
-                    analyticsLink: this.props.analyticsURLBuilder(id),
-                    dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
-                    description: 'Desc',
-                    delete: this.props.deleteItem,
-                    primaryData: contentMetrics.get('traffic'),
-                    secondaryData: contentMetrics.get('historical_traffic'),
-                    differenceData: contentMetrics.get('historical_variance'),
-                    cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
-                    timeToFirstByte: contentMetrics.get('avg_ttfb'),
-                    maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
-                    minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
-                    avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
-                    fetchingMetrics: this.props.fetchingMetrics,
-                    chartWidth: scaledWidth.toString(),
-                    barMaxHeight: (scaledWidth / 7).toString(),
-                    showSlices: this.props.showSlices,
-                    isAllowedToConfigure: this.props.isAllowedToConfigure
-                  }
+                { getPage(contentItems.sort(sortContent(this.getCustomSortPath('content'), sortDirection)), currentPage, PAGE_SIZE)
+                      .map(item => {
+                        const id = item.get('id')
+                        const isTrialHost = false
+                        const name = item.get('name')
+                        const contentMetrics = item.get('metrics')
 
-                  return (
-                    <ContentItem key={`content-item-${id}`}
-                      isChart={viewingChart}
-                      itemProps={itemProps}
-                      scaledWidth={scaledWidth}
-                      deleteItem={this.props.deleteItem}/>
-                  )
-                })}
+                        const scaledWidth =  trafficScale(item.get('totalTraffic') || 0)
+
+                        const itemProps = {
+                          id,
+                          name,
+                          ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                          brightMode: isTrialHost,
+                          linkTo: this.props.nextPageURLBuilder(id, item),
+                          disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
+                          configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
+                          onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
+                            this.editItem(id)
+                          } : null,
+                          analyticsLink: this.props.analyticsURLBuilder(id),
+                          dailyTraffic: this.getDailyTraffic(item).get('detail').reverse(),
+                          description: 'Desc',
+                          delete: this.props.deleteItem,
+                          primaryData: contentMetrics.get('traffic'),
+                          secondaryData: contentMetrics.get('historical_traffic'),
+                          differenceData: contentMetrics.get('historical_variance'),
+                          cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
+                          timeToFirstByte: contentMetrics.get('avg_ttfb'),
+                          maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
+                          minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
+                          avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
+                          fetchingMetrics: this.props.fetchingMetrics,
+                          chartWidth: scaledWidth.toString(),
+                          barMaxHeight: (scaledWidth / 7).toString(),
+                          showSlices: this.props.showSlices,
+                          isAllowedToConfigure: this.props.isAllowedToConfigure
+                        }
+
+                        return (
+                          <ContentItem key={`content-item-${id}`}
+                            isChart={viewingChart}
+                            itemProps={itemProps}
+                            scaledWidth={scaledWidth}
+                            deleteItem={this.props.deleteItem}/>
+                        )
+                      })}
 
 
                 { /* Show Pagination if more items than fit on PAGE_SIZE */
@@ -667,62 +671,61 @@ class ContentItems extends React.Component {
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  analyticsURLBuilder: React.PropTypes.func,
-  changeNotification: React.PropTypes.func,
-  configURLBuilder: React.PropTypes.func,
-  contentItems: React.PropTypes.instanceOf(Immutable.List),
-  createNewItem: React.PropTypes.func,
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  deleteItem: React.PropTypes.func,
-  editItem: React.PropTypes.func,
-  fetchItem: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
-  group: React.PropTypes.string,
-  headerText: React.PropTypes.object,
-  hideInfoDialog: React.PropTypes.func,
-  ifNoContent: React.PropTypes.string,
-  isAllowedToConfigure: React.PropTypes.bool,
-  locationPermissions: React.PropTypes.object,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
-  nextPageURLBuilder: React.PropTypes.func,
-  params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  router: React.PropTypes.object,
+  activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
+  analyticsURLBuilder: PropTypes.func,
+  changeNotification: PropTypes.func,
+  configURLBuilder: PropTypes.func,
+  contentItems: PropTypes.instanceOf(List),
+  createNewItem: PropTypes.func,
+  dailyTraffic: PropTypes.instanceOf(List),
+  deleteItem: PropTypes.func,
+  editItem: PropTypes.func,
+  fetchItem: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  group: PropTypes.string,
+  headerText: PropTypes.object,
+  hideInfoDialog: PropTypes.func,
+  ifNoContent: PropTypes.string,
+  isAllowedToConfigure: PropTypes.bool,
+  locationPermissions: PropTypes.object,
+  metrics: PropTypes.instanceOf(List),
+  nextPageURLBuilder: PropTypes.func,
+  params: PropTypes.object,
+  properties: PropTypes.instanceOf(List),
+  router: PropTypes.object,
   // eslint-disable-next-line react/no-unused-prop-types
-  selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
+  selectionDisabled: PropTypes.bool, // this is used in a helper render method
   // eslint-disable-next-line react/no-unused-prop-types
-  selectionStartTier: React.PropTypes.string, // this is used in a helper render method
-  showAnalyticsLink: React.PropTypes.bool,
-  showInfoDialog: React.PropTypes.func,
-  showSlices: React.PropTypes.bool,
-  sortDirection: React.PropTypes.number,
-  sortItems: React.PropTypes.func,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storagePermission: React.PropTypes.object,
-  storages: React.PropTypes.instanceOf(Immutable.List),
-  toggleChartView: React.PropTypes.func,
-  type: React.PropTypes.string,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+  selectionStartTier: PropTypes.string, // this is used in a helper render method
+  showAnalyticsLink: PropTypes.bool,
+  showInfoDialog: PropTypes.func,
+  showSlices: PropTypes.bool,
+  sortDirection: PropTypes.number,
+  sortItems: PropTypes.func,
+  sortValuePath: PropTypes.instanceOf(List),
+  storagePermission: PropTypes.object,
+  storages: PropTypes.instanceOf(List),
+  toggleChartView: PropTypes.func,
+  type: PropTypes.string,
+  user: PropTypes.instanceOf(Map),
+  viewingChart: PropTypes.bool
 }
 ContentItems.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  contentItems: Immutable.List(),
-  dailyTraffic: Immutable.List(),
-  metrics: Immutable.List(),
-  sortValuePath: Immutable.List(),
-  storages: Immutable.List(),
-  properties: Immutable.List(),
-  user: Immutable.Map(),
+  activeAccount: Map(),
+  activeGroup: Map(),
+  contentItems: List(),
+  dailyTraffic: List(),
+  sortValuePath: List(),
+  storages: List(),
+  properties: List(),
+  user: Map(),
   storagePermission: {}
 }
 
 ContentItems.contextTypes = {
-  location: React.PropTypes.object
+  location: PropTypes.object
 }
 
 export default withRouter(ContentItems)

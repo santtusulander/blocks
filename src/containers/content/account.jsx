@@ -21,7 +21,7 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 import groupActions from '../../redux/modules/entities/groups/actions'
 
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
-import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
+import { getByAccountWithMetrics as getGroupsByAccountWithMetrics } from '../../redux/modules/entities/groups/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
 import { getCurrentUser } from '../../redux/modules/user'
@@ -226,7 +226,6 @@ export class Account extends React.Component {
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
           isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP)}
           locationPermissions={getLocationPermissions(currentUser)}
-          metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
           selectionStartTier="group"
           selectionDisabled={selectionDisabled}
@@ -264,7 +263,6 @@ Account.propTypes = {
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
-  metrics: PropTypes.instanceOf(List),
   oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
@@ -282,7 +280,6 @@ Account.defaultProps = {
   activeGroup: Map(),
   dailyTraffic: List(),
   groups: List(),
-  metrics: List(),
   sortValuePath: List(),
   user: Map()
 }
@@ -300,9 +297,8 @@ const mapStateToProps = (state, ownProps) => {
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
-    groups: getGroupsByAccount(state, account),
+    groups: getGroupsByAccountWithMetrics(state, account),
 
-    metrics: state.metrics.get('groupMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,
