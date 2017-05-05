@@ -44,10 +44,14 @@ class StackedByTimeSummary extends React.Component {
     const {
       dataKey,
       datasetAArray,
+      datasetACalculatedUnit,
+      datasetACalculatedValue,
       datasetALabel,
       datasetAUnit,
       datasetAValue,
       datasetBArray,
+      datasetBCalculatedUnit,
+      datasetBCalculatedValue,
       datasetBLabel,
       datasetBUnit,
       datasetBValue,
@@ -117,7 +121,10 @@ class StackedByTimeSummary extends React.Component {
             <div className="dataset-label dataset-a">{datasetALabel}</div>
             {total > 0 ? [
               <span key={0} className="value">{datasetAValue}</span>,
-              datasetAUnit && <span key={1} className="suffix">{datasetAUnit}</span>
+              datasetAUnit && <span key={1} className="suffix">{datasetAUnit}</span>,
+              datasetACalculatedUnit && <br key={2} />,
+              datasetACalculatedUnit && <span key={3} className="value">{datasetACalculatedValue}</span>,
+              datasetACalculatedUnit && <span key={4} className="suffix">{datasetACalculatedUnit}</span>
             ] : <div className="no-data by-time-summary">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
@@ -129,7 +136,10 @@ class StackedByTimeSummary extends React.Component {
             {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
             {totalDatasetValue > 0 && [
               datasetBValue && <span key={0} className="value">{datasetBValue}</span>,
-              datasetBUnit && <span key={1} className="suffix">{datasetBUnit}</span>
+              datasetBUnit && <span key={1} className="suffix">{datasetBUnit}</span>,
+              datasetBCalculatedUnit && <br key={2} />,
+              datasetBCalculatedUnit && <span key={3} className="value">{datasetBCalculatedValue}</span>,
+              datasetBCalculatedUnit && <span key={4} className="suffix">{datasetBCalculatedUnit}</span>
             ]}
           </div>
           }
@@ -143,10 +153,14 @@ StackedByTimeSummary.displayName = 'StackedByTimeSummary'
 StackedByTimeSummary.propTypes = {
   dataKey: PropTypes.string,
   datasetAArray: PropTypes.array.isRequired,
+  datasetACalculatedUnit: PropTypes.string,
+  datasetACalculatedValue: PropTypes.number,
   datasetALabel: PropTypes.string.isRequired,
   datasetAUnit: PropTypes.string,
   datasetAValue: PropTypes.string.isRequired,
   datasetBArray: PropTypes.array,
+  datasetBCalculatedUnit: PropTypes.string,
+  datasetBCalculatedValue: PropTypes.number,
   datasetBLabel: PropTypes.string,
   datasetBUnit: PropTypes.string,
   datasetBValue: PropTypes.string,
