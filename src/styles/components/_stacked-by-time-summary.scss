@@ -12,6 +12,20 @@
     }
   }
 
+  .optional-dataset-border {
+    min-height: 60px;
+    margin: auto 15px;
+    margin-right: 5%;
+
+    .dark-theme & {
+      border-right: 1px solid $dt-text-color;
+    }
+
+    .light-theme & {
+      border-right: 1px solid $lt-text-color;
+    }
+  }
+
   .stacked-by-time-summary-container {
     display: flex;
     align-items: flex-end;
