@@ -75,7 +75,7 @@ class ConfigurationAdvanced extends React.Component {
     const {brand, account, group, property} = props.params
     const serviceType = getServiceType(props.property)
 
-    props.fetchMetadata({brand, account, group, property, serviceType, forceReload: true})
+    props.fetchMetadata({brand, account, group, property, serviceType})
   }
 
   onSubmit(edit, values) {
