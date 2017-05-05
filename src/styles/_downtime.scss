@@ -9,8 +9,19 @@
     display: inline-block;
     width: 180px;
     height: 180px;
-    margin-bottom: 1em;
     background: url('../assets/img/downtime.svg') center center no-repeat;
     background-size: 100% 100%;
+  }
+
+  h2 {
+    margin: 24px auto;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 36px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 18px;
   }
 }

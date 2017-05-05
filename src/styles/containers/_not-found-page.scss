@@ -4,17 +4,15 @@
     display: inline-block;
     width: 400px;
     height: 150px;
-    margin: 0 0 4em;
     background: url('../assets/img/not-found.svg') center center no-repeat;
     background-size: contain;
   }
 
-  p {
-    font-size: 2em;
-    line-height: 1.5;
-  }
-
-  button {
-    margin: 2em 0;
+  h2 {
+    width: 420px;
+    margin: 24px auto;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 36px;
   }
 }

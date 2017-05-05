@@ -10,15 +10,17 @@
       html,
       body {
         height: 100vh;
+        overflow: hidden;
         font-family: 'Roboto', Helvetica, Arial;
         font-size: 12px;
         line-height: 1.2;
         color: #d2d2d2;
         background-attachment: fixed;
-        background-color: black;
+        background-color: #000;
         background-image: radial-gradient(circle farthest-corner at 50% 0, rgba(123, 6, 99, 0), rgba(123, 6, 99, 0.2)), linear-gradient(rgba(0, 169, 212, 0.5), rgba(0, 169, 212, 0.25));
         background-size: 100%;
-        overflow: hidden;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
       }
 
       .internal-error-content {
@@ -30,31 +32,37 @@
         transform: translate(-50%, -50%);
       }
 
-      .error-image{
+      .error-image {
         width: 290px;
       }
 
       .error-msg {
-        font-size: 30px;
+        margin: 24px auto;
+        font-size: 36px;
+        font-weight: bold;
+        line-height: 36px;
         white-space: nowrap;
       }
 
       .error-apology {
-        margin: auto;
         width: 290px;
+        margin: auto;
+        font-size: 14px;
+        line-height: 18px;
       }
 
       .button {
-        padding: 8px 16px;
-        border-radius: 2px;
+        padding: 7px 17px;
         border: solid transparent 2px;
+        border-radius: 2px;
       }
 
       .support-link {
         display: inline-block;
         margin-top: 24px;
+        font-size: 14px;
         font-weight: bold;
-        color: white;
+        color: #fff;
         text-decoration: none;
         text-transform: uppercase;
         background-color: #00a9d4;
@@ -91,17 +99,17 @@
             </g>
         </g>
       </svg>
-      <h1 class="error-msg">
+      <h2 class="error-msg">
         Oh no, we are having an<br/>
         internal server error
-      </h1>
+      </h2>
       <p class="error-apology">
         Something went wrong on our side and we are currently working on resolving the issue.<br/>
         Sorry for any inconvenience.
       </p>
       <a class="support-link" href="https://support.ericssonudn.com/">
         <div class="button">
-          contanct support
+          contact support
         </div>
       </a>
     </div>
