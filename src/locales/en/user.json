@@ -68,5 +68,6 @@
   "portal.user.edit.recoveryKey.modal.title": "Recovery Key",
   "portal.user.edit.recoveryKey.modal.helpText": "This is one-time recovery key. Store it somewhere safe.",
   "portal.user.edit.localeSettings.text": "Locale settings",
-  "portal.user.edit.dateFormat.text": "Date Format"
+  "portal.user.edit.dateFormat.text": "Date Format",
+  "portal.user.edit.timeZone.text": "Time Zone"
 }

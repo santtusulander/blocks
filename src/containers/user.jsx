@@ -74,6 +74,7 @@ class User extends React.Component {
 
   render() {
     const { currentUser } = this.props;
+    const timezone = currentUser ? currentUser.get('timezone') : ''
     const initialValues = currentUser ? {
       email: currentUser.get('email'),
       first_name: currentUser.get('first_name'),
@@ -82,11 +83,12 @@ class User extends React.Component {
       phone_country_code: currentUser.get('phone_country_code'),
       phone_number: currentUser.get('phone_number'),
       full_phone_number: `${currentUser.get('phone_country_code')}${currentUser.get('phone_number')}`,
-      timezone: currentUser.get('timezone'),
+      timezone: timezone,
       tfa_toggle: !!currentUser.get('tfa'),
       tfa: currentUser.get('tfa'),
       changingPassword: false,
-      language: currentUser.get('locale')
+      language: currentUser.get('locale'),
+      continent: timezone && timezone.split('/')[0]
     } : {}
 
     return (

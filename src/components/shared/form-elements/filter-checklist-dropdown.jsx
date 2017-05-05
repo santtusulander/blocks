@@ -77,7 +77,9 @@ export class FilterChecklistDropdown extends React.Component {
     const labels = this.props.options
       .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
-    if (!numVals || !labels.size) {
+    if (!numVals && !this.props.defaultAllSelected) {
+      return <FormattedMessage id="portal.analytics.dropdownMenu.pleaseSelect"/>
+    } else if ((!numVals || !labels.size) && this.props.defaultAllSelected) {
       return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
     } else if (numVals === 1) {
       return labels.first()
@@ -193,6 +195,7 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   children: React.PropTypes.array,
   className: React.PropTypes.string,
+  defaultAllSelected: React.PropTypes.bool,
   disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
   onChange: React.PropTypes.func,
@@ -203,6 +206,7 @@ FilterChecklistDropdown.propTypes   = {
 }
 
 FilterChecklistDropdown.defaultProps = {
+  defaultAllSelected: true,
   options: List(),
   value: List()
 }

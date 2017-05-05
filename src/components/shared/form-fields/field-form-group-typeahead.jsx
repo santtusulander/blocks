@@ -32,13 +32,12 @@ const FieldFormGroupTypeahead = ({
   onSearch,
   validation
 }) => {
-
   /* eslint-disable react/no-multi-comp */
   /* eslint-disable react/display-name */
   const renderToken = (token, onRemove, key) => {
 
     // Add validation classes to rendered tokens if custom validation rule is defined
-    const validationClass = (validation) ? validation(token) ? 'valid' : 'invalid' : ''
+    const validationClass = (validation) ? validation(token, input.value) ? 'valid' : 'invalid' : ''
 
     return (
       <div className={classNames('token token-removeable', `token__${validationClass}`)} key={key}>

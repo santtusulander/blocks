@@ -61,7 +61,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
         } else if (matchType === 'continent') {
           labelValue = formatMessage({
 
-            id: continentList.find(({ id }) => id.toLowerCase() === matchValue.toLowerCase()).labelId
+            id: continentList.find(({ id }) => id === matchValue).labelId
 
           })
 

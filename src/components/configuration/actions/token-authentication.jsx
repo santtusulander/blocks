@@ -6,8 +6,6 @@ import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import HasServicePermission from '../../shared/permission-wrappers/has-service-permission'
-
 import SidePanel from '../../shared/side-panel'
 import TokenSchema from './token-auth-forms/token-schema'
 import TokenStreaming from './token-auth-forms/token-streaming'
@@ -25,8 +23,6 @@ import { ENCRYPTION_OPTIONS,
          SCHEMA_DEFAULT,
          ENCRYPTION_DEFAULT,
          TA_TYPE_DEFAULT } from '../../../constants/configuration'
-
-import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -114,22 +110,20 @@ export class TokenAuth extends React.Component {
             </a>
           </div>
         </div>
-        <HasServicePermission allOf={[VOD_STREAMING_TOKEN_AUTH]}>
-          <div className="flex-row options-item">
-            <div className="flex-item options-item--name">{<FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />}</div>
-            <div className="flex-item arrow-right">
-              <a
-                className="btn btn-icon btn-transparent"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  this.setState({detailForm: 'streaming'})
-                }}
-              >
-                <IconChevronRight />
-              </a>
-            </div>
+        <div className="flex-row options-item">
+          <div className="flex-item options-item--name">{<FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />}</div>
+          <div className="flex-item arrow-right">
+            <a
+              className="btn btn-icon btn-transparent"
+              onClick={(e) => {
+                e.stopPropagation()
+                this.setState({detailForm: 'streaming'})
+              }}
+            >
+              <IconChevronRight />
+            </a>
           </div>
-        </HasServicePermission>
+        </div>
       </div>
     )
   }
