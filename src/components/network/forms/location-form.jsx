@@ -31,6 +31,7 @@ const validate = ({
   iataCode,
   latitude = '',
   longitude = '',
+  cloudName,
   cloudProviderRegion,
   cloudProviderLocationId = '' }) => {
   const customConditions = {
@@ -88,7 +89,7 @@ const validate = ({
   };
 
   const errors = checkForErrors(
-    { name, iataCode, latitude, longitude, cloudProviderLocationId },
+    { name, iataCode, latitude, longitude, cloudProviderLocationId, cloudName },
     customConditions,
     requiredTexts
   );
