@@ -11,7 +11,7 @@ import {
 } from '../../util/routes.js'
 
 import accountActions from '../../redux/modules/entities/accounts/actions'
-import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
+import { getById as getAccountById, getByBrandWithMetrics  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../redux/modules/user'
@@ -23,7 +23,6 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 
 import {
-  filterMetricsByAccounts,
   userIsCloudProvider,
   userIsServiceProvider
 } from '../../util/helpers'
@@ -85,7 +84,6 @@ export class Brand extends React.Component {
       accounts,
       fetching,
       fetchingMetrics,
-      metrics,
       params,
       sortDirection,
       sortValuePath,
@@ -102,8 +100,6 @@ export class Brand extends React.Component {
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
     const selectionDisabled = !showAccountList && userIsServiceProvider(currentUser)
-
-    const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
     const nextPageURLBuilder = (accountID, account) => {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
@@ -134,7 +130,6 @@ export class Brand extends React.Component {
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
         isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
-        metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
         showSlices={true}
@@ -180,7 +175,6 @@ Brand.defaultProps = {
   accounts: List(),
   activeAccount: Map(),
   dailyTraffic: List(),
-  metrics: List(),
   currentUser: Map()
 }
 
@@ -188,11 +182,10 @@ Brand.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     activeAccount: getAccountById(state, ownProps.params.account),
-    accounts: getByBrand(state, ownProps.params.brand),
+    accounts: getByBrandWithMetrics(state, ownProps.params.brand),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
-    metrics: state.metrics.get('accountMetrics'),
     roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
