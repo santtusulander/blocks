@@ -4,7 +4,7 @@ import { Row, Col, FormGroup } from 'react-bootstrap'
 import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
-
+import _ from 'lodash'
 import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
@@ -85,7 +85,8 @@ class ConfigurationAdvanced extends React.Component {
     const {brand, account, group, property} = this.props.params
 
     if (edit) {
-      return this.props.updateMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: values})
+      const changedValues = this.generateSubmittableValues(values)
+      return this.props.updateMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: changedValues})
       .then(() => this.props.showNotification())
       .catch(this.submissionError)
     } else {
@@ -93,6 +94,13 @@ class ConfigurationAdvanced extends React.Component {
       .then(() => this.props.showNotification())
       .catch(this.submissionError)
     }
+  }
+
+  generateSubmittableValues(values) {
+    const custom =  Object.keys(values).reduce((value, key) => {
+      return key.includes('use_') ? {...value, [key]: values[key]} : value
+    }, {})
+    console.log(custom)
   }
 
   restoreConfig(configName) {
