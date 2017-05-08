@@ -308,8 +308,7 @@ const mapStateToProps = (state, ownProps) => {
 
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {params} = ownProps
-  const {account} = params
+  const {brand, account} = ownProps.params
 
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -324,8 +323,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
   const fetchData = () => {
     return Promise.all([
-      dispatch(accountActions.fetchOne({...params, id: params.account})),
-      dispatch(groupActions.fetchAll(params)),
+      dispatch(accountActions.fetchOne({brand, id: account})),
+      dispatch(groupActions.fetchAll({brand, account})),
 
       metricsActions.startGroupFetching(),
       metricsActions.fetchGroupMetrics(metricsOpts),
