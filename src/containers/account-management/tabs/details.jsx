@@ -9,7 +9,8 @@ import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
-import {fetchAccount, startFetching as accountStartFetching, getById as getAccountById, isFetching as accountsFetching} from '../../../redux/modules/account'
+import {getById as getAccountById} from '../../../redux/modules/entities/accounts/selectors'
+import {getFetchingByTag} from '../../../redux/modules/fetching/selectors'
 
 import { getServicesIds } from '../../../util/services-helpers'
 
@@ -20,18 +21,6 @@ class AccountDetails extends React.Component {
 
   componentWillMount() {
     this.props.fetchServiceInfo()
-    this.fetchData(this.props.params.brand, this.props.params.account)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.params.account !== nextProps.params.account) {
-      this.fetchData(nextProps.params.brand, nextProps.params.account)
-    }
-  }
-
-  fetchData(brand, account) {
-    this.props.accountStartFetching();
-    this.props.fetchAccountDetails(brand, account)
   }
 
   render() {
@@ -94,10 +83,7 @@ AccountDetails.displayName = 'AccountDetails'
 AccountDetails.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountIsFetching: PropTypes.bool,
-  accountStartFetching: PropTypes.func,
-  fetchAccountDetails: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
-  params: PropTypes.object,
   providerTypes: PropTypes.instanceOf(Map),
   servicesInfo: PropTypes.instanceOf(Map)
 
@@ -113,7 +99,7 @@ AccountDetails.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),
-    accountIsFetching: accountsFetching(state),
+    accountIsFetching: getFetchingByTag(state, 'account'),
     providerTypes: getProviderTypes(state),
     servicesInfo: getServicesInfo(state)
   }
@@ -122,8 +108,6 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    accountStartFetching: () => dispatch(accountStartFetching()),
-    fetchAccountDetails: (brand, id) => dispatch(fetchAccount(brand, id)),
     fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
