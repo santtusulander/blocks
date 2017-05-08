@@ -126,7 +126,7 @@ class ContentItems extends Component {
   }
 
   componentDidMount() {
-    this.calculateMinMax(this.props.metrics)
+    this.calculateMinMax(this.props.contentItems)
   }
 
   componentWillReceiveProps(nextProps) {
