@@ -98,13 +98,14 @@ class ConfigurationAdvanced extends React.Component {
 
   generateSubmittableValues(values) {
     return  Object.keys(values).reduce((value, key) => {
-      if (key === FIELD_REQUEST && !values[FIELD_USE_REQUEST] ||
-          key === FIELD_RESPONSE && !values[FIELD_USE_RESPONSE] ||
-          key === FIELD_FINAL_REQUEST && !values[FIELD_USE_FINAL_REQUEST] ||
-          key === FIELD_FINAL_RESPONSE && !values[FIELD_USE_FINAL_RESPONSE]) {
-        return value
+      if (key === FIELD_REQUEST && values[FIELD_USE_REQUEST] ||
+          key === FIELD_RESPONSE && values[FIELD_USE_RESPONSE] ||
+          key === FIELD_FINAL_REQUEST && values[FIELD_USE_FINAL_REQUEST] ||
+          key === FIELD_FINAL_RESPONSE && values[FIELD_USE_FINAL_RESPONSE] ||
+          key.includes('use_')) {
+        return { ...value, [key]: values[key]}
       }
-      return { ...value, [key]: values[key]}
+      return value
     }, {})
   }
 
