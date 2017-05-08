@@ -690,7 +690,6 @@ ContentItems.propTypes = {
   ifNoContent: PropTypes.string,
   isAllowedToConfigure: PropTypes.bool,
   locationPermissions: PropTypes.object,
-  metrics: PropTypes.instanceOf(List),
   nextPageURLBuilder: PropTypes.func,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
