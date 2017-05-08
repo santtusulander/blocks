@@ -307,11 +307,10 @@ class AccountManagementProperties extends React.Component {
                   const originHostname = property.get('origin_type') === 'cis'
                                           ? getCISname(property.get('originHostname'))
                                           : property.get('originHostname')
-                  const propertyName = `${propertyId}${propertyIsDisabled ? ' (disabled)': '' }`
 
                   return (
                     <tr key={i}>
-                      <td>{propertyName}</td>
+                      <td>{propertyId}</td>
                       <td>{groupName}</td>
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{originHostname}</td>
