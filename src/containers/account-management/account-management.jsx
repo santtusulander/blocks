@@ -321,8 +321,7 @@ export class AccountManagement extends Component {
       router
     } = this.props
 
-    const subPage = this.getTabName(),
-      isAdmin = !account,
+    const isAdmin = !account,
       baseUrl = getAccountManagementUrlFromParams(params),
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
@@ -389,10 +388,13 @@ export class AccountManagement extends Component {
               params={params}
               levels={[ 'brand', 'account' ]}
               onItemClick={(entity) => {
-
                 const { nodeInfo, idKey = 'id' } = entity
-                router.push(`${getUrl(getRoute('accountManagement'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+                const parametersToBuildRoute = { [nodeInfo.entityType]: entity[idKey], ...nodeInfo.parents }
+                const baseRoute = getAccountManagementUrlFromParams(parametersToBuildRoute)
 
+                //If the select node is a brand, don't set a tab.
+                const routeToPush = nodeInfo.entityType === 'brand' ? baseRoute : `${baseRoute}/${this.getTabName()}`
+                this.props.router.push(routeToPush)
               }}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeGroup.get('name') || activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
