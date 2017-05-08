@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import SectionContainer from '../shared/layout/section-container'
@@ -26,6 +27,7 @@ const StorageKPI = ({
   chartDataKey,
   currentValue,
   gainPercentage,
+  workflowProfile = Map(),
   locations,
   peakValue,
   referenceValue,
@@ -80,6 +82,14 @@ const StorageKPI = ({
         <KPIFormattedMessage id='portal.storage.kpi.location.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-text'>{locations.join(', ')}</div>
+        </div>
+      </div>
+      <div className='storage-kpi-item'>
+        <KPIFormattedMessage id='portal.storage.kpi.workflowProfile.title' type='title' />
+        <div className='storage-kpi-item-content'>
+          <div className='storage-kpi-text'>
+            {workflowProfile.get('label') || <FormattedMessage id="portal.storage.kpi.workflowProfile.value.fallback" />}
+          </div>
         </div>
       </div>
     </SectionContainer>

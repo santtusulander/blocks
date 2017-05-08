@@ -7,7 +7,10 @@
   "portal.storage.kpi.peak.title": "Peak",
   "portal.storage.kpi.current.title": "Current",
   "portal.storage.kpi.location.title": "Location",
+  "portal.storage.kpi.workflowProfile.title": "Workflow Profile",
   "portal.storage.kpi.note.thisMonth": "(this month)",
+
+  "portal.storage.kpi.workflowProfile.value.fallback": "No Workflow Profile found.",
 
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",

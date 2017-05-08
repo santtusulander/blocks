@@ -19,6 +19,9 @@ import { getById as getStorageById } from '../../redux/modules/entities/CIS-inge
 import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
 import { getById as getClusterById } from '../../redux/modules/entities/CIS-clusters/selectors'
 
+import workflowActions from '../../redux/modules/entities/CIS-workflow-profiles/actions'
+import { getById as getWorkflowProfileById } from '../../redux/modules/entities/CIS-workflow-profiles/selectors'
+
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
@@ -84,6 +87,7 @@ class Storage extends Component {
       }
 
       this.props.fetchStorageMetrics({...metricsOpts})
+      this.props.fetchWorkflowProfiles()
 
       this.props.fetchClusters({})
     }
@@ -174,6 +178,7 @@ class Storage extends Component {
                 chartData={chartData.data}
                 chartDataKey={chartData.key}
                 currentValue={usage.current}
+                workflowProfile={this.props.workflowProfile}
                 gainPercentage={gain}
                 locations={locations}
                 peakValue={usage.peak}
@@ -323,11 +328,17 @@ const mapStateToProps = (state, ownProps) => {
   let storageId = null
   let storage = null
   let storageMetrics = null
+  let workflowProfile = undefined
 
   if (ownProps.params.storage && ownProps.params.group) {
     storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
     storageMetrics = getMetricsByStorageId(state, ownProps.params.storage)
+
+    if (storage) {
+      workflowProfile = getWorkflowProfileById(state, storage.get('workflow'))
+      console.log(getWorkflowProfileById(state, storage.get('workflow')));
+    }
   }
 
   const gateway = storage && storage.get('gateway')
@@ -348,6 +359,7 @@ const mapStateToProps = (state, ownProps) => {
     group: state.group.get('activeGroup'),
     hasStorageService,
     storage,
+    workflowProfile,
     storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
@@ -358,6 +370,7 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
+    fetchWorkflowProfiles: () => dispatch(workflowActions.fetchAll({})),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
