@@ -19,7 +19,12 @@ function intlMaker() {
 }
 const fakeAccount = Immutable.fromJS({id: 11, brand_id: 'udn'})
 
-const fakeGroups = Immutable.fromJS([{id: 1, name: 'Group A'}, {id: 2, name: 'Group B'}])
+const fakeGroup = Immutable.fromJS({
+  id: 339,
+  services: [{
+    service_id: 4
+  }]
+})
 
 const fakeStorages = Immutable.fromJS([
   {
@@ -96,7 +101,7 @@ const fakefullStorage = Immutable.fromJS([
 const storagesComponent =
   <Storages
     account={fakeAccount}
-    groups={fakeGroups}
+    group={fakeGroup}
     storages={fakeStorages}
     clusters={fakeClusters}
     properties={fakeProperties}

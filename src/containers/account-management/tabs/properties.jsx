@@ -29,11 +29,12 @@ import ModalWindow from '../../../components/shared/modal'
 import SidePanel from '../../../components/shared/side-panel'
 import AddHost from '../../../components/content/add-host'
 
-import { getSortData, formatUnixTimestamp, getCISname} from '../../../util/helpers'
+import { getSortData, formatUnixTimestamp, getCISname, hasAnyServices} from '../../../util/helpers'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
 import { PAGINATION_CONFIG_FIELDS, PAGINATION_CONFIG_PAGE_SIZE } from '../../../constants/properties'
+import { MEDIA_DELIVERY_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../../../constants/service-permissions'
 
 const IS_FETCHING = 'PropertiesTabFetching'
 
@@ -241,6 +242,7 @@ class AccountManagementProperties extends React.Component {
     const addPropertySubTitle = currentAccount && currentGroup
       ? `${currentAccount.get('name')} / ${currentGroup.get('name')}`
     : null
+    const propertyIsDisabled = !hasAnyServices(currentGroup, [MEDIA_DELIVERY_SERVICE_ID, VOD_STREAMING_SERVICE_ID])
 
     return (
       !this.props.params.group
@@ -265,11 +267,13 @@ class AccountManagementProperties extends React.Component {
                     disabled={!properties.size}
                     onChange={this.changeSearch} />
                 </FormGroup>
-                <IsAllowed to={CREATE_PROPERTY}>
-                  <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
-                    <IconAdd />
-                  </Button>
-                </IsAllowed>
+                {!propertyIsDisabled &&
+                  <IsAllowed to={CREATE_PROPERTY}>
+                    <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
+                      <IconAdd />
+                    </Button>
+                  </IsAllowed>
+                }
               </SectionHeader>
 
               <Table striped={true}>
@@ -290,9 +294,11 @@ class AccountManagementProperties extends React.Component {
                   <TableSorter {...sorterProps} column="created">
                     <FormattedMessage id="portal.account.properties.table.deployed.text"/>
                   </TableSorter>
-                  <IsAllowed to={MODIFY_PROPERTY}>
-                    <th width="1%"/>
-                  </IsAllowed>
+                  {!propertyIsDisabled &&
+                    <IsAllowed to={MODIFY_PROPERTY}>
+                      <th width="1%"/>
+                    </IsAllowed>
+                  }
                 </tr>
                 </thead>
                 <tbody>
@@ -309,17 +315,18 @@ class AccountManagementProperties extends React.Component {
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{originHostname}</td>
                       <td>{formatUnixTimestamp(property.get('created'))}</td>
-                      <IsAllowed to={MODIFY_PROPERTY}>
-                        <td className="nowrap-column">
-                            <ActionButtons
-                              onEdit={() => {
-                                this.editProperty(property)
-                              }}
-                              onDelete={() => {
-                                this.openDeleteModal(property.get('parentId'), propertyId)
-                              }} />
-                        </td>
-                      </IsAllowed>
+                      {!propertyIsDisabled &&
+                        <IsAllowed to={MODIFY_PROPERTY}>
+                          <td className="nowrap-column">
+                              <ActionButtons
+                                onEdit={() => {
+                                  this.editProperty(property)
+                                }}
+                                onDelete={() => {
+                                  this.openDeleteModal(property.get('parentId'), propertyId)
+                                }} />
+                          </td>
+                        </IsAllowed>}
                     </tr>
                   )
                 })}
