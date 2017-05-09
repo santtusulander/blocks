@@ -82,7 +82,7 @@ class AccountManagementStorages extends Component {
   }
 
   fetchStorageData(groupId) {
-    const {params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const { params: { brand, account }, fetchStorages, fetchProperties } = this.props
     const metricsStartDate = moment().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
     if (brand && account && groupId) {
       fetchStorages({ brand, account, group: groupId, format: 'full'})
