@@ -128,9 +128,9 @@ permissionMapping[PERMISSIONS.MODIFY_ADVANCED] =
 permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'create', 'allowed'])
 permissionMapping[PERMISSIONS.MODIFY_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed']) === true
 permissionMapping[PERMISSIONS.DELETE_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed']) === true
 
 // Users Roles
 permissionMapping[PERMISSIONS.MODIFY_ROLE] =
