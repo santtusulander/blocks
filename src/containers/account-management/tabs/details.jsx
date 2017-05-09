@@ -1,16 +1,16 @@
-import React, {PropTypes} from 'react'
-import {connect} from 'react-redux'
-import {FormattedMessage} from 'react-intl'
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import { Map, List } from 'immutable'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
-import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
-import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
-import {getById as getAccountById} from '../../../redux/modules/entities/accounts/selectors'
-import {getFetchingByTag} from '../../../redux/modules/fetching/selectors'
+import { getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName } from '../../../redux/modules/service-info/selectors'
+import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-info/actions'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import { getServicesIds } from '../../../util/services-helpers'
 
