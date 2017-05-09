@@ -61,6 +61,7 @@ import ConfigurationAdvanced from './components/configuration/advanced'
 import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
+import BrandDashboard from './containers/brand-dashboard'
 import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
@@ -412,7 +413,7 @@ export const getRoutes = store => {
         {/* Dashboard - routes */}
         <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION, store)}>
           <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
-          <Route path={routes.dashboardBrand} component={Dashboard}/>
+          <Route path={routes.dashboardBrand} component={BrandDashboard}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
           <Route path={routes.dashboardProperty} component={Dashboard}/>
