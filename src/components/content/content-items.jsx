@@ -18,7 +18,7 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService, hasAnyServices } from '../../util/helpers'
+import { userIsCloudProvider, hasService, hasAnyServices, getPage } from '../../util/helpers'
 
 import { parseResponseError } from '../../redux/util'
 
@@ -71,19 +71,6 @@ const sortContent = (path, direction) => (item1, item2) => {
     return -1 * direction
   }
   return 0
-}
-
-/**
- * Slice current page out of contentItems
- * @param  {List} items
- * @param  {Number} page
- * @param  {Number} limit
- * @return {List} sliced list section/
- */
-const getPage = (items, page, limit) => {
-  const offset = (page - 1) * limit
-
-  return items.slice(offset, offset + limit)
 }
 
 class ContentItems extends Component {

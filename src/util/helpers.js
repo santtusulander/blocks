@@ -751,3 +751,16 @@ export function getCISname(originHostname) {
   const matchedResult = originHostname.match(/-(\w+).origin/)
   return matchedResult ? matchedResult[1] : ''
 }
+
+/**
+ * Slice current page out of items
+ * @param  {List} items
+ * @param  {Number} page
+ * @param  {Number} limit
+ * @return {List} sliced list section/
+ */
+export const getPage = (items, page, limit) => {
+  const offset = (page - 1) * limit
+
+  return items.slice(offset, offset + limit)
+}
