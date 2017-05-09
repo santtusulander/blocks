@@ -141,7 +141,9 @@ const AnalyticsViewControl = (props) => {
   }
 
   let activeItem;
-  if (property) {
+  if (storage) {
+    activeItem = storage
+  } else if (property) {
     activeItem = property
   } else if (group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
@@ -151,31 +153,26 @@ const AnalyticsViewControl = (props) => {
 
   return (
     <PageHeader pageSubTitle={title}>
-    {/* Hide the dropdown until we get the storage included in it */}
-      {!props.params.storage ?
-        <AccountSelector
-          params={props.params}
-          onItemClick={(entity) => {
+      <AccountSelector
+        params={props.params}
+        onItemClick={(entity) => {
 
-            const { nodeInfo: { parents, entityType }, idKey = 'id' } = entity
-            let url = getAnalyticsUrl(entityType, entity[idKey], parents)
-            if (active && entityType !== 'storage') {
-              let tab = active.key
-              if ((active.propertyOnly && entityType !== 'property') ||
-              (active.hideForProperty && entityType === 'property')) {
-                tab = ''
-              }
-              url = `${url}/${tab}`
+          const { nodeInfo: { parents, entityType }, idKey = 'id' } = entity
+          let url = getAnalyticsUrl(entityType, entity[idKey], parents)
+          if (active && entityType !== 'storage') {
+            let tab = active.key
+            if (active.propertyOnly && entityType !== 'property') {
+              tab = ''
             }
-            props.router.push(url)
-          }}>
+            url = `${url}/${tab}`
+          }
+          props.router.push(url)
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <IconCaretDown />
         </div>
-      </AccountSelector> :
-      <h1><TruncatedTitle content={props.params.storage} /></h1>
-    }
+      </AccountSelector>
       {props.params.account &&
         <ButtonToolbar>
           <AnalyticsExport

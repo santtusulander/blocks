@@ -733,6 +733,10 @@ export function hasOption(group, optionID) {
   return services && services.some(service => service.get('options').some(option => option.get('option_id') === optionID))
 }
 
+export function hasAnyServices(group, serviceIds = []) {
+  return serviceIds.some(id => hasService(group, id))
+}
+
 /**
  * Format ASN number
  *

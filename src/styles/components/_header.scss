@@ -306,7 +306,7 @@ $header-seach-left-padding: rem(30px);
     background-size: 225% 200%;
 
     &.animated {
-      animation: HeaderAnimation 1s linear 1;
+      animation: HeaderAnimation 1s linear infinite;
     }
   }
 }

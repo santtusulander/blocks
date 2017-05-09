@@ -11,14 +11,14 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
-import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID } from '../../constants/service-permissions'
+import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions, {PAGE_SIZE, MAX_PAGINATION_ITEMS} from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService } from '../../util/helpers'
+import { userIsCloudProvider, hasService, hasAnyServices } from '../../util/helpers'
 
 import { parseResponseError } from '../../redux/util'
 
@@ -402,7 +402,7 @@ class ContentItems extends Component {
 
     const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-    const groupHasMediaDeliveryService = hasService(activeGroup, MEDIA_DELIVERY_SERVICE_ID)
+    const groupHasPropertyService = hasAnyServices(activeGroup, [ MEDIA_DELIVERY_SERVICE_ID, VOD_STREAMING_SERVICE_ID])
 
     /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
     const modifyStorageAllowed = modifyAllowed && false
@@ -458,7 +458,7 @@ class ContentItems extends Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton(groupHasMediaDeliveryService, createAllowed && groupHasStorageService)}
+                {this.renderAddButton(groupHasPropertyService, createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
