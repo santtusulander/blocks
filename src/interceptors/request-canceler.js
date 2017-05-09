@@ -1,51 +1,53 @@
-import axios, { CancelToken } from 'axios'
+import axios, { CancelToken, isCancel } from 'axios'
 
-export default new class RequestCanceler {
-  /**
-   * Add cancelToken to config
-   * @param {Promise} cancelToken - axios cancelToken
-   * @return {function} configDecorator
-   */
-  static setCancelToken(cancelToken) {
-    return function configDecorator(config) {
-      return {...config, cancelToken}
-    }
+let source = null
+
+/* Set axios by default */
+let axiosInstance = axios
+
+const refreshCancelTokenSource = function () {
+  source = CancelToken.source()
+}
+
+/**
+ * Decorate config with axios cancelToken
+ * @param {Object} config - axios config
+ * @return {Object} - decorated config
+ */
+const configDecorator = function (config) {
+  return source ? { ...config, cancelToken: source.token } : config
+}
+
+/**
+ * Failure handler
+ * @param {Object} error - failed response
+ * @return {Promise.<*>}
+ */
+const rejectHandler = function (error) {
+  return isCancel(error) ? error : Promise.reject(error)
+}
+
+/**
+ * Apply request and response interceptors to axios instance
+ * @param {Object} instance
+ */
+const applyInterceptor = function (instance) {
+  if (instance) {
+    axiosInstance = instance
   }
+  axiosInstance.interceptors.request.use(configDecorator)
+  axiosInstance.interceptors.response.use(response => response, rejectHandler)
+}
 
-  constructor() {
-    // eslint-disable-next-line no-shadow
-    const {cancel, token} = CancelToken.source()
-    this.interceptor = null
-    this.instance = null
+/**
+ * Cancel requests by resolving cancelToken Promise
+ */
+const cancelPendingRequests = () => {
+  source.cancel('cancelled')
+}
 
-    this.getCanceler = () => cancel
-    this.getToken = () => token
-  }
-
-  /**
-   * Apply interceptor with cancelToken
-   * @param instance - instance of axios
-   */
-  applyCanceler(instance = axios) {
-    const token = this.getToken()
-    this.instance = instance
-
-    // Apply interceptor and save it's id
-    this.interceptor = instance.interceptors.request.use(RequestCanceler.setCancelToken(token))
-  }
-
-  /**
-   * Cancel requests
-   */
-  cancelPending() {
-    this.getCanceler()()
-  }
-
-  /**
-   * Eject cancel interceptor
-   * @param interceptor
-   */
-  removeCanceler() {
-    this.instance.interceptors.request.eject(this.interceptor)
-  }
+export default {
+  applyInterceptor,
+  cancelPendingRequests,
+  refreshCancelTokenSource
 }

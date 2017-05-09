@@ -22,10 +22,8 @@ import {
   deleteUserName
 } from '../../util/local-storage'
 
-import requestCanceler from '../../interceptors/request-canceler'
-
-const USER_LOGGED_IN = 'USER_LOGGED_IN'
-const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
+export const USER_LOGGED_IN = 'USER_LOGGED_IN'
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_FINISH_FETCH = 'USER_FINISH_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
@@ -45,21 +43,6 @@ const USER_ACCESS_KEY_RECEIVED = 'USER_ACCESS_KEY_RECEIVED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
-
-// Apply axios requests interceptor
-requestCanceler.applyCanceler()
-
-/**
- * Cancelling pending requests after logout
- * @param {*} res - resolved data
- * @return {*}
- */
-const cancelPendingRequests = function(res) {
-  requestCanceler.cancelPending()
-  requestCanceler.removeCanceler()
-
-  return res
-}
 
 const emptyUser = Map({
   allUsers: List(),
@@ -420,10 +403,8 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
 
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`, { headers })
       .then(() => deleteUserNameFromStorage())
-      .then(cancelPendingRequests)
   }
   return Promise.resolve({ message: 'Token not found' })
-    .then(cancelPendingRequests)
 })
 
 export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brandId, accountId, groupId, storageId) => {
