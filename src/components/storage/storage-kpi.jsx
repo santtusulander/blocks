@@ -37,7 +37,7 @@ KPIFormattedMessage.propTypes = {
   type: PropTypes.oneOf(['title', 'note'])
 }
 
-class StorageKPI extends Component {
+export class StorageKPI extends Component {
 
   componentWillMount() {
     this.props.fetchData(this.props.params)
