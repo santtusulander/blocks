@@ -5,6 +5,9 @@ import Immutable from 'immutable'
 jest.unmock('../accounts.jsx')
 import AccountList from '../accounts.jsx'
 
+jest.unmock('../../../../util/helpers.js')
+import { getPage } from '../../../../util/helpers.js'
+
 const router = {
   setRouteLeaveHook: jest.fn()
 }
