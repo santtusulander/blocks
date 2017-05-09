@@ -166,7 +166,6 @@ const propertyConfigStateToProps = (state, { params }) => {
   const tree = []
 
   if (canView(VIEW_CONTENT_PROPERTIES)) {
-
     tree.push(getGroupForPropertyConfig(state, params, canView))
   }
 
