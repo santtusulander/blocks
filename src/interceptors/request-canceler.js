@@ -5,10 +5,6 @@ let source = null
 /* Set axios by default */
 let axiosInstance = axios
 
-const refreshCancelTokenSource = function () {
-  source = CancelToken.source()
-}
-
 /**
  * Decorate config with axios cancelToken
  * @param {Object} config - axios config
@@ -28,10 +24,17 @@ const rejectHandler = function (error) {
 }
 
 /**
+ * Initiate cancelToken Promise and canceler
+ */
+export const refreshCancelTokenSource = function () {
+  source = CancelToken.source()
+}
+
+/**
  * Apply request and response interceptors to axios instance
  * @param {Object} instance
  */
-const applyInterceptor = function (instance) {
+export const applyInterceptor = function (instance) {
   if (instance) {
     axiosInstance = instance
   }
@@ -42,12 +45,6 @@ const applyInterceptor = function (instance) {
 /**
  * Cancel requests by resolving cancelToken Promise
  */
-const cancelPendingRequests = () => {
+export const cancelPendingRequests = () => {
   source.cancel('cancelled')
-}
-
-export default {
-  applyInterceptor,
-  cancelPendingRequests,
-  refreshCancelTokenSource
 }

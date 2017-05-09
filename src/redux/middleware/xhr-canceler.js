@@ -1,10 +1,10 @@
 import { USER_LOGGED_IN, USER_LOGGED_OUT } from './../modules/user'
-import requestCanceler from '../../interceptors/request-canceler'
 
-const {
+import {
   applyInterceptor,
   refreshCancelTokenSource,
-  cancelPendingRequests } = requestCanceler
+  cancelPendingRequests
+} from '../../interceptors/request-canceler'
 
 /* Apply interceptor */
 applyInterceptor()
