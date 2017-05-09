@@ -537,7 +537,6 @@ export class AccountManagementAccountUsers extends Component {
           <UserEditModal
             show={this.state.showEditModal}
             user={this.state.userToEdit}
-            accountType={this.props.account.get('provider_type')}
             groups={this.props.groups}
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}
