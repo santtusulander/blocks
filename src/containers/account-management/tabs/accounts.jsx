@@ -29,9 +29,9 @@ import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
-import {PAGE_SIZE, MAX_PAGINATION_ITEMS} from '../../../constants/content-item-sort-options'
+import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../../constants/content-item-sort-options'
 
 /**
  * Slice current page out of sortedAccounts
