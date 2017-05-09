@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
@@ -128,6 +128,11 @@ class Mapbox extends React.Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
+
+    if (this.props.coreLocations && this.props.spEdgesLocations) {
+      this.addPopLayers(map, this.props.coreLocations, this.props.spEdgesLocations)
+    }
+
     this.addCountryLayers(map, this.props.countryData.toJS())
 
     // If we don't reset hoveredLayer, Mapbox gives an error: Cannot read property 'getPaintProperty' of undefined
@@ -313,6 +318,18 @@ class Mapbox extends React.Component {
     return (style, value) => (cursor) => {
       map.setPaintProperty(this.state.hoveredLayer.id, this.state.hoveredLayer.type + '-' + style, value)
       map.getCanvas().style.cursor = cursor
+    }
+  }
+
+
+  addPopLayers(map, coreLocations, spEdgesLocations) {
+    if (map && map.style._loaded) {
+
+      // Sets updated instance of the map to state so that we can access
+      // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
+      // errors for not found layers since we might not have the map in state
+      // with all the countries and previous cities.
+      this.setState({ map })
     }
   }
 
@@ -661,7 +678,8 @@ class Mapbox extends React.Component {
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
-        dragRotate={false}>
+        dragRotate={false}
+      >
 
         {/*
         <div className="map-search">
@@ -746,6 +764,7 @@ class Mapbox extends React.Component {
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List).isRequired,
+  coreLocations: React.PropTypes.object,
   countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
@@ -755,6 +774,7 @@ Mapbox.propTypes = {
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
+  spEdgesLocations: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
