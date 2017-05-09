@@ -234,7 +234,7 @@ export const getRoutes = store => {
       <IndexRoute component={UserIsLoggedIn(Main)} />
       */}
       <Route component={UserIsLoggedIn(Main)}>
-        {/* redirect to /content if in root*/ }
+        {/* redirect to /content if in root */}
         <IndexRedirect to={routes.content} />
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
