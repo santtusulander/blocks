@@ -127,10 +127,12 @@ permissionMapping[PERMISSIONS.MODIFY_ADVANCED] =
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'create', 'allowed'])
+// UDN User having modify role as itself_only so it should be only able to edit itself
+// This check will return true anyway with itself_only.
 permissionMapping[PERMISSIONS.MODIFY_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed']) === true
 permissionMapping[PERMISSIONS.DELETE_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed']) === true
 
 // Users Roles
 permissionMapping[PERMISSIONS.MODIFY_ROLE] =
