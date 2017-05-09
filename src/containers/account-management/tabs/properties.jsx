@@ -16,8 +16,6 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import { parseResponseError } from '../../../redux/util'
 
-import withPagination from '../../../decorators/pagination-hoc'
-
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import ActionButtons from '../../../components/shared/action-buttons'
@@ -33,7 +31,6 @@ import { getSortData, formatUnixTimestamp, getCISname, hasAnyServices} from '../
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
-import { PAGINATION_CONFIG_FIELDS, PAGINATION_CONFIG_PAGE_SIZE } from '../../../constants/properties'
 import { MEDIA_DELIVERY_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../../../constants/service-permissions'
 
 const IS_FETCHING = 'PropertiesTabFetching'
@@ -61,10 +58,6 @@ class AccountManagementProperties extends React.Component {
     this.changeSearch = this.changeSearch.bind(this)
 
     this.notificationTimeout = null
-
-    const { params: { account, brand }, pagination } = this.props
-
-    pagination.registerSubscriber((pagingParams) => this.refreshData(brand, account, pagingParams))
   }
 
   componentWillMount() {
@@ -77,22 +70,17 @@ class AccountManagementProperties extends React.Component {
     } = this.props
 
     if (group) {
-      const { pagination: { getQueryParams } } = this.props
-      this.refreshData(brand, account, group, getQueryParams())
+      this.props.fetchProperties({brand, account, group})
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.group && (nextProps.params.group !== this.props.params.group)) {
-      const { params: { brand, account, group }, pagination: { getQueryParams } } = nextProps
-      this.refreshData(brand, account, group, getQueryParams())
+    if (this.props.params.brand !== nextProps.params.brand
+      || this.props.params.account !== nextProps.params.account
+      || this.props.params.group !== nextProps.params.group) {
+
+      this.props.fetchProperties(nextProps.params)
     }
-  }
-
-  refreshData(brand, account, group, pagingParams) {
-    const { fetchProperties } = this.props
-
-    fetchProperties({ brand, account, group, ...pagingParams })
   }
 
   createProperty(id, deploymentMode, serviceType) {
@@ -402,12 +390,6 @@ AccountManagementProperties.propTypes    = {
   fetchProperties: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  pagination: React.PropTypes.shape({
-    filtering: React.PropTypes.object,
-    paging: React.PropTypes.object,
-    sorting: React.PropTypes.object,
-    registerSubscriber: React.PropTypes.func
-  }).isRequired,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
@@ -418,10 +400,6 @@ AccountManagementProperties.defaultProps = {
   groups: Immutable.List()
 }
 
-const paginationConfig = {
-  fields: PAGINATION_CONFIG_FIELDS,
-  page_size: PAGINATION_CONFIG_PAGE_SIZE
-}
 
 /* istanbul ignore next */
 function mapStateToProps(state, ownProps) {
@@ -444,5 +422,5 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(withPagination(AccountManagementProperties, paginationConfig))))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(AccountManagementProperties)))
 export { AccountManagementProperties as PureProperties }
