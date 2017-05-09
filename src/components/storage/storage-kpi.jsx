@@ -130,11 +130,14 @@ StorageKPI.propTypes = {
   chartData: PropTypes.array,
   chartDataKey: PropTypes.string,
   currentValue: PropTypes.number,
+  fetchData: PropTypes.func,
   gainPercentage: PropTypes.number,
   locations: PropTypes.array,
+  params: PropTypes.object,
   peakValue: PropTypes.number,
   referenceValue: PropTypes.number,
-  valuesUnit: PropTypes.string
+  valuesUnit: PropTypes.string,
+  workflowProfile: PropTypes.instanceOf(Map)
 }
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
