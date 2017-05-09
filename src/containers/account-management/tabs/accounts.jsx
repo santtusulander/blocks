@@ -25,26 +25,13 @@ import {getFetchingByTag} from '../../../redux/modules/fetching/selectors'
 import {getServicesInfo, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getPage } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
 import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../../constants/content-item-sort-options'
-
-/**
- * Slice current page out of sortedAccounts
- * @param  {List} items
- * @param  {Number} page
- * @param  {Number} limit
- * @return {List} sliced list section/
- */
-const getPage = (items, page, limit) => {
-  const offset = (page - 1) * limit
-
-  return items.slice(offset, offset + limit)
-}
 
 class AccountList extends Component {
   constructor(props) {
