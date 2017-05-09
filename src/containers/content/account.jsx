@@ -308,7 +308,7 @@ const mapStateToProps = (state, ownProps) => {
 
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {brand, account} = ownProps.params
+  const { brand, account } = ownProps.params
 
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
