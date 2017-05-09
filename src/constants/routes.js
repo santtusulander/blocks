@@ -65,6 +65,8 @@ const ROUTES = {
   servicesGroup: '/services/:brand/:account/:group',
   servicesProperty: '/services/:brand/:account/:group/:property',
 
+  servicesTabLogDelivery: 'logDelivery',
+
   security: '/security',
   securityBrand: '/security/:brand',
   securityAccount: '/security/:brand/:account',
