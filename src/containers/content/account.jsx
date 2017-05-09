@@ -64,6 +64,7 @@ export class Account extends React.Component {
       groupToDelete: null
     }
   }
+  
   componentWillMount() {
     this.props.fetchData()
   }
