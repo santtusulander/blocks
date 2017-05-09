@@ -3,6 +3,7 @@
   "portal.storage.uploadContent.cancel.text": "Cancel All",
 
   "portal.storage.report.title": "Storage Volume Reporting",
+  
   "portal.storage.kpi.gain.title": "Gain",
   "portal.storage.kpi.peak.title": "Peak",
   "portal.storage.kpi.current.title": "Current",
