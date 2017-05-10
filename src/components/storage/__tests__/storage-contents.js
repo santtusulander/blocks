@@ -9,8 +9,17 @@ const asperaInstanse = fromJS({
   get: jest.fn()
 })
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const subject = () => {
-  return shallow(<StorageContents asperaInstanse={asperaInstanse} />)
+  return shallow(<StorageContents
+    asperaInstanse={asperaInstanse}
+    intl={intlMaker()}
+  />)
 }
 
 describe('StorageContents', () => {
