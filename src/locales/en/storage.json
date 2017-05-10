@@ -48,6 +48,7 @@
   "portal.storage.summaryPage.contentBrowser.name.label": "Name",
   "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
   "portal.storage.summaryPage.contentBrowser.size.label": "Size",
+  "portal.storage.summaryPage.contentBrowser.backButton.text": "..",
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",

@@ -25,7 +25,9 @@ const StorageContents = ({
   accountId,
   groupId,
   fileUploader,
-  openDirectoryHandler
+  openDirectoryHandler,
+  backButtonHandler,
+  isRootDirectory
 }) => {
   const hasContents = contents && contents.size > 0
   const headerTitle = hasContents
@@ -94,6 +96,8 @@ const StorageContents = ({
         ? <StorageContentBrowser
             contents={contents.get('items')}
             openDirectoryHandler={openDirectoryHandler}
+            backButtonHandler={backButtonHandler}
+            isRootDirectory={isRootDirectory}
           />
         : asperaUpload
         ? <AsperaUpload

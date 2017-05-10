@@ -9,7 +9,9 @@ import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
 
 const StorageContentBrowser = ({
+  backButtonHandler,
   contents,
+  isRootDirectory,
   openDirectoryHandler
 }) => {
   return (
@@ -23,6 +25,14 @@ const StorageContentBrowser = ({
         </tr>
       </thead>
       <tbody>
+        {!isRootDirectory &&
+          <tr>
+            <td onDoubleClick={backButtonHandler}>
+              <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
+            </td>
+            <td/><td/><td/>
+          </tr>
+        }
         {contents.map((item, index) => {
           const name = item.get('name')
           const stat = item.get('stat')
