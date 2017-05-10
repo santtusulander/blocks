@@ -208,16 +208,18 @@ class Storage extends Component {
             />
 
             <PageContainer>
-              <StorageKPI
-                chartData={chartData.data}
-                chartDataKey={chartData.key}
-                currentValue={usage.current}
-                gainPercentage={gain}
-                locations={locations}
-                peakValue={usage.peak}
-                referenceValue={usage.estimated}
-                valuesUnit={usage.unit}
-              />
+              { isRootDirectory &&
+                <StorageKPI
+                  chartData={chartData.data}
+                  chartDataKey={chartData.key}
+                  currentValue={usage.current}
+                  gainPercentage={gain}
+                  locations={locations}
+                  peakValue={usage.peak}
+                  referenceValue={usage.estimated}
+                  valuesUnit={usage.unit}
+                />
+              }
               <IsAllowed to={CREATE_ACCESS_KEY}>
                 <StorageContents
                   brandId={params.brand}
