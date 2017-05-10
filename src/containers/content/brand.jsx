@@ -139,7 +139,7 @@ export class Brand extends React.Component {
         user={currentUser}
         viewingChart={viewingChart}
         fetchItem={(id) => {
-          return accounts && accounts.find(account => account.get('id') === id)
+          return this.props.fetchAccount({brand, id})
         }}
       />
     )
@@ -153,6 +153,7 @@ Brand.propTypes = {
   createAccount: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
+  fetchAccount: PropTypes.func,
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
@@ -224,7 +225,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     createAccount: (params) => dispatch(accountActions.create(params)),
     updateAccount: (params) => dispatch(accountActions.update(params)),
-    removeAccount: (params) => dispatch(accountActions.remove(params))
+    removeAccount: (params) => dispatch(accountActions.remove(params)),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params))
   };
 }
 

@@ -61,7 +61,7 @@ export class Account extends React.Component {
       groupToDelete: null
     }
   }
-  
+
   componentWillMount() {
     this.props.fetchData()
   }
@@ -167,8 +167,8 @@ export class Account extends React.Component {
   }
   render() {
 
-    const { brand } = this.props.params
-    const { accountManagementModal, activeAccount, activeGroup, currentUser, groups } = this.props
+    const { brand, account } = this.props.params
+    const { accountManagementModal, activeAccount, activeGroup, currentUser } = this.props
 
     const nextPageURLBuilder = (groupID) => {
       if ((activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) || (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)) {
@@ -237,7 +237,7 @@ export class Account extends React.Component {
           user={this.props.user}
           viewingChart={this.props.viewingChart}
           fetchItem={(id) => {
-            return groups && groups.find(group => group.get('id') === id)
+            return this.props.fetchGroup({brand, account, id})
           }}
         />
 
@@ -257,10 +257,10 @@ Account.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
-  metrics: PropTypes.instanceOf(List),
   params: PropTypes.object,
   removeGroup: PropTypes.func,
   sortDirection: PropTypes.number,
@@ -332,7 +332,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     createGroup: (params) => dispatch(groupActions.create(params)),
     updateGroup: (params) => dispatch(groupActions.update(params)),
-    removeGroup: (params) => dispatch(groupActions.remove(params))
+    removeGroup: (params) => dispatch(groupActions.remove(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetch(params))
   };
 }
 

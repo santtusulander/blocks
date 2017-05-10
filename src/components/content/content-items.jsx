@@ -267,11 +267,13 @@ class ContentItems extends Component {
   }
 
   editItem(id) {
-    const item = this.props.fetchItem(id)
-    this.setState({
-      showModal: true,
-      itemToEdit: item
-    })
+    this.props.fetchItem(id)
+      .then((response) => {
+        this.setState({
+          showModal: true,
+          itemToEdit: fromJS(response)
+        })
+      })
   }
   addItem() {
     this.setState({
