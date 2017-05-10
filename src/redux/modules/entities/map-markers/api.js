@@ -35,11 +35,13 @@ const markerSchema = new schema.Entity('mapMarkers', {},{
     if (value.account_id === 1) {
       return {
         ...value,
+        latlng: [value.lat, value.lon],
         type: 'core'
       }
     } else {
       return {
         ...value,
+        latlng: [value.lat, value.lon],
         type: 'edge'
       }
     }
