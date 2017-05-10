@@ -84,12 +84,14 @@ export class BrandDashboard extends React.Component {
   fetchData(urlParams, filters) {
     // Dashboard should fetch only account level data
     const params = { brand: urlParams.brand }
-    if (false) {
-      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-      const accountType = this.props.activeAccount.get('provider_type')
-      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
+    const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+    dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+
+    const accountType = this.props.activeAccount.get('provider_type')
+    const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+
+    if (true) {
       return Promise.all([
         this.props.dashboardActions.startFetching(),
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),

@@ -3,8 +3,8 @@ import axios from 'axios'
 import Immutable from 'immutable'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
-import { TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
-import { ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
+import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
+import { ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../../constants/account-management-options'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
 const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
@@ -62,6 +62,18 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
     // processDashboardData() always expects 6 arguments
     dashboardRequests.push(null)
+    dashboardRequests.push(null)
+  } else if (account_type === ACCOUNT_TYPE_CLOUD_PROVIDER) {
+    // Limit the amount of results for providers
+    contributionOpts.limit = BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
+    // Show detailed data for providers
+    contributionOpts.show_detail = true
+
+    // sp-contribution endpoint expects a sp_account_ids param instead of account
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    // processDashboardData() always expects 6 arguments
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
     dashboardRequests.push(null)
   } else {
     // cp-contribution endpoint expects a sp_account param instead of account
