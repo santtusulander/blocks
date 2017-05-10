@@ -21,7 +21,9 @@ class StorageContents extends Component {
     super(props)
 
     this.state = {
-      search: ''
+      search: '',
+      sortBy: 'name',
+      sortDir: 1
     }
 
     this.changeSearch = this.changeSearch.bind(this)

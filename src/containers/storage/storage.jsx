@@ -22,8 +22,9 @@ import { getById as getClusterById } from '../../redux/modules/entities/CIS-clus
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
-import { getContent } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
-import { fetchContent } from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
+import storageContentsActions from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
+// import { getContent } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
+// import { fetchContent } from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
 
 import { buildReduxId, parseResponseError } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
@@ -374,7 +375,8 @@ const mapStateToProps = (state, ownProps) => {
     group: state.group.get('activeGroup'),
     hasStorageService,
     storage,
-    storageContents: getContent(state),
+    // storageContents: getContent(state),
+    storageContents: Map(),
     storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
@@ -387,7 +389,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
-    fetchStorageContents: (params) => dispatch(fetchContent(params)),
+    // fetchStorageContents: (params) => dispatch(fetchContent(params)),
+    fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
