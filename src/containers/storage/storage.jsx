@@ -16,13 +16,8 @@ import { hasService } from '../../util/helpers'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
-import storageContentsActions from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
-import { getById as getStorageContentsById } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
-
 import { buildReduxId, parseResponseError } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
-
-import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
 
@@ -67,8 +62,6 @@ class Storage extends Component {
         group: group,
         id: storage
       })
-
-      this.fetchStorageContents(this.props.params)
     }
     //fetch Active group if there is none in redux
     if (!this.props.group && this.props.params) {
@@ -91,21 +84,6 @@ class Storage extends Component {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
     }
-
-    if (params.splat !== this.props.params.splat) {
-      this.fetchStorageContents(params)
-    }
-  }
-
-  fetchStorageContents(params) {
-    const { brand, account, group, storage, splat } = params
-    this.props.fetchStorageContents({
-      brand,
-      account,
-      group,
-      id: storage,
-      path: splat
-    })
   }
 
   /**
@@ -148,7 +126,7 @@ class Storage extends Component {
       storage,
       storageContents,
       gatewayHostname,
-      isFetchingContents,
+      isFetchingContents
     } = this.props
 
     const isRootDirectory = params.splat ? false : true
@@ -170,10 +148,6 @@ class Storage extends Component {
               }
               <IsAllowed to={CREATE_ACCESS_KEY}>
                 <StorageContents
-                  brandId={params.brand}
-                  accountId={params.account}
-                  storageId={params.storage}
-                  groupId={params.group}
                   gatewayHostname={gatewayHostname}
                   asperaInstanse={asperaInstanse}
                   contents={storageContents}
@@ -213,7 +187,6 @@ Storage.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
-  fetchStorageContents: PropTypes.func,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
@@ -236,13 +209,11 @@ Storage.contextTypes = {
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storage = undefined
-  let storageContents = undefined
 
   if (ownProps.params.storage && ownProps.params.group) {
     const storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
-    const storageContentsId = buildReduxId(ownProps.params.group, ownProps.params.storage, ownProps.params.splat || '')
     storage = getStorageById(state, storageId)
-    storageContents = getStorageContentsById(state, storageContentsId)
+
   }
 
   const gateway = storage && storage.get('gateway')
@@ -260,9 +231,7 @@ const mapStateToProps = (state, ownProps) => {
     storageAccessToken: state.user.get('storageAccessToken'),
     group: state.group.get('activeGroup'),
     hasStorageService,
-    storage,
-    storageContents,
-    isFetchingContents: getFetchingByTag(state, 'ingestPointContents')
+    storage
   }
 }
 
@@ -273,7 +242,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
-    fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     toggleModal: uiActions.toggleAccountManagementModal

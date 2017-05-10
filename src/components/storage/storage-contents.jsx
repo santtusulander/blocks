@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map, List } from 'immutable'
+import { connect } from 'react-redux'
 
 import { getContentUrl } from '../../util/routes.js'
 import { getSortData } from '../../util/helpers'
@@ -18,6 +19,13 @@ import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
+import storageContentsActions from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
+import { getById as getStorageContentsById } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
+
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
+import { buildReduxId } from '../../redux/util'
+
 class StorageContents extends Component {
   constructor(props) {
     super(props)
@@ -32,6 +40,27 @@ class StorageContents extends Component {
     this.changeSearch = this.changeSearch.bind(this)
     this.backButtonHandler = this.backButtonHandler.bind(this)
     this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
+  }
+
+  componentWillMount() {
+    this.fetchStorageContents(this.props.params)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params.splat !== this.props.params.splat) {
+      this.fetchStorageContents(nextProps.params)
+    }
+  }
+
+  fetchStorageContents(params) {
+    const { brand, account, group, storage, splat } = params
+    this.props.fetchStorageContents({
+      brand,
+      account,
+      group,
+      id: storage,
+      path: splat
+    })
   }
 
   backButtonHandler() {
@@ -98,15 +127,13 @@ class StorageContents extends Component {
       onMethodToggle,
       asperaInstanse,
       gatewayHostname,
-      storageId,
-      brandId,
-      accountId,
-      groupId,
       fileUploader,
       isRootDirectory,
       isFetchingContents,
-      intl } = this.props
+      intl,
+      params } = this.props
 
+    const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const hasContents = contents && contents.size > 0
     const headerTitle = hasContents
                         ?
@@ -216,21 +243,38 @@ class StorageContents extends Component {
 StorageContents.displayName = 'StorageContents'
 
 StorageContents.propTypes = {
-  accountId: React.PropTypes.string,
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
-  brandId: React.PropTypes.string,
   contents: PropTypes.instanceOf(List),
+  fetchStorageContents: PropTypes.func,
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
-  groupId: PropTypes.string,
   intl: intlShape,
   isFetchingContents: PropTypes.bool,
   isRootDirectory: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
-  router: PropTypes.object,
-  storageId: PropTypes.string
+  router: PropTypes.object
 }
 
-export default injectIntl(StorageContents)
+/* istanbul ignore next */
+const mapStateToProps = (state, ownProps) => {
+  const { group, storage, splat } = ownProps.params
+  let contents
+  if (storage) {
+    const contentsId = buildReduxId(group, storage, splat || '')
+    contents = getStorageContentsById(state, contentsId)
+  }
+
+  return {
+    contents,
+    isFetchingContents: getFetchingByTag(state, 'ingestPointContents')
+  }
+}
+
+/* istanbul ignore next */
+const mapDispatchToProps = (dispatch) => ({
+  fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(StorageContents))

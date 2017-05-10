@@ -24,7 +24,6 @@ const subject = () => {
       params={params}
       fetchGroupData={jest.fn()}
       fetchStorage={jest.fn()}
-      fetchStorageContents={jest.fn()}
       fetchStorageMetrics={jest.fn()}
       fetchClusters={jest.fn()} />)
 }
