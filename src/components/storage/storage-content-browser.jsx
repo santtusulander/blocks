@@ -55,7 +55,9 @@ const StorageContentBrowser = ({
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
-                <div className='storage-contents-name'><TruncatedTitle content={name} /></div>
+                <div className={`storage-contents-name ${isDirectory ? 'directory' : ''}`}>
+                  <TruncatedTitle content={name} />
+                </div>
               </td>
               <td>{formatDate(item.get('lastModified'))}</td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>

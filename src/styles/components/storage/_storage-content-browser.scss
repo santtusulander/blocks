@@ -1,6 +1,10 @@
 .storage-contents-name {
   display: inline-block;
   vertical-align: inherit;
+
+  &.directory {
+    cursor: pointer;
+  }
 }
 
 .storage-contents-icon {
