@@ -190,6 +190,7 @@ export function isValidCloudLocationId(text, minLength = FORM_TEXT_FIELD_DEFAULT
   return text && textFieldRegexp.test(text)
 }
 
+
 /**
  * Check if valid text-field, only allow special character _ ., used in footprint and pod form
  * @param text
