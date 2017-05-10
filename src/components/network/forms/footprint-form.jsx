@@ -18,7 +18,7 @@ import HelpTooltip from '../../../components/shared/tooltips/help-tooltip'
 import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 import MultilineTextFieldError from '../../shared/form-elements/multiline-text-field-error'
 
-import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Address, isValidASN } from '../../../util/validators'
+import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Cidr, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 import CsvUploadArea from '../csv-upload'
 
@@ -34,7 +34,7 @@ import { FOOTPRINT_FILE_TYPES, FOOTPRINT_FIELDS_NAME,
          } from '../../../constants/network'
 
 const validateCIDRToken = (item) => {
-  return item.label && isValidIPv4Address(item.label, true)
+  return item.label && isValidIPv4Cidr(item.label)
 }
 
 const validateASNToken = (item) => {
