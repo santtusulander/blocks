@@ -56,6 +56,19 @@ export const receiveGroupMetrics = () => (state, { response }) => {
 }
 
 /**
+ * Reducer for receiving contents for ingest point
+ * @param  {[type]} key
+ * @return {[Immutable Map]}      state fragment
+ */
+export const receiveContents = ({ key }) => (state, { response }) => {
+  if (response && response[key]) {
+    return state.merge(fromJS({ data: response[key] }))
+  }
+
+  return state
+}
+
+/**
  * Reducer for failed async actions
  * @param  {[type]} state [description]
  * @return {[type]}       [description]
