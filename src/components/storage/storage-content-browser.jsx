@@ -41,7 +41,9 @@ const StorageContentBrowser = ({
           <tr>
             <td onDoubleClick={backButtonHandler}>
               <IconBack className='storage-contents-icon back' />
-              <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
+              <div className='storage-contents-name directory'>
+                <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
+              </div>
             </td>
             <td/><td/><td/>
           </tr>
