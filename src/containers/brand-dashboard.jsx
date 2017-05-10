@@ -53,14 +53,8 @@ export class BrandDashboard extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      byLocationWidth: 100
-    }
-
     this.fetchData = this.fetchData.bind(this)
-    this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
-    this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
   }
 
@@ -70,12 +64,6 @@ export class BrandDashboard extends React.Component {
     } else {
       this.props.filterActions.resetFilters()
     }
-  }
-
-  componentDidMount() {
-    this.measureContainers()
-    // TODO: remove this timeout as part of UDNP-1426
-    window.addEventListener('resize', this.measureContainers)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,20 +77,10 @@ export class BrandDashboard extends React.Component {
     if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
       this.fetchData(nextProps.params, nextProps.filters)
     }
-    // TODO: remove this timeout as part of UDNP-1426
-    if (this.measureContainersTimeout) {
-      clearTimeout(this.measureContainersTimeout)
-    }
-    this.measureContainersTimeout = setTimeout(() => {
-      this.measureContainers()
-    }, 500)
   }
 
   componentWillUnmount() {
     this.props.filterActions.resetContributionFilters()
-    window.removeEventListener('resize', this.measureContainers)
-    // TODO: remove this timeout as part of UDNP-1426
-    clearTimeout(this.measureContainersTimeout)
   }
 
   fetchData(urlParams, filters) {
@@ -131,13 +109,6 @@ export class BrandDashboard extends React.Component {
         .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
       })
     }
-  }
-
-  measureContainers() {
-    const containerWidth = this.refs.byLocationHolder &&  this.refs.byLocationHolder.clientWidth
-    this.setState({
-      byLocationWidth: containerWidth < 640 ? containerWidth : 640
-    })
   }
 
   onFilterChange(filterName, filterValue) {
@@ -256,7 +227,7 @@ export class BrandDashboard extends React.Component {
                 cityData={this.props.cityData}
                 getCityData={this.getCityData}
                 theme={theme}
-                height={this.state.byLocationWidth / 1.6}
+                height={600}
                 dataKey="bits_per_second"
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}
