@@ -161,18 +161,6 @@ export class BrandDashboard extends React.Component {
     const datasetBCalculatedValue = (totalTrafficValue * trafficDatasetBValue) / 100
     const datasetBCalculatedUnit = totalTrafficUnit
 
-    const optionalDataset = true
-    const optionalDatasetACalculatedUnit = totalTrafficUnit
-    const optionalDatasetACalculatedValue = (totalTrafficValue * trafficDatasetAValue) / 100
-    const optionalDatasetALabel = intl.formatMessage({id: 'portal.analytics.prod.title'})
-    const optionalDatasetAUnit = "%"
-    const optionalDatasetAValue = numeral((dashboard.getIn(['traffic', 'bytes_net_on']))).format('0,0')
-    const optionalDatasetBCalculatedUnit = totalTrafficUnit
-    const optionalDatasetBCalculatedValue = (totalTrafficValue * trafficDatasetBValue) / 100
-    const optionalDatasetBLabel = intl.formatMessage({id: 'portal.analytics.trial.title'})
-    const optionalDatasetBUnit = "%"
-    const optionalDatasetBValue = numeral((dashboard.getIn(['traffic', 'bytes_net_off']))).format('0,0')
-
     const countries = !dashboard.size ? List() : dashboard.get('countries')
     const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
 
@@ -204,17 +192,6 @@ export class BrandDashboard extends React.Component {
               datasetBLabel={intl.formatMessage({id: 'portal.analytics.spEdge.title'})}
               datasetBUnit="%"
               datasetBValue={trafficDatasetBValue}
-              optionalDataset={optionalDataset}
-              optionalDatasetACalculatedUnit={optionalDatasetACalculatedUnit}
-              optionalDatasetACalculatedValue={optionalDatasetACalculatedValue}
-              optionalDatasetALabel={optionalDatasetALabel}
-              optionalDatasetAUnit={optionalDatasetAUnit}
-              optionalDatasetAValue={optionalDatasetAValue}
-              optionalDatasetBCalculatedUnit={optionalDatasetBCalculatedUnit}
-              optionalDatasetBCalculatedValue={optionalDatasetBCalculatedValue}
-              optionalDatasetBLabel={optionalDatasetBLabel}
-              optionalDatasetBUnit={optionalDatasetBUnit}
-              optionalDatasetBValue={optionalDatasetBValue}
             />
           </DashboardPanel>
           {/* END ------- Stacked Summary */}

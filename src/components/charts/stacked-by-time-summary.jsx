@@ -56,18 +56,7 @@ class StackedByTimeSummary extends React.Component {
       datasetBUnit,
       datasetBValue,
       totalDatasetUnit,
-      totalDatasetValue,
-
-      optionalDatasetACalculatedUnit,
-      optionalDatasetACalculatedValue,
-      optionalDatasetALabel,
-      optionalDatasetAUnit,
-      optionalDatasetAValue,
-      optionalDatasetBCalculatedUnit,
-      optionalDatasetBCalculatedValue,
-      optionalDatasetBLabel,
-      optionalDatasetBUnit,
-      optionalDatasetBValue
+      totalDatasetValue
     } = this.props
 
     const datasets = []
@@ -154,41 +143,6 @@ class StackedByTimeSummary extends React.Component {
               ]}
             </div>
           }
-
-          {(optionalDatasetALabel || optionalDatasetBLabel) &&
-            <div className="optional-dataset-border" />
-          }
-
-          {optionalDatasetALabel &&
-            <div className={dataSetColClasses}>
-              <div className="dataset-label optional-dataset-a">{optionalDatasetALabel}</div>
-              {totalDatasetValue > 0 ? [
-                optionalDatasetAValue && <span key={0} className="value">{optionalDatasetAValue}</span>,
-                optionalDatasetAUnit && <span key={1} className="suffix">{optionalDatasetAUnit}</span>,
-                optionalDatasetACalculatedUnit && <br key={2} />,
-                optionalDatasetACalculatedUnit && <span key={3} className="value">{optionalDatasetACalculatedValue}</span>,
-                optionalDatasetACalculatedUnit && <span key={4} className="suffix">{optionalDatasetACalculatedUnit}</span>
-              ] : (
-                <div className="no-data by-time-summary">
-                  <FormattedMessage id="portal.common.no-data.text"/>
-                </div>
-              )}
-            </div>
-          }
-
-          {optionalDatasetBLabel &&
-            <div className={dataSetColClasses}>
-              <div className="dataset-label optional-dataset-b">{optionalDatasetBLabel}</div>
-              {totalDatasetValue > 0 && [
-                optionalDatasetBValue && <span key={0} className="value">{optionalDatasetBValue}</span>,
-                optionalDatasetBUnit && <span key={1} className="suffix">{optionalDatasetBUnit}</span>,
-                optionalDatasetBCalculatedUnit && <br key={2} />,
-                optionalDatasetBCalculatedUnit && <span key={3} className="value">{optionalDatasetBCalculatedValue}</span>,
-                optionalDatasetBCalculatedUnit && <span key={4} className="suffix">{optionalDatasetBCalculatedUnit}</span>
-              ]}
-            </div>
-          }
-
         </div>
       </div>
     )
@@ -210,16 +164,6 @@ StackedByTimeSummary.propTypes = {
   datasetBLabel: PropTypes.string,
   datasetBUnit: PropTypes.string,
   datasetBValue: PropTypes.string,
-  optionalDatasetACalculatedUnit: PropTypes.string,
-  optionalDatasetACalculatedValue: PropTypes.number,
-  optionalDatasetALabel: PropTypes.string,
-  optionalDatasetAUnit: PropTypes.string,
-  optionalDatasetAValue: PropTypes.string,
-  optionalDatasetBCalculatedUnit: PropTypes.string,
-  optionalDatasetBCalculatedValue: PropTypes.number,
-  optionalDatasetBLabel: PropTypes.string,
-  optionalDatasetBUnit: PropTypes.string,
-  optionalDatasetBValue: PropTypes.string,
   totalDatasetUnit: PropTypes.string.isRequired,
   totalDatasetValue: PropTypes.string.isRequired
 }

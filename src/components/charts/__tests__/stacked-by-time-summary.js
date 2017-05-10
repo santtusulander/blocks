@@ -114,42 +114,4 @@ describe('StackedByTimeSummary', () => {
     }
     expect(subject(customProps).find('.suffix').length).toBe(5)
   })
-
-  it('should reflect optional dataset A', () => {
-    const customProps = {
-      optionalDatasetACalculatedUnit: "TB",
-      optionalDatasetACalculatedValue: 5,
-      optionalDatasetALabel: "Label",
-      optionalDatasetAUnit: "%",
-      optionalDatasetAValue: "23"
-    }
-    expect(subject(customProps).find('.optional-dataset-a').length).toBe(1)
-  })
-
-  it('should reflect optional dataset B', () => {
-    const customProps = {
-      optionalDatasetBCalculatedUnit: "%",
-      optionalDatasetBCalculatedValue: 5,
-      optionalDatasetBLabel: "Label 2",
-      optionalDatasetBUnit: "TB",
-      optionalDatasetBValue: "32"
-    }
-    expect(subject(customProps).find('.optional-dataset-b').length).toBe(1)
-  })
-
-  it('should reflect optional dataset A & B', () => {
-    const customProps = {
-      optionalDatasetACalculatedUnit: "TB",
-      optionalDatasetACalculatedValue: 5,
-      optionalDatasetALabel: "Label",
-      optionalDatasetAUnit: "%",
-      optionalDatasetAValue: "23",
-      optionalDatasetBCalculatedUnit: "%",
-      optionalDatasetBCalculatedValue: 5,
-      optionalDatasetBLabel: "Label 2",
-      optionalDatasetBUnit: "TB",
-      optionalDatasetBValue: "32"
-    }
-    expect(subject(customProps).find('.optional-dataset-border').length).toBe(1)
-  })
 })
