@@ -64,6 +64,7 @@ class Storage extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
     this.initFileUploader = this.initFileUploader.bind(this)
+    this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
   }
 
   componentWillMount() {
@@ -157,6 +158,11 @@ class Storage extends Component {
     this.props.toggleModal()
   }
 
+  openDirectoryHandler(dirName) {
+    const { params, params: { splat } } = this.props
+    this.props.router.push(getContentUrl('storageContents', `${splat ? `${splat}/${dirName}` : dirName}`, params))
+  }
+
   render() {
     const {
       account,
@@ -211,6 +217,7 @@ class Storage extends Component {
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
                   fileUploader={this.state.fileUploader}
+                  openDirectoryHandler={this.openDirectoryHandler}
                 />
               </IsAllowed>
             </PageContainer>

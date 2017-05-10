@@ -8,7 +8,10 @@ import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
 
-const StorageContentBrowser = ({ contents }) => {
+const StorageContentBrowser = ({
+  contents,
+  openDirectoryHandler
+}) => {
   return (
     <Table striped={true}>
       <thead>
@@ -28,7 +31,11 @@ const StorageContentBrowser = ({ contents }) => {
           const isDirectory = stat.get('type') === 'directory'
           return (
             <tr key={index}>
-              <td>{name}</td>
+              <td onDoubleClick={() => {
+                isDirectory ? openDirectoryHandler(name) : null
+              }}>
+                {name}
+              </td>
               <td>{formatDate(lastModified)}</td>
               <td>{isDirectory ? '-' : formatBytes(size)}</td>
               <td>
