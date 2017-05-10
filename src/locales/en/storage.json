@@ -45,9 +45,9 @@
   "portal.storage.summaryPage.contents.asperaToggle.title": "Aspera Upload",
   "portal.storage.summaryPage.contents.newFile.label": "New File Upload",
   "portal.storage.summaryPage.contents.newFolder.label": "New Folder",
+  "portal.storage.summaryPage.contentBrowser.name.label": "Name",
   "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
-  "portal.storage.summaryPage.contentBrowser.status.label": "Status",
-  "portal.storage.summaryPage.contentBrowser.noOfFiles.label": "No of Files",
+  "portal.storage.summaryPage.contentBrowser.size.label": "Size",
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",

@@ -14,8 +14,19 @@ import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../shared/form-elements/toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
-  const hasContents = contents && contents.length > 0
+const StorageContents = ({
+  asperaUpload,
+  contents,
+  onMethodToggle,
+  asperaInstanse,
+  gatewayHostname,
+  storageId,
+  brandId,
+  accountId,
+  groupId,
+  fileUploader
+}) => {
+  const hasContents = contents && contents.size > 0
   const headerTitle = hasContents
                       ?
                         (<FormattedMessage
@@ -79,7 +90,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
         }
       </SectionHeader>
       { hasContents
-        ? <StorageContentBrowser contents={contents} />
+        ? <StorageContentBrowser contents={contents.get('items')} />
         : asperaUpload
         ? <AsperaUpload
             multiple={true}
@@ -102,7 +113,7 @@ StorageContents.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
   brandId: React.PropTypes.string,
-  contents: PropTypes.array,
+  contents: PropTypes.instanceOf(Map),
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   groupId: PropTypes.string,

@@ -249,7 +249,7 @@ Storage.propTypes = {
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
-  storageContents: PropTypes.array,
+  storageContents: PropTypes.instanceOf(Map),
   storageMetrics: PropTypes.object,
   toggleModal: PropTypes.func,
   uploadHandlers: PropTypes.object
