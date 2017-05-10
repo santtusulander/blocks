@@ -26,6 +26,8 @@ const ROUTES = {
   contentProperty: '/content/:brand/:account/groups/:group/:property',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
   contentStorage: '/content/:brand/:account/groups/:group/storage/:storage',
+  contentStorageContents: '/content/:brand/:account/groups/:group/storage/:storage/contents/:path',
+  contentStorageContentsMatch: '/content/:brand/:account/groups/:group/storage/:storage/contents/*',
   contentStorageConfiguration: '/content/:brand/:account/groups/:group/storage/:storage/configuration',
 
   contentPropertyTabSummary: 'summary',

@@ -291,6 +291,7 @@ const AppRoutes =
 
           {/* Storage - routes */}
           <Route path={routes.contentStorage} component={CanViewStorageSummary(Storage)} />
+          <Route path={routes.contentStorageContentsMatch} component={CanViewStorageSummary(Storage)} />
 
         </Route>
 
