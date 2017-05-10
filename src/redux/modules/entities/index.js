@@ -21,6 +21,10 @@ export const metricsActionTypes = {
   RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
+export const contentsActionTypes = {
+  RECEIVE_CONTENTS: 'contents/RECEIVE'
+}
+
 const locations =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'locations' }),
@@ -87,6 +91,12 @@ const CISIngestPoints =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPoints' }),
     [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
+const CISIngestPointContents =
+  handleActions({
+    [contentsActionTypes.RECEIVE_CONTENTS]: receiveContents({ key: 'ingestPointContents' }),
     [actionTypes.FAIL]: failEntity
   }, Map())
 
@@ -159,6 +169,7 @@ export default combineReducers({
   groups,
   iataCodes,
   CISIngestPoints,
+  CISIngestPointContents,
   gtm,
   CISClusters,
   CISWorkflowProfiles,
@@ -174,6 +185,6 @@ export default combineReducers({
   roleNames,
   serviceTitles,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes, ...contentsActionTypes }),
   entityPagination
 })
