@@ -1,39 +1,36 @@
 jest.unmock('../request-canceler.js')
 
 import axios from 'axios'
-import requestCanceler from '../request-canceler.js'
+import {
+  applyInterceptor,
+  refreshCancelTokenSource,
+  cancelPendingRequests
+} from '../request-canceler.js'
 
-xdescribe('requestCanceler', () => {
-  const expectedPublicMethods = [
-    'applyInterceptor',
-    'removeInterceptor',
-    'cancelPendingRequests'
-  ]
+describe('requestCanceler', () => {
 
-  beforeEach(() => {
-
-  })
-
-  it('should be en object', () => {
-    expect(requestCanceler).toBeInstanceOf(Object)
-  })
-  it(`should have public methods: ${expectedPublicMethods}`, () => {
-    const publicMethods = Object.keys(requestCanceler)
-
-    expect(publicMethods.length).toEqual(expectedPublicMethods.length)
-    expect(Array.prototype.includes.apply(publicMethods, expectedPublicMethods)).toBeTruthy()
-  })
 
   describe('applyInterceptor', () => {
-    const instance = axios.create()
-    const method = requestCanceler.applyInterceptor
 
-
-    it('optionally accept axios instance as argument', () => {
-      expect(method(instance)).toBeUndefined()
+    beforeEach(() => {
+      axios.CancelToken.source = jest.fn().mockImplementation(() => ({
+        cancel: jest.fn()
+      }))
     })
-    it('use axios by default if no instance provided', () => {
 
+    let requestInterceptors = axios.interceptors.request.handlers
+    let responseInterceptors = axios.interceptors.response.handlers
+
+    it('should add interceptors to the axios instance', () => {
+      applyInterceptor()
+
+      expect(requestInterceptors.length).toEqual(1)
+      expect(responseInterceptors.length).toEqual(1)
+    })
+
+    it('refreshCancelTokenSource should init new cancelToken source', () => {
+      refreshCancelTokenSource()
+      expect(axios.CancelToken.source).toBeCalled()
     })
   })
 })

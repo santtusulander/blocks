@@ -45,6 +45,8 @@ export const applyInterceptor = function (instance) {
 /**
  * Cancel requests by resolving cancelToken Promise
  */
-export const cancelPendingRequests = () => {
-  source.cancel('cancelled')
+export const cancelPendingRequests = function () {
+  if (source) {
+    source.cancel('cancelled')
+  }
 }
