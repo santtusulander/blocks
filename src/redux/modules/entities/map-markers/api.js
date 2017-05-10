@@ -3,39 +3,28 @@ import {normalize, schema} from 'normalizr'
 
 const markerMockData = [
   {
-    id: 'Core1',
-    type: 'core1',
-    label: 'Pop 1',
-    lat: 60.192059,
-    lng: 24.945831,
-    traffic: 12334234
-  },
-
-  {
-    id: 'pop2',
-    type: 'pop',
-    label: 'Pop 2',
-    lat: 60.292059,
-    lng: 24.845831,
-    traffic: 78923423
-  },
-
-  {
-    id: 'sp-edge1',
-    type: 'sp-edge',
-    label: 'SP Edge 1',
-    lat: 60.192059,
-    lng: 24.945831,
-    traffic: 12334234
-  },
-
-  {
-    id: 'pop2',
-    type: 'pop',
-    label: 'Pop 2',
-    lat: 60.292059,
-    lng: 24.845831,
-    traffic: 78923423
+    account_id: 1,
+    boundingbox: [
+      50.027758,
+      50.057758,
+      8.5420492,
+      8.5720492
+    ],
+    brand_id: 'udn',
+    city_name: 'Frankfurt',
+    cloud_location_id: 'fra01',
+    cloud_name: 'UDN-Core',
+    cloud_provider: 'os',
+    cloud_region: 'EU',
+    country_code: 'de',
+    group_id: 6,
+    iata_code: 'fra',
+    id: 'fra01',
+    lat: 50.042758,
+    lon: 8.5570492,
+    postalcode: '123123',
+    state: 'Hesse',
+    street: 'some street address'
   }
 ]
 
