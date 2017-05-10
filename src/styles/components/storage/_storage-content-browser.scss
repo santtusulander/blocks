@@ -1,10 +1,12 @@
 .storage-contents-name {
-  display: inline;
+  display: inline-block;
+  vertical-align: inherit;
 }
 
 .storage-contents-icon {
   fill: $pale-blue !important;
   margin-right: rem(20px);
+  display: inlin-block;
 
   &.back {
     position: relative;
