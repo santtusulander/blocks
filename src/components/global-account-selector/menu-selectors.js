@@ -22,7 +22,7 @@ import { accountIsServiceProviderType } from '../../util/helpers'
 
 export const requestTag = 'GAS-REQUEST'
 
-const sort = entities => entities.sort((a, b) => {
+const sorter = (a, b) => {
   const aLower = a[ a.labelKey || 'name' ].toLowerCase()
   const bLower = b[ b.labelKey || 'name' ].toLowerCase()
 
@@ -33,7 +33,7 @@ const sort = entities => entities.sort((a, b) => {
     return 1
   }
   return 0
-})
+}
 
 /**
  * For the account selector in property configuration; this won't include storages.
@@ -87,7 +87,7 @@ export const getGroups = (state, parents, canView) => {
         nodes
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -105,12 +105,11 @@ export const getProperties = (state, parents) => {
       idKey: 'published_host_id',
       labelKey: 'published_host_id',
       nodeInfo: {
-        category: 'Media Delivery',
         entityType: 'property',
         parents
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -133,7 +132,7 @@ export const getStorages = (state, parents) => {
         parents
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -160,7 +159,7 @@ export const getAccounts = (state, parents, canView) => {
         nodes
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -199,8 +198,8 @@ const getStoragesAndProperties = (state, parents, canView) => {
 
   if (!accountIsServiceProviderType(activeAccount)) {
 
-    const properties = canView(VIEW_CONTENT_PROPERTIES) && sort(getProperties(state, parents))
-    const storages = canView(LIST_STORAGE) && sort(getStorages(state, parents))
+    const properties = canView(VIEW_CONTENT_PROPERTIES) && getProperties(state, parents)
+    const storages = canView(LIST_STORAGE) && getStorages(state, parents)
     const propertyCount = properties.length
     const storageCount = storages.length
 
