@@ -3,6 +3,7 @@ import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
 
+import TableSorter from '../shared/table-sorter'
 import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
@@ -15,15 +16,22 @@ const StorageContentBrowser = ({
   backButtonHandler,
   contents,
   isRootDirectory,
-  openDirectoryHandler
+  openDirectoryHandler,
+  sorterProps
 }) => {
   return (
     <Table striped={true}>
       <thead>
         <tr>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' /></th>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' /></th>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.size.label' /></th>
+          <TableSorter {...sorterProps} column='name'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
+          </TableSorter>
+          <TableSorter {...sorterProps} column='lastModified'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' />
+          </TableSorter>
+          <TableSorter {...sorterProps} column='size'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.size.label' />
+          </TableSorter>
           <th width="1%"/>
         </tr>
       </thead>

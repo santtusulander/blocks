@@ -4,6 +4,7 @@ import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map, List } from 'immutable'
 
 import { getContentUrl } from '../../util/routes.js'
+import { getSortData } from '../../util/helpers'
 
 import SectionContainer from '../shared/layout/section-container'
 import SectionHeader from '../shared/layout/section-header'
@@ -26,6 +27,7 @@ class StorageContents extends Component {
       sortDir: 1
     }
 
+    this.changeSort = this.changeSort.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
     this.backButtonHandler = this.backButtonHandler.bind(this)
     this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
@@ -52,6 +54,10 @@ class StorageContents extends Component {
     })
   }
 
+  changeSort(sortBy, sortDir) {
+    this.setState({ sortBy, sortDir })
+  }
+
   getFilteredItems(items, searchTerm) {
     if (!searchTerm) {
       return items
@@ -62,8 +68,14 @@ class StorageContents extends Component {
     })
   }
 
+  getModifiedContents(items) {
+    return items.map(item => {
+      return item.get('type') === 'directory' ? item.set('size', null) : item
+    })
+  }
+
   render() {
-    const { search } = this.state
+    const { search, sortBy, sortDir } = this.state
     const {
       asperaUpload,
       contents,
@@ -95,7 +107,15 @@ class StorageContents extends Component {
     const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
     const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
     const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
+
+    const sorterProps  = {
+      activateSort: this.changeSort,
+      activeColumn: sortBy,
+      activeDirection: sortDir
+    }
     const filteredContents = this.getFilteredItems(contents, search)
+    const modifiedContents = this.getModifiedContents(filteredContents)
+    const sortedContents = getSortData(modifiedContents, sortBy, sortDir)
 
     return (
       <SectionContainer>
@@ -155,10 +175,11 @@ class StorageContents extends Component {
         </SectionHeader>
         { hasContents
           ? <StorageContentBrowser
-              contents={filteredContents}
+              contents={sortedContents}
               openDirectoryHandler={this.openDirectoryHandler}
               backButtonHandler={this.backButtonHandler}
               isRootDirectory={isRootDirectory}
+              sorterProps={sorterProps}
             />
           : asperaUpload
           ? <AsperaUpload
