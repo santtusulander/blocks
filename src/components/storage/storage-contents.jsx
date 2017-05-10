@@ -14,6 +14,7 @@ import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -103,6 +104,7 @@ class StorageContents extends Component {
       groupId,
       fileUploader,
       isRootDirectory,
+      isFetchingContents,
       intl } = this.props
 
     const hasContents = contents && contents.size > 0
@@ -128,8 +130,11 @@ class StorageContents extends Component {
     const modifiedContents = filteredContents && this.getModifiedContents(filteredContents)
     const sortedContents = modifiedContents && getSortData(modifiedContents, sortBy, sortDir)
 
-    return (
-      <SectionContainer>
+    return isFetchingContents
+    ?
+      <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+    :
+      (<SectionContainer>
         <SectionHeader
           sectionHeaderTitle={headerTitle}>
           <FormGroup className="upload-toggle-group">
@@ -204,7 +209,7 @@ class StorageContents extends Component {
           : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
         }
       </SectionContainer>
-    )
+      )
   }
 }
 

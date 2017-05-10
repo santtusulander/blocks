@@ -28,6 +28,8 @@ import { getById as getStorageContentsById } from '../../redux/modules/entities/
 import { buildReduxId, parseResponseError } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
 
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
 import StorageFormContainer from './modals/storage-modal.jsx'
 
 import Content from '../../components/shared/layout/content'
@@ -169,6 +171,7 @@ class Storage extends Component {
       storage,
       storageContents,
       gatewayHostname,
+      isFetchingContents,
       storageMetrics: {
         chartData,
         usage,
@@ -218,6 +221,7 @@ class Storage extends Component {
                   isRootDirectory={isRootDirectory}
                   params={params}
                   router={this.props.router}
+                  isFetchingContents={isFetchingContents}
                 />
               </IsAllowed>
             </PageContainer>
@@ -379,7 +383,8 @@ const mapStateToProps = (state, ownProps) => {
     hasStorageService,
     storage,
     storageContents,
-    storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
+    storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType')),
+    isFetchingContents: getFetchingByTag(state, 'ingestPointContents')
   }
 }
 
