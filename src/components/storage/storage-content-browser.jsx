@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
 
 import TableSorter from '../shared/table-sorter'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
@@ -54,7 +55,7 @@ const StorageContentBrowser = ({
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
-                {name}
+                <TruncatedTitle className='storage-contents-name' content={name} />
               </td>
               <td>{formatDate(item.get('lastModified'))}</td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>

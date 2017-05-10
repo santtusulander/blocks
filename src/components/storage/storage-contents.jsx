@@ -113,9 +113,9 @@ class StorageContents extends Component {
       activeColumn: sortBy,
       activeDirection: sortDir
     }
-    const filteredContents = this.getFilteredItems(contents, search)
-    const modifiedContents = this.getModifiedContents(filteredContents)
-    const sortedContents = getSortData(modifiedContents, sortBy, sortDir)
+    const filteredContents = contents && this.getFilteredItems(contents, search)
+    const modifiedContents = filteredContents && this.getModifiedContents(filteredContents)
+    const sortedContents = modifiedContents && getSortData(modifiedContents, sortBy, sortDir)
 
     return (
       <SectionContainer>
