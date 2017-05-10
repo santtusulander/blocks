@@ -7,8 +7,6 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Table } from 'react-bootstrap'
 
 import {
-  accountIsContentProviderType,
-  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   separateUnit
@@ -17,7 +15,7 @@ import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 import { getDashboardUrl } from '../util/routes'
-
+import { ACCOUNT_TYPE_CLOUD_PROVIDER } from '../constants/account-management-options'
 import * as PERMISSIONS from '../constants/permissions'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import { defaultFilters } from '../redux/modules/filters'
@@ -84,30 +82,21 @@ export class BrandDashboard extends React.Component {
   }
 
   fetchData(urlParams, filters) {
-    if (urlParams.account) {
-      // Dashboard should fetch only account level data
-      const { brand, account: id } = urlParams
-      this.props.fetchAccount({brand, id}).then(() => {
-        const params = { brand: urlParams.brand, account: urlParams.account }
+    // Dashboard should fetch only account level data
+    const params = { brand: urlParams.brand }
+    if (false) {
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+      const accountType = this.props.activeAccount.get('provider_type')
+      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-        const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-        dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-        const accountType = this.props.activeAccount.get('provider_type')
-        const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
-
-        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
-        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
-
-        return Promise.all([
-          this.props.dashboardActions.startFetching(),
-          this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-          fetchProviders
-        ])
-        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
-      })
+      return Promise.all([
+        this.props.dashboardActions.startFetching(),
+        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+        this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts),
+        this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+      ])
+      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
     }
   }
 
@@ -119,9 +108,9 @@ export class BrandDashboard extends React.Component {
   }
 
   getCityData(south, west, north, east) {
-    const { params: { brand, account }, filters } = this.props
+    const { params: { brand }, filters } = this.props
     return getCitiesWithinBounds({
-      params: { brand, account },
+      params: { brand },
       filters,
       coordinates: { south, west, north, east },
       actions: this.props.trafficActions
@@ -198,7 +187,7 @@ export class BrandDashboard extends React.Component {
 
           {/* MAPBOX */}
           <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={countries.size ? true : false} className="full-width">
-            <div ref="byLocationHolder">
+            <div>
               <AnalysisByLocation
                 countryData={countries}
                 cityData={this.props.cityData}
@@ -209,8 +198,6 @@ export class BrandDashboard extends React.Component {
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}
                 mapboxActions={this.props.mapboxActions}
-                coreLocations={{}}
-                spEdgesLocations={{}}
               />
             </div>
           </DashboardPanel>
@@ -376,7 +363,6 @@ BrandDashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
-  fetchAccount: PropTypes.func,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
@@ -397,7 +383,11 @@ BrandDashboard.contextTypes = {
 }
 
 BrandDashboard.defaultProps = {
-  activeAccount: Map({id: 236, name: "UDN Mgmt"}),
+  activeAccount: Map({
+    id: 1,
+    name: <FormattedMessage id="portal.content.property.topBar.brand.label" />,
+    provider_type: ACCOUNT_TYPE_CLOUD_PROVIDER
+  }),
   dashboard: Map(),
   filters: Map(),
   user: Map()
