@@ -2,26 +2,16 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 
-import IconConfiguration from '../../../components/shared/icons/icon-configuration'
-
-import { Row, Col, ControlLabel, FormGroup, InputGroup, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, InputGroup, Button } from 'react-bootstrap'
 import { Map, List } from 'immutable'
 
 import SidePanel from '../../../components/shared/side-panel'
 import StorageKPI from '../../../components/storage/storage-kpi'
-//import SectionContainer from '../../../components/shared/layout/section-container'
 import LogDeliveryConfigureForm from '../../../components/services/log-delivery-configure-form'
 import propertiesActions from '../../../redux/modules/entities/properties/actions'
 import { getIdsByGroup as getPropertiesbyGroup, getById as getPropertyById } from '../../../redux/modules/entities/properties/selectors'
-
+import IconConfiguration from '../../../components/shared/icons/icon-configuration'
 import Select from '../../../components/shared/form-elements/select'
-
-
-// import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
-// import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
-// import {fetchAccount, startFetching as accountStartFetching, getById as getAccountById, isFetching as accountsFetching} from '../../../redux/modules/account'
-
-// import { getServicesIds } from '../../../util/services-helpers'
 
 class LogDeliveryService extends React.Component {
   constructor(props) {
