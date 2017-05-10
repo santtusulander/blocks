@@ -4,7 +4,7 @@ import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination, receiveContents} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -19,10 +19,6 @@ export const metricsActionTypes = {
   RECEIVE_METRICS: 'metrics/RECEIVE',
   RECEIVE_GROUP_METRICS: 'metrics/RECEIVE_GROUP',
   RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
-}
-
-export const contentsActionTypes = {
-  RECEIVE_CONTENTS: 'contents/RECEIVE'
 }
 
 const locations =
@@ -96,7 +92,7 @@ const CISIngestPoints =
 
 const CISIngestPointContents =
   handleActions({
-    [contentsActionTypes.RECEIVE_CONTENTS]: receiveContents({ key: 'ingestPointContents' }),
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPointContents' }),
     [actionTypes.FAIL]: failEntity
   }, Map())
 
@@ -185,6 +181,6 @@ export default combineReducers({
   roleNames,
   serviceTitles,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes, ...contentsActionTypes }),
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
   entityPagination
 })
