@@ -252,11 +252,13 @@ Storage.propTypes = {
   fetchClusters: PropTypes.func,
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
+  fetchStorageContents: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
   initStorageAccessKey: PropTypes.func,
+  isFetchingContents: PropTypes.bool,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
@@ -287,33 +289,6 @@ Storage.defaultProps = {
     gain: 0,
     locations: []
   }
-}
-
-const getMockContents = (storage) => {
-  return storage === 'with-contents' ? [
-    {
-      type: 'file',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'In Progress'
-    },
-    {
-      type: 'file',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'In Progress'
-    },
-    {
-      type: 'directory',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'Completed',
-      noOfFiles: 1000
-    },
-    {
-      type: 'directory',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'Failed',
-      noOfFiles: 800
-    }
-  ] : []
 }
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {

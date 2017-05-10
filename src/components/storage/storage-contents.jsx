@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map, List } from 'immutable'
 
@@ -224,7 +224,12 @@ StorageContents.propTypes = {
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   groupId: PropTypes.string,
+  intl: intlShape,
+  isFetchingContents: PropTypes.bool,
+  isRootDirectory: PropTypes.bool,
   onMethodToggle: PropTypes.func,
+  params: PropTypes.object,
+  router: PropTypes.object,
   storageId: PropTypes.string
 }
 

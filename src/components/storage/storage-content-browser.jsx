@@ -79,7 +79,11 @@ const StorageContentBrowser = ({
 
 StorageContentBrowser.displayName = "StorageContentBrowser"
 StorageContentBrowser.propTypes = {
-  contents: PropTypes.instanceOf(List)
+  backButtonHandler: PropTypes.func,
+  contents: PropTypes.instanceOf(List),
+  isRootDirectory: PropTypes.bool,
+  openDirectoryHandler: PropTypes.func,
+  sorterProps: PropTypes.object
 }
 
 export default StorageContentBrowser
