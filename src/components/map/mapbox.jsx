@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
@@ -23,7 +23,7 @@ import {
 } from '../../util/mapbox-helpers.js'
 
 // import IconMinimap from '../shared/icons/icon-minimap';
-import IconExpand from '../shared/icons/icon-expand';
+// import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
@@ -42,7 +42,6 @@ class Mapbox extends React.Component {
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
-    this.goFullscreen = this.goFullscreen.bind(this)
   }
 
   componentDidMount() {
@@ -128,10 +127,6 @@ class Mapbox extends React.Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
-
-    if (this.props.coreLocations && this.props.spEdgesLocations) {
-      this.addPopLayers(map, this.props.coreLocations, this.props.spEdgesLocations)
-    }
 
     this.addCountryLayers(map, this.props.countryData.toJS())
 
@@ -318,18 +313,6 @@ class Mapbox extends React.Component {
     return (style, value) => (cursor) => {
       map.setPaintProperty(this.state.hoveredLayer.id, this.state.hoveredLayer.type + '-' + style, value)
       map.getCanvas().style.cursor = cursor
-    }
-  }
-
-
-  addPopLayers(map, coreLocations, spEdgesLocations) {
-    if (map && map.style._loaded) {
-
-      // Sets updated instance of the map to state so that we can access
-      // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
-      // errors for not found layers since we might not have the map in state
-      // with all the countries and previous cities.
-      this.setState({ map })
     }
   }
 
@@ -650,11 +633,6 @@ class Mapbox extends React.Component {
     this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
 
-  goFullscreen() {
-    this.state.map.getCanvas().webkitRequestFullScreen()
-    this.state.map.resize();
-  }
-
   render() {
     const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
@@ -717,11 +695,11 @@ class Mapbox extends React.Component {
         }
 
         <div className="map-controls">
-          { this.props.fullScreen &&
+          {/* this.props.fullScreen &&
             <div className="control map-fullscreen" onClick={this.goFullscreen}>
               <IconExpand width={32} height={32} />
             </div>
-          }
+          */}
           <div className="control map-zoom">
             <ZoomControl
               style={{
@@ -764,17 +742,14 @@ class Mapbox extends React.Component {
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List).isRequired,
-  coreLocations: React.PropTypes.object,
   countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
-  fullScreen: React.PropTypes.bool,
   geoData: React.PropTypes.object.isRequired,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
-  spEdgesLocations: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
@@ -787,8 +762,7 @@ Mapbox.defaultProps = {
     setMapBounds: () => null,
     setMapZoom: () => null
   },
-  mapBounds: Immutable.Map(),
-  fullScreen: false
+  mapBounds: Immutable.Map()
 }
 
 export default Mapbox
