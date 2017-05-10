@@ -17,9 +17,9 @@
 }
 
 .storage-contents-icon {
-  fill: $pale-blue !important;
+  display: inline-block;
   margin-right: rem(20px);
-  display: inlin-block;
+  fill: $pale-blue !important;
 
   &.back {
     position: relative;
