@@ -1,7 +1,9 @@
-import React, { PropTypes } from 'react'
-import { FormattedMessage } from 'react-intl'
-import { Col, FormGroup } from 'react-bootstrap'
+import React, { Component, PropTypes } from 'react'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map } from 'immutable'
+
+import { getContentUrl } from '../../util/routes.js'
 
 import SectionContainer from '../shared/layout/section-container'
 import SectionHeader from '../shared/layout/section-header'
@@ -14,104 +16,162 @@ import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../shared/form-elements/toggle'
 
-const StorageContents = ({
-  asperaUpload,
-  contents,
-  onMethodToggle,
-  asperaInstanse,
-  gatewayHostname,
-  storageId,
-  brandId,
-  accountId,
-  groupId,
-  fileUploader,
-  openDirectoryHandler,
-  backButtonHandler,
-  isRootDirectory
-}) => {
-  const hasContents = contents && contents.size > 0
-  const headerTitle = hasContents
-                      ?
-                        (<FormattedMessage
-                          id='portal.storage.summaryPage.contents.hasContents.title'
-                          values={{
-                            folders: contents.filter((item) => item.type === 'directory').length,
-                            files: contents.filter((item) => item.type === 'file').length}} />)
-                      :
-                        <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
+class StorageContents extends Component {
+  constructor(props) {
+    super(props)
 
-  const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
-  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
-  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => { /* no-op */ })
-  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
-  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
-  const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
+    this.state = {
+      search: ''
+    }
 
-  return (
-    <SectionContainer>
-      <SectionHeader
-        sectionHeaderTitle={headerTitle}>
-        <FormGroup className="upload-toggle-group">
-          <Col className="pull-left">
-            <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
-          </Col>
-          <Col xs={6} className="pull-right">
-            <Toggle
-              value={asperaUpload}
-              onText='ON'
-              offText='OFF'
-              changeValue={onMethodToggle}
+    this.changeSearch = this.changeSearch.bind(this)
+    this.backButtonHandler = this.backButtonHandler.bind(this)
+    this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
+  }
+
+  backButtonHandler() {
+    const { params, params: { splat, storage }, router } = this.props
+    const splatArray = splat.split('/')
+    if (splatArray.length > 1) {
+      router.push(getContentUrl('storageContents', splatArray.slice(0, -1).join('/'), params))
+    } else {
+      router.push(getContentUrl('storage', storage, params))
+    }
+  }
+
+  openDirectoryHandler(dirName) {
+    const { params, params: { splat }, router } = this.props
+    router.push(getContentUrl('storageContents', `${splat ? `${splat}/${dirName}` : dirName}`, params))
+  }
+
+  changeSearch(e) {
+    this.setState({
+      search: e.target.value
+    })
+  }
+
+  getFilteredItems(items, searchTerm) {
+    if (!searchTerm) {
+      return items
+    }
+    const searchTermLowerCase = searchTerm.toLowerCase()
+    return items.filter((item) => {
+      return item.get('name').toLowerCase().includes(searchTermLowerCase)
+    })
+  }
+
+  render() {
+    const { search } = this.state
+    const {
+      asperaUpload,
+      contents,
+      onMethodToggle,
+      asperaInstanse,
+      gatewayHostname,
+      storageId,
+      brandId,
+      accountId,
+      groupId,
+      fileUploader,
+      isRootDirectory,
+      intl } = this.props
+
+    const hasContents = contents && contents.size > 0
+    const headerTitle = hasContents
+                        ?
+                          (<FormattedMessage
+                            id='portal.storage.summaryPage.contents.hasContents.title'
+                            values={{
+                              folders: contents.filter((item) => item.type === 'directory').length,
+                              files: contents.filter((item) => item.type === 'file').length}} />)
+                        :
+                          <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
+
+    const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
+    const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
+    const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => { /* no-op */ })
+    const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+    const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+    const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
+    const filteredContents = this.getFilteredItems(contents.get('items'), search)
+
+    return (
+      <SectionContainer>
+        <SectionHeader
+          sectionHeaderTitle={headerTitle}>
+          <FormGroup className="upload-toggle-group">
+            <Col xs={6} md={4} className="pull-left">
+              <FormControl
+                type="text"
+                className="search-input"
+                placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
+                value={search}
+                disabled={!hasContents}
+                onChange={this.changeSearch} />
+            </Col>
+            <Col xs={6} md={4} className="pull-right">
+              <Col className="pull-left">
+                <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
+              </Col>
+              <Col className="pull-right">
+                <Toggle
+                  value={asperaUpload}
+                  onText='ON'
+                  offText='OFF'
+                  changeValue={onMethodToggle}
+                />
+              </Col>
+            </Col>
+          </FormGroup>
+          { asperaUpload &&
+            <ButtonDropdown
+              bsStyle="success"
+              pullRight={true}
+              disabled={uploadButtonIsDisabled}
+              options={[
+                {
+                  label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
+                  handleClick: openFileDialog
+                },
+                {
+                  label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                  handleClick: openFolderDialog
+                }
+              ]}
             />
-          </Col>
-        </FormGroup>
-        { asperaUpload &&
-          <ButtonDropdown
-            bsStyle="success"
-            pullRight={true}
-            disabled={uploadButtonIsDisabled}
-            options={[
-              {
-                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-                handleClick: openFileDialog
-              },
-              {
-                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
-                handleClick: openFolderDialog
-              }
-            ]}
-          />
+          }
+          { !asperaUpload &&
+            <Button
+              bsStyle="success"
+              icon={true}
+              onClick={openFileDialog}
+              disabled={!fileUploader}
+            >
+              <IconAdd/>
+            </Button>
+          }
+        </SectionHeader>
+        { hasContents
+          ? <StorageContentBrowser
+              contents={filteredContents}
+              openDirectoryHandler={this.openDirectoryHandler}
+              backButtonHandler={this.backButtonHandler}
+              isRootDirectory={isRootDirectory}
+            />
+          : asperaUpload
+          ? <AsperaUpload
+              multiple={true}
+              brandId={brandId}
+              accountId={accountId}
+              groupId={groupId}
+              storageId={storageId}
+              asperaGetaway={gatewayHostname}
+            />
+          : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
         }
-        { !asperaUpload &&
-          <Button
-            bsStyle="success"
-            icon={true}
-            onClick={openFileDialog}
-            disabled={!fileUploader}
-          >
-            <IconAdd/>
-          </Button>
-        }
-      </SectionHeader>
-      { hasContents
-        ? <StorageContentBrowser
-            contents={contents.get('items')}
-            openDirectoryHandler={openDirectoryHandler}
-            backButtonHandler={backButtonHandler}
-            isRootDirectory={isRootDirectory}
-          />
-        : asperaUpload
-        ? <AsperaUpload
-            multiple={true}
-            brandId={brandId}
-            accountId={accountId}
-            groupId={groupId}
-            storageId={storageId}
-            asperaGetaway={gatewayHostname}
-          />
-        : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
-      }
-    </SectionContainer>
-  )
+      </SectionContainer>
+    )
+  }
 }
 
 StorageContents.displayName = 'StorageContents'
@@ -129,4 +189,4 @@ StorageContents.propTypes = {
   storageId: PropTypes.string
 }
 
-export default StorageContents
+export default injectIntl(StorageContents)

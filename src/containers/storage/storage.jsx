@@ -64,8 +64,6 @@ class Storage extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
     this.initFileUploader = this.initFileUploader.bind(this)
-    this.backButtonHandler = this.backButtonHandler.bind(this)
-    this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
   }
 
   componentWillMount() {
@@ -159,21 +157,6 @@ class Storage extends Component {
     this.props.toggleModal()
   }
 
-  backButtonHandler() {
-    const { params, params: { splat, storage } } = this.props
-    const splatArray = splat.split('/')
-    if (splatArray.length > 1) {
-      this.props.router.push(getContentUrl('storageContents', splatArray.slice(0, -1).join('/'), params))
-    } else {
-      this.props.router.push(getContentUrl('storage', storage, params))
-    }
-  }
-
-  openDirectoryHandler(dirName) {
-    const { params, params: { splat } } = this.props
-    this.props.router.push(getContentUrl('storageContents', `${splat ? `${splat}/${dirName}` : dirName}`, params))
-  }
-
   render() {
     const {
       account,
@@ -232,9 +215,9 @@ class Storage extends Component {
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
                   fileUploader={this.state.fileUploader}
-                  openDirectoryHandler={this.openDirectoryHandler}
-                  backButtonHandler={this.backButtonHandler}
                   isRootDirectory={isRootDirectory}
+                  params={params}
+                  router={this.props.router}
                 />
               </IsAllowed>
             </PageContainer>
