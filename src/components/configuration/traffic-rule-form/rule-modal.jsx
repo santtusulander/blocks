@@ -86,7 +86,8 @@ TrafficRuleFormContainer.propTypes = {
   onCancel: PropTypes.func
 }
 
-const stateToProps = (state, { rule }) => {
+/* istanbul ignore next */
+const mapStateToProps = (state, { rule }) => {
 
   const matchArrayValues = formValueSelector('traffic-rule-form')(state, 'matchArray')
   const activeCondition = formValueSelector('traffic-rule-form')(state, 'condition')
@@ -99,7 +100,8 @@ const stateToProps = (state, { rule }) => {
   }
 }
 
-const dispatchToProps = (dispatch, { rule, onCancel }) => ({
+/* istanbul ignore next */
+const mapDispatchToProps = (dispatch, { rule, onCancel }) => ({
   addRule: values => {
     dispatch(arrayPush('gtmForm', 'rules', values))
     onCancel()
@@ -113,6 +115,6 @@ const dispatchToProps = (dispatch, { rule, onCancel }) => ({
 })
 
 export default connect(
-  stateToProps,
-  dispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(TrafficRuleFormContainer)

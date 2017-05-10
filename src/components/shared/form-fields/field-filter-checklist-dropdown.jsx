@@ -6,7 +6,7 @@ import FilterChecklistDropdown from '../form-elements/filter-checklist-dropdown'
 import DefaultErrorBlock from '../form-elements/default-error-block'
 
 const FieldFilterChecklistDropdown  = ({ addonAfter, addonAfterLabel, addonBefore,
-                                 input, options, className,
+                                 input, options, className, defaultAllSelected,
                                  ErrorComponent, disabled, meta, meta: { touched, error },
                                  label, required = true }) => {
   return (
@@ -31,6 +31,7 @@ const FieldFilterChecklistDropdown  = ({ addonAfter, addonAfterLabel, addonBefor
 
         <FilterChecklistDropdown
           {...input}
+          defaultAllSelected={defaultAllSelected}
           disabled={disabled}
           className={className}
           options={options}
@@ -62,6 +63,7 @@ FieldFilterChecklistDropdown.propTypes = {
   addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
+  defaultAllSelected: PropTypes.bool,
   disabled: PropTypes.bool,
   input: PropTypes.object,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),

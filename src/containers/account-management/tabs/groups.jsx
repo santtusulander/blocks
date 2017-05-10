@@ -20,11 +20,13 @@ import TableSorter from '../../../components/shared/table-sorter'
 import ArrayTd from '../../../components/shared/page-elements/array-td'
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
+import Paginator from '../../../components/shared/paginator/paginator'
 
-import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
+import { formatUnixTimestamp, checkForErrors, getSortData, getPage } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
+import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../../constants/content-item-sort-options'
 
 class AccountManagementAccountGroups extends Component {
   constructor(props) {
@@ -45,6 +47,7 @@ class AccountManagementAccountGroups extends Component {
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
+    this.onActivePageChange = this.onActivePageChange.bind(this)
     this.shouldLeave     = this.shouldLeave.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.isLeaving       = false;
@@ -143,6 +146,18 @@ class AccountManagementAccountGroups extends Component {
     })
   }
 
+  /**
+   * Pushes ?page= -param to url for pagination
+   */
+  onActivePageChange(nextPage) {
+    this.props.router.push({
+      pathname: this.context.location.pathname,
+      query: {
+        page: nextPage
+      }
+    })
+  }
+
   render() {
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -156,6 +171,22 @@ class AccountManagementAccountGroups extends Component {
     const groupText = this.props.intl.formatMessage({id: 'portal.account.groups.counter.text'}, {numGroups: sortedGroups.size})
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
     const finalGroupText = groupText + hiddenGroupText
+
+    const location = this.context.location
+    const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
+
+    const paginationProps = {
+      activePage: currentPage,
+      items: Math.ceil(sortedGroups.count() / PAGE_SIZE),
+      onSelect: this.onActivePageChange,
+      maxButtons: MAX_PAGINATION_ITEMS,
+      boundaryLinks: true,
+      first: true,
+      last: true,
+      next: true,
+      prev: true
+    }
+
     return (
       <PageContainer className="account-management-account-groups">
         <SectionHeader sectionHeaderTitle={finalGroupText}>
@@ -191,7 +222,7 @@ class AccountManagementAccountGroups extends Component {
           </thead>
           <tbody>
 
-          {sortedGroups.map((group, i) => {
+          {getPage(sortedGroups, currentPage, PAGE_SIZE).map((group, i) => {
             const userEmails = this.props.users
               .filter(user => user.get('group_id') &&
                 user.get('group_id').size &&
@@ -227,6 +258,10 @@ class AccountManagementAccountGroups extends Component {
           sortedGroups.size === 0 &&
           this.state.search.length > 0 &&
           <div className="text-center"><FormattedMessage id="portal.account.groups.table.noGroupsFound.text" values={{searchTerm: this.state.search}}/></div>
+        }
+        { /* Show Pagination if more items than fit on PAGE_SIZE */
+          sortedGroups && sortedGroups.count() > PAGE_SIZE &&
+          <Paginator {...paginationProps} />
         }
       </PageContainer>
     )
@@ -271,6 +306,10 @@ const mapDispatchToProps = (dispatch) => {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
+}
+
+AccountManagementAccountGroups.contextTypes = {
+  location: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(AccountManagementAccountGroups)))

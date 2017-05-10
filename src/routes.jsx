@@ -12,8 +12,6 @@ import {
   UserHasPermission,
   UserCanListAccounts,
   UserCanViewAccountDetail,
-  UserCanManageAccounts,
-  UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
   UserCanViewDns,
   UserCanViewHosts,
@@ -94,7 +92,7 @@ import User from './containers/user'
 
 import ContentTransition from './transitions/content'
 
-import { getRoute } from './util/routes'
+import { getRoute, getDashboardUrlFromParams, getContentUrlFromParams } from './util/routes'
 
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
@@ -184,8 +182,7 @@ const AccountIsSP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/network\//, 'i'), '/content/')
-    return redirectPath
+    return getContentUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
@@ -212,8 +209,7 @@ const AccountIsCP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
-    return redirectPath
+    return getDashboardUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
@@ -238,10 +234,10 @@ const AppRoutes =
         <Route path="configure/purge" component={Purge}/>
 
         {/* Analytics - routes */}
-        <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION)} >
+        <Route path={routes.analytics} component={UserCanListAccounts('analyticsAccount')(UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION))} >
           {/* default - set 'udn' as brand */}
           <IndexRedirect to="udn" />
-          <Route path={routes.analyticsBrand} component={UserCanListAccounts(AnalyticsContainer)}>
+          <Route path={routes.analyticsBrand} component={AnalyticsContainer}>
             {getAnalyticsTabRoutes}
           </Route>
           <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
@@ -264,10 +260,10 @@ const AppRoutes =
 
 
         {/* Content / CP Accounts - routes */}
-        <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION))}>
+        <Route path={routes.content} component={UserCanListAccounts('contentAccount')(AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION)))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.contentBrand} component={UserCanListAccounts(BrandContainer)}/>
+            <Route path={routes.contentBrand} component={BrandContainer}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(BrandContainer)}/>
             <Route path={routes.contentGroups} component={AccountContainer}/>
             <Route path={routes.contentGroup} component={UserCanViewHosts(GroupContainer)}/>
@@ -299,10 +295,10 @@ const AppRoutes =
         </Route>
 
         {/* Network / SP Accounts - routes */}
-        <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION))}>
+        <Route path={routes.network} component={UserCanListAccounts('networkAccount')(AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION)))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.networkBrand} component={UserCanListAccounts(BrandContainer)}/>
+            <Route path={routes.networkBrand} component={BrandContainer}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(Network)}/>
           </Route>
           <Route path={routes.networkGroups} component={Network}/>
@@ -313,9 +309,9 @@ const AppRoutes =
         </Route>
 
         {/* Security - routes */}
-        <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION)}>
+        <Route path={routes.security} component={UserCanListAccounts('securityAccount')(UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION))}>
           <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
-          <Route path={routes.securityBrand} component={UserCanListAccounts(Security)} />
+          <Route path={routes.securityBrand} component={Security} />
           <Route path={routes.securityAccount} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
             <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
@@ -338,18 +334,18 @@ const AppRoutes =
         </Route>
 
         {/* Services - routes */}
-        <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION)}>
+        <Route path={routes.services} component={UserCanListAccounts('servicesAccount')(UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION))}>
           <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
-          <Route path={routes.servicesBrand} component={UserCanListAccounts(Services)}/>
+          <Route path={routes.servicesBrand} component={Services}/>
           <Route path={routes.servicesAccount} component={Services}/>
           <Route path={routes.servicesGroup} component={Services}/>
           <Route path={routes.servicesProperty} component={Services}/>
         </Route>
 
         {/* Support - routes */}
-        <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION)}>
+        <Route path={routes.support} component={UserCanListAccounts('supportAccount')((UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION)))}>
           <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
-          <Route path={routes.supportBrand} component={UserCanTicketAccounts(Support)}>
+          <Route path={routes.supportBrand} component={Support}>
               {getSupportTabRoutes}
           </Route>
           <Route path={routes.supportAccount} component={Support}>
@@ -364,9 +360,9 @@ const AppRoutes =
         </Route>
 
         {/* Account management - routes */}
-        <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION)}>
+        <Route path={routes.accountManagement} component={UserCanListAccounts('accountManagementAccount')(UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION))}>
           <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
-          <Route path={routes.accountManagementBrand} component={UserCanManageAccounts(AccountManagement)}>
+          <Route path={routes.accountManagementBrand} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
             <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
             <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
@@ -409,7 +405,7 @@ const AppRoutes =
         </Route>
 
         {/* Dashboard - routes */}
-        <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION)}>
+        <Route path={routes.dashboard} component={UserCanListAccounts('dashboardAccount')(UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION))}>
           <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
           <Route path={routes.dashboardBrand} component={Dashboard}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>

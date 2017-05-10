@@ -21,19 +21,19 @@ import storageActions from '../../../redux/modules/entities/CIS-ingest-points/ac
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import { fetchGroupMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
-import groupActions from '../../../redux/modules/entities/groups/actions'
 
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
-import { getSortData, formatBytes } from '../../../util/helpers'
+import { getSortData, formatBytes, hasService } from '../../../util/helpers'
 import { getByGroup as getStoragesByGroup } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getByGroup as getPropetiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import { getByGroup as getMetricsByGroup } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
-import { getByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
+import { STORAGE_SERVICE_ID } from '../../../constants/service-permissions'
 import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
 import * as PERMISSIONS from '../../../constants/permissions.js'
 
@@ -64,10 +64,7 @@ class AccountManagementStorages extends Component {
     const {params: {account, brand, group}} = this.props
 
     if (brand && account && group) {
-      this.props.fetchGroups(this.props.params)
-      if (group) {
-        this.fetchStorageData(group)
-      }
+      this.fetchStorageData(group)
     }
 
     this.props.fetchClusters({})
@@ -82,10 +79,10 @@ class AccountManagementStorages extends Component {
   }
 
   fetchStorageData(groupId) {
-    const {params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const { params: { brand, account }, fetchStorages, fetchProperties } = this.props
     const metricsStartDate = moment().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
     if (brand && account && groupId) {
-      fetchStorages({ brand, account, group: groupId})
+      fetchStorages({ brand, account, group: groupId, format: 'full'})
       fetchProperties({ brand, account, group: groupId})
       this.props.fetchGroupMetrics(groupId, { start: metricsStartDate, account })
     }
@@ -147,9 +144,10 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, groups, storages, clusters, properties, metrics, params,
+    const { account, group, storages, clusters, properties, metrics, params,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
+    const hasStorageService = hasService(group, STORAGE_SERVICE_ID)
     const sorterProps  = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -157,16 +155,14 @@ class AccountManagementStorages extends Component {
     }
 
     const storagesFullData = storages.map(storage => {
-      const storageGroupId = storage.get('parentId')
-      // eslint-disable-next-line eqeqeq
-      const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
+      const storageGroup = group
       const groupName = storageGroup && storageGroup.get('name')
       const origins = []
-      const storageGatewayHost = storage.getIn(['gateway','hostname'])
+      const storageOriginHostName = storage.getIn(['origin','hostname'])
       const originsData = properties.filter(property => {
         const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
         return propertyEdgeConfig.get('origin_type') === 'cis' &&
-               propertyEdgeConfig.get('origin_host_name') === storageGatewayHost
+               propertyEdgeConfig.get('origin_host_name') === storageOriginHostName
       })
       originsData.forEach(origin => {
         origins.push(origin.get('published_host_id'))
@@ -226,11 +222,12 @@ class AccountManagementStorages extends Component {
                     value={this.state.search}
                     onChange={this.changeSearch}  />
                 </FormGroup>
-                <IsAllowed to={PERMISSIONS.CREATE_STORAGE}>
-                  <Button bsStyle="success" className="btn-icon" onClick={this.addStorage}>
-                    <IconAdd />
-                  </Button>
-                </IsAllowed>
+                {hasStorageService &&
+                  <IsAllowed to={PERMISSIONS.CREATE_STORAGE}>
+                    <Button bsStyle="success" className="btn-icon" onClick={this.addStorage}>
+                      <IconAdd />
+                    </Button>
+                  </IsAllowed>}
               </SectionHeader>
 
               <Table striped={true}>
@@ -252,9 +249,11 @@ class AccountManagementStorages extends Component {
                       <FormattedMessage id="portal.account.storage.table.usage.text"/>
                     </TableSorter>
                     <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
-                    <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
-                      <th width="1%"/>
-                    </IsAllowed>
+                    {hasStorageService &&
+                      <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
+                        <th width="1%"/>
+                      </IsAllowed>
+                    }
                   </tr>
                 </thead>
                 <tbody>
@@ -278,20 +277,22 @@ class AccountManagementStorages extends Component {
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
                         <td>{storage.get('files_count')}</td>
-                        <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
-                          <td className="nowrap-column">
+                        {hasStorageService &&
+                          <IsAllowed to={PERMISSIONS.DELETE_STORAGE || PERMISSIONS.MODIFY_STORAGE}>
+                            <td className="nowrap-column">
 
-                          {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
-                              onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
-                          */}
+                            {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                                onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                            */}
 
-                          <ActionButtons
-                            permissions={permissions}
-                            onDelete={() => {
-                              this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))
-                            }} />
-                          </td>
-                        </IsAllowed>
+                              <ActionButtons
+                                permissions={permissions}
+                                onDelete={() => {
+                                  this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))
+                                }} />
+                            </td>
+                          </IsAllowed>
+                        }
                       </tr>
                     )
                   })}
@@ -340,10 +341,9 @@ AccountManagementStorages.propTypes = {
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
   fetchGroupMetrics: PropTypes.func,
-  fetchGroups: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
-  groups: PropTypes.instanceOf(List),
+  group: PropTypes.instanceOf(Map),
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
@@ -356,18 +356,16 @@ AccountManagementStorages.propTypes = {
 
 AccountManagementStorages.defaultProps = {
   account: Map(),
-  groups: List(),
+  group: Map(),
   storages: List()
 }
 
 /* istanbul ignore next */
 function mapStateToProps(state, ownProps) {
-  const account = getAccountById(state, ownProps.params.account)
-
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    account: account,
-    groups: getByAccount(state, ownProps.params.account),
+    account: getAccountById(state, ownProps.params.account),
+    group: getGroupById(state, ownProps.params.group),
     storages: getStoragesByGroup(state, ownProps.params.group),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroup(state, ownProps.params.group),
@@ -386,8 +384,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchGroupMetrics: (group, params) => dispatch(fetchGroupMetrics(group, params)),
-    fetchGroups: (params) => dispatch(groupActions.fetchAll(params))
+    fetchGroupMetrics: (group, params) => dispatch(fetchGroupMetrics(group, params))
   };
 }
 

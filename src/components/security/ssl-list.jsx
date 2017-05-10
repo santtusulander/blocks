@@ -5,12 +5,41 @@ import moment from 'moment'
 
 import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
+import Paginator from '../shared/paginator/paginator'
 import { AccountManagementHeader } from '../account-management/account-management-header'
-import { formatMoment } from '../../util/helpers'
+import { formatMoment, getPage } from '../../util/helpers'
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
+import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../constants/content-item-sort-options'
 
-const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, uploadCertificate }) => {
+const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, uploadCertificate, context, router }) => {
+  /**
+   * Pushes ?page= -param to url for pagination
+   */
+  const onActivePageChange = (nextPage) => {
+    router.push({
+      pathname: context.location.pathname,
+      query: {
+        page: nextPage
+      }
+    })
+  }
+
+  const location = context.location
+  const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
+
+  const paginationProps = {
+    activePage: currentPage,
+    items: Math.ceil(certificates.count() / PAGE_SIZE),
+    onSelect: onActivePageChange,
+    maxButtons: MAX_PAGINATION_ITEMS,
+    boundaryLinks: true,
+    first: true,
+    last: true,
+    next: true,
+    prev: true
+  }
+
   return (
     <div>
       <AccountManagementHeader
@@ -30,7 +59,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
           </tr>
         </thead>
         <tbody>
-          {!certificates.isEmpty() ? certificates.map((cert, index) => {
+          {!certificates.isEmpty() ? getPage(certificates, currentPage, PAGE_SIZE).map((cert, index) => {
             const title = cert.get('title')
             const commonName = cert.get('cn')
             const groupID = cert.get('group')
@@ -62,6 +91,10 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
           )}
         </tbody>
       </table>
+      { /* Show Pagination if more items than fit on PAGE_SIZE */
+        certificates && certificates.count() > PAGE_SIZE &&
+        <Paginator {...paginationProps} />
+      }
     </div>
   )
 }
@@ -69,9 +102,11 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
 SSLList.displayName = "SSLList"
 SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
+  context: PropTypes.object,
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
   groups: PropTypes.instanceOf(List),
+  router: PropTypes.object,
   uploadCertificate: PropTypes.func
 }
 SSLList.defaultProps = {

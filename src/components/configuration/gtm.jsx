@@ -370,7 +370,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
           onCancel={reset}
           invalid={invalid}
           saving={submitting}
-          show={(dirty && !!initialValues.GTMToggle) || (!isFormDisabled && !initialValues.GTMToggle)}>
+          show={dirty}>
           {error && <span>{error}<br/></span>}
           <FormattedMessage id="portal.configuration.gtm.edit.unsavedChanges.text"/>
         </SaveBar>
@@ -400,7 +400,7 @@ const mapStateToProps = (state, { params: { property }, intl }) => {
     isFormDisabled: !GTMToggle,
     getRule: (index) => getFieldValue(state, 'rules')[index],
     property: getProperty(state, property),
-    initialValues: { ttl: GTM_TTL_DEFAULT, ...initialValues }
+    initialValues: { ttl: GTM_TTL_DEFAULT, GTMToggle: false, ...initialValues }
   }
 }
 

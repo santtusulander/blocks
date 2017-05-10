@@ -6,15 +6,52 @@ import Select from '../select.jsx'
 import { Dropdown } from 'react-bootstrap'
 
 describe('Select', () => {
+  let subject = null
+
+  beforeEach(() => {
+    subject = (value = '1', className = '', autoselectFirst = false) => {
+      const props = {
+        className,
+        value,
+        options: [
+          {value: '1', label: 'First Option'},
+          {value: '2', label: 'Second Option'},
+          {value: '3', label: 'Third Option'},
+        ],
+        autoselectFirst
+      }
+
+      return shallow(
+        <Select {...props}/>
+      )
+    }
+  })
+
   it('should exist', () => {
-    const select = shallow(<Select value={'foo'} options={[['foo', 'bar']]} />)
-    expect(select).toBeDefined()
+    expect(subject()).toBeDefined()
   });
 
   it('can be passed a custom css class', () => {
-    const select = shallow(
-      <Select className="aaa" value={'foo'} options={[['foo', 'bar']]} />
-    )
-    expect(select.find(Dropdown).props().className).toContain('aaa')
+    expect(subject('', 'aaa').find(Dropdown).props().className).toContain('aaa')
   });
+
+  it('autoselectFirst should not work when flag is not specified', () => {
+    expect(subject('').find('.dropdown-select__selected-item').find('.dropdown-select__option-label').children().props().id).toBe('portal.select.emptyLabel')
+  })
+
+  it('autoselectFirst should not work when flag are false', () => {
+    expect(subject('', '', false).find('.dropdown-select__selected-item').find('.dropdown-select__option-label').children().props().id).toBe('portal.select.emptyLabel')
+  })
+
+  it('autoselectFirst should work when flag are true', () => {
+    expect(subject('', '', true).find('.dropdown-select__selected-item').find('.dropdown-select__option-label').text()).toBe('First Option')
+  })
+
+  it('autoselectFirst should not work when flag are true but we have value', () => {
+    expect(subject('2', '', true).find('.dropdown-select__selected-item').find('.dropdown-select__option-label').text()).toBe('Second Option')
+  })
+
+  it('autoselectFirst should not work flag is not specified but we have default value', () => {
+    expect(subject().find('.dropdown-select__selected-item').find('.dropdown-select__option-label').text()).toBe('First Option')
+  })
 })

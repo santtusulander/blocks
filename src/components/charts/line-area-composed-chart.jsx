@@ -47,7 +47,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
         <ResponsiveContainer {...containerProps}>
           <ComposedChart
               data={data}
-              margin={isMiniChart ? {} : {left: 50, bottom: 30, top: 100}}
+              margin={isMiniChart ? {} : {left: 50, bottom: 30, top: 100, right: 50}}
               className={classNames({'comparison': isComparison}, {'non-stacked': !isComparison})}
           >
             { isComparison &&
