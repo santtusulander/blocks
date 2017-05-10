@@ -8,7 +8,7 @@ const baseUrl = ({ brand, account, group, id, path = '' }) => (
 )
 
 const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
-  idAttribute: (contents, storage) => buildReduxId(storage.group, storage.id),
+  idAttribute: (contents, storage) => buildReduxId(storage.group, storage.id, storage.path || ''),
   processStrategy: (value) => (
     value.items.map((item) => (
       {
@@ -28,6 +28,6 @@ const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
 export const fetchAll = (params) => {
   return axios.get(baseUrl(params))
   .then(({data}) => {
-    return normalize({ group: params.group, id: params.id , contents: data }, [ ingestPointContentSchema ])
+    return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
   })
 }

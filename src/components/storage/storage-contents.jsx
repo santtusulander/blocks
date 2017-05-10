@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Col, FormGroup, FormControl } from 'react-bootstrap'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 import { getContentUrl } from '../../util/routes.js'
 
@@ -95,7 +95,7 @@ class StorageContents extends Component {
     const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
     const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
     const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
-    const filteredContents = this.getFilteredItems(contents.get('items'), search)
+    const filteredContents = this.getFilteredItems(contents, search)
 
     return (
       <SectionContainer>
@@ -183,7 +183,7 @@ StorageContents.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
   brandId: React.PropTypes.string,
-  contents: PropTypes.instanceOf(Map),
+  contents: PropTypes.instanceOf(List),
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   groupId: PropTypes.string,

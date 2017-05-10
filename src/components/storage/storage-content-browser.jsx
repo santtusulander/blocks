@@ -39,10 +39,7 @@ const StorageContentBrowser = ({
         }
         {contents.map((item, index) => {
           const name = item.get('name')
-          const stat = item.get('stat')
-          const lastModified = stat.get('mtime')
-          const size = stat.get('size')
-          const isDirectory = stat.get('type') === 'directory'
+          const isDirectory = item.get('type') === 'directory'
           return (
             <tr key={index}>
               <td onDoubleClick={() => {
@@ -51,8 +48,8 @@ const StorageContentBrowser = ({
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
                 {name}
               </td>
-              <td>{formatDate(lastModified)}</td>
-              <td>{isDirectory ? '-' : formatBytes(size)}</td>
+              <td>{formatDate(item.get('lastModified'))}</td>
+              <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
                 <IsAllowed to={MODIFY_STORAGE}>
                   <ActionButtons onDelete={() => {
