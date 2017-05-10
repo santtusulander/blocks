@@ -10,7 +10,6 @@ import { getById as getGroupById } from '../redux/modules/entities/groups/select
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import { getServicePermissions } from '../util/services-helpers'
 
-import Dashboard from '../containers/dashboard'
 import { hasService } from '../util/helpers'
 import {
   accountIsContentProviderType,
@@ -205,9 +204,15 @@ export const CanViewStorageTab = (store) => {
 export const CanViewBrandDashboard = (store) => {
   return UserAuthWrapper({
     authSelector: authSelector,
-    FailureComponent: Dashboard,
+    failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
+      const path = `${ownProps.location.pathname}/${currentUser.get('account_id')}`
+      const backupPath = ownProps.location.pathname.replace(/\/dashboard\/\w+/, 'content')
+
+      return currentUser ? path : backupPath
+    },
     wrapperDisplayName: 'CanViewBrandDashboard',
-    predicate: permissionChecker(PERMISSIONS.CONFIGURE_DNS, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION, store),
     allowRedirectBack: false
   })
 }
