@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
-import Immutable from 'immutable'
+import React, {Component, PropTypes} from 'react'
+import ReactMapboxGl, { Popup, ZoomControl, Marker } from 'react-mapbox-gl'
+import {Map, List} from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 // import Typeahead from '../shared/form-elements/typeahead'
@@ -25,7 +25,7 @@ import {
 // import IconMinimap from '../shared/icons/icon-minimap';
 import IconGlobe from '../shared/icons/icon-globe';
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
-class Mapbox extends React.Component {
+class Mapbox extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -630,9 +630,34 @@ class Mapbox extends React.Component {
     this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
 
+
+
   render() {
     const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
+
+    const styles = {
+      marker: {
+        width: 30,
+        height: 30,
+        borderRadius: '50%',
+        backgroundColor: '#E0E0E0',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: '2px solid #C9C9C9'
+      }
+    }
+
+    const validateLatLng = (latlng) => {
+      const [lat,lng] = latlng
+
+      if (Math.abs(lat) <= 90  && Math.abs(lng) <= 90) {
+        return true
+      }
+
+      return false
+    }
 
     return (
       <ReactMapboxGl
@@ -654,6 +679,27 @@ class Mapbox extends React.Component {
         onMouseMove={this.onMouseMove.bind(this)}
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
+
+
+          {this.props.markers
+              .map((feature, key) => {
+                const latlng = feature.get('latlng').toJS()
+                if (validateLatLng(latlng)) {
+                  return (
+                    <Marker
+                      key={key}
+                      style={styles.marker}
+                      coordinates={latlng}
+                      onClick={() => console.log(`Marker ${key} clicked`)}
+                    />
+                  )
+                }
+
+                return undefined
+              })
+          }
+
+
 
         {/*
         <div className="map-search">
@@ -737,16 +783,18 @@ class Mapbox extends React.Component {
 
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
-  cityData: React.PropTypes.instanceOf(Immutable.List).isRequired,
-  countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
-  dataKey: React.PropTypes.string,
-  dataKeyFormat: React.PropTypes.func,
-  geoData: React.PropTypes.object.isRequired,
-  getCitiesWithinBounds: React.PropTypes.func,
-  height: React.PropTypes.number,
-  mapBounds: React.PropTypes.object,
-  mapboxActions: React.PropTypes.object,
-  theme: React.PropTypes.string
+  cityData: PropTypes.instanceOf(List).isRequired,
+  countryData: PropTypes.instanceOf(List).isRequired,
+  dataKey: PropTypes.string,
+  dataKeyFormat: PropTypes.func,
+  geoData: PropTypes.object.isRequired,
+  getCitiesWithinBounds: PropTypes.func,
+  height: PropTypes.number,
+  mapBounds: PropTypes.object,
+  mapboxActions: PropTypes.object,
+  theme: PropTypes.string,
+
+  markers: PropTypes.instanceOf(List)
 }
 
 Mapbox.defaultProps = {
@@ -758,7 +806,8 @@ Mapbox.defaultProps = {
     setMapBounds: () => null,
     setMapZoom: () => null
   },
-  mapBounds: Immutable.Map()
+  mapBounds: Map(),
+  markers: List()
 }
 
 export default Mapbox
