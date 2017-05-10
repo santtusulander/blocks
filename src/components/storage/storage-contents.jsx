@@ -122,7 +122,7 @@ class StorageContents extends Component {
         <SectionHeader
           sectionHeaderTitle={headerTitle}>
           <FormGroup className="upload-toggle-group">
-            <Col xs={6} md={4} className="pull-left">
+            <Col xs={6} className="pull-left">
               <FormControl
                 type="text"
                 className="search-input"
@@ -131,7 +131,7 @@ class StorageContents extends Component {
                 disabled={!hasContents}
                 onChange={this.changeSearch} />
             </Col>
-            <Col xs={6} md={4} className="pull-right">
+            <Col xs={6} className="pull-right">
               <Col className="pull-left">
                 <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
               </Col>
