@@ -1,5 +1,6 @@
 const ROUTES = {
   root: '/',
+  home: '/home',
 
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',

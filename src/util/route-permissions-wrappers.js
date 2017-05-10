@@ -10,14 +10,14 @@ import { getById as getGroupById } from '../redux/modules/entities/groups/select
 import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import { getServicePermissions } from '../util/services-helpers'
 
-import {
-  hasService
-} from '../util/helpers'
-
+import Dashboard from '../containers/dashboard'
+import { hasService } from '../util/helpers'
 import {
   accountIsContentProviderType,
   accountIsCloudProviderType
  } from '../util/helpers'
+
+
 
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
@@ -161,7 +161,6 @@ export const CanViewConfigurationSecurity = (store) => {
   return UserAuthWrapper({
     authSelector: (state, ownProps) => {
       const activeGroup = getGroupById(state, ownProps.params.group)
- 
       return getServicePermissions(activeGroup)
     },
     failureRedirectPath: (state, ownProps) => {
@@ -199,6 +198,16 @@ export const CanViewStorageTab = (store) => {
     },
     wrapperDisplayName: 'CanViewStorageTab',
     predicate: permissionChecker(PERMISSIONS.LIST_STORAGE, store),
+    allowRedirectBack: false
+  })
+}
+
+export const CanViewBrandDashboard = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    FailureComponent: Dashboard,
+    wrapperDisplayName: 'CanViewBrandDashboard',
+    predicate: permissionChecker(PERMISSIONS.CONFIGURE_DNS, store),
     allowRedirectBack: false
   })
 }
