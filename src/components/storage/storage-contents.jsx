@@ -74,6 +74,21 @@ class StorageContents extends Component {
     })
   }
 
+  getHeader(contents) {
+    const { foldersCount: folders, filesCount: files } = contents.reduce(({ foldersCount, filesCount }, item) => {
+      if (item.get('type') === 'directory') {
+        foldersCount = foldersCount + 1
+      } else {
+        filesCount = filesCount + 1
+      }
+      return { foldersCount, filesCount }
+    }, { foldersCount: 0, filesCount: 0 })
+
+    return (<FormattedMessage
+      id='portal.storage.summaryPage.contents.hasContents.title'
+      values={{ folders, files }} />)
+  }
+
   render() {
     const { search, sortBy, sortDir } = this.state
     const {
@@ -93,11 +108,7 @@ class StorageContents extends Component {
     const hasContents = contents && contents.size > 0
     const headerTitle = hasContents
                         ?
-                          (<FormattedMessage
-                            id='portal.storage.summaryPage.contents.hasContents.title'
-                            values={{
-                              folders: contents.filter((item) => item.type === 'directory').length,
-                              files: contents.filter((item) => item.type === 'file').length}} />)
+                          this.getHeader(contents)
                         :
                           <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
 
