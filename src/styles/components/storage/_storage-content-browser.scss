@@ -1,3 +1,10 @@
+.storage-contents-cell-directory {
+  > .storage-contents-name,
+  > .storage-contents-icon {
+    cursor: pointer;
+  }
+}
+
 .storage-contents-spinner {
   display: flex;
   align-items: center;
@@ -7,10 +14,6 @@
 .storage-contents-name {
   display: inline-block;
   vertical-align: inherit;
-
-  &.directory {
-    cursor: pointer;
-  }
 }
 
 .storage-contents-icon {

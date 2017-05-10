@@ -39,9 +39,9 @@ const StorageContentBrowser = ({
       <tbody>
         {!isRootDirectory &&
           <tr>
-            <td onDoubleClick={backButtonHandler}>
+            <td className='storage-contents-cell-directory' onDoubleClick={backButtonHandler}>
               <IconBack className='storage-contents-icon back' />
-              <div className='storage-contents-name directory'>
+              <div className='storage-contents-name'>
                 <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
               </div>
             </td>
@@ -53,11 +53,11 @@ const StorageContentBrowser = ({
           const isDirectory = item.get('type') === 'directory'
           return (
             <tr key={index}>
-              <td onDoubleClick={() => {
+              <td className={`${isDirectory ? 'storage-contents-cell-directory' : ''}`} onDoubleClick={() => {
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
-                <div className={`storage-contents-name ${isDirectory ? 'directory' : ''}`}>
+                <div className='storage-contents-name'>
                   <TruncatedTitle content={name} />
                 </div>
               </td>
