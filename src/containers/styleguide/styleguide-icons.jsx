@@ -11,6 +11,7 @@ import IconArrowLgRight  from '../../components/shared/icons/icon-arrow-lg-right
 import IconArrowLeft     from '../../components/shared/icons/icon-arrow-left'
 import IconArrowLgUp     from '../../components/shared/icons/icon-arrow-lg-up'
 import IconArrowUp       from '../../components/shared/icons/icon-arrow-up'
+import IconBack          from '../../components/shared/icons/icon-back'
 import IconBrowse        from '../../components/shared/icons/icon-browse'
 import IconCaretRight    from '../../components/shared/icons/icon-caret-right'
 import IconCaretDown     from '../../components/shared/icons/icon-caret-down'
@@ -299,6 +300,11 @@ const StyleguideIcons = () => {
         <IconContent />
         <br />
         IconContent
+      </span>
+      <span className="col-xs-3" style={{marginBottom: '1em'}}>
+        <IconBack />
+        <br />
+        IconBack
       </span>
     </div>
   )
