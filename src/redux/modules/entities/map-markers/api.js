@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { BASE_URL_NORTH, PAGINATION_MOCK } from '../../../util'
 
 // const markerMockData = [
 //   {
@@ -30,7 +30,21 @@ import { BASE_URL_NORTH } from '../../../util'
 //   }
 // ]
 
-const markerSchema = new schema.Entity('mapMarkers', {},{})
+const markerSchema = new schema.Entity('mapMarkers', {},{
+  processStrategy: (value) => {
+    if (value.account_id === 1) {
+      return {
+        ...value,
+        type: 'core'
+      }
+    } else {
+      return {
+        ...value,
+        type: 'edge'
+      }
+    }
+  }
+})
 
 const baseUrl = () => {
   return `${BASE_URL_NORTH}/locations`
@@ -42,7 +56,7 @@ const baseUrl = () => {
  */
 export const fetchAll = () => {
 
-  return axios.get(baseUrl())
+  return axios.get(baseUrl(), PAGINATION_MOCK)
   .then(({data}) => {
     return normalize(data.data, [ markerSchema ])
   })
