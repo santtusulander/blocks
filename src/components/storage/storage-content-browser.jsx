@@ -7,6 +7,9 @@ import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
+import IconFolder from '../shared/icons/icon-folder'
+import IconFile from '../shared/icons/icon-file'
+import IconBack from '../shared/icons/icon-back'
 
 const StorageContentBrowser = ({
   backButtonHandler,
@@ -28,6 +31,7 @@ const StorageContentBrowser = ({
         {!isRootDirectory &&
           <tr>
             <td onDoubleClick={backButtonHandler}>
+              <IconBack className='storage-contents-icon back' />
               <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
             </td>
             <td/><td/><td/>
@@ -44,6 +48,7 @@ const StorageContentBrowser = ({
               <td onDoubleClick={() => {
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
+                {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
                 {name}
               </td>
               <td>{formatDate(lastModified)}</td>
