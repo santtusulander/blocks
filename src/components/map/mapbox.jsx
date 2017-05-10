@@ -690,7 +690,11 @@ class Mapbox extends Component {
                       key={key}
                       style={styles.marker}
                       coordinates={latlng}
-                      onClick={() => console.log(`Marker ${key} clicked`)}
+                      onClick={
+                        /* eslint-disable no-console */
+                        () => console.log(`Marker ${key} clicked`)
+                        /* eslint-enable no-console */
+                      }
                     />
                   )
                 }
