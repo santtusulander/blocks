@@ -11,6 +11,7 @@ import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 
 import Content from '../../components/shared/layout/content'
 import PageHeader from '../../components/shared/layout/page-header'
+import PageContainer from '../../components/shared/layout/page-container'
 import Tabs from '../../components/shared/page-elements/tabs'
 
 import AccountSelector from '../../components/global-account-selector/account-selector-container'
@@ -40,7 +41,8 @@ class Services extends React.Component {
             onItemClick={(entity) => {
               const { nodeInfo, idKey = 'id' } = entity
               router.push(`${getUrl(getRoute('services'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}`)
-            }}>
+            }}
+          >
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1>
                 <TruncatedTitle
@@ -61,13 +63,15 @@ class Services extends React.Component {
                 to={baseUrl + '/logDelivery'}
                 activeClassName="active"
               >
-                <FormattedMessage id="portal.services.logDelivery.text"/>
+                <FormattedMessage id="portal.services.tab.logDelivery.text"/>
               </Link>
             </li>
           </Tabs>
         }
 
-        {this.props.children && React.cloneElement(this.props.children, {})}
+        <PageContainer className="tab-bodies">
+          {this.props.children && React.cloneElement(this.props.children, {})}
+        </PageContainer>
       </Content>
     )
   }

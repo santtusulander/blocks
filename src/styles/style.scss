@@ -57,6 +57,7 @@
 @import 'containers/account-management';
 @import 'containers/security';
 @import 'containers/property';
+@import 'containers/services';
 @import 'containers/starburst-help';
 @import 'containers/not-found-page';
 @import 'containers/analytics-container';
@@ -194,6 +195,9 @@
 @import 'components/network/network-item';
 @import 'components/network/network-forms';
 @import 'components/network/csv-upload';
+
+//Services
+@import 'components/services/log-delivery-configure-form';
 
 // Storage
 @import 'components/storage/storage-forms';

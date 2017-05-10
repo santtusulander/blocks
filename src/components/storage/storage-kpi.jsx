@@ -5,6 +5,7 @@ import SectionContainer from '../shared/layout/section-container'
 import MiniChart from '../charts/mini-chart'
 import ComparisonBars from './comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
+import { isDefined } from '../../util/helpers'
 
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
@@ -29,12 +30,13 @@ const StorageKPI = ({
   locations,
   peakValue,
   referenceValue,
+  showLabels,
   valuesUnit
 }) => {
   return (
     <SectionContainer>
       <div className='storage-kpi-item'>
-        <KPIFormattedMessage id='portal.storage.kpi.current.title' type='title' />
+        {showLabels && <KPIFormattedMessage id='portal.storage.kpi.current.title' type='title' />}
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <TruncatedTitle className='value' content={currentValue.toString()} />
@@ -49,8 +51,9 @@ const StorageKPI = ({
           </div>
         </div>
       </div>
-      <div className='storage-kpi-item'>
-        <KPIFormattedMessage id='portal.storage.kpi.peak.title' type='title' />
+      {isDefined(peakValue) &&
+        <div className='storage-kpi-item'>
+        {showLabels && <KPIFormattedMessage id='portal.storage.kpi.peak.title' type='title' />}
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <TruncatedTitle className='value' content={peakValue.toString()} />
@@ -59,29 +62,35 @@ const StorageKPI = ({
         </div>
         <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
       </div>
-      <div className='storage-kpi-item'>
-        <KPIFormattedMessage id='portal.storage.kpi.gain.title' type='title' />
-        <div className='storage-kpi-item-content'>
-          <div className='storage-kpi-number'>
-            <span className='value'>
-              {`${(gainPercentage > 0) ? '+' : ''}${gainPercentage.toFixed(1)}%`}
-            </span>
+      }
+
+      {isDefined(gainPercentage) &&
+        <div className='storage-kpi-item'>
+          {showLabels && <KPIFormattedMessage id='portal.storage.kpi.gain.title' type='title' />}
+          <div className='storage-kpi-item-content'>
+            <div className='storage-kpi-number'>
+              <span className='value'>
+                {`${(gainPercentage > 0) ? '+' : ''}${gainPercentage.toFixed(1)}%`}
+              </span>
+            </div>
+            <div className='storage-kpi-chart'>
+              <MiniChart
+                dataKey={chartDataKey}
+                data={chartData}
+                />
+            </div>
           </div>
-          <div className='storage-kpi-chart'>
-            <MiniChart
-              dataKey={chartDataKey}
-              data={chartData}
-              />
-          </div>
+          <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
         </div>
-        <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
-      </div>
+      }
+      {isDefined(locations) &&
       <div className='storage-kpi-item'>
-        <KPIFormattedMessage id='portal.storage.kpi.location.title' type='title' />
+        {showLabels && <KPIFormattedMessage id='portal.storage.kpi.location.title' type='title' />}
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-text'>{locations.join(', ')}</div>
         </div>
       </div>
+      }
     </SectionContainer>
   )
 }
@@ -95,7 +104,12 @@ StorageKPI.propTypes = {
   locations: PropTypes.array,
   peakValue: PropTypes.number,
   referenceValue: PropTypes.number,
+  showLabels: PropTypes.bool,
   valuesUnit: PropTypes.string
+}
+
+StorageKPI.defaultProps = {
+  showLabels: true
 }
 
 export default StorageKPI

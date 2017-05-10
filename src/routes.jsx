@@ -79,7 +79,7 @@ import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificat
 import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
 import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
 import Services from './containers/services/services'
-import ServicesTabLogDelivery from './containers/services/tabs/log-delivery'
+import ServicesTabLogDelivery from './containers/services/tabs/log-delivery-service'
 import Storage from './containers/storage/storage'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'

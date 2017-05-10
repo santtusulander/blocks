@@ -751,3 +751,7 @@ export function getCISname(originHostname) {
   const matchedResult = originHostname.match(/-(\w+).origin/)
   return matchedResult ? matchedResult[1] : ''
 }
+
+export function isDefined(value) {
+  return typeof value !== 'undefined'
+}

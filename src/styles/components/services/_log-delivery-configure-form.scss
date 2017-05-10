@@ -1,0 +1,22 @@
+$input-height: 36px;
+
+.log-delivery-form {
+  .form-group {
+    .input-group-addon {
+      padding-top: 0px;
+    }
+
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
