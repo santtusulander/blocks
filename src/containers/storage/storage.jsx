@@ -22,6 +22,9 @@ import { getById as getClusterById } from '../../redux/modules/entities/CIS-clus
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
+import { getContent } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
+import { fetchContent } from '../../redux/modules/entities/CIS-ingest-point-contents/actions'
+
 import { buildReduxId, parseResponseError } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
 
@@ -84,6 +87,7 @@ class Storage extends Component {
       }
 
       this.props.fetchStorageMetrics({...metricsOpts})
+      this.fetchStorageContents(this.props.params)
 
       this.props.fetchClusters({})
     }
@@ -108,6 +112,21 @@ class Storage extends Component {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
     }
+
+    if (params.splat !== this.props.params.splat) {
+      this.fetchStorageContents(params)
+    }
+  }
+
+  fetchStorageContents(params) {
+    const { brand, account, group, storage, splat } = params
+    this.props.fetchStorageContents({
+      brand,
+      account,
+      group,
+      id: storage,
+      path: splat
+    })
   }
 
   /**
@@ -348,7 +367,7 @@ const mapStateToProps = (state, ownProps) => {
     group: state.group.get('activeGroup'),
     hasStorageService,
     storage,
-    storageContents: getMockContents(ownProps.params.storage),
+    storageContents: getContent(state),
     storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
@@ -361,6 +380,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
+    fetchStorageContents: (params) => dispatch(fetchContent(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
