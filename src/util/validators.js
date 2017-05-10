@@ -178,6 +178,13 @@ export function isValidTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_L
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
 }
 
+/**
+ * Check if valid text-field, only allow special character _ . - used in location form
+ * @param text
+ * @param minLength
+ * @param maxLength
+ * @returns {boolean}
+ */
 export function isValidCloudLocationId(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
   const textFieldRegexp = new RegExp(`^[a-zA-Z0-9-_\.]{${minLength},${maxLength}}$`)
   return text && textFieldRegexp.test(text)
