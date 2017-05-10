@@ -18,9 +18,7 @@ import DateRanges from '../constants/date-ranges'
 import { BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 import { getDashboardUrl } from '../util/routes'
 
-import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
-
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import { defaultFilters } from '../redux/modules/filters'
 import * as filterActionCreators from '../redux/modules/filters'
@@ -33,10 +31,6 @@ import { getById as getAccountById} from '../redux/modules/entities/accounts/sel
 
 import groupActions from '../redux/modules/entities/groups/actions'
 import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
-
-import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
-
-import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
 
 import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -114,7 +108,7 @@ export class BrandDashboard extends React.Component {
   fetchData(urlParams, filters) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
-      const {brand, account: id} = urlParams
+      const { brand, account: id } = urlParams
       this.props.fetchAccount({brand, id}).then(() => {
         const params = { brand: urlParams.brand, account: urlParams.account }
 
@@ -129,36 +123,10 @@ export class BrandDashboard extends React.Component {
           this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
         const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
 
-        /**
-         * If user has permission to list storages and view storage analytics and if the active account is a content provider:
-         * fetch all groups and storage metrics of this account, all storages of each group.
-         * @type {[Promise]}
-         */
-        const fetchStorageData =
-          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-          checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-          accountIsContentProviderType(this.props.activeAccount) &&
-
-          this.props.fetchGroups(params).then((response) => {
-            let groupIds = []
-            if (response) {
-              groupIds = Object.keys(response.entities.groups)
-            } else {
-              // We don't always have to fetch groups because of caching, in those cases use selector
-              // to get group IDs for this account from the store.
-              groupIds = this.props.getGroupIds()
-            }
-            return Promise.all([
-              ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
-              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
-            ])
-          })
-
         return Promise.all([
           this.props.dashboardActions.startFetching(),
           this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-          fetchProviders,
-          fetchStorageData
+          fetchProviders
         ])
         .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
       })
@@ -461,14 +429,10 @@ BrandDashboard.propTypes = {
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
   fetchAccount: PropTypes.func,
-  fetchGroups: PropTypes.func,
-  fetchStorageMetrics: PropTypes.func,
-  fetchStorages: PropTypes.func,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
-  getGroupIds: PropTypes.func,
   intl: PropTypes.object,
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
@@ -511,9 +475,7 @@ const mapStateToProps = (state, { params: { account } }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
-    fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
-    fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
