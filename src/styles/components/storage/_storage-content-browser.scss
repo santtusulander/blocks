@@ -1,0 +1,10 @@
+.storage-contents-icon {
+  fill: $pale-blue !important;
+  margin-right: rem(20px);
+
+  &.back {
+    position: relative;
+    top: rem(5px);
+    left: rem(5px);
+  }
+}
