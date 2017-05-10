@@ -31,9 +31,6 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 import { parseResponseError } from '../../redux/util'
 
-//TODO: UDNP-3177 Remove when fetchItem is not needed anymore
-import * as groupActionCreators from '../../redux/modules/group'
-
 import PROVIDER_TYPES from '../../constants/provider-types'
 
 import Content from '../../components/shared/layout/content'
@@ -64,7 +61,7 @@ export class Account extends React.Component {
       groupToDelete: null
     }
   }
-  
+
   componentWillMount() {
     this.props.fetchData()
   }
@@ -240,8 +237,7 @@ export class Account extends React.Component {
           user={this.props.user}
           viewingChart={this.props.viewingChart}
           fetchItem={(id) => {
-            console.warn('UDNP-3177 fetchItem will be deprecated')
-            return this.props.oldGroupActions.fetchGroup(brand, account, id)
+            return this.props.fetchGroup({brand, account, id})
           }}
         />
 
@@ -261,10 +257,10 @@ Account.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
-  oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
   sortDirection: PropTypes.number,
@@ -314,9 +310,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
-  //TODO: UDNP-3177 Remove when fetchItem is not needed anymore
-  const oldGroupActions = bindActionCreators(groupActionCreators, dispatch)
-
   const metricsOpts = {
     account: account,
     startDate: startOfLast28().format('X'),
@@ -336,11 +329,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchData: fetchData,
     uiActions,
-    oldGroupActions,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     createGroup: (params) => dispatch(groupActions.create(params)),
     updateGroup: (params) => dispatch(groupActions.update(params)),
-    removeGroup: (params) => dispatch(groupActions.remove(params))
+    removeGroup: (params) => dispatch(groupActions.remove(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetch(params))
   };
 }
 

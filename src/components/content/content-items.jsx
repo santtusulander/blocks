@@ -266,13 +266,12 @@ class ContentItems extends Component {
     }
   }
 
-  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
       .then((response) => {
         this.setState({
           showModal: true,
-          itemToEdit: fromJS(response.payload)
+          itemToEdit: fromJS(response)
         })
       })
   }
