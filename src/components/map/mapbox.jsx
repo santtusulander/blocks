@@ -792,9 +792,8 @@ Mapbox.propTypes = {
   height: PropTypes.number,
   mapBounds: PropTypes.object,
   mapboxActions: PropTypes.object,
-  theme: PropTypes.string,
-
-  markers: PropTypes.instanceOf(List)
+  markers: PropTypes.instanceOf(List),
+  theme: PropTypes.string
 }
 
 Mapbox.defaultProps = {
