@@ -242,6 +242,7 @@
   "portal.network.locationForm.longitude.invalid.error": "Longitude is invalid",
   "portal.network.locationForm.cloudProviderRegion.invalid.error": "Cloud Provider Region is invalid",
   "portal.network.locationForm.cloudProviderLocationId.invalid.error": "Cloud Provider ID is invalid",
+  "portal.network.locationForm.cloudProviderLocationId.allowedSpecialChars.error": "allowed special characters: - _ .",
 
   "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",

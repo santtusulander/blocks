@@ -755,3 +755,16 @@ export function getCISname(originHostname) {
 export function isDefined(value) {
   return typeof value !== 'undefined'
 }
+
+/**
+ * Slice current page out of items
+ * @param  {List} items
+ * @param  {Number} page
+ * @param  {Number} limit
+ * @return {List} sliced list section/
+ */
+export const getPage = (items, page, limit) => {
+  const offset = (page - 1) * limit
+
+  return items.slice(offset, offset + limit)
+}

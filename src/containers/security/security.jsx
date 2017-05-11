@@ -19,22 +19,19 @@ import PageContainer from '../../components/shared/layout/page-container'
 import SecurityPageHeader from '../../components/security/security-page-header'
 import Content from '../../components/shared/layout/content'
 
-import { getUrl } from '../../util/routes.js'
-
 export class Security extends Component {
   componentWillMount() {
     const {brand, account, group} = this.props.params
 
     if (account) {
       this.props.fetchAccount({brand, id: account})
+      this.props.fetchGroups({brand, account})
     } else {
       this.props.fetchAccounts({brand})
     }
 
     if (group) {
       this.props.fetchGroup({brand, account, id: group})
-    } else {
-      this.props.fetchGroups({brand, account})
     }
   }
 
@@ -63,7 +60,12 @@ export class Security extends Component {
 
     const itemSelectorFunc = (entity) => {
       const { nodeInfo, idKey = 'id' } = entity
-      this.props.router.push(`${getUrl('/security', nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${this.getTabName()}`)
+      const parametersToBuildRoute = { [nodeInfo.entityType]: entity[idKey], ...nodeInfo.parents }
+      const baseUrl = getSecurityUrlFromParams(parametersToBuildRoute)
+
+      //If the select node is a brand, don't set a tab.
+      const routeToPush = nodeInfo.entityType === 'brand' ? baseUrl : `${baseUrl}/${this.getTabName()}`
+      this.props.router.push(routeToPush)
     }
 
     const securityBaseUrl = getSecurityUrlFromParams(params);

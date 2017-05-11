@@ -3,10 +3,10 @@ import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 
 import { Row, Col, FormGroup, InputGroup, Button } from 'react-bootstrap'
-import { Map, List, is } from 'immutable'
+import { Map, is } from 'immutable'
 
 import SidePanel from '../../../components/shared/side-panel'
-import StorageKPI from '../../../components/storage/storage-kpi'
+import ComparisonBars from '../../../components/shared/comparison-bars'
 import LogDeliveryConfigureForm from '../../../components/services/log-delivery-configure-form'
 import propertiesActions from '../../../redux/modules/entities/properties/actions'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
@@ -74,7 +74,7 @@ class LogDeliveryService extends React.Component {
     const { currentProperty } = this.state
     const storage = {
       current: 100,
-      estimated: 500,
+      estimate: 500,
       unit: 'Gb'
     }
 
@@ -115,12 +115,16 @@ class LogDeliveryService extends React.Component {
                 <h5>
                   <FormattedMessage id="portal.services.logDelivery.currentLogStorage.text"/>
                 </h5>
-                <StorageKPI
-                  currentValue={storage.current}
-                  referenceValue={storage.estimated}
-                  valuesUnit={storage.unit}
-                  showLabels={false}
-                />
+                <div className="storage-metrics-container">
+                  <h2>{storage.current.toString()} </h2>
+                  <h5>{`/ ${storage.estimate} ${storage.unit}`}</h5>
+                  <div className="storage-kpi-comparison-bars">
+                    <ComparisonBars
+                      referenceValue={storage.estimate}
+                      currentValue={storage.current}
+                    />
+                  </div>
+                </div>
               </Col>
             </FormGroup>
           </Row>
@@ -149,7 +153,7 @@ LogDeliveryService.propTypes = {
   fetchProperties: PropTypes.func,
   getPropertyConfig: PropTypes.func,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(List),
+  properties: PropTypes.object,
   updatePropertyConfig: PropTypes.func
 }
 

@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import { getRoute } from '../../util/routes'
-import { getUrl, getSupportUrlFromParams } from '../../util/routes'
+import { getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../shared/layout/page-header'
 import AccountSelector from '../global-account-selector/account-selector-container'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
@@ -18,7 +17,6 @@ const SupportPageHeader = (props) => {
     params,
     router
   } = props;
-  const subPage = getTabName(router, params);
 
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.support.text"/>}>
@@ -29,7 +27,8 @@ const SupportPageHeader = (props) => {
           onItemClick={(entity) => {
 
             const { nodeInfo, idKey = 'id' } = entity
-            router.push(`${getUrl(getRoute('support'), nodeInfo.entityType, entity[idKey], nodeInfo.parents)}/${subPage}`)
+            const parametersToBuildRoute = { [nodeInfo.entityType]: entity[idKey], ...nodeInfo.parents }
+            router.push(`${getSupportUrlFromParams(parametersToBuildRoute)}/${getTabName(router, params)}`)
 
           }}>
           <div className="btn btn-link dropdown-toggle header-toggle">

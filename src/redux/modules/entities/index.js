@@ -30,7 +30,7 @@ const locations =
 
 const accounts =
   handleActions({
-    [actionTypes.RECEIVE]: receiveEntity({ key: 'accounts' }),
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'accounts', useMergeDeep: false }),
     [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())

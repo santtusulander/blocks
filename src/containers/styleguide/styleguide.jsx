@@ -53,7 +53,7 @@ import NetworkItem from '../../components/network/network-item'
 import CsvUploadArea from '../../components/network/csv-upload'
 import TimePicker from '../../components/shared/form-elements/time-picker'
 import Typeahead from '../../components/shared/form-elements/typeahead'
-import StorageKPI from '../../components/storage/storage-kpi'
+import { StorageKPI } from '../../components/storage/storage-kpi'
 import StorageItemChart from '../../components/content/storage/storage-item-chart'
 import SortableMultiSelector from '../../components/shared/form-elements/sortable-multi-selector'
 import FileUploadStatus from '../../components/storage/file-upload-status-container.jsx'
@@ -836,7 +836,9 @@ class Styleguide extends React.Component {
 
           <StorageKPI
             chartData={storageKPIData}
+            fetchData={() => {/*no-op*/}}
             chartDataKey='bytes'
+            storage={Immutable.Map()}
             currentValue={112}
             gainPercentage={0.2}
             locations={['San Jose', 'Frankfurt']}

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 import { List, Map } from 'immutable'
 import { injectIntl } from 'react-intl'
+import { withRouter } from 'react-router'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
@@ -120,6 +121,8 @@ class TabSslCertificate extends Component {
           uploadCertificate={() => toggleModal(UPLOAD_CERTIFICATE)}
           editCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE))}
           deleteCertificate={(...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))}
+          context={this.context}
+          router={this.props.router}
         />
 
         {(activeModal === EDIT_CERTIFICATE || activeModal === UPLOAD_CERTIFICATE) &&
@@ -163,6 +166,7 @@ TabSslCertificate.propTypes = {
   intl: React.PropTypes.object,
   isFetching: PropTypes.bool,
   params: PropTypes.object,
+  router: PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
   toDelete: PropTypes.instanceOf(Map),
@@ -198,4 +202,8 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(TabSslCertificate))
+TabSslCertificate.contextTypes = {
+  location: PropTypes.object
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(TabSslCertificate)))

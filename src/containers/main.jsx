@@ -285,7 +285,12 @@ const mapStateToProps = (state, ownProps) => {
 
   const stateMap = Map(rest)
   const fetching = stateMap.some(
-    store => store && (store.get ? store.get('fetching') : store.fetching)
+    store => store && (store.get
+      ? (store.get('fetching')
+        || store.get('fetchingAccountMetrics')
+        || store.get('fetchingGroupMetrics')
+        || store.get('fetchingHostMetrics'))
+      : store.fetching)
   ) || getGlobalFetching({entities})
 
   return {
