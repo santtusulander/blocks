@@ -9,7 +9,6 @@ import {
   MAPBOX_DARK_THEME,
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
-  MAPBOX_SCROLL_TIMEOUT,
   MAPBOX_CITY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
@@ -96,25 +95,8 @@ class Mapbox extends React.Component {
     // We might not have the map instance saved in this.state yet, so we need to
     // get it from the the ReactMapboxGl components state instead.
     if (this.mapbox && this.mapbox.state && this.mapbox.state.map) {
-      this.disableAndEnableZoom(this.mapbox.state.map)
+      this.mapbox.state.map.scrollZoom.disable()
     }
-  }
-
-  /**
-   * Disables and enables zoom handlers on the map with a slight delay.
-   *
-   * @method disableAndEnableZoom
-   * @param  {object}             map Instance of Mapbox map
-   */
-  disableAndEnableZoom(map) {
-    map.scrollZoom.disable()
-
-    if (this.timeout) {
-      window.clearTimeout(this.timeout)
-      this.timeout = null
-    }
-
-    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
   /**
