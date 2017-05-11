@@ -333,7 +333,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createGroup: (params) => dispatch(groupActions.create(params)),
     updateGroup: (params) => dispatch(groupActions.update(params)),
     removeGroup: (params) => dispatch(groupActions.remove(params)),
-    fetchGroup: (params) => dispatch(groupActions.fetch(params))
+    fetchGroup: (params) => dispatch(groupActions.fetchOne({...params, forceReload: true}))
   };
 }
 

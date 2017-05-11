@@ -226,7 +226,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createAccount: (params) => dispatch(accountActions.create(params)),
     updateAccount: (params) => dispatch(accountActions.update(params)),
     removeAccount: (params) => dispatch(accountActions.remove(params)),
-    fetchAccount: (params) => dispatch(accountActions.fetchOne(params))
+    fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, forceReload: true}))
   };
 }
 
