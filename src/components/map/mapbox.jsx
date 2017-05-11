@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 // import Typeahead from '../shared/form-elements/typeahead'
 
+
 import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME,
