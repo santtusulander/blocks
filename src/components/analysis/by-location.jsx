@@ -16,10 +16,7 @@ const AnalysisByLocation = (props) => {
     mapBounds,
     mapboxActions,
     dataKey,
-    dataKeyFormat,
-    fullScreen,
-    coreLocations,
-    spEdgesLocations
+    dataKeyFormat
   } = props
 
   if (!countryData.size) {
@@ -29,7 +26,6 @@ const AnalysisByLocation = (props) => {
   return (
     <div className="analysis-by-location">
       <Mapbox
-        fullScreen={fullScreen}
         getCitiesWithinBounds={getCityData}
         geoData={countriesGeoJSON}
         countryData={countryData}
@@ -40,8 +36,6 @@ const AnalysisByLocation = (props) => {
         mapboxActions={mapboxActions}
         dataKey={dataKey}
         dataKeyFormat={dataKeyFormat}
-        coreLocations={coreLocations}
-        spEdgesLocations={spEdgesLocations}
       />
     </div>
   )
@@ -58,16 +52,13 @@ AnalysisByLocation.defaultProps = {
 
 AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
-  coreLocations: React.PropTypes.object,
   countryData: React.PropTypes.instanceOf(Immutable.List),
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
-  fullScreen: React.PropTypes.bool,
   getCityData: React.PropTypes.func,
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
-  spEdgesLocations: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 

@@ -107,8 +107,6 @@ describe('AnalysisByLocation', () => {
         dataKeyFormat={jest.fn()}
         mapBounds={{}}
         mapboxActions={{}}
-        coreLocations={{}}
-        spEdgesLocations={{}}
       />
     )
     expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
