@@ -145,21 +145,24 @@ export class BrandDashboard extends React.Component {
       }).toJS()
 
 
-    const trafficBytes = dashboard.getIn(['total_traffic'])
+    const udn_core_traffic = Number(dashboard.getIn(['udn_core_traffic', 'bytes']))
+    const sp_edges_traffic = Number(dashboard.getIn(['sp_edges_traffic', 'bytes']))
+
+    const trafficBytes = sp_edges_traffic + udn_core_traffic
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
     const totalTrafficValue = totalTraffic.value
     const totalTrafficUnit = totalTraffic.unit
 
-    const spEdgeTotalTraffic = separateUnit(formatBytes((dashboard.getIn(['sp_edges_traffic', 'bytes'])))).value
-    const udnCoreTotalTraffic = separateUnit(formatBytes((dashboard.getIn(['udn_core_traffic', 'bytes'])))).value
+    const udnCoreTotalTraffic = separateUnit(formatBytes(udn_core_traffic))
+    const spEdgeTotalTraffic = separateUnit(formatBytes(sp_edges_traffic))
 
-    const trafficDatasetAValue = numeral((udnCoreTotalTraffic * 100) / totalTrafficValue).format('0,0')
-    const trafficDatasetBValue = numeral((spEdgeTotalTraffic * 100) / totalTrafficValue).format('0,0')
+    const trafficDatasetAValue = numeral((udn_core_traffic * 100) / trafficBytes).format('0,0')
+    const trafficDatasetBValue = numeral((sp_edges_traffic * 100) / trafficBytes).format('0,0')
 
-    const datasetACalculatedValue = Number(udnCoreTotalTraffic)
-    const datasetACalculatedUnit = totalTrafficUnit
-    const datasetBCalculatedValue = Number(spEdgeTotalTraffic)
-    const datasetBCalculatedUnit = totalTrafficUnit
+    const datasetACalculatedValue = Number(udnCoreTotalTraffic.value)
+    const datasetACalculatedUnit = udnCoreTotalTraffic.unit
+    const datasetBCalculatedValue = Number(spEdgeTotalTraffic.value)
+    const datasetBCalculatedUnit = spEdgeTotalTraffic.unit
     /* END - Stacked Summary */
 
     /* MAPBOX */
