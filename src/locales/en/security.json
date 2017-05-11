@@ -25,6 +25,8 @@
   "portal.security.ssl.edit.certificate.text": "Certificate",
   "portal.security.ssl.validation.certificateRequired.text": "Certificate is required",
   "portal.security.ssl.edit.intermediateCertificates.text": "Intermediate Certificates",
+  "portal.security.ssl.edit.privateKeyAndCertificates.text": "Private Key and Certificates",
+  "portal.security.ssl.edit.addManually.text": "Add manually",
   "portal.security.ssl.expirationDate.text": "Expiration Date",
   "portal.security.ssl.sslIsUpdated.text": "SSL Certificate successfully updated",
   "portal.security.ssl.sslIsCreated.text": "SSL Certificate successfully created",

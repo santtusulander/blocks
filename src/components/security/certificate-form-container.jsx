@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import {
   change,
-  Fields,
+  Field,
   getFormValues,
   propTypes as reduxFormPropTypes,
   reduxForm,
@@ -12,8 +12,18 @@ import {
 } from 'redux-form'
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { Button } from 'react-bootstrap'
+
 import { parseResponseError } from '../../redux/util'
+
+import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import SidePanel from '../shared/side-panel'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import IconFile from '../shared/icons/icon-file'
+import IconPassword from '../shared/icons/icon-password'
+import IconClose from '../shared/icons/icon-close'
 
 import * as securityActionCreators from '../../redux/modules/security'
 
@@ -43,7 +53,18 @@ class CertificateFormContainer extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      privateKey: '',
+      certificate: '',
+      intermediateCertificates: '',
+      showManuallModal: false
+    }
+
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.handleManualAdding = this.handleManualAdding.bind(this)
+    this.toggleManuallModal = this.toggleManuallModal.bind(this)
+    this.uploadWithFileDialog = this.uploadWithFileDialog.bind(this)
+    this.deleteItem = this.deleteItem.bind(this)
   }
 
   componentWillMount() {
@@ -96,30 +117,223 @@ class CertificateFormContainer extends Component {
     });
   }
 
+  handleManualAdding(values) {
+    this.setState({
+      privateKey: values.privateKey,
+      certificate: values.certificate,
+      intermediateCertificates: values.intermediateCertificates
+    })
+    this.toggleManuallModal()
+  }
+
+  toggleManuallModal() {
+    this.setState({showManuallModal: !this.state.showManuallModal})
+  }
+
+  uploadWithFileDialog() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0]
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileNameArr = file.name.split('.')
+        const fileExtension = fileNameArr[fileNameArr.length-1]
+        const content = e.target.result;
+
+        if (fileExtension === 'crt') {
+          if (this.state.certificate) {
+            this.setState({intermediateCertificates: content})
+          } else {
+            this.setState({certificate: content})
+          }
+        } else if (fileExtension === 'key') {
+          this.setState({privateKey: content})
+        }
+      }
+      reader.readAsText(file);
+    });
+    input.click();
+  }
+
+  deleteItem(item) {
+    switch (item) {
+      case 'privateKey':
+        this.setState({privateKey: ''})
+        break
+      case 'certificate':
+        this.setState({certificate: ''})
+        break
+      case 'intermediateCertificates':
+        this.setState({intermediateCertificates: ''})
+        break
+    }
+  }
+
   render() {
-    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, submitting, ...formProps } = this.props
+    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit,invalid, submitting } = this.props
+    const groupsOptions = this.props.groups.map(group => [
+      group.get('id'),
+      group.get('name')
+    ])
 
     return (
-      <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
-          <Fields
-            names={[
-              'group',
-              'title',
-              'privateKey',
-              'certificate',
-              'intermediateCertificates'
-            ]}
-            component={CertificateForm}
-            editMode={!certificateToEdit.isEmpty()}
-            onCancel={() => cancel(toggleModal)}
-            onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
-            fromSubmitting={submitting}
-            {...formProps}
-          />
-      </SidePanel>
+      <div>
+        <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
+            <form className="upload-certificate-form" onSubmit={handleSubmit(values => this.handleFormSubmit(values))}>
+              <Field
+                name="group"
+                className="input-select"
+                component={FieldFormGroupSelect}
+                options={groupsOptions.toJS()}
+                label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
+                disabled={!certificateToEdit.isEmpty()}
+              />
+              <hr/>
+              <Field
+                name="title"
+                type="text"
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text"/>}
+              />
+              <hr/>
+
+              <label><FormattedMessage id="portal.security.ssl.edit.privateKeyAndCertificates.text"/></label>
+              <Button bsStyle="success" className="btn-icon" onClick={this.uploadWithFileDialog}>
+                <IconAdd />
+              </Button>
+              <div className="key-and-certificates-list">
+                {this.state.privateKey &&
+                  <div>
+                    <IconPassword />
+                    <FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>
+                      <Button
+                        onClick={() => this.deleteItem('privateKey')}
+                        className="btn btn-icon">
+                        <IconClose/>
+                      </Button>
+                  </div>
+                }
+                {this.state.certificate &&
+                  <div>
+                    <IconFile />
+                    <FormattedMessage id="portal.security.ssl.edit.certificate.text"/>
+                    <Button
+                      onClick={() => this.deleteItem('certificate')}
+                      className="btn btn-icon">
+                      <IconClose/>
+                    </Button>
+                  </div>
+                }
+                {this.state.intermediateCertificates &&
+                  <div>
+                    <IconFile />
+                    <FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>
+                    <Button
+                      onClick={() => this.deleteItem('intermediateCertificates')}
+                      className="btn btn-icon">
+                      <IconClose/>
+                    </Button>
+                  </div>
+                }
+              </div>
+
+              <a onClick={this.toggleManuallModal}><FormattedMessage id="portal.security.ssl.edit.addManually.text"/></a>
+
+              <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
+                <Button
+                  id="cancel_button"
+                  className="btn-secondary"
+                  onClick={() => cancel(toggleModal)}>
+                  <FormattedMessage id="portal.common.button.cancel"/>
+                </Button>
+                <Button
+                  id="save_button"
+                  type="submit"
+                  bsStyle="primary"
+                  disabled={invalid || submitting}>
+                  {submitting ? <FormattedMessage id='portal.common.button.saving' />
+                              : <FormattedMessage id='portal.common.button.save' />
+                  }
+                </Button>
+              </FormFooterButtons>
+            </form>
+        </SidePanel>
+
+        {this.state.showManuallModal &&
+          <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
+            <form onSubmit={handleSubmit(values => this.handleManualAdding(values))}>
+              <Field
+                name="privateKey"
+                type="textarea"
+                className="fixed-size-textarea"
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>}
+              />
+
+              <hr/>
+
+              <Field
+                name="intermediateCertificates"
+                type="textarea"
+                className="fixed-size-textarea"
+                component={FieldFormGroup}
+                required={false}
+                label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>}
+              />
+
+              <hr/>
+
+              <Field
+                name="certificate"
+                type="textarea"
+                className="fixed-size-textarea"
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.security.ssl.edit.certificate.text"/>}
+              />
+
+              <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
+                <Button
+                  id="cancel_button"
+                  className="btn-secondary"
+                  onClick={this.toggleManuallModal}>
+                  <FormattedMessage id="portal.common.button.cancel"/>
+                </Button>
+                <Button
+                  id="save_button"
+                  type="submit"
+                  bsStyle="primary"
+                  disabled={invalid || submitting}>
+                  {submitting ? <FormattedMessage id='portal.button.adding' />
+                              : <FormattedMessage id='portal.button.add' />
+                  }
+                </Button>
+              </FormFooterButtons>
+            </form>
+          </SidePanel>
+        }
+      </div>
     )
   }
 }
+
+/*
+<Fields
+  names={[
+    'group',
+    'title',
+    'privateKey',
+    'certificate',
+    'intermediateCertificates'
+  ]}
+  component={CertificateForm}
+  editMode={!certificateToEdit.isEmpty()}
+  onCancel={() => cancel(toggleModal)}
+  onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
+  fromSubmitting={submitting}
+  {...formProps}
+/>
+*/
 
 CertificateFormContainer.displayName = "CertificateFormContainer"
 CertificateFormContainer.propTypes = {
@@ -188,11 +402,11 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+const form = reduxForm({
+  form: 'certificateForm',
+  validate
+})(CertificateFormContainer)
+
 export default injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm({
-      form: 'certificateForm',
-      validate
-    })(CertificateFormContainer)
-  )
+  connect(mapStateToProps, mapDispatchToProps)(form)
 )

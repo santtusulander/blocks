@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List } from 'immutable'
+import { List, toJS } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import UDNButton from '../shared/form-elements/button'
@@ -12,7 +12,7 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
     group.get('id'),
     group.get('name')
   ])
-
+console.log('TEST==',groups.toJS(), group,title)
   return (
     <form>
       <div id="groups">

@@ -1,0 +1,39 @@
+.upload-certificate-form {
+  .btn-success {
+    float: right;
+  }
+
+  .key-and-certificates-list {
+    margin-top: 30px;
+    clear: both;
+
+    >div {
+      padding: 5px 15px;
+      margin-bottom: 15px;
+      font-weight: bold;
+      line-height: 50px;
+      background-color: rgba($pale-blue, 0.2);
+
+      >.icon {
+        margin-right: 15px;
+        fill: $pale-blue;
+      }
+
+      .btn-default {
+        float: right;
+        margin-top: 8px;
+        background: none;
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+        background-color: $white;
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        .icon {
+          fill: $lt-text-color;
+        }
+      }
+    }
+  }
+}
