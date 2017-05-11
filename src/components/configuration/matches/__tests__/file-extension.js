@@ -18,11 +18,41 @@ const fakeConfig = Immutable.fromJS({
 const fakePath = Immutable.fromJS(['foo', 'bar'])
 
 describe('FileExtension', () => {
+  let component, changeValue, activateMatch
+
+  beforeEach(() => {
+    changeValue = jest.fn()
+    activateMatch = jest.fn()
+
+    component = shallow(
+      <FileExtension
+        match={fakeConfig}
+        changeValue={changeValue}
+        activateMatch={activateMatch}
+        path={fakePath}
+        intl={intlMaker()}
+      />
+    )
+  })
 
   it('should exist', () => {
-    let fileExtension = shallow(
-      <FileExtension match={fakeConfig} path={fakePath} intl={intlMaker()}/>
-    );
-    expect(fileExtension).toBeDefined();
+    expect(component).toBeDefined()
+  })
+
+  it('should call changeValue with valid params', () => {
+    component.setState({
+      extensions: [{label: 'MP3'}, {label: 'MOV'}, {label: 'GIF'}]
+    })
+    component.instance().saveChanges()
+
+    expect(changeValue.mock.calls.length).toBe(1)
+
+    const result = {
+      type: 'regexp',
+      value: '(.*)\\.(MP3|MOV|GIF)',
+      inverted: false
+    }
+
+    expect(changeValue.mock.calls[0][1].toJS()).toEqual(result)
   })
 })
