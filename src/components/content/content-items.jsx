@@ -543,7 +543,7 @@ class ContentItems extends Component {
                         const id = item.get('id')
                         const isTrialHost = false
                         const name = item.get('name')
-                        const contentMetrics = item.get('metrics')
+                        const contentMetrics = item.get('metrics') || Map()
 
                         const scaledWidth =  trafficScale(item.get('totalTraffic') || 0)
 
