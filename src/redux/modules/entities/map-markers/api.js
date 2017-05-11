@@ -2,11 +2,12 @@ import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
 import { BASE_URL_NORTH, PAGINATION_MOCK } from '../../../util'
+import { UDN_CORE_ACCOUNT_ID } from '../../../../constants/account-management-options'
 
 const markerSchema = new schema.Entity('mapMarkers', {},{
   processStrategy: (value) => {
 
-    const type = (value.account_id === 1) ? 'core' : 'edge'
+    const type = (value.account_id === UDN_CORE_ACCOUNT_ID) ? 'core' : 'edge'
 
     return {
       ...value,
