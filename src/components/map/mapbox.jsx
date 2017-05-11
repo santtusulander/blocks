@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import ReactMapboxGl, { Popup, ZoomControl, Marker } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature, Marker } from 'react-mapbox-gl'
 import {Map, List} from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
@@ -186,17 +186,21 @@ class Mapbox extends Component {
     if (map.style._loaded) {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
-      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
+      const layers = [...this.state.layers, 'markers']
+      const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
       if (features.length) {
         // Check if hovered feature is a cluster since we need to apply different hover style methods on clusters
         const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
+        const isMarker = (features[0].layer.id === 'markers')
+
         // Sets the hovered layer so we can easily reference it in setHoverStyle method
         const hoveredLayer = {
           id: isCluster ? 'cluster-hover' : features[0].layer.id,
           type: features[0].layer.type,
           coordinates: features[0].geometry.coordinates
         }
+
 
         if (isCluster) {
           // We need to compare current and previous coordinates in order apply the hover effect
@@ -213,7 +217,10 @@ class Mapbox extends Component {
         }
 
         this.setState({ hoveredLayer })
-        this.setHoverStyle(map)('opacity', isCluster ? 0.7 : 0.9)('pointer')
+
+        if (!isMarker) {
+          this.setHoverStyle(map)('opacity', isCluster ? 0.7 : 0.9)('pointer')
+        }
 
         // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
@@ -230,14 +237,16 @@ class Mapbox extends Component {
         // if we had hovered an interactive layer and the moved mouse
         // out of the layer boundaries.
         if (this.state.hoveredLayer) {
-          this.setHoverStyle(map)('opacity', 0.5)('default')
+          if (this.state.hoveredLayer.id !== 'markers') {
+            this.setHoverStyle(map)('opacity', 0.5)('default')
+            this.removeClusterHoverStyles(map)
+          }
           this.setState({ hoveredLayer: null })
           this.closePopup()
 
           // Since cluster hovers are separate from the general hover styles,
           // they necessary layers and sources should be removed once hovered
           // outside of the cluster.
-          this.removeClusterHoverStyles(map)
         }
       }
     }
@@ -636,28 +645,9 @@ class Mapbox extends Component {
     const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
-    const styles = {
-      marker: {
-        width: 30,
-        height: 30,
-        borderRadius: '50%',
-        backgroundColor: '#E0E0E0',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        border: '2px solid #C9C9C9'
-      }
-    }
-
-    const validateLatLng = (latlng) => {
-      const [lat,lng] = latlng
-
-      if (Math.abs(lat) <= 90  && Math.abs(lng) <= 90) {
-        return true
-      }
-
-      return false
-    }
+    //marker colors:
+    //#88BA17
+    //#00AAD4
 
     return (
       <ReactMapboxGl
@@ -680,30 +670,27 @@ class Mapbox extends Component {
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
 
-
+        <Layer
+          id="markers"
+          layout={{
+            "icon-image": "{icon}-15",
+            //"text-field": "{title}",
+            "icon-allow-overlap": true
+          }}
+          >
           {this.props.markers
-              .map((feature, key) => {
-                const latlng = feature.get('latlng').toJS()
-                if (validateLatLng(latlng)) {
-                  return (
-                    <Marker
-                      key={key}
-                      style={styles.marker}
-                      coordinates={latlng}
-                      onClick={
-                        /* eslint-disable no-console */
-                        () => console.log(`Marker ${key} clicked`)
-                        /* eslint-enable no-console */
-                      }
-                    />
-                  )
-                }
-
-                return undefined
-              })
+            .map(marker => (
+              <Feature
+                coordinates={marker.get("latlng").toJS()}
+                properties={{
+                  "name": marker.get('id'),
+                  [this.props.dataKey]: Math.floor(Math.random()*10000),
+                  "icon": "marker"
+                }}
+              />
+            )).toArray()
           }
-
-
+        </Layer>
 
         {/*
         <div className="map-search">
