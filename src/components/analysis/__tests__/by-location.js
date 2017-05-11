@@ -83,7 +83,8 @@ describe('AnalysisByLocation', () => {
       <AnalysisByLocation
         countryData={fakeCountryData}
         cityData={Immutable.List()}
-        />
+        markers={Immutable.List()}
+      />
     )
     expect(byLocation).toBeDefined();
   })
@@ -91,8 +92,9 @@ describe('AnalysisByLocation', () => {
   it('should show loading message if there is no data', () => {
     let byLocation = shallow(
       <AnalysisByLocation
-        countryData={Immutable.List()
-        }/>
+        countryData={Immutable.List()}
+        markers={Immutable.List()}
+      />
     )
     expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
   })
@@ -107,6 +109,7 @@ describe('AnalysisByLocation', () => {
         dataKeyFormat={jest.fn()}
         mapBounds={{}}
         mapboxActions={{}}
+        markers={Immutable.List()}
       />
     )
     expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
