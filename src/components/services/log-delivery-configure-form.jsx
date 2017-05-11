@@ -146,12 +146,8 @@ class LogDeliveryConfigureForm extends React.Component {
                 component={FieldFormGroupMultiOptionSelector}
                 options={logTypesOptions}
                 label={<FormattedMessage id="portal.services.logDelivery.requestedLogTypes.text" />}
-                normalize={(v) => {
-                  return v.map(item => item.id)
-                }}
-                format={(v) => {
-                  return v.map(item => ({id: item}))
-                }}
+                normalize={(v) => v.map(item => item.id)}
+                format={(v) => v.map(item => ({id: item}))}
                 required={false}
                 disabled={true}
               />
@@ -228,21 +224,29 @@ class LogDeliveryConfigureForm extends React.Component {
 
 LogDeliveryConfigureForm.displayName = 'LogDeliveryConfigureForm'
 LogDeliveryConfigureForm.propTypes = {
-  close: React.PropTypes.func,
+  config: React.PropTypes.object,
+  onCancel: React.PropTypes.func,
+  onSave: React.PropTypes.func,
   ...reduxFormPropTypes
 }
 
+LogDeliveryConfigureForm.defaultProps = {
+  initialValues: {
+    log_delivery_enabled: false,
+    aggregation_interval: 30,
+    log_types: ['conductor'],
+    export_file_format: 'zip'
+  }
+}
+
 /* istanbul ignore next */
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { config }) => {
   const selector = formValueSelector('log-delivery-configure-form')
 
   return {
     ldsEnabled: selector(state, 'log_delivery_enabled'),
     initialValues: {
-      log_delivery_enabled: false,
-      aggregation_interval: 30,
-      log_types: ['conductor'],
-      export_file_format: 'zip'
+      ...config
     }
   }
 }

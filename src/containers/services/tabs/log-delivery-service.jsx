@@ -3,13 +3,14 @@ import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 
 import { Row, Col, FormGroup, InputGroup, Button } from 'react-bootstrap'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 
 import SidePanel from '../../../components/shared/side-panel'
 import StorageKPI from '../../../components/storage/storage-kpi'
 import LogDeliveryConfigureForm from '../../../components/services/log-delivery-configure-form'
 import propertiesActions from '../../../redux/modules/entities/properties/actions'
-import { getIdsByGroup as getPropertiesbyGroup, getById as getPropertyById } from '../../../redux/modules/entities/properties/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getIdsByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import IconConfiguration from '../../../components/shared/icons/icon-configuration'
 import Select from '../../../components/shared/form-elements/select'
 
@@ -17,8 +18,8 @@ class LogDeliveryService extends React.Component {
   constructor(props) {
     super(props)
 
-    this.editPropertyConfig = this.editPropertyConfig.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
+    this.editPropertyConfig = this.editPropertyConfig.bind(this)
     this.savePropertyConfig = this.savePropertyConfig.bind(this)
     this.changeCurrentProperty = this.changeCurrentProperty.bind(this)
     
@@ -30,7 +31,7 @@ class LogDeliveryService extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchProperties(this.props.params)
+    this.props.params.group && this.props.fetchProperties(this.props.params)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -38,6 +39,10 @@ class LogDeliveryService extends React.Component {
       this.setState({
         currentProperty: nextProps.currentProperty
       })
+    }
+
+    if (!is(this.props.activeGroup, nextProps.activeGroup) && this.props.params.group) {
+      this.props.fetchProperties(this.props.params)
     }
   }
 
@@ -99,6 +104,7 @@ class LogDeliveryService extends React.Component {
                       bsStyle="success"
                       className="btn-icon"
                       onClick={() => this.editPropertyConfig()}
+                      disabled={!currentProperty}
                     >
                       <IconConfiguration />
                     </Button>
@@ -118,7 +124,7 @@ class LogDeliveryService extends React.Component {
               </Col>
             </FormGroup>
           </Row>
-       
+
         <SidePanel
           show={!!this.state.showModal}
           title={<FormattedMessage id="portal.services.logDelivery.configureLogDelivery.text"/>}
@@ -131,41 +137,46 @@ class LogDeliveryService extends React.Component {
             onSave={this.savePropertyConfig}
           />
         </SidePanel>
-         </div>
+      </div>
     )
   }
 }
 
 LogDeliveryService.displayName = 'LogDeliveryService'
 LogDeliveryService.propTypes = {
-  // account: PropTypes.instanceOf(Map),
-  // accountIsFetching: PropTypes.bool,
-  // accountStartFetching: PropTypes.func,
-  // fetchAccountDetails: PropTypes.func,
-  // fetchServiceInfo: PropTypes.func,
-  params: PropTypes.object
+  activeGroup: PropTypes.instanceOf(Map),
+  currentProperty: PropTypes.string,
+  fetchProperties: PropTypes.func,
+  getPropertyConfig: PropTypes.func,
+  params: PropTypes.object,
+  properties: PropTypes.instanceOf(List),
+  updatePropertyConfig: PropTypes.func
 }
 
 /* istanbul ignore next */
-const mapStateToProps = (state, {params: {group, property}}) => {
-  const activeProperty = getPropertyById(state, property)
-
-  const properties = getPropertiesbyGroup(state, group) || List()
+const mapStateToProps = (state, {params: {group}}) => {
+  const properties = getPropertiesByGroup(state, group)
 
   return {
+    activeGroup: getGroupById(state, group) || Map(),
     properties,
-    currentProperty: activeProperty || properties.first()
+    currentProperty: properties.first()
   }
 }
 
 const dispatchToProps = (dispatch) => {
   return {
     fetchProperties: (params) => dispatch(propertiesActions.fetchAll(params)),
-    getPropertyConfig: (property) => ({
-      aaa: 'asdasf'
+    getPropertyConfig: () => ({ //TODO
+      contact_first_name: "John",
+      contact_second_name: "John",
+      log_delivery_enabled: true,
+      aggregation_interval: 30,
+      log_types: ['conductor'],
+      export_file_format: 'zip'
     }),
-    updatePropertyConfig: (params) => {
-      return ()=>({success: true})
+    updatePropertyConfig: () => {
+      return () => ({success: true}) //TODO
     }
   }
 }
