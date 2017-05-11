@@ -91,15 +91,12 @@ export class BrandDashboard extends React.Component {
     const accountType = this.props.activeAccount.get('provider_type')
     const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-    if (true) {
-      return Promise.all([
-        this.props.dashboardActions.startFetching(),
-        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-        this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts),
-        this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
-      ])
-      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
-    }
+    return Promise.all([
+      this.props.dashboardActions.startFetching(),
+      this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+      this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts),
+      this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+    ]).then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
   }
 
   onFilterChange(filterName, filterValue) {
@@ -155,11 +152,15 @@ export class BrandDashboard extends React.Component {
     const countries = !dashboard.size ? List() : dashboard.get('countries')
     const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
 
-    const topProviders = !dashboard.size ? List() : dashboard.get('providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
+    const topProvidersSp = !dashboard.size ? List() : dashboard.get('sp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
+      return a < b
+    })
+    const topProvidersCp = !dashboard.size ? List() : dashboard.get('cp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
     })
     const topSPProvidersAccounts = filterOptions.getIn(['serviceProviders'], List())
     const topCPProvidersAccounts = filterOptions.getIn(['contentProviders'], List())
+
 
     return (
       <PageContainer>
@@ -216,7 +217,7 @@ export class BrandDashboard extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {topProviders.map((provider, i) => {
+                {topProvidersSp.map((provider, i) => {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
@@ -243,7 +244,7 @@ export class BrandDashboard extends React.Component {
               </tbody>
             </Table>
 
-            {!topProviders.size &&
+            {!topProvidersSp.size &&
               <div className="no-data">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
@@ -262,7 +263,7 @@ export class BrandDashboard extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {topProviders.map((provider, i) => {
+                {topProvidersCp.map((provider, i) => {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
@@ -289,7 +290,7 @@ export class BrandDashboard extends React.Component {
               </tbody>
             </Table>
 
-            {!topProviders.size &&
+            {!topProvidersCp.size &&
               <div className="no-data">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
