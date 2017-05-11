@@ -50,7 +50,7 @@ AnalysisByLocation.defaultProps = {
   cityData: Immutable.List(),
   countryData: Immutable.List(),
   fullScreen: false,
-  markers: {}
+  markers: Immutable.List()
 }
 
 AnalysisByLocation.propTypes = {
