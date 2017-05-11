@@ -153,11 +153,6 @@ const entityPagination =
     [actionTypes.RECEIVE]: receiveEntityPagination
   }, Map())
 
-const mapMarkers =
-  handleActions({
-    [actionTypes.RECEIVE]: receiveEntity({ key: 'mapMarkers' })
-  }, Map())
-
 export default combineReducers({
   accounts,
   nodes,
@@ -180,6 +175,5 @@ export default combineReducers({
   serviceTitles,
   users,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
-  entityPagination,
-  mapMarkers
+  entityPagination
 })
