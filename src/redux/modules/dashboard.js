@@ -47,8 +47,8 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
   const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
   const totalOpts = Object.assign({}, opts)
   const udnCoreByTimeOpts = Object.assign({}, opts, { account: UDN_CORE_ACCOUNT_ID})
-  // const spEdgesByTimeOpts = Object.assign({}, opts, { exclude_accounts: UDN_CORE_ACCOUNT_ID})
-  const spEdgesByTimeOpts = Object.assign({}, opts, { account: 20558})
+  const spEdgesByTimeOpts = Object.assign({}, opts, { exclude_accounts: UDN_CORE_ACCOUNT_ID})
+
   const dashboardRequests = []
 
   // Limit the amount of results for providers
