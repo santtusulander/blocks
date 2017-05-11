@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature, Marker } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
 import {Map, List} from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
