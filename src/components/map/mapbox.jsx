@@ -685,26 +685,25 @@ class Mapbox extends Component {
       >
 
 
-          {this.props.markers
-              .map((feature, key) => {
-                const latlng = feature.get('latlng').toJS()
-                if (validateLatLng(latlng)) {
-                  return (
-                    <Marker
-                      key={key}
-                      style={styles.marker}
-                      coordinates={latlng}
-                      onClick={
-                        /* eslint-disable no-console */
-                        () => console.log(`Marker ${key} clicked`)
-                        /* eslint-enable no-console */
-                      }
-                    />
-                  )
-                }
+          {(this.props.markers && this.props.markers.size > 0) && this.props.markers.map((feature, key) => {
+            const latlng = feature.get('latlng').toJS()
+            if (validateLatLng(latlng)) {
+              return (
+                <Marker
+                  key={key}
+                  style={styles.marker}
+                  coordinates={latlng}
+                  onClick={
+                    /* eslint-disable no-console */
+                    () => console.log(`Marker ${key} clicked`)
+                    /* eslint-enable no-console */
+                  }
+                />
+              )
+            }
 
-                return undefined
-              })
+            return undefined
+          })
           }
 
 

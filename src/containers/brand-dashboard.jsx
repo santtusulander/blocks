@@ -24,6 +24,9 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+import markersActions from '../redux/modules/entities/map-markers/actions'
+import { getAll as getMarkers} from '../redux/modules/entities/map-markers/selectors'
+
 import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
@@ -92,6 +95,7 @@ export class BrandDashboard extends React.Component {
     const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
     return Promise.all([
+      this.props.fetchMarkers(),
       this.props.dashboardActions.startFetching(),
       this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
       this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts),
@@ -117,7 +121,7 @@ export class BrandDashboard extends React.Component {
   }
 
   renderContent() {
-    const { dashboard, filterOptions, intl, theme } = this.props
+    const { dashboard, filterOptions, intl, theme, markers } = this.props
 
     /* Stacked Summary */
     const spTrafficDetail = dashboard.getIn(['sp_edges_traffic', 'detail'])
@@ -214,6 +218,7 @@ export class BrandDashboard extends React.Component {
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}
                 mapboxActions={this.props.mapboxActions}
+                markers={markers}
               />
             </div>
           </DashboardPanel>
@@ -379,6 +384,7 @@ BrandDashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
+  fetchMarkers: PropTypes.func,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
@@ -386,6 +392,7 @@ BrandDashboard.propTypes = {
   intl: PropTypes.object,
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
+  markers: PropTypes.instanceOf(List),
   params: PropTypes.object,
   router: PropTypes.object,
   theme: PropTypes.string,
@@ -421,7 +428,8 @@ const mapStateToProps = (state, { params: { account } }) => {
     user: state.user.get('currentUser'),
     theme: state.ui.get('theme'),
     mapBounds: state.mapbox.get('mapBounds'),
-    cityData: state.traffic.get('byCity')
+    cityData: state.traffic.get('byCity'),
+    markers: getMarkers(state)
   }
 }
 
@@ -430,6 +438,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
+    fetchMarkers: () => dispatch(markersActions.fetchAll({})),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
