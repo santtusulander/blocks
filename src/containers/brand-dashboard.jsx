@@ -119,48 +119,60 @@ export class BrandDashboard extends React.Component {
   renderContent() {
     const { dashboard, filterOptions, intl, theme } = this.props
 
-    const trafficDetail = dashboard.getIn(['traffic', 'detail'])
-    const trafficDatasetA = !trafficDetail ?
+    /* Stacked Summary */
+    const spTrafficDetail = dashboard.getIn(['sp_edges_traffic', 'detail'])
+    const coreTrafficDetail = dashboard.getIn(['udn_core_traffic', 'detail'])
+
+    const trafficDatasetA = !coreTrafficDetail ?
       [] :
-      trafficDetail.map(datapoint => {
+      coreTrafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.bytes_net_on || datapoint.bytes_http || 0,
+          bytes: datapoint.bytes || 0,
           timestamp: datapoint.timestamp
         }
       }).toJS()
-    const trafficDatasetB = !trafficDetail ?
+    const trafficDatasetB = !spTrafficDetail ?
       [] :
-      trafficDetail.map(datapoint => {
+      spTrafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.bytes_net_off ||  datapoint.bytes_https || 0,
+          bytes: datapoint.bytes || 0,
           timestamp: datapoint.timestamp
         }
       }).toJS()
 
-    const trafficBytes = dashboard.getIn(['traffic', 'bytes'])
+
+    const trafficBytes = dashboard.getIn(['total_traffic'])
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
     const totalTrafficValue = totalTraffic.value
     const totalTrafficUnit = totalTraffic.unit
 
-    const trafficDatasetAValue = numeral((dashboard.getIn(['traffic', 'bytes_net_on']))).format('0,0')
-    const trafficDatasetBValue = numeral((dashboard.getIn(['traffic', 'bytes_net_off']))).format('0,0')
-    const datasetACalculatedValue = (totalTrafficValue * trafficDatasetAValue) / 100
-    const datasetACalculatedUnit = totalTrafficUnit
-    const datasetBCalculatedValue = (totalTrafficValue * trafficDatasetBValue) / 100
-    const datasetBCalculatedUnit = totalTrafficUnit
+    const spEdgeTotalTraffic = separateUnit(formatBytes((dashboard.getIn(['sp_edges_traffic', 'bytes'])))).value
+    const udnCoreTotalTraffic = separateUnit(formatBytes((dashboard.getIn(['udn_core_traffic', 'bytes'])))).value
 
+    const trafficDatasetAValue = numeral((udnCoreTotalTraffic * 100) / totalTrafficValue).format('0,0')
+    const trafficDatasetBValue = numeral((spEdgeTotalTraffic * 100) / totalTrafficValue).format('0,0')
+
+    const datasetACalculatedValue = Number(udnCoreTotalTraffic)
+    const datasetACalculatedUnit = totalTrafficUnit
+    const datasetBCalculatedValue = Number(spEdgeTotalTraffic)
+    const datasetBCalculatedUnit = totalTrafficUnit
+    /* END - Stacked Summary */
+
+    /* MAPBOX */
     const countries = !dashboard.size ? List() : dashboard.get('countries')
     const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
+    /* END - MAPBOX */
 
-    const topProvidersSp = !dashboard.size ? List() : dashboard.get('sp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
+    /* TOP 5 SERVICE/CONTENT PROVICERS */
+    const topProvidersSp = !dashboard.size ? List() : dashboard.get('sp_providers') && dashboard.get('sp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
     })
-    const topProvidersCp = !dashboard.size ? List() : dashboard.get('cp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
+    const topProvidersCp = !dashboard.size ? List() : dashboard.get('cp_providers') && dashboard.get('cp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
     })
     const topSPProvidersAccounts = filterOptions.getIn(['serviceProviders'], List())
     const topCPProvidersAccounts = filterOptions.getIn(['contentProviders'], List())
-
+    /* END - TOP 5 SERVICE/CONTENT PROVICERS */
 
     return (
       <PageContainer>
@@ -170,6 +182,7 @@ export class BrandDashboard extends React.Component {
           <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})} className="full-width">
             <StackedByTimeSummary
               dataKey="bytes"
+              addDelimiter={true}
               totalDatasetValue={totalTrafficValue}
               totalDatasetUnit={totalTrafficUnit}
               datasetAArray={trafficDatasetA}
@@ -217,7 +230,7 @@ export class BrandDashboard extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {topProvidersSp.map((provider, i) => {
+                {topProvidersSp && topProvidersSp.map((provider, i) => {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
@@ -244,7 +257,7 @@ export class BrandDashboard extends React.Component {
               </tbody>
             </Table>
 
-            {!topProvidersSp.size &&
+            {(!topProvidersSp || !topProvidersSp.size) &&
               <div className="no-data">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
@@ -263,7 +276,7 @@ export class BrandDashboard extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {topProvidersCp.map((provider, i) => {
+                {topProvidersCp && topProvidersCp.map((provider, i) => {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
@@ -290,7 +303,7 @@ export class BrandDashboard extends React.Component {
               </tbody>
             </Table>
 
-            {!topProvidersCp.size &&
+            {(!topProvidersCp || !topProvidersCp.size) &&
               <div className="no-data">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>

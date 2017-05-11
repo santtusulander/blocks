@@ -43,6 +43,7 @@ class StackedByTimeSummary extends React.Component {
   render() {
     const {
       dataKey,
+      addDelimiter,
       datasetAArray,
       datasetACalculatedUnit,
       datasetACalculatedValue,
@@ -117,6 +118,10 @@ class StackedByTimeSummary extends React.Component {
               </div>
             </div>}
 
+          {(addDelimiter) &&
+             <div className="optional-dataset-border" />
+          }
+
           <div className="dataset-col">
             <div className="dataset-label dataset-a">{datasetALabel}</div>
             {total > 0 ? [
@@ -151,6 +156,7 @@ class StackedByTimeSummary extends React.Component {
 
 StackedByTimeSummary.displayName = 'StackedByTimeSummary'
 StackedByTimeSummary.propTypes = {
+  addDelimiter: PropTypes.bool,
   dataKey: PropTypes.string,
   datasetAArray: PropTypes.array.isRequired,
   datasetACalculatedUnit: PropTypes.string,
@@ -166,6 +172,9 @@ StackedByTimeSummary.propTypes = {
   datasetBValue: PropTypes.string,
   totalDatasetUnit: PropTypes.string.isRequired,
   totalDatasetValue: PropTypes.string.isRequired
+}
+StackedByTimeSummary.defaultProps = {
+  addDelimiter: false
 }
 
 module.exports = StackedByTimeSummary
