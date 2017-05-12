@@ -32,6 +32,7 @@ describe('FileUploader', () => {
     const accessKey = 'key'
     const gateway = 'https://gateway'
     const uploadHandlers = {}
+    const hasABRWorkFlow = false
 
     let Uploader = null;
 
@@ -60,7 +61,7 @@ describe('FileUploader', () => {
       beforeEach(() => {
         Reader.readFile = jest.fn().mockImplementation((file) => new Promise(resolve => resolve(file)))
         FileDialog.open = jest.fn().mockImplementation(() => new Promise(resolve => resolve([])))
-        api.uploadFile = jest.fn().mockImplementation((accessKey, gateway, file, uploadHandlers) => {})
+        api.uploadFile = jest.fn().mockImplementation((accessKey, gateway, file, uploadHandlers, hasABRWorkFlow) => {})
       })
 
       it('openFileDialog should open file dialog', () => {
@@ -84,8 +85,8 @@ describe('FileUploader', () => {
 
       it('uploading should be called with initialization params: "accessKey", "gateway", "uploadHandlers"', () => {
         const [ file ] = filesMock
-        const { accessKey, gateway, uploadHandlers } = Uploader
-        const expectedParams = [accessKey, gateway, file, uploadHandlers]
+        const { accessKey, gateway, uploadHandlers, hasABRWorkFlow } = Uploader
+        const expectedParams = [accessKey, gateway, file, uploadHandlers, hasABRWorkFlow]
 
         Uploader.uploadFile(file)
         expect(api.uploadFile).toBeCalledWith(...expectedParams)
