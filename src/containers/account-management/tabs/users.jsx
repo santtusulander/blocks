@@ -453,66 +453,67 @@ export class AccountManagementAccountUsers extends Component {
 
         { fetching
           ? <LoadingSpinner />
-          : <Table striped={true}>
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="email" width="40%">
-                <FormattedMessage id="portal.user.list.email.text" />
-              </TableSorter>
-              <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-              {/* TODO: UDNP-3529 - Removed until we have group_id in user
-                <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
-              */}
-              <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                <th width="1%"/>
-              </IsAllowed>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.addingNew && <InlineAdd
-              validate={this.validateInlineAdd}
-              inputs={this.getInlineAddFields()}
-              unmount={this.toggleInlineAdd}
-              save={this.newUser}/>}
-            {/*
-              Note, this is the temporary approach to fix bug when deleting user cause by pagination, remove filter() when
-              the pagination is fixed
-            */}
-            {users && users.filter(user => user).map((user, i) => {
-              return (
-                <tr key={i}>
-                  <td>
-                    {this.getEmailForUser(user)}
-                  </td>
-                  <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
-                  { /* TODO: UDNP-3529 removed until we have group data in user
-                  <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  */ }
-                  <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                    <td className="nowrap-column">
-                        <ActionButtons
-                          permissions={{
-                            modify: MODIFY_USER,
-                            delete: DELETE_USER
-                          }}
-                          onEdit={() => {
-                            this.editUser(user)
-                          }}
-                          onDelete={() => this.deleteUser(user.get('email'))} />
-                    </td>
-                  </IsAllowed>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+          : <div>
+              <Table striped={true}>
+                <thead>
+                  <tr>
+                    <TableSorter {...sorterProps} column="email" width="40%">
+                      <FormattedMessage id="portal.user.list.email.text" />
+                    </TableSorter>
+                    <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+                    {/* TODO: UDNP-3529 - Removed until we have group_id in user
+                      <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+                    */}
+                    <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                      <th width="1%"/>
+                    </IsAllowed>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.addingNew && <InlineAdd
+                    validate={this.validateInlineAdd}
+                    inputs={this.getInlineAddFields()}
+                    unmount={this.toggleInlineAdd}
+                    save={this.newUser}/>}
+                  {/*
+                    Note, this is the temporary approach to fix bug when deleting user cause by pagination, remove filter() when
+                    the pagination is fixed
+                  */}
+                  {users && users.filter(user => user).map((user, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>
+                          {this.getEmailForUser(user)}
+                        </td>
+                        <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                        { /* TODO: UDNP-3529 removed until we have group data in user
+                        <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                        */ }
+                        <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                          <td className="nowrap-column">
+                              <ActionButtons
+                                permissions={{
+                                  modify: MODIFY_USER,
+                                  delete: DELETE_USER
+                                }}
+                                onEdit={() => {
+                                  this.editUser(user)
+                                }}
+                                onDelete={() => this.deleteUser(user.get('email'))} />
+                          </td>
+                        </IsAllowed>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+              {
+                // Show Pagination if more items than fit on PAGE_SIZE
+                totalCount > PAGE_SIZE &&
+                <Paginator {...paginationProps} />
+              }
+            </div>
         }
-
-        { /* Show Pagination if more items than fit on PAGE_SIZE */
-          totalCount > PAGE_SIZE &&
-          <Paginator {...paginationProps} />
-        }
-
 
         {users && users.size === 0 &&
           <div className="text-center">
