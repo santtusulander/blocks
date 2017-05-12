@@ -75,7 +75,7 @@ Services.displayName = 'Services'
 Services.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
-  children: PropTypes.node,
+  children: PropTypes.object,
   params: PropTypes.object,
   router: PropTypes.object
 }

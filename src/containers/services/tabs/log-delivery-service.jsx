@@ -1,18 +1,20 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
-
 import { Row, Col, FormGroup, InputGroup, Button } from 'react-bootstrap'
+
 import { Map, is } from 'immutable'
+
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getIdsByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
+import propertiesActions from '../../../redux/modules/entities/properties/actions'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ComparisonBars from '../../../components/shared/comparison-bars'
-import LogDeliveryConfigureForm from '../../../components/services/log-delivery-configure-form'
-import propertiesActions from '../../../redux/modules/entities/properties/actions'
-import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
-import { getIdsByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import IconConfiguration from '../../../components/shared/icons/icon-configuration'
 import Select from '../../../components/shared/form-elements/select'
+
+import LogDeliveryConfigureForm from '../../../components/services/log-delivery-configure-form'
 
 class LogDeliveryService extends React.Component {
   constructor(props) {
@@ -72,7 +74,7 @@ class LogDeliveryService extends React.Component {
   render() {
     const propertiesOptions = this.props.properties.toJS().map((host) => ({label: host, value: host}))
     const { currentProperty } = this.state
-    const storage = {
+    const storage = { //TODO mock
       current: 100,
       estimate: 500,
       unit: 'Gb'
@@ -158,7 +160,7 @@ LogDeliveryService.propTypes = {
 }
 
 /* istanbul ignore next */
-const mapStateToProps = (state, {params: {group}}) => {
+const mapStateToProps = (state, {params: { group }}) => {
   const properties = getPropertiesByGroup(state, group)
 
   return {
@@ -171,7 +173,7 @@ const mapStateToProps = (state, {params: {group}}) => {
 const dispatchToProps = (dispatch) => {
   return {
     fetchProperties: (params) => dispatch(propertiesActions.fetchAll(params)),
-    getPropertyConfig: () => ({ //TODO
+    getPropertyConfig: () => ({ //TODO mock
       contact_first_name: "John",
       contact_second_name: "John",
       log_delivery_enabled: true,
@@ -180,7 +182,7 @@ const dispatchToProps = (dispatch) => {
       export_file_format: 'zip'
     }),
     updatePropertyConfig: () => {
-      return () => ({success: true}) //TODO
+      return () => ({success: true}) //TODO mock
     }
   }
 }

@@ -3,7 +3,7 @@ $input-height: 36px;
 .log-delivery-service {
   .form-group {
     .input-group-addon {
-      padding-top: 0px;
+      padding-top: 0;
     }
   }
 
@@ -13,7 +13,7 @@ $input-height: 36px;
 
   .storage-metrics-container {
     display: flex;
-    align-items: baseline;
     margin-top: 15px;
+    align-items: baseline;
   }
 }
