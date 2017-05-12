@@ -59,9 +59,8 @@ class Mapbox extends Component {
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
       const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
-      const newNewLayers = newLayers.filter(layer => !layer.includes('markers'))
 
-      this.updateLayers(newNewLayers)
+      this.updateLayers(newLayers)
       this.addCountryLayers(this.state.map, nextProps.countryData.toJS(), nextProps.dataKey)
     }
 
