@@ -30,7 +30,7 @@ export const getLocationTraffic = (state, location) => {
 
     })
 
-  const total = nodes && nodes.reduce((mem, val) => {
+  const total = nodes.reduce((mem, val) => {
     mem += val.getIn(['http', 'net_off_bytes'],0)
     mem += val.getIn(['https', 'net_on_bytes'],0)
     mem += val.getIn(['http', 'net_off_bytes'],0)
@@ -38,10 +38,6 @@ export const getLocationTraffic = (state, location) => {
 
     return mem
   }, 0)
-
-  if (!total) {
-    return 'No Data'
-  }
 
   return total
 }
