@@ -25,7 +25,7 @@ import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
 import markersActions from '../redux/modules/entities/map-markers/actions'
-import { getAll as getMarkers} from '../redux/modules/entities/map-markers/selectors'
+import { getAllWithTraffic as getMarkers} from '../redux/modules/entities/map-markers/selectors'
 
 import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
