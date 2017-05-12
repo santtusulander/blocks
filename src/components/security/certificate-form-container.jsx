@@ -13,8 +13,7 @@ import {
 import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
-
-import { parseResponseError } from '../../redux/util'
+import Dropzone from 'react-dropzone'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
@@ -25,7 +24,11 @@ import IconFile from '../shared/icons/icon-file'
 import IconPassword from '../shared/icons/icon-password'
 import IconClose from '../shared/icons/icon-close'
 
+import { ALLOWED_CERT_EXTENSIONS, ALLOWED_CERT_KEY_EXTENSIONS, CERT_MAX_FILE_COUNT } from '../../constants/security'
+
 import * as securityActionCreators from '../../redux/modules/security'
+import * as uiActionCreators from '../../redux/modules/ui'
+import { parseResponseError } from '../../redux/util'
 
 import CertificateForm from './certificate-form'
 
@@ -63,8 +66,11 @@ class CertificateFormContainer extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleManualAdding = this.handleManualAdding.bind(this)
     this.toggleManuallModal = this.toggleManuallModal.bind(this)
-    this.uploadWithFileDialog = this.uploadWithFileDialog.bind(this)
+    this.uploadWithDialog = this.uploadWithDialog.bind(this)
+    this.uploadWithDropZone = this.uploadWithDropZone.bind(this)
+    this.isAllFilesAdded = this.isAllFilesAdded.bind(this)
     this.deleteItem = this.deleteItem.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   componentWillMount() {
@@ -80,9 +86,9 @@ class CertificateFormContainer extends Component {
       Number(values.group),
       {
         title: values.title,
-        private_key: values.privateKey,
-        certificate: values.certificate,
-        intermediate_certificates: values.intermediateCertificates
+        private_key: this.state.privateKey,
+        certificate: this.state.certificate,
+        intermediate_certificates: this.state.intermediateCertificates
       }
     ]
 
@@ -130,30 +136,32 @@ class CertificateFormContainer extends Component {
     this.setState({showManuallModal: !this.state.showManuallModal})
   }
 
-  uploadWithFileDialog() {
-    const input = document.createElement('input');
-    input.type = 'file';
+  uploadWithDialog() {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.multiple = true
     input.addEventListener('change', (e) => {
-      const file = e.target.files[0]
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const fileNameArr = file.name.split('.')
-        const fileExtension = fileNameArr[fileNameArr.length-1]
-        const content = e.target.result;
-
-        if (fileExtension === 'crt') {
-          if (this.state.certificate) {
-            this.setState({intermediateCertificates: content})
-          } else {
-            this.setState({certificate: content})
-          }
-        } else if (fileExtension === 'key') {
-          this.setState({privateKey: content})
+      const files = e.target.files
+      if (files.length > CERT_MAX_FILE_COUNT) {
+        this.showNotification(<FormattedMessage id="portal.security.ssl.uploadRestriction.text"/>)
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          this.readFile(file)
         }
       }
-      reader.readAsText(file);
     });
     input.click();
+  }
+
+  uploadWithDropZone(files) {
+    if (files.length > CERT_MAX_FILE_COUNT) {
+      this.showNotification(<FormattedMessage id="portal.security.ssl.uploadRestriction.text"/>)
+    } else {
+      files.forEach(file => {
+        this.readFile(file)
+      })
+    }
   }
 
   deleteItem(item) {
@@ -170,12 +178,73 @@ class CertificateFormContainer extends Component {
     }
   }
 
+  readFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileExtension = this.getFileExtension(file.name)
+      const content = e.target.result;
+      const isValidCertExtension = ALLOWED_CERT_EXTENSIONS.some(extension => {
+        return extension === fileExtension
+      })
+
+      if (isValidCertExtension) {
+        if (this.state.certificate) {
+          if (this.state.intermediateCertificates) {
+            this.setState({intermediateCertificates: content})
+            this.showNotification(<FormattedMessage id="portal.security.ssl.intermidCertsRewritten.text"/>)
+          } else {
+            this.setState({intermediateCertificates: content})
+          }
+        } else {
+          this.setState({certificate: content})
+        }
+      } else if (fileExtension === ALLOWED_CERT_KEY_EXTENSIONS) {
+        if (this.state.privateKey) {
+          this.setState({privateKey: content})
+          this.showNotification(<FormattedMessage id="portal.security.ssl.privateKeyRewritten.text"/>)
+        } else {
+          this.setState({privateKey: content})
+        }
+      } else {
+        this.showNotification(
+          <div>
+            <FormattedMessage id="portal.security.ssl.notSupportedFile.text"/><br/>
+            <FormattedMessage id="portal.security.ssl.supportedFileTypes.text"/>
+          </div>
+        )
+      }
+    }
+    reader.readAsText(file);
+  }
+
+  getFileExtension(fileName) {
+    const nameArr = fileName.split('.')
+    return nameArr[nameArr.length-1]
+  }
+
+  isAllFilesAdded() {
+    const {privateKey, certificate, intermediateCertificates} = this.state
+    if (privateKey && certificate && intermediateCertificates) {
+      return true
+    }
+    return false
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 5000)
+  }
+
+
   render() {
     const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit,invalid, submitting } = this.props
+    const { privateKey, intermediateCertificates, certificate, showManuallModal} = this.state
     const groupsOptions = this.props.groups.map(group => [
       group.get('id'),
       group.get('name')
     ])
+    const certRequiredText = (privateKey && certificate) ? null : <FormattedMessage id="portal.security.ssl.certRequired.text"/>
 
     return (
       <div>
@@ -199,11 +268,15 @@ class CertificateFormContainer extends Component {
               <hr/>
 
               <label><FormattedMessage id="portal.security.ssl.edit.privateKeyAndCertificates.text"/></label>
-              <Button bsStyle="success" className="btn-icon" onClick={this.uploadWithFileDialog}>
+              <Button
+                bsStyle="success"
+                className="btn-icon"
+                onClick={this.uploadWithDialog}
+                disabled={this.isAllFilesAdded()}>
                 <IconAdd />
               </Button>
               <div className="key-and-certificates-list">
-                {this.state.privateKey &&
+                {privateKey &&
                   <div>
                     <IconPassword />
                     <FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>
@@ -214,7 +287,7 @@ class CertificateFormContainer extends Component {
                       </Button>
                   </div>
                 }
-                {this.state.certificate &&
+                {certificate &&
                   <div>
                     <IconFile />
                     <FormattedMessage id="portal.security.ssl.edit.certificate.text"/>
@@ -225,7 +298,7 @@ class CertificateFormContainer extends Component {
                     </Button>
                   </div>
                 }
-                {this.state.intermediateCertificates &&
+                {intermediateCertificates &&
                   <div>
                     <IconFile />
                     <FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>
@@ -237,6 +310,18 @@ class CertificateFormContainer extends Component {
                   </div>
                 }
               </div>
+
+              {!this.isAllFilesAdded() &&
+                <Dropzone
+                  onDrop={this.uploadWithDropZone}
+                  multiple={true}
+                  disableClick={true}
+                  className="upload-dropzone"
+                  activeClassName="upload-dropzone-active">
+                  <FormattedMessage id="portal.common.dropFilesHere.text"/>
+                  {certRequiredText}
+                </Dropzone>
+              }
 
               <a onClick={this.toggleManuallModal}><FormattedMessage id="portal.security.ssl.edit.addManually.text"/></a>
 
@@ -251,7 +336,7 @@ class CertificateFormContainer extends Component {
                   id="save_button"
                   type="submit"
                   bsStyle="primary"
-                  disabled={invalid || submitting}>
+                  disabled={invalid || submitting || !certificate || !privateKey}>
                   {submitting ? <FormattedMessage id='portal.common.button.saving' />
                               : <FormattedMessage id='portal.common.button.save' />
                   }
@@ -260,56 +345,13 @@ class CertificateFormContainer extends Component {
             </form>
         </SidePanel>
 
-        {this.state.showManuallModal &&
+        {showManuallModal &&
           <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
-            <form onSubmit={handleSubmit(values => this.handleManualAdding(values))}>
-              <Field
-                name="privateKey"
-                type="textarea"
-                className="fixed-size-textarea"
-                component={FieldFormGroup}
-                label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>}
-              />
-
-              <hr/>
-
-              <Field
-                name="intermediateCertificates"
-                type="textarea"
-                className="fixed-size-textarea"
-                component={FieldFormGroup}
-                required={false}
-                label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>}
-              />
-
-              <hr/>
-
-              <Field
-                name="certificate"
-                type="textarea"
-                className="fixed-size-textarea"
-                component={FieldFormGroup}
-                label={<FormattedMessage id="portal.security.ssl.edit.certificate.text"/>}
-              />
-
-              <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
-                <Button
-                  id="cancel_button"
-                  className="btn-secondary"
-                  onClick={this.toggleManuallModal}>
-                  <FormattedMessage id="portal.common.button.cancel"/>
-                </Button>
-                <Button
-                  id="save_button"
-                  type="submit"
-                  bsStyle="primary"
-                  disabled={invalid || submitting}>
-                  {submitting ? <FormattedMessage id='portal.button.adding' />
-                              : <FormattedMessage id='portal.button.add' />
-                  }
-                </Button>
-              </FormFooterButtons>
-            </form>
+            <CertificateForm
+              submitting={submitting}
+              invalid={invalid}
+              onSubmit={handleSubmit(values => this.handleManualAdding(values))}
+              onCancel={this.toggleManuallModal} />
           </SidePanel>
         }
       </div>
@@ -317,23 +359,6 @@ class CertificateFormContainer extends Component {
   }
 }
 
-/*
-<Fields
-  names={[
-    'group',
-    'title',
-    'privateKey',
-    'certificate',
-    'intermediateCertificates'
-  ]}
-  component={CertificateForm}
-  editMode={!certificateToEdit.isEmpty()}
-  onCancel={() => cancel(toggleModal)}
-  onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
-  fromSubmitting={submitting}
-  {...formProps}
-/>
-*/
 
 CertificateFormContainer.displayName = "CertificateFormContainer"
 CertificateFormContainer.propTypes = {
@@ -342,6 +367,7 @@ CertificateFormContainer.propTypes = {
   activeAccount: PropTypes.string,
   cancel: PropTypes.func,
   certificateToEdit: PropTypes.instanceOf(Map),
+  changeNotification: PropTypes.func,
   edit: PropTypes.func,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
@@ -381,6 +407,7 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   return {
     fetchGroups: (...params) => {
@@ -398,7 +425,8 @@ const mapDispatchToProps = (dispatch) => {
     resetForm: toggleModal => {
       toggleModal(null)
       dispatch(reset('certificateForm'))
-    }
+    },
+    changeNotification: uiActions.changeSidePanelNotification
   }
 }
 
@@ -407,6 +435,4 @@ const form = reduxForm({
   validate
 })(CertificateFormContainer)
 
-export default injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(form)
-)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
