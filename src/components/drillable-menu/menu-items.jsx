@@ -40,7 +40,7 @@ const DrillableMenuItems = ({ menuNodes = [], fetching, searchValue, handleCaret
 
     } else {
 
-      aggregate.push(<Accordion searchActive={!!searchValue.length} headerTitle={category} items={categories[category]} />)
+      aggregate.push(<Accordion key={category} searchActive={!!searchValue.length} headerTitle={category} items={categories[category]} />)
     }
     return aggregate
   }, [])
