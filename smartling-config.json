@@ -7,11 +7,15 @@
     "locales": [
          {
              "smartling" : "zh-CN",
-             "application" : "zh-Hans"
+             "application" : "zh-CN"
          },
          {
-             "smartling" : "zh-TW",
-             "application" : "zh-Hant"
+             "smartling" : "es",
+             "application" : "es-ES"
+         },
+         {
+             "smartling" : "fr-FR",
+             "application" : "fr-FR"
          }
      ],
 
@@ -40,54 +44,9 @@
      "resourceSets": [
          // Minimal recourse set definition. Translations won't be pushed back.
          {
-            "type"      : "javaProperties",
-            "pathRegex" : "messages\\/.*\\.properties"
-         },
-
-         // Translation set for docx files, translation results will be put to "translated" sub-folder and translated locale will be added to result file names.
-         // Custom commit message is also defined
-         {
-            "type"                      : "docx",
-            "pathRegex"                 : "documentation\\/.*\\.docx",
-            "translationPathExpression" : "translated/${originalFile.baseName}_${locale}.${originalFile.extension}",
-            "translationCommitMessage"  : "Translate ${originalFile.fullName} to ${locale}"
-         },
-
-         // Translation set with manual authorization. You should go to Smartling and authorize strings for translation after upload.
-         // Original resources have "_en" suffix and this suffix will be replaced with target locale in translations.
-         {
-            "type"                      : "xml",
-            "authorizeContent"          : "false",
-            "pathRegex"                 : "messages\\/.*_en\\.xml",
-            "translationPathExpression" : "${originalFile.path}${originalFile.baseName.replaceAll('_en$', '_'+locale)}.${originalFile.extension}"
-         },
-
-         // Resource set includes all properties files from /web/messages/en folder and all it sub-folders.
-         // Named group <path> is defined in the pathRegex value. For this group variable "path" will be created with corresponded value during
-         // translation path evaluation in groovy.
-         // Example:
-         //     /web/messages/en/test.properties                    - translation for zh-CN locale will be placed to /web/messages/zh-Hans/test.properties
-         //                                                           Custom locale name is defined in this file in "locales" array.
-         //     /web/messages/en/admin/main_screen/title.properties - translation for zh-TW locale will be placed to
-         //                                                           /web/messages/zh-Hant/admin/main_screen/title.properties
-         {
-             "type"                      : "javaProperties",
-             "authorizeContent"          : "true",
-             "pathRegex"                 : "web\\/messages\\/en/(?<path>.*)\\.properties",
-             "translationPathExpression" : "web/messages/${locale}/${path}.${originalFile.extension}",
-             "translationCommitMessage"  : "Task TRN-18 translate ${originalFile.name} to ${locale}\n${translatedFile.fullName}"
-         },
-
-         // Translate all properties files from /msg folder and put translations to a /msg sub-folder that has the same name as translated locale.
-         // Two additional Smartling directives are provided.
-         {
-            "type"                      : "javaProperties",
-            "pathRegex"                 : "msg\\/.*\\.properties",
-            "translationPathExpression" : "msg/${locale}/${originalFile.name}",
-            "smartlingDirectives"       : [
-                 "smartling.placeholder_format = YAML",
-                 "smartling.variants_enabled = true"
-             ]
+            "type"      : "json",
+            "pathRegex" : "src\\/locales\\/en\\/.*\\.json",
+            "authorizeContent" : "true"
          }
      ]
 }
