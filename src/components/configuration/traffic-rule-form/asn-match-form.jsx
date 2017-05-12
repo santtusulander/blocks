@@ -80,10 +80,10 @@ const mapStateToProps = (state) => {
 
   const checkIfExists = (value, initialValues) => {
 
-    const isInInitialValues = initialValues.asn.some(({ id }) => Number(id) === value.id)
+    const isInInitialValues = initialValues.asn.some(({ id }) => Number(id) === Number(value.id))
     //Check if any of the existing rules contain this value
     for (const existing of existingValues) {
-      if (!isInInitialValues && existing === value.id) {
+      if (!isInInitialValues && existing === Number(value.id)) {
         return true
       }
     }
