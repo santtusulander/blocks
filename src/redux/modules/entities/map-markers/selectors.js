@@ -1,3 +1,6 @@
+
+import {List} from 'immutable'
+
 /**
  * Get list of Markers
  * @param  {} state
@@ -20,12 +23,25 @@ export const getAllWithTraffic = (state) => {
 
 export const getLocationTraffic = (state, location) => {
 
-  //cores need to be fetched by 'asset' - as key
-  if (location.get('type') === 'core') {
+  //get nodes that match with the iata_code
+  const nodes = state.dashboard.getIn(['dashboard', 'all_sp_providers', 'rawDetails'], List())
+    .filter(node => {
+      return node.get('asset').match(new RegExp(`[.-]${location.get('iata_code')}[0-9]*[.-]`, "i"))
 
-  } else {
+    })
 
+  const total = nodes && nodes.reduce((mem, val) => {
+    mem += val.getIn(['http', 'net_off_bytes'],0)
+    mem += val.getIn(['https', 'net_on_bytes'],0)
+    mem += val.getIn(['http', 'net_off_bytes'],0)
+    mem += val.getIn(['https', 'net_on_bytes'],0)
+
+    return mem
+  }, 0)
+
+  if (!total) {
+    return 'No Data'
   }
-  
-  return state
+
+  return total
 }

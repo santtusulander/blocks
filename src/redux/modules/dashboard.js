@@ -73,6 +73,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     // Show detailed data for providers
     contributionOpts.show_detail = true
     allContributionOpts.show_detail = true
+    allContributionOpts.limit = 0
 
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
@@ -278,6 +279,8 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
         }
       }).toJS(),
       all_sp_providers: allSpContribution && {
+        rawDetails: allSpContribution.data.details,
+
         total: allSpContributionMap.getIn(['data', 'totals']),
         detail: allSpContributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
           // Calculate bytes and bits_per_second since these are not returned as totals

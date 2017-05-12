@@ -693,8 +693,8 @@ class Mapbox extends Component {
                   coordinates={marker.get("lnglat").toJS()}
                   properties={{
                     "name": marker.get('id'),
-                    [this.props.dataKey]: Math.floor(Math.random()*10000),
-                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker")
+                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
+                    [this.props.dataKey]: marker.get('traffic')
                   }}
                 />
               )).toArray()

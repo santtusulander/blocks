@@ -25,7 +25,7 @@ import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
 import markersActions from '../redux/modules/entities/map-markers/actions'
-import { getAll as getMarkers} from '../redux/modules/entities/map-markers/selectors'
+import { getAllWithTraffic as getMarkers} from '../redux/modules/entities/map-markers/selectors'
 
 import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
@@ -93,8 +93,7 @@ export class BrandDashboard extends React.Component {
 
     const accountType = this.props.activeAccount.get('provider_type')
     const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
-    providerOpts.depth = 'asset'
-    
+
     return Promise.all([
       this.props.fetchMarkers(),
       this.props.dashboardActions.startFetching(),
