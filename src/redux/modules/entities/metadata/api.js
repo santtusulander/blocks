@@ -18,7 +18,7 @@ export const fetchAll = ({ brand, account, group, property, serviceType }) => {
 export const create = ({ brand, account, group, property, serviceType, payload }) => {
   return axios.post(`${baseURL(brand, account, group, property, serviceType)}`,  payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({data}) => {
-      const [customPolicyConfig] = data.data
+      const customPolicyConfig = data
       return normalize({ id: buildReduxId(property, serviceType), customPolicyConfig }, metadataSchema)
     })
 }
