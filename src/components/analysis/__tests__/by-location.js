@@ -76,39 +76,6 @@ const fakeCountryData = Immutable.fromJS([
     ]
   }
 ])
-//
-// const fakeStates = Immutable.fromJS({
-//   objects: {
-//     states: [
-//       {properties: {name: 'Georgia'}},
-//       {properties: {name: 'Michigan'}},
-//       {properties: {name: 'California'}},
-//       {properties: {name: 'Nevada'}}
-//     ]
-//   }
-// })
-//
-// const fakeStateData = Immutable.fromJS([
-//   {id: 'Georgia', trending: -1},
-//   {id: 'Michigan', trending: 1},
-//   {id: 'California', trending: 0}
-// ])
-//
-// const fakeCities = Immutable.fromJS({
-//   objects: {
-//     cities: [
-//       {properties: {name: 'Savannah', state: 'Georgia'}},
-//       {properties: {name: 'Atlanta', state: 'Georgia'}},
-//       {properties: {name: 'Augusta', state: 'Georgia'}}
-//     ]
-//   }
-// })
-//
-// const fakeCityData = Immutable.fromJS([
-//   {name: 'Savannah', state: 'Georgia', trending: -1},
-//   {name: 'Atlanta', state: 'Georgia', trending: 1},
-//   {name: 'Augusta', state: 'Georgia', trending: 0}
-// ])
 
 describe('AnalysisByLocation', () => {
   it('should exist', () => {
@@ -116,121 +83,35 @@ describe('AnalysisByLocation', () => {
       <AnalysisByLocation
         countryData={fakeCountryData}
         cityData={Immutable.List()}
-        />
-    );
+        markers={Immutable.List()}
+      />
+    )
     expect(byLocation).toBeDefined();
-  });
+  })
 
   it('should show loading message if there is no data', () => {
     let byLocation = shallow(
       <AnalysisByLocation
-        countryData={Immutable.List()
-        }/>
-    );
+        countryData={Immutable.List()}
+        markers={Immutable.List()}
+      />
+    )
     expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
-  });
+  })
 
-  // Not supporting zoom in 0.5
-  // it('should show states', () => {
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActionsMaker()}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}
-  //       activeCountry='usa'
-  //       states={fakeStates}
-  //       stateData={fakeStateData}/>
-  //   );
-  //   let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
-  //   expect(paths.length).toBe(7)
-  //   expect(paths[3].getAttribute('class')).toContain('below-avg')
-  //   expect(paths[4].getAttribute('class')).toContain('above-avg')
-  //   expect(paths[5].getAttribute('class')).toContain('avg')
-  // });
-
-  // it('should show cities', () => {
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActionsMaker()}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}
-  //       activeCountry='usa'
-  //       states={fakeStates}
-  //       stateData={fakeStateData}
-  //       activeState='Georgia'
-  //       cities={fakeCities}
-  //       cityData={fakeCityData}/>
-  //   );
-  //   let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
-  //   expect(paths.length).toBe(10)
-  //   expect(paths[7].getAttribute('class')).toContain('below-avg')
-  //   expect(paths[8].getAttribute('class')).toContain('above-avg')
-  //   expect(paths[9].getAttribute('class')).toContain('avg')
-  // });
-  //
-  // it('selects a country when clicked', () => {
-  //   const topoActions = topoActionsMaker()
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActions}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}/>
-  //   );
-  //   let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
-  //   TestUtils.Simulate.click(paths[0])
-  //   expect(topoActions.changeActiveCountry.mock.calls[0][0]).toBe('usa')
-  //   expect(topoActions.fetchStates.mock.calls[0][0]).toBe('usa')
-  // });
-  //
-  // it('selects a state when clicked', () => {
-  //   const topoActions = topoActionsMaker()
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActions}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}
-  //       activeCountry='usa'
-  //       states={fakeStates}
-  //       stateData={fakeStateData}/>
-  //   );
-  //   let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
-  //   TestUtils.Simulate.click(paths[3])
-  //   expect(topoActions.changeActiveState.mock.calls[0][0]).toBe('Georgia')
-  //   expect(topoActions.fetchCities.mock.calls[0][0]).toBe('usa')
-  // });
-  //
-  // it('zooms out from a country when the zoom out is clicked', () => {
-  //   const topoActions = topoActionsMaker()
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActions}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}
-  //       activeCountry='usa'
-  //       states={fakeStates}
-  //       stateData={fakeStateData}/>
-  //   );
-  //   let zoom = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'a')
-  //   TestUtils.Simulate.click(zoom[0])
-  //   expect(topoActions.changeActiveCountry.mock.calls[0][0]).toBe(null)
-  // });
-  //
-  // it('zooms out from a state when the zoom out is clicked', () => {
-  //   const topoActions = topoActionsMaker()
-  //   let byLocation = TestUtils.renderIntoDocument(
-  //     <AnalysisByLocation topoActions={topoActions}
-  //       fetching={false} width={400} height={200}
-  //       countries={fakeCountries}
-  //       countryData={fakeCountryData}
-  //       activeCountry='usa'
-  //       states={fakeStates}
-  //       stateData={fakeStateData}
-  //       activeState='Georgia'
-  //       cities={fakeCities}
-  //       cityData={fakeCityData}/>
-  //   );
-  //   let zoom = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'a')
-  //   TestUtils.Simulate.click(zoom[0])
-  //   expect(topoActions.changeActiveState.mock.calls[0][0]).toBe(null)
-  // });
+  it('should reflect all props and not fail', () => {
+    let byLocation = shallow(
+      <AnalysisByLocation
+        countryData={Immutable.List()}
+        theme="dark"
+        height={400}
+        dataKey="bits_per_second"
+        dataKeyFormat={jest.fn()}
+        mapBounds={{}}
+        mapboxActions={{}}
+        markers={Immutable.List()}
+      />
+    )
+    expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
+  })
 })

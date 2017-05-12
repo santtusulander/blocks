@@ -3,8 +3,8 @@ import axios from 'axios'
 import Immutable from 'immutable'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
-import { TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
-import { ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
+import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
+import { ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../../constants/account-management-options'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
 const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
@@ -45,6 +45,8 @@ export default handleActions({
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
   const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  const allContributionOpts = Object.assign({}, opts, {granularity: 'day'})
+
   const dashboardRequests = []
 
   // Limit the amount of results for providers
@@ -53,27 +55,47 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
   contributionOpts.show_detail = true
 
   // Build Promise object with different data depending on account type
-  dashboardRequests.push(axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData))
-  dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
+  // PLEASE NOTE! processDashboardData() always expects 7 arguments
 
   if (account_type === ACCOUNT_TYPE_CONTENT_PROVIDER) {
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
     // sp-contribution endpoint expects a sp_account_ids param instead of account
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
-    // processDashboardData() always expects 6 arguments
     dashboardRequests.push(null)
     dashboardRequests.push(null)
+    dashboardRequests.push(null)
+
+  } else if (account_type === ACCOUNT_TYPE_CLOUD_PROVIDER) {
+    // Limit the amount of results for providers
+    contributionOpts.limit = BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
+    // Show detailed data for providers
+    contributionOpts.show_detail = true
+    allContributionOpts.show_detail = true
+
+    dashboardRequests.push(null)
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(null)
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    dashboardRequests.push(null)
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(allContributionOpts)}`).then(parseResponseData))
   } else {
     // cp-contribution endpoint expects a sp_account param instead of account
     contributionOpts.sp_account = contributionOpts.account
     // Remove account parameter or the query will fail
     delete contributionOpts.account
-    // processDashboardData() always expects 6 arguments
+
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(null)
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    dashboardRequests.push(null)
   }
+
   // Combine data from many endpoints to serve dashboard
   return Promise.all(dashboardRequests)
   .then(axios.spread(processDashboardData))
@@ -88,16 +110,17 @@ export const finishFetching = createAction(DASHBOARD_FINISH_FETCH)
 // a single object, which get passed to the dashboard container. This was done
 // so that there was no need to do a lot of changes in the container, which
 // previously used sp-dashboard endpoint that did all this aggregation for us
-export function processDashboardData(traffic, countries, trafficTime, spContribution, trafficOnOffNet, cpContribution) {
+export function processDashboardData(traffic, countries, trafficTime, spContribution, trafficOnOffNet, cpContribution, allSpContribution) {
   // Creating Immutable objects for easier error handling
-  const trafficMap = Immutable.fromJS(traffic)
+  const trafficMap = Immutable.fromJS(traffic || {})
   const countriesMap = Immutable.fromJS(countries)
   const trafficTimeMap = Immutable.fromJS(trafficTime || {})
   const trafficOnOffNetMap = Immutable.fromJS(trafficOnOffNet || {})
   const contributionMap = Immutable.fromJS(cpContribution ? cpContribution : spContribution)
+  const allSpContributionMap = Immutable.fromJS(allSpContribution || {})
 
   // Creates detail arrays for bandwidth, latency, connections and cache hit
-  const trafficDetails = trafficMap.getIn(['data', 0, 'detail'], []).reduce((details, detail) => {
+  const trafficDetails =  trafficMap.getIn(['data', 0, 'detail'], []).reduce((details, detail) => {
     const timestamp = detail.getIn(['timestamp'], null)
     const avg_fbl = detail.getIn(['avg_fbl'], '') || ''
 
@@ -207,7 +230,79 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
           detail: provider.getIn(['detail'], []),
           percent_total: provider.getIn(['percent_total'], null)
         }
-      }).toJS()
+      }).toJS(),
+      cp_providers: cpContribution && Immutable.fromJS(cpContribution).getIn(['data', 'details'], Immutable.List()).map(provider => {
+        // Calculate bytes and bits_per_second since these are not returned as totals
+        const bytes = (
+          provider.getIn(['http', 'net_off_bytes'], 0) +
+          provider.getIn(['http', 'net_on_bytes'], 0) +
+          provider.getIn(['https', 'net_off_bytes'], 0) +
+          provider.getIn(['https', 'net_on_bytes'], 0)
+        )
+        const bits_per_second = (
+          provider.getIn(['http', 'net_off_bps'], 0) +
+          provider.getIn(['http', 'net_on_bps'], 0) +
+          provider.getIn(['https', 'net_off_bps'], 0) +
+          provider.getIn(['https', 'net_on_bps'], 0)
+        )
+        return {
+          // Use different provider account id depending on main account type
+          account: provider.getIn(['account'], null),
+          bytes: bytes,
+          bits_per_second: bits_per_second,
+          detail: provider.getIn(['detail'], []),
+          percent_total: provider.getIn(['percent_total'], null)
+        }
+      }).toJS(),
+      sp_providers: spContribution && Immutable.fromJS(spContribution).getIn(['data', 'details'], Immutable.List()).map(provider => {
+        // Calculate bytes and bits_per_second since these are not returned as totals
+        const bytes = (
+          provider.getIn(['http', 'net_off_bytes'], 0) +
+          provider.getIn(['http', 'net_on_bytes'], 0) +
+          provider.getIn(['https', 'net_off_bytes'], 0) +
+          provider.getIn(['https', 'net_on_bytes'], 0)
+        )
+        const bits_per_second = (
+          provider.getIn(['http', 'net_off_bps'], 0) +
+          provider.getIn(['http', 'net_on_bps'], 0) +
+          provider.getIn(['https', 'net_off_bps'], 0) +
+          provider.getIn(['https', 'net_on_bps'], 0)
+        )
+        return {
+          // Use different provider account id depending on main account type
+          account: provider.getIn(['sp_account'], null),
+          bytes: bytes,
+          bits_per_second: bits_per_second,
+          detail: provider.getIn(['detail'], []),
+          percent_total: provider.getIn(['percent_total'], null)
+        }
+      }).toJS(),
+      all_sp_providers: allSpContribution && {
+        total: allSpContributionMap.getIn(['data', 'totals']),
+        detail: allSpContributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
+          // Calculate bytes and bits_per_second since these are not returned as totals
+          const bytes = (
+            provider.getIn(['http', 'net_off_bytes'], 0) +
+            provider.getIn(['http', 'net_on_bytes'], 0) +
+            provider.getIn(['https', 'net_off_bytes'], 0) +
+            provider.getIn(['https', 'net_on_bytes'], 0)
+          )
+          const bits_per_second = (
+            provider.getIn(['http', 'net_off_bps'], 0) +
+            provider.getIn(['http', 'net_on_bps'], 0) +
+            provider.getIn(['https', 'net_off_bps'], 0) +
+            provider.getIn(['https', 'net_on_bps'], 0)
+          )
+          return {
+            // Use different provider account id depending on main account type
+            account: provider.getIn(['sp_account'], null),
+            bytes: bytes,
+            bits_per_second: bits_per_second,
+            detail: provider.getIn(['detail'], []),
+            percent_total: provider.getIn(['percent_total'], null)
+          }
+        }).toJS()
+      }
     }
   }
 }

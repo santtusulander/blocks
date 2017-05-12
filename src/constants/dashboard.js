@@ -1,1 +1,3 @@
 export const TOP_PROVIDER_LENGTH = 5
+
+export const BRAND_DASHBOARD_TOP_PROVIDER_LENGTH = 5

@@ -43,11 +43,16 @@ class StackedByTimeSummary extends React.Component {
   render() {
     const {
       dataKey,
+      addDelimiter,
       datasetAArray,
+      datasetACalculatedUnit,
+      datasetACalculatedValue,
       datasetALabel,
       datasetAUnit,
       datasetAValue,
       datasetBArray,
+      datasetBCalculatedUnit,
+      datasetBCalculatedValue,
       datasetBLabel,
       datasetBUnit,
       datasetBValue,
@@ -82,7 +87,7 @@ class StackedByTimeSummary extends React.Component {
       })
     }
     const total = Number(totalDatasetValue)
-    const dataSetBColClasses = classnames('dataset-col', { empty: !total })
+    const dataSetColClasses = classnames('dataset-col', { empty: !total })
     return (
       <div className="stacked-by-time-summary">
         <div className="dataset-label"><FormattedMessage id='portal.common.total.text'/></div>
@@ -113,11 +118,18 @@ class StackedByTimeSummary extends React.Component {
               </div>
             </div>}
 
+          {(addDelimiter) &&
+             <div className="optional-dataset-border" />
+          }
+
           <div className="dataset-col">
             <div className="dataset-label dataset-a">{datasetALabel}</div>
             {total > 0 ? [
               <span key={0} className="value">{datasetAValue}</span>,
-              datasetAUnit && <span key={1} className="suffix">{datasetAUnit}</span>
+              datasetAUnit && <span key={1} className="suffix">{datasetAUnit}</span>,
+              datasetACalculatedUnit && <br key={2} />,
+              datasetACalculatedUnit && <span key={3} className="value">{datasetACalculatedValue}</span>,
+              datasetACalculatedUnit && <span key={4} className="suffix">{datasetACalculatedUnit}</span>
             ] : <div className="no-data by-time-summary">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
@@ -125,13 +137,16 @@ class StackedByTimeSummary extends React.Component {
           </div>
 
           {datasetBArray &&
-          <div className={dataSetBColClasses}>
-            {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
-            {totalDatasetValue > 0 && [
-              datasetBValue && <span key={0} className="value">{datasetBValue}</span>,
-              datasetBUnit && <span key={1} className="suffix">{datasetBUnit}</span>
-            ]}
-          </div>
+            <div className={dataSetColClasses}>
+              {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
+              {totalDatasetValue > 0 && [
+                datasetBValue && <span key={0} className="value">{datasetBValue}</span>,
+                datasetBUnit && <span key={1} className="suffix">{datasetBUnit}</span>,
+                datasetBCalculatedUnit && <br key={2} />,
+                datasetBCalculatedUnit && <span key={3} className="value">{datasetBCalculatedValue}</span>,
+                datasetBCalculatedUnit && <span key={4} className="suffix">{datasetBCalculatedUnit}</span>
+              ]}
+            </div>
           }
         </div>
       </div>
@@ -141,17 +156,25 @@ class StackedByTimeSummary extends React.Component {
 
 StackedByTimeSummary.displayName = 'StackedByTimeSummary'
 StackedByTimeSummary.propTypes = {
+  addDelimiter: PropTypes.bool,
   dataKey: PropTypes.string,
   datasetAArray: PropTypes.array.isRequired,
+  datasetACalculatedUnit: PropTypes.string,
+  datasetACalculatedValue: PropTypes.number,
   datasetALabel: PropTypes.string.isRequired,
   datasetAUnit: PropTypes.string,
   datasetAValue: PropTypes.string.isRequired,
   datasetBArray: PropTypes.array,
+  datasetBCalculatedUnit: PropTypes.string,
+  datasetBCalculatedValue: PropTypes.number,
   datasetBLabel: PropTypes.string,
   datasetBUnit: PropTypes.string,
   datasetBValue: PropTypes.string,
   totalDatasetUnit: PropTypes.string.isRequired,
   totalDatasetValue: PropTypes.string.isRequired
+}
+StackedByTimeSummary.defaultProps = {
+  addDelimiter: false
 }
 
 module.exports = StackedByTimeSummary

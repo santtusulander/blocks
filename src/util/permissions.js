@@ -31,6 +31,8 @@ permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
 // TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
 permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
   (role) => role.getIn([ 'ui', 'content'])
+permissionMapping[PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION] =
+  (role) => role.getIn([ 'ui', 'analytics_dashboard'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn([ 'ui', 'security'])
 permissionMapping[PERMISSIONS.VIEW_SERVICES_SECTION] =

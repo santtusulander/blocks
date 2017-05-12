@@ -5,7 +5,8 @@ const DashboardPanels = (props) => {
   const { children, className } = props
   return (
     <div className={classNames(
-      'dashboard-panels', { className }
+      'dashboard-panels',
+      className
     )}>
       {children}
     </div>
