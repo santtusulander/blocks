@@ -210,8 +210,8 @@ export class BrandDashboard extends React.Component {
       }).toJS()
 
     /* Prepare ammount of traffic for chart */
-    const udn_core_traffic = Number(coreResultData.get('bytes'))
-    const sp_edges_traffic = Number(spResultData.get('bytes'))
+    const udn_core_traffic = dataIsReady && Number(coreResultData.get('bytes'))
+    const sp_edges_traffic = dataIsReady && Number(spResultData.get('bytes'))
 
     const trafficBytes = chartTraffic && chartTraffic.getIn(['total', 'bytes'])
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
