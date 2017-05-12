@@ -14,6 +14,8 @@ import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
 
+import { FOLDER_TYPE } from '../constants/storage'
+
 const BYTE_BASE = 1000
 const UNITS_COEFFICIENTS = Map({
   PB: Math.pow(BYTE_BASE, 5),
@@ -724,9 +726,14 @@ export function formatASN(asnObj) {
 }
 
 export function getFolderName(fileName, postFix) {
-  const fileNameWithNoExtension = fileName.match(/(.+)\.\w+$/)
+  const fileNameWithNoExtension = fileName.match(/\/?([^\/]+)\.\w+$/)
   const folderName = fileNameWithNoExtension
                       ? (fileNameWithNoExtension[1] ? `${fileNameWithNoExtension[1]}${postFix}`: '')
                       : ''
   return folderName
+}
+
+
+export function checkIfUploadingFolder(type = '') {
+  return type.includes(FOLDER_TYPE)
 }

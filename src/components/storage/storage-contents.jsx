@@ -14,7 +14,20 @@ import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../shared/form-elements/toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader, hasABRWorkFlow }) => {
+const StorageContents = (props) => {
+  const {
+          asperaUpload,
+          contents,
+          onMethodToggle,
+          asperaInstanse,
+          gatewayHostname,
+          storageId,
+          brandId,
+          accountId,
+          groupId,
+          fileUploader,
+          hasABRWorkFlow } = props
+
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -87,6 +100,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             accountId={accountId}
             groupId={groupId}
             storageId={storageId}
+            hasABRWorkFlow={hasABRWorkFlow}
             asperaGetaway={gatewayHostname}
           />
         : <HttpUpload processFiles={processFiles} openFileDialog={() => openFileDialog(hasABRWorkFlow)} />

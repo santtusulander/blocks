@@ -349,7 +349,7 @@ const mapStateToProps = (state, ownProps) => {
     filters,
     group: state.group.get('activeGroup'),
     hasStorageService,
-    hasABRWorkFlow: storage && storage.get('workflow'),
+    hasABRWorkFlow: storage && !!storage.get('workflow'),
     storage,
     storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))

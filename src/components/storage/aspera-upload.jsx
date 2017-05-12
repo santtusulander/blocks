@@ -18,6 +18,8 @@ import { ASPERA_STATUS_TRANSFER_ERROR,
          ASPERA_STATUS_ACCESS_CODE_ERROR
        } from './aspera-notification'
 
+import { checkIfUploadingFolder, getFolderName } from '../../util/helpers'
+
 const DROP_EVENT_NAME = 'drop'
 const DRAG_OVER_EVENT_NAME = 'dragover'
 const DRAG_ENTER_EVENT_NAME = 'dragenter'
@@ -131,16 +133,21 @@ class AsperaUpload extends Component {
       })
     }
   }
-
+  /* ASPERA_DEFAULT_DESTINATION_ROOT */
   startTransfer(files) {
     const connectSettings = {}
+    const [file] = files
+    const {type, name} = file
+    const isDirectory = checkIfUploadingFolder(type)
+    const folderName = this.props.hasABRWorkFlow && !isDirectory ? getFolderName(name, '__VOD/') : ''
+
     const transferSpec = {
       "paths": [],
       "remote_host": this.props.asperaGetaway,
       "remote_user": this.state.accessKey,
       "remote_password": this.state.accessKey,
       "direction": ASPERA_DEFAULT_PATH,
-      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
+      "destination_root": `${ASPERA_DEFAULT_DESTINATION_ROOT}${folderName}`,
       "ssh_port": ASPERA_DEFAULT_PORT
     }
 
@@ -307,6 +314,7 @@ AsperaUpload.propTypes = {
   asperaGetaway: React.PropTypes.string,
   brandId: React.PropTypes.string,
   groupId: React.PropTypes.string,
+  hasABRWorkFlow: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
   openUploadModalOnClick: React.PropTypes.bool,
   storageId: React.PropTypes.string,
