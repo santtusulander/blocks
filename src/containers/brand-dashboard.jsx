@@ -93,7 +93,8 @@ export class BrandDashboard extends React.Component {
 
     const accountType = this.props.activeAccount.get('provider_type')
     const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
-
+    providerOpts.depth = 'asset'
+    
     return Promise.all([
       this.props.fetchMarkers(),
       this.props.dashboardActions.startFetching(),
