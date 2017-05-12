@@ -26,6 +26,8 @@ import {
 // import IconMinimap from '../shared/icons/icon-minimap';
 // import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
+import IconSpMarker      from '../shared/icons/icon-sp-marker'
+import IconCoreMarker    from '../shared/icons/icon-core-marker'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 class Mapbox extends Component {
@@ -191,6 +193,7 @@ class Mapbox extends Component {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
       const layers = [...this.state.layers, 'markers']
+
       const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
       if (features.length) {
@@ -686,11 +689,12 @@ class Mapbox extends Component {
             {this.props.markers
               .map(marker => (
                 <Feature
+                  key={marker.get('id')}
                   coordinates={marker.get("lnglat").toJS()}
                   properties={{
                     "name": marker.get('id'),
                     [this.props.dataKey]: Math.floor(Math.random()*10000),
-                    "icon": "marker"
+                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker")
                   }}
                 />
               )).toArray()
@@ -773,6 +777,13 @@ class Mapbox extends Component {
           </div>
         }
 
+        { (this.props.markers && this.props.markers.size) &&
+          <div className="map-markers-legend">
+            <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+            <span className="space" />
+            <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+          </div>
+        }
       </ReactMapboxGl>
     )
   }
