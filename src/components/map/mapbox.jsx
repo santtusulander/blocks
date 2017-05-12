@@ -1,7 +1,12 @@
 import React from 'react'
-import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup } from 'react-mapbox-gl'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
+
+import UDNButton from '../shared/form-elements/button'
+import IconAdd from '../shared/icons/icon-add.jsx'
+import IconDelete from '../shared/icons/icon-delete.jsx'
+
 // import Typeahead from '../shared/form-elements/typeahead'
 
 import {
@@ -133,8 +138,8 @@ class Mapbox extends React.Component {
    * @method onZoom
    * @param  {object} map Instance of Mapbox map
    */
-  onZoom(map) {
-    this.setState({ scale: map.transform.scale, zoom: map.transform._zoom })
+  onZoom(e) {
+    this.setState({ zoom: parseInt(e.target.value) })
   }
 
   /**
@@ -634,11 +639,10 @@ class Mapbox extends React.Component {
         zoom={[this.state.zoom]}
         minZoom={MAPBOX_ZOOM_MIN}
         maxZoom={MAPBOX_ZOOM_MAX}
-        onZoom={this.onZoom}
-        onZoomEnd={this.getCitiesOnZoomDrag}
         onStyleLoad={this.onStyleLoaded}
         onMouseMove={this.onMouseMove}
         onDragEnd={this.getCitiesOnZoomDrag}
+        scrollZoom={false}
         dragRotate={false}>
 
         {/*
@@ -683,17 +687,25 @@ class Mapbox extends React.Component {
           </div>
           */}
           <div className="control map-zoom">
-            <ZoomControl
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                boxShadow: 'none',
-                border: 0,
-                position: 'relative',
-                top: 'auto',
-                right: 'auto',
-                zIndex: 1
-              }}/>
+            <div className="map-slider">
+              <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={this.onIncreaseZoom}>
+                <IconAdd width={16} height={16}/>
+              </UDNButton>
+
+              <div className="map-slider__slider">
+                <input type="range"
+                  min={MAPBOX_ZOOM_MIN}
+                  max={MAPBOX_ZOOM_MAX}
+                  step={1}
+                  defaultValue={MAPBOX_ZOOM_MIN}
+                  onMouseUp={this.onZoom}
+                  />
+              </div>
+
+              <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
+                <IconDelete width={16} height={16}/>
+              </UDNButton>
+            </div>
             <div
               className="map-zoom-reset"
               onClick={this.resetZoom}>
