@@ -91,9 +91,13 @@ export class Brand extends React.Component {
 
     // Only UDN admins can see list of all accounts
     const showAccountList = activeAccount && activeAccount.isEmpty() && userIsCloudProvider(currentUser)
+
     const contentItems = showAccountList
                       ? accounts
-                      : List.of(activeAccount)
+                      : List.of(
+                        accounts.find(account => account.get('id') === Number(params.account)) || Map()
+                      )
+
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
