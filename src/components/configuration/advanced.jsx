@@ -63,7 +63,7 @@ class ConfigurationAdvanced extends React.Component {
   componentWillReceiveProps(nextProps) {
 
     //If property Changed, fetch metadata
-    if (!is(this.props.property, nextProps.property)) {
+    if (!nextProps.property.isEmpty() && !is(this.props.property, nextProps.property)) {
       this.fetchMetadata(nextProps)
     }
 
