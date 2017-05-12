@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 import SectionContainer from '../shared/layout/section-container'
 import MiniChart from '../charts/mini-chart'
-import ComparisonBars from './comparison-bars'
+import ComparisonBars from '../shared/comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
@@ -111,6 +111,7 @@ export class StorageKPI extends Component {
           <div className='storage-kpi-item-content'>
             <div className='storage-kpi-text'>{locations.join(', ')}</div>
           </div>
+          <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
         </div>
         <div className='storage-kpi-item'>
           <KPIFormattedMessage id='portal.storage.kpi.workflowProfile.title' type='title' />

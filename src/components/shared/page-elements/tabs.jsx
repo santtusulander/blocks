@@ -83,7 +83,9 @@ class Tabs extends React.Component {
   render() {
     const { className, onSelect } = this.props
     const { hiddenTabs } = this.state
-    const children = this.props.children.filter(item => item)
+    const children = Array.isArray(this.props.children)
+                     ? this.props.children.filter(item => item)
+                     : this.props.children
 
     return (
       <ul role="tablist" className={classnames('nav nav-tabs', className)}>
