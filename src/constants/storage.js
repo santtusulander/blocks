@@ -15,3 +15,5 @@ export const STORAGE_ESTIMATE_UNITS = [
 ]
 // Storage metrics shift time, need according to some delay
 export const STORAGE_METRICS_SHIFT_TIME = 2
+
+export const FOLDER_TYPE = 'directory'

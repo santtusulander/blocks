@@ -1,10 +1,12 @@
 import axios from 'axios'
 import fileUploadAdapter from './uploader/file-upload-adapter'
 import * as actionTypes from './actionTypes'
+import { getFolderName } from '../../../util/helpers'
 
 const UPLOAD_VERSION = 'v1'
 const UPLOAD_PROTOCOL = 'https://'
 const UPLOAD_PORT = ':443'
+const FOLDER_POSTFIX = '__VOD/'
 
 /**
  * Upload file via POST request to API
@@ -14,10 +16,11 @@ const UPLOAD_PORT = ':443'
  * @param uploadHandlers {object} - action creators map
  * @returns {axios.Promise}
  */
-export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
+export const uploadFile = (accessKey, gateway, file, uploadHandlers, hasABRWorkFlow = false) => {
   const [ fileName ] = Object.keys(file)
   const [ data ] = Object.values(file)
-  const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${fileName}`
+  const folderName = hasABRWorkFlow ? getFolderName(fileName, FOLDER_POSTFIX) : ''
+  const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${folderName}${fileName}`
 
   const headers = { 'X-Auth-Token': accessKey }
   const adapter = fileUploadAdapter
