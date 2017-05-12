@@ -674,27 +674,29 @@ class Mapbox extends Component {
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
 
-        <Layer
-          id="markers"
-          layout={{
-            "icon-image": "{icon}-15",
-            //"text-field": "{title}",
-            "icon-allow-overlap": true
-          }}
-          >
-          {this.props.markers
-            .map(marker => (
-              <Feature
-                coordinates={marker.get("latlng").toJS()}
-                properties={{
-                  "name": marker.get('id'),
-                  [this.props.dataKey]: Math.floor(Math.random()*10000),
-                  "icon": "marker"
-                }}
-              />
-            )).toArray()
-          }
-        </Layer>
+        { (this.props.markers && this.props.markers.size) &&
+          <Layer
+            id="markers"
+            layout={{
+              "icon-image": "{icon}-15",
+              //"text-field": "{title}",
+              "icon-allow-overlap": true
+            }}
+            >
+            {this.props.markers
+              .map(marker => (
+                <Feature
+                  coordinates={marker.get("latlng").toJS()}
+                  properties={{
+                    "name": marker.get('id'),
+                    [this.props.dataKey]: Math.floor(Math.random()*10000),
+                    "icon": "marker"
+                  }}
+                />
+              )).toArray()
+            }
+          </Layer>
+        }
 
         {/*
         <div className="map-search">
