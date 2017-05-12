@@ -133,7 +133,7 @@ class AsperaUpload extends Component {
       })
     }
   }
-  /* ASPERA_DEFAULT_DESTINATION_ROOT */
+
   startTransfer(files) {
     const connectSettings = {}
     const [file] = files
