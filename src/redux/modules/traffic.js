@@ -57,7 +57,7 @@ export function trafficFetchSuccess(state, action) {
   return state.merge({
     traffic: Immutable.fromJS(action.payload.data.map(entity => {
       entity.detail = entity.detail.map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
         return datapoint
       })
       return entity
@@ -90,7 +90,7 @@ export function trafficByTimeSuccess(state, action) {
     byTime: {
       totals: Immutable.fromJS(action.payload.data.totals),
       details: Immutable.fromJS(action.payload.data.details.map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
         return datapoint
       }))
     }
@@ -108,7 +108,7 @@ export function trafficByTimeComparisonSuccess(state, action) {
     byTimeComparison: {
       totals: Immutable.fromJS(action.payload.data.totals),
       details: Immutable.fromJS(action.payload.data.details.map(datapoint => {
-        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
         return datapoint
       }))
     }
@@ -145,7 +145,7 @@ export function trafficByCityFailure(state) {
 
 export function trafficOnOffNetSuccess(state, action) {
   action.payload.data.detail = action.payload.data.detail.map(datapoint => {
-    datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+    datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
     return datapoint
   })
   return state.merge({
@@ -194,7 +194,7 @@ export function trafficContentProvidersFailure(state) {
 
 export function trafficStorageSuccess(state, action) {
   action.payload.data = action.payload.data.map(datapoint => {
-    datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+    datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
     return datapoint
   })
   return state.merge({

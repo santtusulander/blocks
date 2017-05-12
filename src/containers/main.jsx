@@ -71,9 +71,17 @@ export class Main extends React.Component {
     const { currentUser } = this.props
     !is(Map(this.props.params), Map(nextProps.params)) && this.fetchData(nextProps.params)
 
+    if (currentUser && currentUser.get('locale') !== nextProps.currentUser.get('locale')) {
+      moment.locale(nextProps.currentUser.get('locale'))
+    }
+
     if (currentUser && currentUser.get('timezone') !== nextProps.currentUser.get('timezone')) {
-      // moment.tz.setDefault(nextProps.currentUser.get('timezone'))
-      console.log(moment('1494595195','X'))
+      moment.tz.setDefault(nextProps.currentUser.get('timezone'))
+      console.log(moment())
+    }
+
+    if (currentUser && currentUser.get('date_format') !== nextProps.currentUser.get('date_format')) {
+      moment.defaultFormat = nextProps.currentUser.get('date_format')
     }
   }
 

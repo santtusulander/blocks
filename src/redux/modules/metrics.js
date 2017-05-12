@@ -45,11 +45,11 @@ const emptyMetrics = Map({
 
 export const parseDatapointTraffic = datapoint => {
   datapoint.historical_traffic = datapoint.historical_traffic.map(traffic => {
-    traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
+    traffic.timestamp = moment.unix(traffic.timestamp).toDate()
     return traffic;
   })
   datapoint.traffic = datapoint.traffic.map(traffic => {
-    traffic.timestamp = moment(traffic.timestamp, 'X').toDate()
+    traffic.timestamp = moment.unix(traffic.timestamp).toDate()
     return traffic;
   })
   datapoint.totalTraffic = datapoint.traffic.reduce((total, traffic) => {
@@ -196,8 +196,8 @@ export const fetchHourlyAccountTraffic = createAction(ACCOUNT_HOURLY_TRAFFIC_FET
     granularity: 'hour'
   }, opts)
   const historyOpts = Object.assign({}, nowOpts, {
-    startDate: moment(opts.startDate, 'X').subtract(28, 'days').format('X'),
-    endDate: moment(opts.endDate, 'X').subtract(28, 'days').format('X')
+    startDate: moment.unix(opts.startDate).subtract(28, 'days').format('X'),
+    endDate: moment.unix(opts.endDate).subtract(28, 'days').format('X')
   })
   return Promise.all([
     axios.get(`${analyticsBase()}/traffic${qsBuilder(nowOpts)}`),
@@ -234,8 +234,8 @@ export const fetchHourlyHostTraffic = createAction(HOST_HOURLY_TRAFFIC_FETCHED, 
   }
 
   const historyOpts = Object.assign({}, nowOpts, {
-    startDate: moment(opts.startDate, 'X').subtract(dateRange, 'days').format('X'),
-    endDate: moment(opts.endDate, 'X').subtract(dateRange, 'days').format('X')
+    startDate: moment.unix(opts.startDate).subtract(dateRange, 'days').format('X'),
+    endDate: moment.unix(opts.endDate).subtract(dateRange, 'days').format('X')
   })
   return Promise.all([
     axios.get(`${analyticsBase()}/traffic${qsBuilder(nowOpts)}`),
