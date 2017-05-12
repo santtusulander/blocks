@@ -96,6 +96,13 @@ const fakeDashboard = Immutable.fromJS({
       bytes_net_off: 1,
       timestamp: 2
     }]
+  },
+  all_sp_providers: {
+    bytes: 1,
+    detail: [{
+      bytes_net_off: 1,
+      timestamp: 2
+    }]
   }
 })
 

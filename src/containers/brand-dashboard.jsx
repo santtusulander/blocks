@@ -141,6 +141,7 @@ export class BrandDashboard extends React.Component {
         const accDetailBytes = accountDetail.get('bytes')
         const accDetailTimestamp = accountDetail.get('timestamp')
 
+        /* We are pushing to detail array only on first iteration */
         if (firstIteration === true) {
           resultData.detail.push({
             bytes: accDetailBytes,
