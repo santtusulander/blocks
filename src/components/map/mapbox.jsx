@@ -686,7 +686,7 @@ class Mapbox extends Component {
             {this.props.markers
               .map(marker => (
                 <Feature
-                  coordinates={marker.get("latlng").toJS()}
+                  coordinates={marker.get("lnglat").toJS()}
                   properties={{
                     "name": marker.get('id'),
                     [this.props.dataKey]: Math.floor(Math.random()*10000),
