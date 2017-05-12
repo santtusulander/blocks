@@ -127,6 +127,7 @@ class ContentItems extends React.Component {
    */
   onActivePageChange(nextPage) {
     this.props.router.push({
+      pathname: this.context.location.pathname,
       query: {
         page: nextPage
       }

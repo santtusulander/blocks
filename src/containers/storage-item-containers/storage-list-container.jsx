@@ -13,7 +13,7 @@ import StorageItemList from '../../components/content/storage/storage-item-list'
 const StorageChartContainer = props => {
 
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
-  const { detail, totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
+  const { detail, totals: { bytes = {}, historical_bytes = {}} } = props.storageMetrics.toJS()
 
   return (
       <StorageItemList

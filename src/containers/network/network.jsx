@@ -338,15 +338,6 @@ class Network extends React.Component {
     this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
-  // handleGroupSave(data) {
-  //   console.log(data)
-  //   return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
-  //     .then(action => {
-  //       this.handleCancel(ADD_EDIT_GROUP)
-  //       return action.payload
-  //     })
-  // }
-
   handleGroupSave(payload) {
     const { edit } = payload
     if (edit) {

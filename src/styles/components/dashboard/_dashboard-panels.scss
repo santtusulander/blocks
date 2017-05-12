@@ -18,3 +18,11 @@
     }
   }
 }
+
+.dashboard-panels.responsive {
+  max-width: none;
+
+  .full-width {
+    flex: 1 100%;
+  }
+}

@@ -284,6 +284,7 @@ export class Configuration extends React.Component {
     const advancedTabReadOnly = this.isAdvancedTabReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
+    const customPolicyIsUsed = activeHost.getIn(['services', 0, 'uses_custom_policy_xml'])
 
     return (
       <Content>
@@ -404,7 +405,8 @@ export class Configuration extends React.Component {
             showNotification: this.showNotification,
             storagePermission: this.props.storagePermission,
             serviceType: serviceType,
-            serviceTypeText: serviceTypeText
+            serviceTypeText: serviceTypeText,
+            customPolicyIsUsed
           })}
           </PageContainer>
 

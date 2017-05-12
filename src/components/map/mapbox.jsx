@@ -22,10 +22,12 @@ import {
   checkChangeInBounds,
   getScore
 } from '../../util/mapbox-helpers.js'
-// import IconExpand from '../shared/icons/icon-expand';
+
 // import IconMinimap from '../shared/icons/icon-minimap';
+// import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
+
 class Mapbox extends Component {
   constructor(props) {
     super(props)
@@ -126,6 +128,7 @@ class Mapbox extends Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
+
     this.addCountryLayers(map, this.props.countryData.toJS())
 
     // If we don't reset hoveredLayer, Mapbox gives an error: Cannot read property 'getPaintProperty' of undefined
@@ -729,10 +732,10 @@ class Mapbox extends Component {
         }
 
         <div className="map-controls">
-          {/*
-          <div className="control map-fullscreen">
-            <IconExpand width={32} height={32} />
-          </div>
+          {/* this.props.fullScreen &&
+            <div className="control map-fullscreen" onClick={this.goFullscreen}>
+              <IconExpand width={32} height={32} />
+            </div>
           */}
           <div className="control map-zoom">
             <ZoomControl
