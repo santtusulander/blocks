@@ -144,7 +144,7 @@ class StorageFormContainer extends React.Component {
                onDelete={() => this.onToggleDeleteModal(true)}
                onCancel={onCancel}
                abrToggle={abrToggle}
-               hasTranscodingSupport={false}
+               hasTranscodingSupport={hasTranscodingSupport}
                locationOptions={locationOptions}
                abrProfileOptions={abrProfileOptions}
              />
