@@ -26,6 +26,8 @@ import {
 // import IconMinimap from '../shared/icons/icon-minimap';
 // import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
+import IconSpMarker      from '../shared/icons/icon-sp-marker'
+import IconCoreMarker    from '../shared/icons/icon-core-marker'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 class Mapbox extends Component {
@@ -57,8 +59,9 @@ class Mapbox extends Component {
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
       const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
+      const newNewLayers = newLayers.filter(layer => !layer.includes('markers'))
 
-      this.updateLayers(newLayers)
+      this.updateLayers(newNewLayers)
       this.addCountryLayers(this.state.map, nextProps.countryData.toJS(), nextProps.dataKey)
     }
 
@@ -191,6 +194,7 @@ class Mapbox extends Component {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
       const layers = [...this.state.layers, 'markers']
+
       const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
       if (features.length) {
@@ -774,6 +778,13 @@ class Mapbox extends Component {
           </div>
         }
 
+        { (this.props.markers && this.props.markers.size) &&
+          <div className="map-markers-legend">
+            <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+            <span className="space" />
+            <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+          </div>
+        }
       </ReactMapboxGl>
     )
   }
