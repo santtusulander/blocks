@@ -36,7 +36,9 @@ export const fetchAll = () => {
         })
 
         if (!resource) {
+          /* eslint-disable no-console */
           console.warn('Location ', loc.id, ' could not be combined with resource')
+          /* eslint-enable no-console */
           return undefined
         }
 
@@ -49,13 +51,6 @@ export const fetchAll = () => {
         return loc
       }
     })
-
-    console.log('combined', combined);
-    // const withIata = locations.map(loc => {
-    //   //const resourceIata = resources.find(r => r.name === loc.)
-    // })
-    console.log('locations', locations);
-    console.log('resources', resources);
 
     return normalize(combined, [ markerSchema ])
 
