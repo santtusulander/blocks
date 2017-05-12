@@ -268,10 +268,12 @@ class ContentItems extends Component {
 
   editItem(id) {
     this.props.fetchItem(id)
-      .then((response) => {
+      .then(({ entities }) => {
+        const item = this.getTier() === 'brand' ? entities.accounts[id] : entities.groups[id]
+
         this.setState({
           showModal: true,
-          itemToEdit: fromJS(response)
+          itemToEdit: fromJS(item)
         })
       })
   }
