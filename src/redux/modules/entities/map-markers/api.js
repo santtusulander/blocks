@@ -12,6 +12,7 @@ const markerSchema = new schema.Entity('mapMarkers', {},{
     return {
       ...value,
       latlng: [value.lat, value.lon],
+      lnglat: [value.lon, value.lat],
       type
     }
   }
