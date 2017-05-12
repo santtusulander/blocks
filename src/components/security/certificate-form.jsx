@@ -4,12 +4,31 @@ import { Field } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
+import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 
-export const CertificateForm = ({ submitting,invalid, onCancel, onSubmit }) => {
+export const CertificateForm = ({ groupsOptions, certificateToEdit, submitting,invalid, onCancel, onSubmit }) => {
   return (
     <form onSubmit={onSubmit}>
+      <Field
+        name="group"
+        className="input-select"
+        component={FieldFormGroupSelect}
+        options={groupsOptions.toJS()}
+        label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
+        disabled={!certificateToEdit.isEmpty()}
+      />
+      <hr/>
+
+      <Field
+        name="title"
+        type="text"
+        component={FieldFormGroup}
+        label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text"/>}
+      />
+      <hr/>
+
       <Field
         name="privateKey"
         type="textarea"
@@ -62,6 +81,8 @@ export const CertificateForm = ({ submitting,invalid, onCancel, onSubmit }) => {
 
 CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
+  certificateToEdit: PropTypes.object,
+  groupsOptions: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,

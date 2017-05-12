@@ -350,6 +350,8 @@ class CertificateFormContainer extends Component {
             <CertificateForm
               submitting={submitting}
               invalid={invalid}
+              groupsOptions={groupsOptions}
+              certificateToEdit={certificateToEdit}
               onSubmit={handleSubmit(values => this.handleManualAdding(values))}
               onCancel={this.toggleManuallModal} />
           </SidePanel>
