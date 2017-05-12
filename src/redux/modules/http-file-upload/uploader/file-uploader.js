@@ -62,23 +62,27 @@ class Uploader {
    * Upload file via API
    * @param file {File} - HTML File object to upload
    */
-  uploadFile(file) {
-    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers)
+  uploadFile(file, hasABRWorkFlow) {
+    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers, hasABRWorkFlow)
   }
 
   /**
    * Read and upload files
    * @param files []
    */
-  processFiles(files) {
-    [...files].forEach(file => Reader.readFile(file).then(this.uploadFile))
+  processFiles(files, hasABRWorkFlow) {
+    [...files].forEach(file => Reader.readFile(file).then((processedFile) => {
+      this.uploadFile(processedFile, hasABRWorkFlow)
+    }))
   }
 
   /**
    * open Browser File Dialog
    */
-  openFileDialog() {
-    FileDialog.open().then(this.processFiles)
+  openFileDialog(hasABRWorkFlow) {
+    FileDialog.open().then(files => {
+      this.processFiles(files, hasABRWorkFlow)
+    })
   }
 }
 

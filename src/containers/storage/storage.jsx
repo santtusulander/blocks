@@ -148,6 +148,7 @@ class Storage extends Component {
       params,
       storage,
       storageContents,
+      hasABRWorkFlow,
       gatewayHostname,
       storageMetrics: {
         chartData,
@@ -188,6 +189,7 @@ class Storage extends Component {
                   gatewayHostname={gatewayHostname}
                   asperaInstanse={asperaInstanse}
                   contents={storageContents}
+                  hasABRWorkFlow={hasABRWorkFlow}
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
                   fileUploader={this.state.fileUploader}
@@ -224,6 +226,7 @@ Storage.propTypes = {
   fetchStorageMetrics: PropTypes.func,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
+  hasABRWorkFlow: PropTypes.bool,
   hasStorageService: PropTypes.bool,
   initStorageAccessKey: PropTypes.func,
   params: PropTypes.object,
@@ -346,6 +349,7 @@ const mapStateToProps = (state, ownProps) => {
     filters,
     group: state.group.get('activeGroup'),
     hasStorageService,
+    hasABRWorkFlow: storage && storage.get('workflow'),
     storage,
     storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))

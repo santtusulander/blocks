@@ -14,7 +14,7 @@ import IconAdd from '../shared/icons/icon-add'
 
 import Toggle from '../shared/form-elements/toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader, hasABRWorkFlow }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -58,7 +58,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             options={[
               {
                 label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-                handleClick: openFileDialog
+                handleClick: () => openFileDialog(hasABRWorkFlow)
               },
               {
                 label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
@@ -71,7 +71,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
           <Button
             bsStyle="success"
             icon={true}
-            onClick={openFileDialog}
+            onClick={() => openFileDialog(hasABRWorkFlow)}
             disabled={!fileUploader}
           >
             <IconAdd/>
@@ -89,7 +89,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             storageId={storageId}
             asperaGetaway={gatewayHostname}
           />
-        : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
+        : <HttpUpload processFiles={processFiles} openFileDialog={() => openFileDialog(hasABRWorkFlow)} />
       }
     </SectionContainer>
   )
@@ -106,6 +106,7 @@ StorageContents.propTypes = {
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   groupId: PropTypes.string,
+  hasABRWorkFlow: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   storageId: PropTypes.string
 }

@@ -722,3 +722,11 @@ export function hasOption(group, optionID) {
 export function formatASN(asnObj) {
   return asnObj ? `ASN${asnObj.asn} (${asnObj.organization})` : ''
 }
+
+export function getFolderName(fileName, postFix) {
+  const fileNameWithNoExtension = fileName.match(/(.+)\.\w+$/)
+  const folderName = fileNameWithNoExtension
+                      ? (fileNameWithNoExtension[1] ? `${fileNameWithNoExtension[1]}${postFix}`: '')
+                      : ''
+  return folderName
+}
