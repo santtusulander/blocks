@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List, Map, is } from 'immutable'
+import { List, Map, is, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -15,7 +15,7 @@ import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 import { getDashboardUrl } from '../util/routes'
-import { ACCOUNT_TYPE_CLOUD_PROVIDER } from '../constants/account-management-options'
+import { ACCOUNT_TYPE_CLOUD_PROVIDER, UDN_CORE_ACCOUNT_ID } from '../constants/account-management-options'
 import * as PERMISSIONS from '../constants/permissions'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import { defaultFilters } from '../redux/modules/filters'
@@ -120,35 +120,100 @@ export class BrandDashboard extends React.Component {
     })
   }
 
+  /*
+    This is aggregation function to gether all the data.
+    We need to calculate SP edges traffic for the chart.
+   */
+  spDataAggregation(spEdgaData) {
+    let firstIteration = true
+    const resultData = {
+      bytes: 0,
+      detail: []
+    }
+
+    spEdgaData.forEach((accoutData) => {
+      const accBytes = accoutData.get('bytes')
+      const accDetail = accoutData.get('detail')
+
+      resultData.bytes += accBytes
+
+      accDetail.forEach((accountDetail, i) => {
+        const accDetailBytes = accountDetail.get('bytes')
+        const accDetailTimestamp = accountDetail.get('timestamp')
+
+        if (firstIteration === true) {
+          resultData.detail.push({
+            bytes: accDetailBytes,
+            timestamp: accDetailTimestamp
+          })
+        } else {
+          resultData.detail[i].bytes += accDetailBytes
+
+          // WE SHOULD NOT AGGREGATE TIMESTAMPS!!!
+          // resultData.detail[i].timestamp += accDetailTimestamp
+        }
+      })
+      firstIteration = false
+
+    })
+
+    return fromJS(resultData)
+  }
+
   renderContent() {
     const { dashboard, filterOptions, intl, theme, markers } = this.props
+    const chartTraffic = dashboard && dashboard.get('all_sp_providers')
 
-    /* Stacked Summary */
-    const spTrafficDetail = dashboard.getIn(['sp_edges_traffic', 'detail'])
-    const coreTrafficDetail = dashboard.getIn(['udn_core_traffic', 'detail'])
+    const coreData = []
+    const spEdgaData = []
+    let dataIsReady = false
 
+    /* Separate SP Edges & UDN Core accounts */
+    chartTraffic && chartTraffic.get('detail').forEach((accountData) => {
+      if (String(accountData.get('account')) === String(UDN_CORE_ACCOUNT_ID)) {
+        coreData.push(accountData)
+      } else {
+        spEdgaData.push(accountData)
+      }
+    })
+
+    /* Verify that data is ready */
+    if ((coreData && spEdgaData) &&
+        (coreData.length && spEdgaData.length)) {
+      dataIsReady = true
+    }
+
+    /* Prepared data for Stacked Summary */
+    const coreResultData = dataIsReady && coreData[0]
+    const spResultData = dataIsReady && this.spDataAggregation(spEdgaData)
+
+    const coreTrafficDetail = coreResultData && coreResultData.get('detail')
+    const spTrafficDetail = spResultData && spResultData.get('detail')
+
+    /* Prepare datasets for chart */
     const trafficDatasetA = !coreTrafficDetail ?
       [] :
       coreTrafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.bytes || 0,
-          timestamp: datapoint.timestamp
+          bytes: datapoint && datapoint.get('bytes') || 0,
+          timestamp: datapoint && datapoint.get('timestamp')
         }
       }).toJS()
+
     const trafficDatasetB = !spTrafficDetail ?
       [] :
       spTrafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.bytes || 0,
-          timestamp: datapoint.timestamp
+          bytes: datapoint && datapoint.get('bytes') || 0,
+          timestamp: datapoint && datapoint.get('timestamp')
         }
       }).toJS()
 
+    /* Prepare ammount of traffic for chart */
+    const udn_core_traffic = Number(coreResultData.get('bytes'))
+    const sp_edges_traffic = Number(spResultData.get('bytes'))
 
-    const udn_core_traffic = Number(dashboard.getIn(['udn_core_traffic', 'bytes']))
-    const sp_edges_traffic = Number(dashboard.getIn(['sp_edges_traffic', 'bytes']))
-
-    const trafficBytes = sp_edges_traffic + udn_core_traffic
+    const trafficBytes = chartTraffic && chartTraffic.getIn(['total', 'bytes'])
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
     const totalTrafficValue = totalTraffic.value
     const totalTrafficUnit = totalTraffic.unit

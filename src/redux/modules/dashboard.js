@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
-import { ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER, UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
+import { ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../../constants/account-management-options'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
 const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
@@ -45,9 +45,7 @@ export default handleActions({
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
   const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
-  const totalOpts = Object.assign({}, opts)
-  const udnCoreByTimeOpts = Object.assign({}, opts, { account: UDN_CORE_ACCOUNT_ID})
-  const spEdgesByTimeOpts = Object.assign({}, opts, { exclude_accounts: UDN_CORE_ACCOUNT_ID})
+  const allContributionOpts = Object.assign({}, opts, {granularity: 'day'})
 
   const dashboardRequests = []
 
@@ -57,7 +55,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
   contributionOpts.show_detail = true
 
   // Build Promise object with different data depending on account type
-  // PLEASE NOTE! processDashboardData() always expects 9 arguments
+  // PLEASE NOTE! processDashboardData() always expects 7 arguments
 
   if (account_type === ACCOUNT_TYPE_CONTENT_PROVIDER) {
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData))
@@ -68,13 +66,13 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(null)
     dashboardRequests.push(null)
     dashboardRequests.push(null)
-    dashboardRequests.push(null)
-    dashboardRequests.push(null)
+
   } else if (account_type === ACCOUNT_TYPE_CLOUD_PROVIDER) {
     // Limit the amount of results for providers
     contributionOpts.limit = BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
     // Show detailed data for providers
     contributionOpts.show_detail = true
+    allContributionOpts.show_detail = true
 
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
@@ -82,15 +80,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
-
-    delete totalOpts.field_filters
-    delete totalOpts.granularity
-    delete udnCoreByTimeOpts.field_filters
-    delete spEdgesByTimeOpts.field_filters
-
-    dashboardRequests.push(axios.get(`${analyticsBase({legacy: false})}/traffic/get-totals${qsBuilder(totalOpts)}`).then(parseResponseData))
-    dashboardRequests.push(axios.get(`${analyticsBase({legacy: false})}/traffic/get-by-time${qsBuilder(udnCoreByTimeOpts)}`).then(parseResponseData))
-    dashboardRequests.push(axios.get(`${analyticsBase({legacy: false})}/traffic/get-by-time${qsBuilder(spEdgesByTimeOpts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(allContributionOpts)}`).then(parseResponseData))
   } else {
     // cp-contribution endpoint expects a sp_account param instead of account
     contributionOpts.sp_account = contributionOpts.account
@@ -103,8 +93,6 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
-    dashboardRequests.push(null)
-    dashboardRequests.push(null)
     dashboardRequests.push(null)
   }
 
@@ -122,16 +110,14 @@ export const finishFetching = createAction(DASHBOARD_FINISH_FETCH)
 // a single object, which get passed to the dashboard container. This was done
 // so that there was no need to do a lot of changes in the container, which
 // previously used sp-dashboard endpoint that did all this aggregation for us
-export function processDashboardData(traffic, countries, trafficTime, spContribution, trafficOnOffNet, cpContribution, totalTraffic, udnCoreTraffic, spEdgesTraffic) {
+export function processDashboardData(traffic, countries, trafficTime, spContribution, trafficOnOffNet, cpContribution, allSpContribution) {
   // Creating Immutable objects for easier error handling
   const trafficMap = Immutable.fromJS(traffic || {})
   const countriesMap = Immutable.fromJS(countries)
   const trafficTimeMap = Immutable.fromJS(trafficTime || {})
   const trafficOnOffNetMap = Immutable.fromJS(trafficOnOffNet || {})
   const contributionMap = Immutable.fromJS(cpContribution ? cpContribution : spContribution)
-  const totalTrafficMap = Immutable.fromJS(totalTraffic || {})
-  const udnCoreTrafficMap = Immutable.fromJS(udnCoreTraffic || {})
-  const spEdgesTrafficMap = Immutable.fromJS(spEdgesTraffic || {})
+  const allSpContributionMap = Immutable.fromJS(allSpContribution || {})
 
   // Creates detail arrays for bandwidth, latency, connections and cache hit
   const trafficDetails =  trafficMap.getIn(['data', 0, 'detail'], []).reduce((details, detail) => {
@@ -203,26 +189,6 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
   // Final data object returned
   return {
     data: {
-      total_traffic: totalTrafficMap.getIn(['data', 'bytes'], null),
-      udn_core_traffic: {
-        bytes: udnCoreTrafficMap.getIn(['data', 'totals', 0, 'bytes'], null) + udnCoreTrafficMap.getIn(['data', 'totals', 1, 'bytes'], null),
-        detail: udnCoreTrafficMap.getIn(['data', 'details'], Immutable.List()).map(detail => {
-          return {
-            timestamp: detail.getIn(['timestamp'], null),
-            bytes: detail.getIn(['bytes'], null)
-          }
-        })
-      },
-      sp_edges_traffic: {
-        bytes: spEdgesTrafficMap.getIn(['data', 'totals', 0, 'bytes'], null) + spEdgesTrafficMap.getIn(['data', 'totals', 1, 'bytes'], null),
-        detail: spEdgesTrafficMap.getIn(['data', 'details'], Immutable.List()).map(detail => {
-          return {
-            timestamp: detail.getIn(['timestamp'], null),
-            bytes: detail.getIn(['bytes'], null)
-          }
-        })
-      },
-
       traffic: trafficData,
       bandwidth: {
         bits_per_second: trafficMap.getIn(['data', 0, 'totals', 'transfer_rates', 'average'], null),
@@ -310,7 +276,33 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
           detail: provider.getIn(['detail'], []),
           percent_total: provider.getIn(['percent_total'], null)
         }
-      }).toJS()
+      }).toJS(),
+      all_sp_providers: allSpContribution && {
+        total: allSpContributionMap.getIn(['data', 'totals']),
+        detail: allSpContributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
+          // Calculate bytes and bits_per_second since these are not returned as totals
+          const bytes = (
+            provider.getIn(['http', 'net_off_bytes'], 0) +
+            provider.getIn(['http', 'net_on_bytes'], 0) +
+            provider.getIn(['https', 'net_off_bytes'], 0) +
+            provider.getIn(['https', 'net_on_bytes'], 0)
+          )
+          const bits_per_second = (
+            provider.getIn(['http', 'net_off_bps'], 0) +
+            provider.getIn(['http', 'net_on_bps'], 0) +
+            provider.getIn(['https', 'net_off_bps'], 0) +
+            provider.getIn(['https', 'net_on_bps'], 0)
+          )
+          return {
+            // Use different provider account id depending on main account type
+            account: provider.getIn(['sp_account'], null),
+            bytes: bytes,
+            bits_per_second: bits_per_second,
+            detail: provider.getIn(['detail'], []),
+            percent_total: provider.getIn(['percent_total'], null)
+          }
+        }).toJS()
+      }
     }
   }
 }
