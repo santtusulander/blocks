@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
 import CaretDown from '../shared/icons/icon-caret-down'
 
@@ -28,8 +29,12 @@ class Accordion extends Component {
     return (
       <li className={classnames('accordion', { active })}>
         <a onClick={() => this.toggle()} className="accordion-header">
-          <h4 className="name-container">{headerTitle}<CaretDown /></h4>
+
+          <h4 className="name-container">
+            <FormattedMessage id={headerTitle} /><CaretDown />
+          </h4>
           <h4 className="entity-count-number">({items.length})</h4>
+          
         </a>
           {this.state.open &&
             <ul className='scrollable-menu'>

@@ -100,12 +100,14 @@ export const getProperties = (state, parents) => {
 
   return getPropertiesByGroup(state, parents.group).toJS().map((property) => {
 
+    //default to media delivery
+    const serviceType = property.services[0].service_type || 'large'
     return {
       ...property,
       idKey: 'published_host_id',
       labelKey: 'published_host_id',
       nodeInfo: {
-        category: 'Properties',
+        category: `portal.configuration.details.serviceType.${serviceType}`,
         entityType: 'property',
         parents
       }
@@ -128,7 +130,7 @@ export const getStorages = (state, parents) => {
       labelKey: 'ingest_point_id',
       idKey: 'ingest_point_id',
       nodeInfo: {
-        category: 'Storages',
+        category: 'portal.account.storage.text',
         entityType: 'storage',
         parents
       }
@@ -155,7 +157,6 @@ export const getAccounts = (state, parents, canView) => {
       nodeInfo: {
         headerSubtitle,
         fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: String(account.id), requestTag })),
-        category: 'Accounts',
         entityType: 'account',
         parents,
         nodes
