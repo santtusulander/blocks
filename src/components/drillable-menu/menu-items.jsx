@@ -1,67 +1,48 @@
 import React, { PropTypes } from 'react'
-import IconArrowRight from '../shared/icons/icon-arrow-right'
+
+import MenuItem from './menu-item'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import Accordion from './menu-item-accordion'
 
-const MenuItem = ({ node, handleCaretClick, onItemClick }) => {
-  const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren, nodes } } = node
-
-  const nodeId = node[idKey]
-  const nodeName = node[labelKey]
-  return (
-    <li>
-
-      <a className="name-container" onClick={() => onItemClick(node)}><span>{nodeName}</span></a>
-      {nodes &&
-        <a
-          className="caret-container"
-          tabIndex="-1"
-          onClick={event => {
-            event.nativeEvent.stopImmediatePropagation()
-            handleCaretClick(fetchChildren, nodeId)
-          }}>
-          <span className="caret-container-short-border"/>
-          <IconArrowRight />
-        </a>
-      }
-
-    </li>
-  )
-}
+const UNCATEGORIZED = 'uncategorized'
 
 const DrillableMenuItems = ({ menuNodes = [], fetching, searchValue, handleCaretClick, onItemClick }) => {
 
-  const menu = menuNodes.reduce((categories, node, index) => {
+  const categories = menuNodes.reduce((aggregate, node, index) => {
 
-    const { nodeInfo: { category = 'uncategorized' }, labelKey = 'name' } = node
+    // Default all nodes as uncategorized. Uncategorized nodes
+    // will be rendered without a wrapping Accordion.
+    const { nodeInfo: { category = UNCATEGORIZED }, labelKey = 'name' } = node
 
     const passesSearch = node[labelKey].toLowerCase().includes(searchValue.toLowerCase())
 
-    if (categories[category] && passesSearch) {
+    if (aggregate[category] && passesSearch) {
 
       // If the node's label contains search value and an array for the node's
       // category already exists, push a MenuItem.
-      categories[category].push(<MenuItem key={index} node={node} handleCaretClick={handleCaretClick} onItemClick={onItemClick}/>)
+      aggregate[category].push(<MenuItem key={index} node={node} handleCaretClick={handleCaretClick} onItemClick={onItemClick}/>)
 
-    } else if (!categories[category]) {
+    } else if (!aggregate[category]) {
 
       //If an array for the current node's category does not exist, create it.
-      categories[category] = []
+      aggregate[category] = passesSearch
+        ? [ <MenuItem key={index} node={node} handleCaretClick={handleCaretClick} onItemClick={onItemClick}/> ]
+        : []
     }
 
-    return categories
+    return aggregate
   }, {})
 
-  const readyMenu = Object.keys(menu).reduce((done, category) => {
-    if (category === 'uncategorized') {
+  const menuItems = Object.keys(categories).reduce((aggregate, category) => {
+    if (category === UNCATEGORIZED) {
 
-      done.push(...menu.uncategorized)
+      aggregate.push(...categories.uncategorized)
 
     } else {
 
-      done.push(<Accordion searchActive={!!searchValue.length} headerTitle={category} items={menu[category]} />)
+      aggregate.push(<Accordion searchActive={!!searchValue.length} headerTitle={category} items={categories[category]} />)
     }
-    return done
+    return aggregate
   }, [])
 
   if (fetching) {
@@ -72,8 +53,7 @@ const DrillableMenuItems = ({ menuNodes = [], fetching, searchValue, handleCaret
     <li className="menu-container">
       {/* Dropdown with nodes */}
       <ul className="scrollable-menu">
-
-        {readyMenu}
+        {menuItems}
       </ul>
 
     </li>

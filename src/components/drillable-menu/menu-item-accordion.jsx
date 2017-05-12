@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 
 import CaretDown from '../shared/icons/icon-caret-down'
@@ -38,6 +38,11 @@ class Accordion extends Component {
       </li>
     )
   }
+}
+
+Accordion.propTypes = {
+  headerTitle: PropTypes.string,
+  items: PropTypes.array
 }
 
 Accordion.displayName = 'Accordion'

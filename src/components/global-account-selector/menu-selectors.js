@@ -105,6 +105,7 @@ export const getProperties = (state, parents) => {
       idKey: 'published_host_id',
       labelKey: 'published_host_id',
       nodeInfo: {
+        category: 'Properties',
         entityType: 'property',
         parents
       }
@@ -127,7 +128,7 @@ export const getStorages = (state, parents) => {
       labelKey: 'ingest_point_id',
       idKey: 'ingest_point_id',
       nodeInfo: {
-        category: 'Storage',
+        category: 'Storages',
         entityType: 'storage',
         parents
       }
@@ -154,6 +155,7 @@ export const getAccounts = (state, parents, canView) => {
       nodeInfo: {
         headerSubtitle,
         fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: String(account.id), requestTag })),
+        category: 'Accounts',
         entityType: 'account',
         parents,
         nodes
