@@ -162,14 +162,21 @@ export const CanViewStorageSummary =
 
 export const CanViewStorageTab =
   UserAuthWrapper({
-    authSelector: authSelector,
+    authSelector: (state, ownProps) => {
+      return {
+        currentUser: authSelector(state),
+        account: getAccountById(state, ownProps.params.account)
+      }
+    },
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/storage$/, '')
 
       return `${path}`
     },
     wrapperDisplayName: 'CanViewStorageTab',
-    predicate: permissionChecker(PERMISSIONS.LIST_STORAGE),
+    predicate: ({ currentUser, account }) => {
+      return accountIsContentProviderType(account) && permissionChecker(PERMISSIONS.LIST_STORAGE)(currentUser)
+    },
     allowRedirectBack: false
   })
 
