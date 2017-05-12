@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 jest.unmock('../time-picker.jsx')
 import TimePicker from '../time-picker.jsx'

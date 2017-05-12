@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 jest.unmock('../date-range')
 import FilterDateRange from '../date-range'

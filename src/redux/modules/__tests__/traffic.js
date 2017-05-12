@@ -1,5 +1,5 @@
 jest.unmock('../traffic.js')
-jest.unmock('moment-timezone')
+jest.unmock('moment')
 
 import Immutable from 'immutable'
 import {

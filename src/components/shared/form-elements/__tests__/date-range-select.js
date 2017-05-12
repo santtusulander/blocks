@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../date-range-select.jsx')
 import DateRange from '../date-range-select.jsx'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 const intlMaker = () => {
   return {

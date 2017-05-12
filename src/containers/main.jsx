@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { is, Map, List } from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
@@ -77,7 +77,6 @@ export class Main extends React.Component {
 
     if (currentUser && currentUser.get('timezone') !== nextProps.currentUser.get('timezone')) {
       moment.tz.setDefault(nextProps.currentUser.get('timezone'))
-      console.log(moment())
     }
 
     if (currentUser && currentUser.get('date_format') !== nextProps.currentUser.get('date_format')) {

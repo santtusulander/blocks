@@ -1,4 +1,4 @@
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 export const deploymentModes = {
   production: 'portal.configuration.details.deploymentMode.production',

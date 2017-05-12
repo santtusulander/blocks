@@ -1,5 +1,5 @@
 import React from 'react'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'

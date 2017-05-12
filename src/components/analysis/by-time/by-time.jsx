@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'

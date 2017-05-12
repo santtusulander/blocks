@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'

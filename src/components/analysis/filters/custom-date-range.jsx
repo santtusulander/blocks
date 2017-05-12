@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import { FormattedMessage } from 'react-intl';
 
 import CustomDatePicker from '../../../components/shared/form-elements/custom-date-picker'

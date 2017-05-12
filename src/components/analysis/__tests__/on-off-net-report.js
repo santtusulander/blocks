@@ -11,7 +11,7 @@ jest.mock('../../../util/helpers', () => ({ formatBytes: bytes => bytes }))
 import AnalysisOnOffNetReport from '../on-off-net-report.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
-import moment from 'moment-timezone'
+import moment from 'moment'
 import numeral from 'numeral'
 
 moment.format = jest.fn()

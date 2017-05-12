@@ -1,5 +1,5 @@
 jest.unmock('../visitors.js')
-jest.unmock('moment-timezone')
+jest.unmock('moment')
 
 import {
   fetchedByTimeSuccess,

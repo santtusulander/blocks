@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import { isDirty } from 'redux-form'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import classNames from 'classnames'
 
 import * as accountActionCreators from '../redux/modules/account'

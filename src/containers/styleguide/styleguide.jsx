@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import numeral from 'numeral'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 // React-Bootstrap
 // ===============

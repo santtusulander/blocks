@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import numeral from 'numeral'
-import moment from 'moment-timezone'
+import moment from 'moment'
 
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
