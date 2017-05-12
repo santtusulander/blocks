@@ -142,14 +142,16 @@ StorageKPI.propTypes = {
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   if (!storage) {
-    return {}
+    return {
+      chartDataKey: 'bytes'
+    }
   }
 
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
   const ending = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'ending']) : 0
   const currentValue = formatBytesToUnit(ending, unit, FORMAT)
   const peakValue = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit, FORMAT) : 0
-  const gainPercentage = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
+  const gainPercentage = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) || 0 : 0
 
   const locations = storage.get('clusters').map((cluster) => {
     const clusterData = getClusterById(state, cluster)
