@@ -1,7 +1,7 @@
 import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Immutable from 'immutable'
 import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'

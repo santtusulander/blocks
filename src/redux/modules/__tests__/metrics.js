@@ -1,8 +1,8 @@
 import { fromJS, is } from 'immutable'
 
 jest.unmock('../metrics.js')
-jest.unmock('moment')
-import moment from 'moment'
+jest.unmock('moment-timezone')
+import moment from 'moment-timezone'
 import {
   fetchSuccess,
   fetchFailure,

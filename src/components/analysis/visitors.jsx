@@ -1,7 +1,7 @@
 import React from 'react'
 import numeral from 'numeral'
 import Immutable from 'immutable'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import SectionHeader from '../shared/layout/section-header'

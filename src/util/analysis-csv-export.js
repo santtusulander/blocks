@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 import download from 'downloadjs'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 

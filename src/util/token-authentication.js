@@ -1,6 +1,6 @@
 import md5 from 'blueimp-md5'
 import jsSHA from 'jssha'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import { SCHEMA_LABEL_MAP, STATIC_TOKEN_SAMPLE_VALUES } from '../constants/configuration'
 

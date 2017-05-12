@@ -1,6 +1,6 @@
 import React from 'react'
 import Datetime from 'react-datetime'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { formatMoment } from '../../../util/helpers'
 
 import { Dropdown } from 'react-bootstrap'

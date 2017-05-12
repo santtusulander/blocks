@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import numeral from 'numeral'
 
 import * as accountActionCreators from '../../../redux/modules/account'

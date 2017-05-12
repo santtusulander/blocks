@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../stacked-by-time.jsx')
-jest.unmock('moment')
+jest.unmock('moment-timezone')
 jest.unmock('numeral')
 
 import AnalysisStackedByTime from '../stacked-by-time'

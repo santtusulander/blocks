@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 import numeral from 'numeral'
 import { Map, List, fromJS } from 'immutable'
 import { getDateRange, getCustomDateRange } from '../redux/util.js'

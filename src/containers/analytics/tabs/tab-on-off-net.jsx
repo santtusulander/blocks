@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl'
 import PROVIDER_TYPES from '../../../constants/provider-types.js'
 

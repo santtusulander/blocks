@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 export default {
   MONTH_TO_DATE: 'portal.constants.date-ranges.month_to_date',

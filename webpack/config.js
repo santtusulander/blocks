@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.json$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(bower_components)/,
         loader: 'json'
       },
       {

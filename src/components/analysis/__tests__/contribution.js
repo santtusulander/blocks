@@ -10,7 +10,7 @@ jest.unmock('../../shared/table-sorter.jsx')
 import AnalysisContribution from '../contribution.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
-import moment from 'moment'
+import moment from 'moment-timezone'
 import numeral from 'numeral'
 
 moment.format = jest.fn()

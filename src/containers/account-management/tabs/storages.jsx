@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
 import { Map, List } from 'immutable'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'

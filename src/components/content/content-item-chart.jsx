@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import IconChart from '../shared/icons/icon-chart'
 import IconConfiguration from '../shared/icons/icon-configuration'

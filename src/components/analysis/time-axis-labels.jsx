@@ -1,5 +1,5 @@
 import React from 'react'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import d3 from 'd3'
 import { formatDate } from '../../util/helpers'
 

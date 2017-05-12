@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { injectIntl, intlShape } from 'react-intl'
 import { MultiMonthView } from 'react-date-picker'
 import { Dropdown } from 'react-bootstrap'

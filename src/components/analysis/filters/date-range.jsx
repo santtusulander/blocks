@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { FormattedMessage } from 'react-intl';
 
 import FilterIncludeComparison from './include-comparison.jsx'
