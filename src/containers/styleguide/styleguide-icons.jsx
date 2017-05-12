@@ -48,6 +48,8 @@ import IconTask          from '../../components/shared/icons/icon-task'
 import IconTrash         from '../../components/shared/icons/icon-trash'
 import IconFile          from '../../components/shared/icons/icon-file'
 import IconFolder        from '../../components/shared/icons/icon-folder'
+import IconSpMarker      from '../../components/shared/icons/icon-sp-marker'
+import IconCoreMarker    from '../../components/shared/icons/icon-core-marker'
 import LoadingSpinnerSmall from '../../components/loading-spinner/loading-spinner-sm'
 
 /* eslint-disable react-intl/string-is-marked-for-translation */
@@ -299,6 +301,16 @@ const StyleguideIcons = () => {
         <IconContent />
         <br />
         IconContent
+      </span>
+      <span className="col-xs-3" style={{marginBottom: '1em'}}>
+        <IconSpMarker />
+        <br />
+        IconSpMarker
+      </span>
+      <span className="col-xs-3" style={{marginBottom: '1em'}}>
+        <IconCoreMarker />
+        <br />
+        IconCoreMarker
       </span>
     </div>
   )
