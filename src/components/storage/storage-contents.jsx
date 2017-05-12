@@ -58,7 +58,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             options={[
               {
                 label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-                handleClick: () => openFileDialog(hasABRWorkFlow)
+                handleClick: openFileDialog
               },
               {
                 label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
