@@ -419,7 +419,7 @@ const AppRoutes =
         {/* Dashboard - routes */}
         <Route path={routes.dashboard} component={UserCanListAccounts('dashboardAccount')(UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION))}>
           <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
-          <Route path={routes.dashboardBrand} component={CanViewBrandDashboard(store)(BrandDashboard)}/>
+          <Route path={routes.dashboardBrand} component={CanViewBrandDashboard(BrandDashboard)}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
           <Route path={routes.dashboardProperty} component={Dashboard}/>
