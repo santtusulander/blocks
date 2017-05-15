@@ -245,10 +245,11 @@ class CertificateFormContainer extends Component {
       group.get('name')
     ])
     const certRequiredText = (privateKey && certificate) ? null : <FormattedMessage id="portal.security.ssl.certRequired.text"/>
+    const subTitle = !certificateToEdit.isEmpty() && formValues && formValues.title
 
     return (
       <div>
-        <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
+        <SidePanel show={true} title={title} subTitle={subTitle}>
             <form className="upload-certificate-form" onSubmit={handleSubmit(values => this.handleFormSubmit(values))}>
               <Field
                 name="group"
@@ -346,7 +347,7 @@ class CertificateFormContainer extends Component {
         </SidePanel>
 
         {showManuallModal &&
-          <SidePanel show={true} title={title} subTitle={!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}>
+          <SidePanel show={true} title={title} subTitle={subTitle}>
             <CertificateForm
               submitting={submitting}
               invalid={invalid}
