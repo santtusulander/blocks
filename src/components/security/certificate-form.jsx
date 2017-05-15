@@ -1,83 +1,79 @@
 import React, { PropTypes } from 'react'
-import { List } from 'immutable'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
+import { Field } from 'redux-form'
+import { Button } from 'react-bootstrap'
 
-import UDNButton from '../shared/form-elements/button'
 import FieldFormGroup from '../shared/form-fields/field-form-group'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
-export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title, fromSubmitting }) => {
-  const groupsOptions = groups.map(group => [
-    group.get('id'),
-    group.get('name')
-  ])
 
+export const CertificateForm = ({ groupsOptions, certificateToEdit, submitting,invalid, onCancel, onSubmit }) => {
   return (
-    <form>
-      <div id="groups">
-        <FieldFormGroupSelect
-          {...group}
-          label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
-          disabled={editMode}
-          numericValues={true}
-          className="input-select"
-          options={groupsOptions.toJS()}/>
-      </div>
-
+    <form onSubmit={onSubmit}>
+      <Field
+        name="group"
+        className="input-select"
+        component={FieldFormGroupSelect}
+        options={groupsOptions}
+        label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
+        disabled={!certificateToEdit.isEmpty()}
+      />
       <hr/>
 
-      <FieldFormGroup
-        {...title}
-        label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text" />}
+      <Field
+        name="title"
+        type="text"
+        component={FieldFormGroup}
+        label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text"/>}
+      />
+      <hr/>
+
+      <Field
+        name="privateKey"
+        type="textarea"
+        className="fixed-size-textarea"
+        component={FieldFormGroup}
+        label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>}
       />
 
       <hr/>
 
-      <FieldFormGroup
-        {...privateKey}
+      <Field
+        name="certificate"
         type="textarea"
         className="fixed-size-textarea"
-        label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text" />}
+        component={FieldFormGroup}
+        label={<FormattedMessage id="portal.security.ssl.edit.certificate.text"/>}
       />
 
       <hr/>
 
-      <FieldFormGroup
-        {...intermediateCertificates}
+      <Field
+        name="intermediateCertificates"
         type="textarea"
         className="fixed-size-textarea"
+        component={FieldFormGroup}
         required={false}
-        label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" />}
-      />
-
-      <hr/>
-
-      <FieldFormGroup
-        {...certificate}
-        type="textarea"
-        className="fixed-size-textarea"
-        label={<FormattedMessage id="portal.security.ssl.edit.certificate.text" />}
+        label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>}
       />
 
       <FormFooterButtons className="text-right extra-margin-top" bsClass="btn-toolbar">
-        <UDNButton
+        <Button
           id="cancel_button"
           className="btn-secondary"
           onClick={onCancel}>
-          {intl.formatMessage({id: 'portal.common.button.cancel'})}
-        </UDNButton>
-        <UDNButton
+          <FormattedMessage id="portal.common.button.cancel"/>
+        </Button>
+        <Button
           id="save_button"
+          type="submit"
           bsStyle="primary"
-          disabled={invalid || fromSubmitting || submitting}
-          onClick={onSubmit}>
-          {
-            fromSubmitting
-            ? <FormattedMessage id='portal.common.button.saving' />
-            : <FormattedMessage id='portal.common.button.save' />
+          disabled={invalid || submitting}>
+          {submitting ? <FormattedMessage id='portal.button.adding' />
+                      : <FormattedMessage id='portal.button.add' />
           }
-        </UDNButton>
+        </Button>
       </FormFooterButtons>
     </form>
   )
@@ -85,22 +81,13 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
 
 CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
-  certificate: PropTypes.object,
-  editMode: PropTypes.bool,
-  fromSubmitting: PropTypes.bool,
-  group: PropTypes.object,
-  groups: PropTypes.instanceOf(List),
-  intermediateCertificates: PropTypes.object,
-  intl: intlShape.isRequired,
+  certificateToEdit: PropTypes.object,
+  groupsOptions: PropTypes.array,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
-  privateKey: PropTypes.object,
-  submitting: PropTypes.bool,
-  title: PropTypes.object
-}
-CertificateForm.defaultProps = {
-  groups: List()
+  submitting: PropTypes.bool
 }
 
-export default injectIntl(CertificateForm)
+
+export default CertificateForm
