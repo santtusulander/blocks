@@ -785,3 +785,12 @@ export const getRoleOptionsById = (roles, id) => {
             return role.get('account_provider_types').includes(providerType)
           })
 }
+
+
+export const roleIsEditableByCurrentUser = (allowedRoles, userRoleId) => {
+  /*
+    This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
+    we have to treat it this way
+  */
+  return allowedRoles.get(0) === '*' || allowedRoles.includes(userRoleId)
+}

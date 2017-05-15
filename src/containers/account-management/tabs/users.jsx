@@ -51,7 +51,7 @@ import Paginator from '../../../components/shared/paginator/paginator'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, roleIsEditableByCurrentUser } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { DELETE_USER, MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
@@ -483,6 +483,7 @@ export class AccountManagementAccountUsers extends Component {
                     the pagination is fixed
                   */}
                   {users && users.filter(user => user).map((user, i) => {
+                    const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
                     return (
                       <tr key={i}>
                         <td>
@@ -495,6 +496,8 @@ export class AccountManagementAccountUsers extends Component {
                         <IsAllowed to={MODIFY_USER || DELETE_USER}>
                           <td className="nowrap-column">
                               <ActionButtons
+                                editDisabled={!userIsEditable}
+                                deleteDisabled={!userIsEditable}
                                 permissions={{
                                   modify: MODIFY_USER,
                                   delete: DELETE_USER

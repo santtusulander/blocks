@@ -7,7 +7,7 @@ import AccountManagementUserEditForm from './form'
 import SidePanel from '../../shared/side-panel'
 
 import { getCheckboxArrayOptions } from '../../../util/group-helpers'
-import { getRoleOptionsById } from '../../../util/helpers'
+import { getRoleOptionsById , roleIsEditableByCurrentUser } from '../../../util/helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
@@ -20,12 +20,8 @@ class UserEditModal extends React.Component {
     const {roles, user, allowedRoles} = this.props
     const userRoleId = user.getIn(['roles', 0])
 
-    /*
-      This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
-      we have to treat it this way
-    */
     return getRoleOptionsById(roles, userRoleId)
-            .filter(role => allowedRoles.get(0) === '*' || allowedRoles.includes(role.get('id')))
+            .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
             .map(role => [role.get('id'), role.get('name')]).toJS()
   }
 
