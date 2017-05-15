@@ -19,8 +19,8 @@ class UserEditModal extends React.Component {
   getRoleOptions() {
     const {roles, user, allowedRoles} = this.props
     const userRoleId = user.getIn(['roles', 0])
-
-    return getRoleOptionsById(roles, userRoleId)
+    const roleOptions = getRoleOptionsById(roles, userRoleId) || List()
+    return roleOptions
             .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
             .map(role => [role.get('id'), role.get('name')]).toJS()
   }
