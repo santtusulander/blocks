@@ -18,6 +18,7 @@ import {
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
   CanViewStorageTab,
+  CanViewBrandDashboard,
   UserCanViewGTM,
   UserCanViewAdvancedTab,
   AccountCanViewProperties
@@ -61,6 +62,7 @@ import ConfigurationAdvanced from './components/configuration/advanced'
 import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
+import BrandDashboard from './containers/brand-dashboard'
 import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
@@ -69,6 +71,7 @@ import GroupContainer from './containers/content/group'
 
 import Login from './containers/login'
 import Main from './containers/main'
+import Home from './containers/home'
 import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property/property'
 import PropertySummary from './containers/property/tabs/property-summary'
@@ -189,7 +192,6 @@ const AccountIsSP = UserAuthWrapper({
 })
 
 
-
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
@@ -229,8 +231,11 @@ const AppRoutes =
       <IndexRoute component={UserIsLoggedIn(Main)} />
       */}
       <Route component={UserIsLoggedIn(Main)}>
-        {/* redirect to /content if in root*/ }
-        <IndexRedirect to={routes.content} />
+
+        {/* redirect to /home if in root */}
+        <IndexRedirect to={routes.home} />
+        <Route path={routes.home} component={Home}/>
+
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
@@ -414,7 +419,7 @@ const AppRoutes =
         {/* Dashboard - routes */}
         <Route path={routes.dashboard} component={UserCanListAccounts('dashboardAccount')(UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION))}>
           <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
-          <Route path={routes.dashboardBrand} component={Dashboard}/>
+          <Route path={routes.dashboardBrand} component={CanViewBrandDashboard(store)(BrandDashboard)}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
           <Route path={routes.dashboardProperty} component={Dashboard}/>
