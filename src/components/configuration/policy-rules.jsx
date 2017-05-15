@@ -91,6 +91,7 @@ class ConfigurationPolicyRules extends React.Component {
   }
 
   render() {
+    const { customPolicyIsUsed } = this.props
     const policyMapper = type => (rule, i) => {
       const { matches, sets, default_sets } = parsePolicy(rule, [])
       const matchLabel = this.getListOfConditionActionNames(matches)
@@ -99,6 +100,8 @@ class ConfigurationPolicyRules extends React.Component {
 
       const actionButtons = (
         <ActionButtons
+          deleteDisabled={customPolicyIsUsed}
+          editDisabled={customPolicyIsUsed}
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
           onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
           onDelete={this.showConfirmation(`${type}_policy`, i)} />
@@ -149,6 +152,13 @@ class ConfigurationPolicyRules extends React.Component {
     const isEmpty = !rows.filter(Boolean).length
     return (
       <div className="configuration-policies">
+        { customPolicyIsUsed && 
+          <div className="banner-container">
+            <div className="policy-override-banner">
+              <h3 className="banner-message"><FormattedMessage id="portal.policy.override.banner.message"/></h3>
+            </div>
+          </div>
+        }
         <Table striped={true}>
           <thead>
             <tr>
@@ -181,6 +191,7 @@ ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
   cancelDeletePolicyRoute: React.PropTypes.func,
+  customPolicyIsUsed: React.PropTypes.bool,
   deleteRule: React.PropTypes.func,
   finalRequestPolicies: React.PropTypes.instanceOf(Immutable.List),
   finalResponsePolicies: React.PropTypes.instanceOf(Immutable.List),

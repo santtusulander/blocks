@@ -7,6 +7,9 @@ jest.unmock('../../account-management/account-management-header.jsx')
 jest.unmock('../ssl-list.jsx')
 import SSLList from '../ssl-list.jsx'
 
+jest.unmock('../../../util/helpers.js')
+import { getPage } from '../../../util/helpers.js'
+
 const fakeCerts = fromJS([
   {id: 1, commonName: 'Firstname Lastname', group: 'UDN Superuser'},
   {id: 1, commonName: 'Firstname Lastname', group: 'UDN Superuser'},
@@ -29,7 +32,12 @@ describe('SSLList', () => {
         intl: intlMaker(),
         groups: fromJS([]),
         certificates: fakeCerts,
-        activeCertificates: fromJS([])
+        activeCertificates: fromJS([]),
+        context: {
+          location: {
+            pathname: 'foo'
+          }
+        }
       }, props)
       return shallow(<SSLList {...defaultProps}/>)
     }

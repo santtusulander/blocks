@@ -59,6 +59,10 @@
 
   "portal.analytics.onNet.title": "On-Net",
   "portal.analytics.offNet.title": "Off-Net",
+  "portal.analytics.udnCore.title": "UDN Core",
+  "portal.analytics.spEdge.title": "SP Edge",
+  "portal.analytics.prod.title": "Production Traffic",
+  "portal.analytics.trial.title": "Trial Traffic",
 
   "portal.analytics.onOffNet.text": "ON/OFF NET",
   "portal.analytics.onOffNet.noOptionsSelected.text": "There must be at least one option selected.",

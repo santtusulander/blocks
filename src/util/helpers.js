@@ -282,10 +282,20 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       net_type: netType,
       status_codes: statusCodes || errorCodes
     }
-  } else if (
-    accountType === PROVIDER_TYPES.SERVICE_PROVIDER ||
-    accountType === PROVIDER_TYPES.CLOUD_PROVIDER
-  ) {
+  } else if (accountType === PROVIDER_TYPES.CLOUD_PROVIDER) {
+    return {
+      brand: params.brand,
+      startDate: startDate.format('X'),
+      endDate: endDate.format('X'),
+      account_ids: contentProviders,
+      group_ids: contentProviderGroups,
+      sp_account_ids: serviceProviders,
+      sp_group_ids: serviceProviderGroups,
+      service_type: serviceType,
+      net_type: netType,
+      status_codes: statusCodes || errorCodes
+    }
+  } else {
     return {
       sp_account: params.account,
       brand: params.brand,
@@ -299,8 +309,6 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       status_codes: statusCodes || errorCodes
     }
   }
-
-  return null
 }
 
 export function filterChangeNeedsReload(currentFilters, nextFilters) {
@@ -750,4 +758,21 @@ export function formatASN(asnObj) {
 export function getCISname(originHostname) {
   const matchedResult = originHostname.match(/-(\w+).origin/)
   return matchedResult ? matchedResult[1] : ''
+}
+
+export function isDefined(value) {
+  return typeof value !== 'undefined'
+}
+
+/**
+ * Slice current page out of items
+ * @param  {List} items
+ * @param  {Number} page
+ * @param  {Number} limit
+ * @return {List} sliced list section/
+ */
+export const getPage = (items, page, limit) => {
+  const offset = (page - 1) * limit
+
+  return items.slice(offset, offset + limit)
 }

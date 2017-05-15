@@ -11,14 +11,14 @@ import IconEricsson from '../shared/icons/icon-ericsson.jsx'
 const LogoItem = (props) => {
   const {user} = props
 
-  const logoLink = userIsServiceProvider(user) ?
-    getRoute('networkAccount', {brand: 'udn', account: user.get('account_id')}) :
-    getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
+  const logoLink = userIsServiceProvider(user)
+    ? getRoute('dashboardAccount', {brand: 'udn', account: user.get('account_id')})
+    : getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
 
   return (
     <li className="header__logo">
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <Link to={getRoute('content', { brand: 'udn' })} className="logo">
+        <Link to={getRoute('dashboardBrand', { brand: 'udn' })} className="logo">
           <IconEricsson />
         </Link>
       </IsAllowed>

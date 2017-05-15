@@ -76,8 +76,11 @@ class FileExtension extends React.Component {
   saveChanges() {
     const matchCase = this.matchCaseFromExtensions(this.state.extensions)
     let newMatch = this.props.match
+
+    newMatch = newMatch.delete('_temp')
     newMatch = newMatch.set('type', 'regexp')
     newMatch = newMatch.set('value', matchCase)
+    newMatch = newMatch.set('inverted', false)
 
     this.props.changeValue(this.props.path, newMatch)
     this.props.activateMatch(null)

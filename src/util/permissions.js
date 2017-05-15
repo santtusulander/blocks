@@ -31,6 +31,8 @@ permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
 // TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
 permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
   (role) => role.getIn([ 'ui', 'content'])
+permissionMapping[PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION] =
+  (role) => role.getIn([ 'ui', 'analytics_dashboard'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn([ 'ui', 'security'])
 permissionMapping[PERMISSIONS.VIEW_SERVICES_SECTION] =
@@ -127,10 +129,12 @@ permissionMapping[PERMISSIONS.MODIFY_ADVANCED] =
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn([ 'aaa', 'users', 'create', 'allowed'])
+// UDN User having modify role as itself_only so it should be only able to edit itself
+// This check will return true anyway with itself_only.
 permissionMapping[PERMISSIONS.MODIFY_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'modify', 'allowed']) === true
 permissionMapping[PERMISSIONS.DELETE_USER] =
-  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed'])
+  (role) => role.getIn([ 'aaa', 'users', 'delete', 'allowed']) === true
 
 // Users Roles
 permissionMapping[PERMISSIONS.MODIFY_ROLE] =

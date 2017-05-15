@@ -18,7 +18,7 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService, hasAnyServices } from '../../util/helpers'
+import { userIsCloudProvider, hasService, hasAnyServices, getPage } from '../../util/helpers'
 
 import { parseResponseError } from '../../redux/util'
 
@@ -71,19 +71,6 @@ const sortContent = (path, direction) => (item1, item2) => {
     return -1 * direction
   }
   return 0
-}
-
-/**
- * Slice current page out of contentItems
- * @param  {List} items
- * @param  {Number} page
- * @param  {Number} limit
- * @return {List} sliced list section/
- */
-const getPage = (items, page, limit) => {
-  const offset = (page - 1) * limit
-
-  return items.slice(offset, offset + limit)
 }
 
 class ContentItems extends Component {
@@ -152,6 +139,7 @@ class ContentItems extends Component {
    */
   onActivePageChange(nextPage) {
     this.props.router.push({
+      pathname: this.context.location.pathname,
       query: {
         page: nextPage
       }
@@ -279,13 +267,14 @@ class ContentItems extends Component {
     }
   }
 
-  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
-      .then((response) => {
+      .then(({ entities }) => {
+        const item = this.getTier() === 'brand' ? entities.accounts[id] : entities.groups[id]
+
         this.setState({
           showModal: true,
-          itemToEdit: fromJS(response.payload)
+          itemToEdit: fromJS(item)
         })
       })
   }
@@ -557,7 +546,7 @@ class ContentItems extends Component {
                         const id = item.get('id')
                         const isTrialHost = false
                         const name = item.get('name')
-                        const contentMetrics = item.get('metrics')
+                        const contentMetrics = item.get('metrics') || Map()
 
                         const scaledWidth =  trafficScale(item.get('totalTraffic') || 0)
 

@@ -116,6 +116,12 @@ const roles =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const allowedRoles =
+    handleActions({
+      [actionTypes.RECEIVE]: receiveEntity({ key: 'allowedRoles' }),
+      [actionTypes.FAIL]: failEntity
+    }, Map())
+
 const roleNames =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'roleNames' }),
@@ -153,6 +159,11 @@ const entityPagination =
     [actionTypes.RECEIVE]: receiveEntityPagination
   }, Map())
 
+const mapMarkers =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'mapMarkers' })
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
@@ -172,8 +183,10 @@ export default combineReducers({
   storageMetrics,
   roles,
   roleNames,
+  allowedRoles,
   serviceTitles,
   users,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
-  entityPagination
+  entityPagination,
+  mapMarkers
 })

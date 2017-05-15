@@ -53,7 +53,7 @@ import NetworkItem from '../../components/network/network-item'
 import CsvUploadArea from '../../components/network/csv-upload'
 import TimePicker from '../../components/shared/form-elements/time-picker'
 import Typeahead from '../../components/shared/form-elements/typeahead'
-import StorageKPI from '../../components/storage/storage-kpi'
+import { StorageKPI } from '../../components/storage/storage-kpi'
 import StorageItemChart from '../../components/content/storage/storage-item-chart'
 import SortableMultiSelector from '../../components/shared/form-elements/sortable-multi-selector'
 import FileUploadStatus from '../../components/storage/file-upload-status-container.jsx'
@@ -755,7 +755,7 @@ class Styleguide extends React.Component {
               analyticsLink='#'
               configurationLink='#'
               name="Storage 01"
-              locations={["Hong Kong"]}
+              locations={Immutable.List(["Hong Kong"])}
               currentUsage={0}
               estimate={100e12}
               peak={0}
@@ -767,7 +767,7 @@ class Styleguide extends React.Component {
               analyticsLink='#'
               configurationLink='#'
               name="Storage 02"
-              locations={["Hong Kong"]}
+              locations={Immutable.List(["Hong Kong"])}
               currentUsage={80.2e12}
               estimate={250e12}
               peak={160e12}
@@ -779,7 +779,7 @@ class Styleguide extends React.Component {
               analyticsLink='#'
               configurationLink='#'
               name="Storage very very very long name"
-              locations={["Hong Kong", "Finland"]}
+              locations={Immutable.List(["Hong Kong", "Finland"])}
               currentUsage={270e12}
               estimate={300e12}
               peak={380e12}
@@ -791,19 +791,19 @@ class Styleguide extends React.Component {
               analyticsLink='#'
               configurationLink='#'
               name="Storage 04"
-              locations={["Hong Kong", "Finland", "United States"]}
-              currentUsage={520e12}
-              estimate={500e12}
-              peak={600e12}
-              lastMonthUsage={470e12}
-              lastMonthEstimate={450e12}
-              lastMonthPeak={480e12} />
+              locations={Immutable.List(["Hong Kong", "Finland", "United States"])}
+              currentUsage={350e3}
+              estimate={100e12}
+              peak={74.1e12}
+              lastMonthUsage={400e3}
+              lastMonthEstimate={100e12}
+              lastMonthPeak={474.1e3} />
 
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
               name="Storage 05"
-              locations={["Hong Kong", "Finland"]}
+              locations={Immutable.List(["Hong Kong", "Finland"])}
               currentUsage={270e12}
               estimate={300e12}
               peak={380e12}
@@ -836,7 +836,9 @@ class Styleguide extends React.Component {
 
           <StorageKPI
             chartData={storageKPIData}
+            fetchData={() => {/*no-op*/}}
             chartDataKey='bytes'
+            storage={Immutable.Map()}
             currentValue={112}
             gainPercentage={0.2}
             locations={['San Jose', 'Frankfurt']}
@@ -868,7 +870,7 @@ class Styleguide extends React.Component {
           />
 
           <h1 className="page-header">Slider</h1>
-            <PolicyWeight secondaryProvider="CDN" onChange={() => {
+            <PolicyWeight onChange={() => {
               // no-op
             }} />
 

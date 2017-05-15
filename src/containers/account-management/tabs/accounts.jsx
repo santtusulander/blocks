@@ -13,6 +13,7 @@ import ActionButtons from '../../../components/shared/action-buttons'
 import ArrayCell from '../../../components/shared/page-elements/array-td'
 import TableSorter from '../../../components/shared/table-sorter'
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
+import Paginator from '../../../components/shared/paginator/paginator'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -24,12 +25,13 @@ import {getFetchingByTag} from '../../../redux/modules/fetching/selectors'
 import {getServicesInfo, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getPage } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 import { getServicesIds } from '../../../util/services-helpers'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { CREATE_ACCOUNT, MODIFY_ACCOUNT, DELETE_ACCOUNT } from '../../../constants/permissions'
+import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../../constants/content-item-sort-options'
 
 class AccountList extends Component {
   constructor(props) {
@@ -37,6 +39,7 @@ class AccountList extends Component {
 
     this.changeSort = this.changeSort.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
+    this.onActivePageChange = this.onActivePageChange.bind(this)
     this.isLeaving = false;
 
     this.state = {
@@ -116,6 +119,18 @@ class AccountList extends Component {
     return true
   }
 
+  /**
+   * Pushes ?page= -param to url for pagination
+   */
+  onActivePageChange(nextPage) {
+    this.props.router.push({
+      pathname: this.context.location.pathname,
+      query: {
+        page: nextPage
+      }
+    })
+  }
+
   render() {
     const {
       accounts,
@@ -155,6 +170,21 @@ class AccountList extends Component {
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
     const finalAccountsText = accountsText + hiddenAccountsText
 
+    const location = this.context.location
+    const currentPage = location && location.query && location.query.page && !!parseInt(location.query.page) ? parseInt(location.query.page) : 1
+
+    const paginationProps = {
+      activePage: currentPage,
+      items: Math.ceil(sortedAccounts.count() / PAGE_SIZE),
+      onSelect: this.onActivePageChange,
+      maxButtons: MAX_PAGINATION_ITEMS,
+      boundaryLinks: true,
+      first: true,
+      last: true,
+      next: true,
+      prev: true
+    }
+
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={finalAccountsText}>
@@ -187,7 +217,7 @@ class AccountList extends Component {
           </tr>
           </thead>
           <tbody>
-          {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
+          {!sortedAccounts.isEmpty() ? getPage(sortedAccounts, currentPage, PAGE_SIZE).map((account, index) => {
             const id = account.get('id')
             const servicesIds = getServicesIds(account.get('services')) || List()
 
@@ -220,6 +250,10 @@ class AccountList extends Component {
             </tr>}
           </tbody>
         </table>
+        { /* Show Pagination if more items than fit on PAGE_SIZE */
+          sortedAccounts && sortedAccounts.count() > PAGE_SIZE &&
+          <Paginator {...paginationProps} />
+        }
       </PageContainer>
     )
   }
@@ -266,6 +300,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
+}
+
+AccountList.contextTypes = {
+  location: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountList)))

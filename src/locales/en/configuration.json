@@ -520,5 +520,6 @@
   "portal.policy.edit.versions.deactivated.text": "De-Activated",
   "portal.policy.edit.matcher.required.error": "This field is required",
   "portal.policy.edit.matcher.invalid.error": "This field is invalid",
-  "portal.policy.edit.action.responseCodes.required.error": "At least one response code should be selected"
+  "portal.policy.edit.action.responseCodes.required.error": "At least one response code should be selected",
+  "portal.policy.override.banner.message": "A custom config override has been applied to your property. Please contact support before applying new policies"
 }

@@ -79,10 +79,10 @@ class AccountManagementStorages extends Component {
   }
 
   fetchStorageData(groupId) {
-    const {params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const { params: { brand, account }, fetchStorages, fetchProperties } = this.props
     const metricsStartDate = moment().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
     if (brand && account && groupId) {
-      fetchStorages({ brand, account, group: groupId})
+      fetchStorages({ brand, account, group: groupId, format: 'full'})
       fetchProperties({ brand, account, group: groupId})
       this.props.fetchGroupMetrics(groupId, { start: metricsStartDate, account })
     }
@@ -158,11 +158,11 @@ class AccountManagementStorages extends Component {
       const storageGroup = group
       const groupName = storageGroup && storageGroup.get('name')
       const origins = []
-      const storageGatewayHost = storage.getIn(['gateway','hostname'])
+      const storageOriginHostName = storage.getIn(['origin','hostname'])
       const originsData = properties.filter(property => {
         const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
         return propertyEdgeConfig.get('origin_type') === 'cis' &&
-               propertyEdgeConfig.get('origin_host_name') === storageGatewayHost
+               propertyEdgeConfig.get('origin_host_name') === storageOriginHostName
       })
       originsData.forEach(origin => {
         origins.push(origin.get('published_host_id'))

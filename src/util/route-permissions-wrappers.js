@@ -10,9 +10,7 @@ import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../redux/modules/user'
 
 import { getServicePermissions } from '../util/services-helpers'
-
 import { getRoute } from '../util/routes'
-
 import {
   hasService
 } from '../util/helpers'
@@ -162,16 +160,39 @@ export const CanViewStorageSummary =
 
 export const CanViewStorageTab =
   UserAuthWrapper({
-    authSelector: authSelector,
+    authSelector: (state, ownProps) => {
+      return {
+        currentUser: authSelector(state),
+        account: getAccountById(state, ownProps.params.account)
+      }
+    },
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/storage$/, '')
 
       return `${path}`
     },
     wrapperDisplayName: 'CanViewStorageTab',
-    predicate: permissionChecker(PERMISSIONS.LIST_STORAGE),
+    predicate: ({ currentUser, account }) => {
+      return accountIsContentProviderType(account) && permissionChecker(PERMISSIONS.LIST_STORAGE)(currentUser)
+    },
     allowRedirectBack: false
   })
+
+export const CanViewBrandDashboard = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
+      const path = `${ownProps.location.pathname}/${currentUser.get('account_id')}`
+      const backupPath = ownProps.location.pathname.replace(/\/dashboard\/\w+/, 'content')
+
+      return currentUser ? path : backupPath
+    },
+    wrapperDisplayName: 'CanViewBrandDashboard',
+    predicate: permissionChecker(PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION, store),
+    allowRedirectBack: false
+  })
+}
 
 export const UserCanViewGTM = UserAuthWrapper({
   authSelector: (state, ownProps) => {
