@@ -430,7 +430,15 @@ class Mapbox extends Component {
     // Choose a color for the country based on its score
     // See if it's possible to use Mapbox's data-driven styling here.
     // https://www.mapbox.com/blog/data-driven-styling/
-    const colorIndex = trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length ? trafficHeat - 1 : null
+    let colorIndex
+    if (trafficHeat === 0) {
+      colorIndex = 0
+    } else if (trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length) {
+      colorIndex = trafficHeat - 1
+    } else {
+      colorIndex = null
+    }
+
     const countryColor = colorIndex !== null ? MAPBOX_HEAT_MAP_COLORS[colorIndex] : MAPBOX_HEAT_MAP_DEFAULT_COLOR
 
     map.addLayer({
