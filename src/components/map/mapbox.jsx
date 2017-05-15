@@ -734,7 +734,7 @@ class Mapbox extends Component {
             </div>
           */}
           <div className="control map-zoom">
-            <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={this.onIncreaseZoom}>
+            <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
               <IconAdd width={16} height={16}/>
             </UDNButton>
 
@@ -747,6 +747,12 @@ class Mapbox extends Component {
                   defaultValue={MAPBOX_ZOOM_MIN}
                   onMouseUp={this.onZoom}
                   />
+              </div>
+
+              <div className="map-label">
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.earth"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
               </div>
             </div>
 

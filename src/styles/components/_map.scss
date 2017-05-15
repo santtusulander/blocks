@@ -121,8 +121,29 @@ $thumb-margin: -11px;
       flex-direction: column;
       align-items: center;
 
+      .map-label {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        flex-grow: 1;
+
+        span {
+          font-size: 1.3rem;
+          text-align: right;
+
+          .dark-theme & {
+            color: $white !important;
+          }
+
+          .light-theme & {
+            color: $black !important;
+          }
+        }
+      }
+
       .map-slider {
         position: relative;
+        display: flex;
         width: $slider-width;
         height: $slider-height;
 
@@ -132,7 +153,7 @@ $thumb-margin: -11px;
         }
 
         input[type=range] {
-          background: $black;
+          background: transparent;
           transform: rotate(-90deg);
           -webkit-appearance: none;
 
@@ -149,8 +170,15 @@ $thumb-margin: -11px;
           &::-moz-range-thumb {
             width: $thumb-width;
             height: $thumb-height;
-            background-color: $black;
             border: 0;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
           }
 
           &::-webkit-slider-thumb {
@@ -158,16 +186,30 @@ $thumb-margin: -11px;
             height: $thumb-height;
             margin-top: $thumb-margin;
             cursor: pointer;
-            background: $black;
             border-radius: 4px;
             appearance: none;
             -webkit-appearance: none;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
           }
 
           &::-webkit-slider-runnable-track {
             width: $slider-height;
             height: 6px;
-            background: $black;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
           }
 
           &:focus {
