@@ -63,7 +63,7 @@ class ConfigurationAdvanced extends React.Component {
   componentWillReceiveProps(nextProps) {
 
     //If property Changed, fetch metadata
-    if (!is(this.props.property, nextProps.property)) {
+    if (!nextProps.property.isEmpty() && !is(this.props.property, nextProps.property)) {
       this.fetchMetadata(nextProps)
     }
 
@@ -82,15 +82,14 @@ class ConfigurationAdvanced extends React.Component {
 
   onSubmit(edit, values) {
     const {brand, account, group, property} = this.props.params
+    const changedValues = this.generateSubmittableValues(values)
 
     if (edit) {
-      const changedValues = this.generateSubmittableValues(values)
-
       return this.props.updateMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: changedValues})
       .then(() => this.props.showNotification())
       .catch(this.submissionError)
     } else {
-      return this.props.createMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: values})
+      return this.props.createMetadata({brand, account, group, property, serviceType: getServiceType(this.props.property), payload: changedValues})
       .then(() => this.props.showNotification())
       .catch(this.submissionError)
     }

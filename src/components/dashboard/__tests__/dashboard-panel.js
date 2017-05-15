@@ -1,6 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
+jest.unmock('classnames')
 jest.unmock('../dashboard-panel.jsx')
 import DashboardPanel from '../dashboard-panel.jsx'
 
@@ -8,11 +9,12 @@ describe('DashboardPanel', () => {
   let subject, error, props = null
 
   beforeEach(() => {
-    subject = () => {
+    subject = (className, children = <div></div>) => {
       props = {
-        title: 'foo'
+        title: 'foo',
+        className: className
       }
-      return shallow(<DashboardPanel {...props}/>)
+      return shallow(<DashboardPanel {...props}>{children}</DashboardPanel>)
     }
   })
 
@@ -22,5 +24,13 @@ describe('DashboardPanel', () => {
 
   it('should show a title', () => {
     expect(subject().find('.dashboard-panel-header').length).toBe(1)
+  })
+
+  it('should reflect className', () => {
+    expect(subject('test').find('.test').length).toBe(1)
+  })
+
+  it('should reflect children', () => {
+    expect(subject('test', <div className="childTest"></div>).find('.childTest').length).toBe(1)
   })
 })

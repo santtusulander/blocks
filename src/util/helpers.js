@@ -282,10 +282,20 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       net_type: netType,
       status_codes: statusCodes || errorCodes
     }
-  } else if (
-    accountType === PROVIDER_TYPES.SERVICE_PROVIDER ||
-    accountType === PROVIDER_TYPES.CLOUD_PROVIDER
-  ) {
+  } else if (accountType === PROVIDER_TYPES.CLOUD_PROVIDER) {
+    return {
+      brand: params.brand,
+      startDate: startDate.format('X'),
+      endDate: endDate.format('X'),
+      account_ids: contentProviders,
+      group_ids: contentProviderGroups,
+      sp_account_ids: serviceProviders,
+      sp_group_ids: serviceProviderGroups,
+      service_type: serviceType,
+      net_type: netType,
+      status_codes: statusCodes || errorCodes
+    }
+  } else {
     return {
       sp_account: params.account,
       brand: params.brand,
@@ -299,8 +309,6 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       status_codes: statusCodes || errorCodes
     }
   }
-
-  return null
 }
 
 export function filterChangeNeedsReload(currentFilters, nextFilters) {

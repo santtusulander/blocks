@@ -127,6 +127,7 @@ class Storage extends Component {
       storageContents,
       gatewayHostname
     } = this.props
+
     return (
       <Content>
         {group && hasStorageService &&

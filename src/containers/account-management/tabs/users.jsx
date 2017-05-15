@@ -109,8 +109,8 @@ export class AccountManagementAccountUsers extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
-    const {page, sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
-
+    const { sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
+    const page = nextProps.location.query.page ? nextProps.location.query.page : 1
     //if brand, account or pagination/sort has changed -> refetch
     if (brand !== this.props.params.brand
       || account !== this.props.params.account
