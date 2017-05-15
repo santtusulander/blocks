@@ -276,41 +276,44 @@ class CertificateFormContainer extends Component {
                 disabled={this.isAllFilesAdded()}>
                 <IconAdd />
               </Button>
-              <div className="key-and-certificates-list">
-                {privateKey &&
-                  <div>
-                    <IconPassword />
-                    <FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>
+
+              {(privateKey || certificate || intermediateCertificates)  &&
+                <div className="key-and-certificates-list">
+                  {privateKey &&
+                    <div>
+                      <IconPassword />
+                      <FormattedMessage id="portal.security.ssl.edit.privateKey.text"/>
+                        <Button
+                          onClick={() => this.deleteItem('privateKey')}
+                          className="btn btn-icon">
+                          <IconClose/>
+                        </Button>
+                    </div>
+                  }
+                  {certificate &&
+                    <div>
+                      <IconFile />
+                      <FormattedMessage id="portal.security.ssl.edit.certificate.text"/>
                       <Button
-                        onClick={() => this.deleteItem('privateKey')}
+                        onClick={() => this.deleteItem('certificate')}
                         className="btn btn-icon">
                         <IconClose/>
                       </Button>
-                  </div>
-                }
-                {certificate &&
-                  <div>
-                    <IconFile />
-                    <FormattedMessage id="portal.security.ssl.edit.certificate.text"/>
-                    <Button
-                      onClick={() => this.deleteItem('certificate')}
-                      className="btn btn-icon">
-                      <IconClose/>
-                    </Button>
-                  </div>
-                }
-                {intermediateCertificates &&
-                  <div>
-                    <IconFile />
-                    <FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>
-                    <Button
-                      onClick={() => this.deleteItem('intermediateCertificates')}
-                      className="btn btn-icon">
-                      <IconClose/>
-                    </Button>
-                  </div>
-                }
-              </div>
+                    </div>
+                  }
+                  {intermediateCertificates &&
+                    <div>
+                      <IconFile />
+                      <FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text"/>
+                      <Button
+                        onClick={() => this.deleteItem('intermediateCertificates')}
+                        className="btn btn-icon">
+                        <IconClose/>
+                      </Button>
+                    </div>
+                  }
+                </div>
+              }
 
               {!this.isAllFilesAdded() &&
                 <Dropzone
