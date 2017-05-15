@@ -1,8 +1,10 @@
-$thumb-width: 32px;
-$thumb-height: 10px;
+$thumb-width: 10px;
+$thumb-height: 28px;
 $track-width: 10px;
 $track-margin: 13px;
-$slider-height: 100px;
+$slider-height: 130px;
+$slider-width: 120px;
+$thumb-margin: -11px;
 
 .mapboxgl-popup {
   min-width: 150px;
@@ -120,19 +122,19 @@ $slider-height: 100px;
       align-items: center;
 
       .map-slider {
-        &__slider {
-          position: relative;
-          height: $slider-height;
-        }
-        input[type=range] {
-          transform: rotate(90deg);
-          -webkit-appearance: none;
-          background: $black;
+        position: relative;
+        width: $slider-width;
+        height: $slider-height;
+
+        &__wrapper {
           position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          z-index: 10;
+          top: 48%;
+        }
+
+        input[type=range] {
+          background: $black;
+          transform: rotate(-90deg);
+          -webkit-appearance: none;
 
           &::-moz-range-track {
             background-color: transparent;
@@ -152,20 +154,28 @@ $slider-height: 100px;
           }
 
           &::-webkit-slider-thumb {
-            appearance: none;
             width: $thumb-width;
             height: $thumb-height;
-            background: $white;
-            -webkit-appearance: none;
+            margin-top: $thumb-margin;
             cursor: pointer;
+            background: $black;
+            border-radius: 4px;
+            appearance: none;
+            -webkit-appearance: none;
           }
 
-          &::-webkit-slider-runnable-track{
+          &::-webkit-slider-runnable-track {
+            width: $slider-height;
+            height: 6px;
             background: $black;
-            width: $track-width;
+          }
+
+          &:focus {
+            outline: none;
           }
         }
       }
+
       button {
         position: relative;
         display: block;

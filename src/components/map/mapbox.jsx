@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactMapboxGl, { Popup } from 'react-mapbox-gl'
-import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
+import ReactMapboxGl, { Popup, Layer, Feature } from 'react-mapbox-gl'
+import { Map, List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import UDNButton from '../shared/form-elements/button'
@@ -734,12 +734,12 @@ class Mapbox extends Component {
             </div>
           */}
           <div className="control map-zoom">
-            <div className="map-slider">
-              <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={this.onIncreaseZoom}>
-                <IconAdd width={16} height={16}/>
-              </UDNButton>
+            <UDNButton bsStyle="primary" icon={true} addNew={true} onClick={this.onIncreaseZoom}>
+              <IconAdd width={16} height={16}/>
+            </UDNButton>
 
-              <div className="map-slider__slider">
+            <div className="map-slider">
+              <div className="map-slider__wrapper">
                 <input type="range"
                   min={MAPBOX_ZOOM_MIN}
                   max={MAPBOX_ZOOM_MAX}
@@ -748,11 +748,11 @@ class Mapbox extends Component {
                   onMouseUp={this.onZoom}
                   />
               </div>
-
-              <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
-                <IconDelete width={16} height={16}/>
-              </UDNButton>
             </div>
+
+            <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
+              <IconDelete width={16} height={16}/>
+            </UDNButton>
             <div
               className="map-zoom-reset"
               onClick={this.resetZoom}>
