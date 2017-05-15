@@ -36,11 +36,11 @@ import { paleblue } from "../../../constants/colors";
 
 // default dates to last 28 days
 function safeMomentStartDate(date) {
-  return date ? moment(date, 'X') : startOfLast28()
+  return date ? moment.unix(date) : startOfLast28()
 }
 
 function safeMomentEndDate(date) {
-  return date ? moment(date, 'X') : endOfThisDay()
+  return date ? moment.unix(date) : endOfThisDay()
 }
 
 function safeFormattedStartDate(date) {
@@ -130,7 +130,7 @@ class PropertySummary extends React.Component {
     for (let t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
       hourlyTraffic.push({
         bits_per_second: 0,
-        timestamp: moment(t, 'X').toDate()
+        timestamp: moment.unix(t).toDate()
       })
     }
     return hourlyTraffic
@@ -251,7 +251,7 @@ class PropertySummary extends React.Component {
   hoverSlice(date, x1, x2) {
     if (date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
-        .find(day => moment(day.get('timestamp'), 'X')
+        .find(day => moment.unix(day.get('timestamp'))
           .isSame(moment(date), 'day'))
       const xPos = (((x1 + x2) / 2) - 100)
       this.setState({
@@ -290,7 +290,7 @@ class PropertySummary extends React.Component {
       [] :
       this.props.hourlyTraffic.getIn(['history', 0, 'detail']).map(hour => {
         return {
-          timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
+          timestamp: moment.unix(hour.get('timestamp')).add(dateRange.asDays(), 'days').toDate(),
           bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
@@ -298,7 +298,7 @@ class PropertySummary extends React.Component {
       !historical_traffic.length ? [] : this.getEmptyHourlyTraffic(startDate, endDate) :
       this.props.hourlyTraffic.getIn(['now', 0, 'detail']).map(hour => {
         return {
-          timestamp: moment(hour.get('timestamp'), 'X').toDate(),
+          timestamp: moment.unix(hour.get('timestamp')).toDate(),
           bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
@@ -440,7 +440,7 @@ class PropertySummary extends React.Component {
             y={-30}
             hidden={false}>
             <div className="tooltip-header">
-              <b>{formatMoment(moment(this.state.activeSlice.get('timestamp'), 'X'), 'MMM D, ddd')}</b>
+              <b>{formatMoment(moment.unix(this.state.activeSlice.get('timestamp')), 'MMM D, ddd')}</b>
             </div>
             <div>
               <FormattedMessage id="portal.content.property.summary.peak.label"/>

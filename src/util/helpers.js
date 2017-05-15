@@ -350,7 +350,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @param format
  * @returns {*}
  */
-export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+export function formatUnixTimestamp(unix, format) {
   return moment.unix(unix).format(format)
 }
 
@@ -370,7 +370,7 @@ export function unixTimestampToDate(unix) {
  * @param format
  * @returns {*}
  */
-export function formatDate(date, format = 'MM/DD/YYYY') {
+export function formatDate(date, format) {
   return moment(date).format(format)
 }
 
@@ -380,7 +380,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
  * @param format
  * @returns {*}
  */
-export function formatMoment(momentObj, format = 'MM/DD/YYYY') {
+export function formatMoment(momentObj, format) {
   return momentObj.format(format)
 }
 
