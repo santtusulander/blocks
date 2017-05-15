@@ -240,10 +240,10 @@ class CertificateFormContainer extends Component {
   render() {
     const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit,invalid, submitting } = this.props
     const { privateKey, intermediateCertificates, certificate, showManuallModal} = this.state
-    const groupsOptions = this.props.groups.map(group => [
-      group.get('id'),
-      group.get('name')
-    ])
+    const groupsOptions = this.props.groups.map(group => {
+      return {value: group.get('id'), label: group.get('name')}
+    })
+
     const certRequiredText = (privateKey && certificate) ? null : <FormattedMessage id="portal.security.ssl.certRequired.text"/>
     const subTitle = !certificateToEdit.isEmpty() && formValues && formValues.title
 
@@ -351,7 +351,7 @@ class CertificateFormContainer extends Component {
             <CertificateForm
               submitting={submitting}
               invalid={invalid}
-              groupsOptions={groupsOptions}
+              groupsOptions={groupsOptions.toJS()}
               certificateToEdit={certificateToEdit}
               onSubmit={handleSubmit(values => this.handleManualAdding(values))}
               onCancel={this.toggleManuallModal} />

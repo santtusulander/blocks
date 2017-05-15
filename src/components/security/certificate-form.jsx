@@ -15,7 +15,7 @@ export const CertificateForm = ({ groupsOptions, certificateToEdit, submitting,i
         name="group"
         className="input-select"
         component={FieldFormGroupSelect}
-        options={groupsOptions.toJS()}
+        options={groupsOptions}
         label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
         disabled={!certificateToEdit.isEmpty()}
       />
@@ -82,7 +82,7 @@ export const CertificateForm = ({ groupsOptions, certificateToEdit, submitting,i
 CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
   certificateToEdit: PropTypes.object,
-  groupsOptions: PropTypes.object,
+  groupsOptions: PropTypes.array,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
