@@ -793,12 +793,15 @@ class Mapbox extends Component {
           </div>
         }
 
-        { (this.props.markers && this.props.markers.size) &&
-          <div className="map-markers-legend">
-            <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
-            <span className="space" />
-            <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
-          </div>
+        { (this.props.markers && this.props.markers.size)
+          ?
+            <div className="map-markers-legend">
+              <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+              <span className="space" />
+              <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+            </div>
+          :
+            null
         }
       </ReactMapboxGl>
     )
