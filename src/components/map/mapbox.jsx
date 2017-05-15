@@ -739,16 +739,14 @@ class Mapbox extends Component {
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
-              {this.state.popupContent.total &&
                 <table>
                   <tbody>
                     <tr>
                       <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
-                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
+                      <td>{this.state.popupContent.total !== undefined ? this.props.dataKeyFormat(this.state.popupContent.total) : '-'}</td>
                     </tr>
                   </tbody>
                 </table>
-              }
             </div>
           </Popup>
         }
