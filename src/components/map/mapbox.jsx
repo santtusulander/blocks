@@ -431,7 +431,7 @@ class Mapbox extends Component {
     // See if it's possible to use Mapbox's data-driven styling here.
     // https://www.mapbox.com/blog/data-driven-styling/
     let colorIndex
-    if (trafficCountry && trafficHeat === 0) {
+    if (trafficHeat === 0) {
       colorIndex = 0
     } else if (trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length) {
       colorIndex = trafficHeat - 1
