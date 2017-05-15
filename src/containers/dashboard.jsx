@@ -412,7 +412,7 @@ export class Dashboard extends React.Component {
                 router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
 
               }}
-              levels={[ 'brand' ]}>
+              levels={[ 'brand', 'account' ]}>
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1>
                   <TruncatedTitle
