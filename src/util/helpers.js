@@ -734,7 +734,7 @@ export function formatASN(asnObj) {
 }
 
 export function getFolderName(fileName, postFix) {
-  const fileNameWithNoExtension = fileName.match(/\/?([^\/]+)\.\w+$/)
+  const fileNameWithNoExtension = fileName.match(/\/?([^\/\\]+)\.\w+$/)
   const folderName = fileNameWithNoExtension
                       ? (fileNameWithNoExtension[1] ? `${fileNameWithNoExtension[1]}${postFix}`: '')
                       : ''
