@@ -677,29 +677,32 @@ class Mapbox extends Component {
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
 
-        { (this.props.markers && this.props.markers.size) &&
-          <Layer
-            id="markers"
-            layout={{
-              "icon-image": "{icon}-15",
-              //"text-field": "{title}",
-              "icon-allow-overlap": true
-            }}
-            >
-            {this.props.markers
-              .map(marker => (
-                <Feature
-                  key={marker.get('id')}
-                  coordinates={marker.get("lnglat").toJS()}
-                  properties={{
-                    "name": marker.get('id'),
-                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
-                    [this.props.dataKey]: marker.get('traffic')
-                  }}
-                />
-              )).toArray()
-            }
-          </Layer>
+        { (this.props.markers && this.props.markers.size)
+          ?
+            <Layer
+              id="markers"
+              layout={{
+                "icon-image": "{icon}-15",
+                //"text-field": "{title}",
+                "icon-allow-overlap": true
+              }}
+              >
+              {this.props.markers
+                .map(marker => (
+                  <Feature
+                    key={marker.get('id')}
+                    coordinates={marker.get("lnglat").toJS()}
+                    properties={{
+                      "name": marker.get('id'),
+                      "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
+                      [this.props.dataKey]: marker.get('traffic')
+                    }}
+                  />
+                )).toArray()
+              }
+            </Layer>
+          :
+          null
         }
 
         {/*
@@ -777,12 +780,15 @@ class Mapbox extends Component {
           </div>
         }
 
-        { (this.props.markers && this.props.markers.size) &&
-          <div className="map-markers-legend">
-            <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
-            <span className="space" />
-            <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
-          </div>
+        { (this.props.markers && this.props.markers.size)
+          ?
+            <div className="map-markers-legend">
+              <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+              <span className="space" />
+              <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+            </div>
+          :
+            null
         }
       </ReactMapboxGl>
     )
