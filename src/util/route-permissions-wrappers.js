@@ -178,8 +178,8 @@ export const CanViewStorageTab =
     allowRedirectBack: false
   })
 
-export const CanViewBrandDashboard = (store) => {
-  return UserAuthWrapper({
+export const CanViewBrandDashboard =
+  UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
       const currentUser = state.user.get('currentUser')
@@ -189,10 +189,10 @@ export const CanViewBrandDashboard = (store) => {
       return currentUser ? path : backupPath
     },
     wrapperDisplayName: 'CanViewBrandDashboard',
-    predicate: permissionChecker(PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION, store),
+    predicate: permissionChecker(PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION),
     allowRedirectBack: false
   })
-}
+
 
 export const UserCanViewGTM = UserAuthWrapper({
   authSelector: (state, ownProps) => {
