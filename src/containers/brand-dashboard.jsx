@@ -233,7 +233,8 @@ export class BrandDashboard extends React.Component {
     /* TOP 5 SERVICE/CONTENT PROVICERS */
     const topProvidersSp = !dashboard.size ? List() : dashboard.get('all_sp_providers') && dashboard.getIn(['all_sp_providers', 'detail']).sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
-    })
+    }).slice(0, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH)
+
     const topProvidersCp = !dashboard.size ? List() : dashboard.get('cp_providers') && dashboard.get('cp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
     })
@@ -297,9 +298,6 @@ export class BrandDashboard extends React.Component {
               </thead>
               <tbody>
                 {topProvidersSp && topProvidersSp.map((provider, i) => {
-                  if (i >= BRAND_DASHBOARD_TOP_PROVIDER_LENGTH) {
-                    return null
-                  }
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
