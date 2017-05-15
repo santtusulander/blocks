@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
-import {Map, List} from 'immutable'
+import {Map, List, is} from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 // import Typeahead from '../shared/form-elements/typeahead'
@@ -54,7 +54,11 @@ class Mapbox extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map || nextProps.dataKey !== this.props.dataKey) {
+    if (this.props.theme !== nextProps.theme) {
+      location.reload();
+    }
+
+    if (this.state.map && !is(this.props.countryData, nextProps.countryData) || nextProps.dataKey !== this.props.dataKey || this.props.theme !== nextProps.theme) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
@@ -67,7 +71,7 @@ class Mapbox extends Component {
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (!nextProps.cityData.equals(this.props.cityData) ||
+    if (!is(nextProps.cityData, this.props.cityData) ||
         (nextProps.dataKey !== this.props.dataKey && this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
@@ -192,16 +196,15 @@ class Mapbox extends Component {
     if (map.style._loaded) {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
-      let layers
-      if (this.props.markers && this.props.markers.size) {
-        layers = [...this.state.layers, 'markers']
-      } else {
-        layers = [...this.state.layers]
+      const layers = [...this.state.layers]
+
+      if (map.getLayer('markers')) {
+        layers.push('markers')
       }
 
       const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
-      if (features.length) {
+      if (features && features.length) {
         // Check if hovered feature is a cluster since we need to apply different hover style methods on clusters
         const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
         const isMarker = (features[0].layer.id === 'markers')
@@ -690,32 +693,29 @@ class Mapbox extends Component {
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
 
-        { (this.props.markers && this.props.markers.size)
-          ?
-            <Layer
-              id="markers"
-              layout={{
-                "icon-image": "{icon}-15",
-                //"text-field": "{title}",
-                "icon-allow-overlap": true
-              }}
-              >
-              {this.props.markers
-                .map(marker => (
-                  <Feature
-                    key={marker.get('id')}
-                    coordinates={marker.get("lnglat").toJS()}
-                    properties={{
-                      "name": marker.get('id'),
-                      "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
-                      [this.props.dataKey]: marker.get('traffic')
-                    }}
-                  />
-                )).toArray()
-              }
-            </Layer>
-          :
-          null
+        { (this.props.markers && !this.props.markers.isEmpty()) &&
+          <Layer
+            id="markers"
+            layout={{
+              "icon-image": "{icon}-15",
+              //"text-field": "{title}",
+              "icon-allow-overlap": true
+            }}
+            >
+            {this.props.markers
+              .map(marker => (
+                <Feature
+                  key={marker.get('id')}
+                  coordinates={marker.get("lnglat").toJS()}
+                  properties={{
+                    "name": marker.get('id'),
+                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
+                    [this.props.dataKey]: marker.get('traffic')
+                  }}
+                />
+              )).toArray()
+            }
+          </Layer>
         }
 
         {/*
@@ -739,16 +739,14 @@ class Mapbox extends Component {
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
-              {this.state.popupContent.total &&
                 <table>
                   <tbody>
                     <tr>
                       <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
-                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
+                      <td>{this.state.popupContent.total !== undefined ? this.props.dataKeyFormat(this.state.popupContent.total) : '-'}</td>
                     </tr>
                   </tbody>
                 </table>
-              }
             </div>
           </Popup>
         }
@@ -824,6 +822,8 @@ Mapbox.propTypes = {
 }
 
 Mapbox.defaultProps = {
+  cityData: List(),
+  countryData: List(),
   dataKeyFormat: data => data,
   getCitiesWithinBounds: () => {
     // no-op
