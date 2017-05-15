@@ -27,7 +27,7 @@ import { getByPage } from '../../../redux/modules/entities/users/selectors'
 import { getPaginationMeta } from '../../../redux/modules/entity/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
-//import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
@@ -49,14 +49,12 @@ import ModalWindow from '../../../components/shared/modal'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import Paginator from '../../../components/shared/paginator/paginator'
 
-import { ROLES_MAPPING } from '../../../constants/account-management-options'
+// import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors, roleIsEditableByCurrentUser } from '../../../util/helpers'
+import { checkForErrors, roleIsEditableByCurrentUser, getRoleOptionsByProviderType } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { DELETE_USER, MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
-import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
-
 import { paginationChanged } from '../../../util/pagination'
 
 const PAGE_SIZE = 20
@@ -198,28 +196,10 @@ export class AccountManagementAccountUsers extends Component {
     return checkForErrors({ email, roles }, conditions)
   }
 
-  getRoleOptions(roleMapping, props) {
-    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
-    return roleMapping
-      .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .filter((roleToCheck) => {
-        // Don't allow UDN admin to create another UDN Admin or Super admin
-        // TODO: make dynamic check
-        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
-          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
-              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
-            return false
-          }
-        }
-
-        return true
-      })
-      .map((mapped_role) => {
-        const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
-        return matchedRole
-              ? [matchedRole.get('id'), matchedRole.get('name')]
-              : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
-      })
+  getRoleOptions({ account, roles, allowedRoles }) {
+    return getRoleOptionsByProviderType(roles, account.get('provider_type'))
+      .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
+      .map(role => [role.get('id'), role.get('name')])
   }
 
   getInlineAddFields() {
@@ -236,7 +216,8 @@ export class AccountManagementAccountUsers extends Component {
           {error}
         </Tooltip>
 
-    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(this.props)
+
     return [
       [
         {
@@ -635,6 +616,7 @@ const mapStateToProps = (state, ownProps) => {
   const currentUser = getCurrentUser(state)
   const allowedRoles = getAllowedRolesById(state, currentUser.getIn(['roles', 0]))
   return {
+    account: getAccountById(state, ownProps.params.account),
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
