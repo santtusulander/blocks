@@ -164,10 +164,8 @@ export class BrandDashboard extends React.Component {
   renderContent() {
     const { dashboard, filterOptions, intl, theme, markers } = this.props
     const chartTraffic = dashboard && dashboard.get('all_sp_providers')
-
     const coreData = []
     const spEdgaData = []
-    let dataIsReady = false
 
     /* Separate SP Edges & UDN Core accounts */
     chartTraffic && chartTraffic.get('detail').forEach((accountData) => {
@@ -179,14 +177,12 @@ export class BrandDashboard extends React.Component {
     })
 
     /* Verify that data is ready */
-    if ((coreData && spEdgaData) &&
-        (coreData.length && spEdgaData.length)) {
-      dataIsReady = true
-    }
+    const coreDataIsReady = coreData && coreData.length
+    const spDataIsReady = spEdgaData && spEdgaData.length
 
     /* Prepared data for Stacked Summary */
-    const coreResultData = dataIsReady && coreData[0]
-    const spResultData = dataIsReady && this.spDataAggregation(spEdgaData)
+    const coreResultData = coreDataIsReady && coreData[0]
+    const spResultData = spDataIsReady && this.spDataAggregation(spEdgaData)
 
     const coreTrafficDetail = coreResultData && coreResultData.get('detail')
     const spTrafficDetail = spResultData && spResultData.get('detail')
@@ -211,9 +207,8 @@ export class BrandDashboard extends React.Component {
       }).toJS()
 
     /* Prepare ammount of traffic for chart */
-    const udn_core_traffic = dataIsReady && Number(coreResultData.get('bytes'))
-    const sp_edges_traffic = dataIsReady && Number(spResultData.get('bytes'))
-
+    const udn_core_traffic = coreDataIsReady && Number(coreResultData.get('bytes'))
+    const sp_edges_traffic = spDataIsReady && Number(spResultData.get('bytes'))
     const trafficBytes = chartTraffic && chartTraffic.getIn(['total', 'bytes'])
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
     const totalTrafficValue = totalTraffic.value
