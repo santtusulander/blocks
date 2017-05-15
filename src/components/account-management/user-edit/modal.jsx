@@ -7,6 +7,7 @@ import AccountManagementUserEditForm from './form'
 import SidePanel from '../../shared/side-panel'
 
 import { getCheckboxArrayOptions } from '../../../util/group-helpers'
+import { getRoleOptionsById } from '../../../util/helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
@@ -16,16 +17,16 @@ class UserEditModal extends React.Component {
   }
 
   getRoleOptions() {
-    const {roles, user} = this.props
-    const userRole = user.getIn(['roles', 0])
-    const userRoleData = roles.find(role => role.get('id') === userRole)
-    const userRoleType = userRoleData && userRoleData.getIn(['account_provider_types', 0])
+    const {roles, user, allowedRoles} = this.props
+    const userRoleId = user.getIn(['roles', 0])
 
-    return roles
-            .filter(role => {
-              return role.get('account_provider_types').includes(userRoleType)
-            })
-            .map(role => [role.get('id'), role.get('name')])
+    /*
+      This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
+      we have to treat it this way
+    */
+    return getRoleOptionsById(roles, userRoleId)
+            .filter(role => allowedRoles.get(0) === '*' || allowedRoles.includes(role.get('id')))
+            .map(role => [role.get('id'), role.get('name')]).toJS()
   }
 
   render() {
@@ -65,6 +66,7 @@ class UserEditModal extends React.Component {
 UserEditModal.displayName = "UserEditModal"
 
 UserEditModal.propTypes = {
+  allowedRoles: PropTypes.instanceOf(List),
   groups: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

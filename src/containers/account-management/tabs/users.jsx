@@ -14,6 +14,8 @@ import { parseResponseError } from '../../../redux/util'
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
+import { getAllowedRolesById } from '../../../redux/modules/entities/roles/selectors'
+
 import rolesActions from '../../../redux/modules/entities/roles/actions'
 import {getAll as getAllPermissions} from '../../../redux/modules/entities/roles/selectors'
 
@@ -374,6 +376,7 @@ export class AccountManagementAccountUsers extends Component {
       users,
       roles,
       permissions,
+      allowedRoles,
       permissionServiceTitles,
       params: {account}
     } = this.props
@@ -542,6 +545,7 @@ export class AccountManagementAccountUsers extends Component {
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}
             roles={this.props.roles}
+            allowedRoles={allowedRoles}
           />
         }
 
@@ -591,6 +595,7 @@ export class AccountManagementAccountUsers extends Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
+  allowedRoles: PropTypes.instanceOf(List),
   createUser: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
@@ -616,19 +621,23 @@ AccountManagementAccountUsers.propTypes = {
 }
 
 AccountManagementAccountUsers.defaultProps = {
-  roles: List()
+  roles: List(),
+  allowedRoles: List()
 }
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const page = ownProps.location.query.page ? ownProps.location.query.page : 1
   const permissionTitles = getTitlesByID(state,'UI')
+  const currentUser = getCurrentUser(state)
+  const allowedRoles = getAllowedRolesById(state, currentUser.getIn(['roles', 0]))
   return {
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
-    currentUser: getCurrentUser(state),
+    currentUser,
+    allowedRoles,
     permissions: getAllPermissions(state),
     paginationMeta: getPaginationMeta(state, 'user'),
     permissionServiceTitles: permissionTitles ? permissionTitles.get('resources'): List()
