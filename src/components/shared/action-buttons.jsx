@@ -31,6 +31,7 @@ class ActionButtons extends Component {
             className,
             deleteDisabled,
             removeDisabled,
+            editDisabled,
             onArrowDown,
             onArrowUp,
             onEdit,
@@ -72,6 +73,7 @@ class ActionButtons extends Component {
         <IsAllowed to={permissions ? permissions.modify : ALLOW_ALWAYS}>
           <Button
             onClick={onEdit}
+            disabled={editDisabled}
             className="btn btn-icon edit-button">
             <IconEdit />
           </Button>
@@ -140,6 +142,7 @@ ActionButtons.propTypes = {
   arrowUpDisabled: PropTypes.bool,
   className: PropTypes.string,
   deleteDisabled: PropTypes.bool,
+  editDisabled: PropTypes.bool,
   intl: PropTypes.object,
   onArrowDown: PropTypes.func,
   onArrowUp: PropTypes.func,

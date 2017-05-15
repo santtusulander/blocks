@@ -36,34 +36,38 @@ const StorageItemChart = ({
     /****** This Month Chart ******/
     // ↓         ↓
     // ⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: currentUsage,                       className: 'current-month current-month-usage'},
+    [{value: (currentUsage * 360) / estimate < 1 //round small values to avoid miscalculations that happen in some browsers. UDNP-3670
+      ? Math.round((currentUsage * 360) / estimate)
+      : currentUsage,                            className: 'current-month current-month-usage'},
     //            ↓             ↓
     // ⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: estimate - currentUsage,            className: classNames('current-month current-month-background', {exceeded: currentUsage > estimate})}],
      /****** This Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: peak && peak - (estimate / 360),            className: 'current-month'},
+    [{value: peak && peak - (estimate / 360),    className: 'current-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: peak && estimate / 360,                     className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
+     {value: peak && estimate / 360,             className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: estimate - peak,                    className: 'current-month'}],
      /****** Last Month Chart ******/
     // ↓         ↓
     // ⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: lastMonthUsage,                     className: 'last-month last-month-usage'},
+    [{value: (lastMonthUsage * 360) / lastMonthEstimate < 1 //round small values to avoid miscalculations that happen in some browsers. UDNP-3670
+        ? Math.round((lastMonthUsage * 360) / lastMonthEstimate)
+        : lastMonthUsage,                        className: 'last-month last-month-usage'},
     //            ↓             ↓
     // ⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthUsage, className: 'last-month last-month-background'}],
      /****** Last Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: lastMonthPeak && lastMonthPeak - (lastMonthEstimate / 360),   className: 'last-month'},
+    [{value: lastMonthPeak && lastMonthPeak - (lastMonthEstimate / 360), className: 'last-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: lastMonthPeak && lastMonthEstimate / 360,            className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
+     {value: lastMonthPeak && lastMonthEstimate / 360, className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthPeak,  className: 'last-month'}]]

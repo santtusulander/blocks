@@ -12,14 +12,13 @@ import {
   UserHasPermission,
   UserCanListAccounts,
   UserCanViewAccountDetail,
-  UserCanManageAccounts,
-  UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
   UserCanViewDns,
   UserCanViewHosts,
   CanViewConfigurationSecurity,
   CanViewStorageSummary,
   CanViewStorageTab,
+  CanViewBrandDashboard,
   UserCanViewGTM,
   UserCanViewAdvancedTab,
   AccountCanViewProperties
@@ -63,6 +62,7 @@ import ConfigurationAdvanced from './components/configuration/advanced'
 import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
+import BrandDashboard from './containers/brand-dashboard'
 import RecoveryKey from './components/login/login-form-two-factor-recovery-key'
 import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
@@ -71,6 +71,7 @@ import GroupContainer from './containers/content/group'
 
 import Login from './containers/login'
 import Main from './containers/main'
+import Home from './containers/home'
 import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property/property'
 import PropertySummary from './containers/property/tabs/property-summary'
@@ -80,7 +81,8 @@ import Security from './containers/security/security'
 import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificate'
 import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
 import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
-import Services from './containers/services'
+import Services from './containers/services/services'
+import ServicesTabLogDelivery from './containers/services/tabs/log-delivery-service'
 import Storage from './containers/storage/storage'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'
@@ -94,7 +96,7 @@ import User from './containers/user'
 
 import ContentTransition from './transitions/content'
 
-import { getRoute } from './util/routes'
+import { getRoute, getDashboardUrlFromParams, getContentUrlFromParams } from './util/routes'
 
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],
@@ -184,12 +186,10 @@ const AccountIsSP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/network\//, 'i'), '/content/')
-    return redirectPath
+    return getContentUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
-
 
 
 const AccountIsCP = UserAuthWrapper({
@@ -212,8 +212,7 @@ const AccountIsCP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
-    return redirectPath
+    return getDashboardUrlFromParams(ownProps.params)
   },
   allowRedirectBack: false
 })
@@ -232,16 +231,19 @@ const AppRoutes =
       <IndexRoute component={UserIsLoggedIn(Main)} />
       */}
       <Route component={UserIsLoggedIn(Main)}>
-        {/* redirect to /content if in root*/ }
-        <IndexRedirect to={routes.content} />
+
+        {/* redirect to /home if in root */}
+        <IndexRedirect to={routes.home} />
+        <Route path={routes.home} component={Home}/>
+
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
         {/* Analytics - routes */}
-        <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION)} >
+        <Route path={routes.analytics} component={UserCanListAccounts('analyticsAccount')(UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION))} >
           {/* default - set 'udn' as brand */}
           <IndexRedirect to="udn" />
-          <Route path={routes.analyticsBrand} component={UserCanListAccounts(AnalyticsContainer)}>
+          <Route path={routes.analyticsBrand} component={AnalyticsContainer}>
             {getAnalyticsTabRoutes}
           </Route>
           <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
@@ -264,10 +266,10 @@ const AppRoutes =
 
 
         {/* Content / CP Accounts - routes */}
-        <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION))}>
+        <Route path={routes.content} component={UserCanListAccounts('contentAccount')(AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION)))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.contentBrand} component={UserCanListAccounts(BrandContainer)}/>
+            <Route path={routes.contentBrand} component={BrandContainer}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(BrandContainer)}/>
             <Route path={routes.contentGroups} component={AccountContainer}/>
             <Route path={routes.contentGroup} component={UserCanViewHosts(GroupContainer)}/>
@@ -299,10 +301,10 @@ const AppRoutes =
         </Route>
 
         {/* Network / SP Accounts - routes */}
-        <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION))}>
+        <Route path={routes.network} component={UserCanListAccounts('networkAccount')(AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION)))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.networkBrand} component={UserCanListAccounts(BrandContainer)}/>
+            <Route path={routes.networkBrand} component={BrandContainer}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(Network)}/>
           </Route>
           <Route path={routes.networkGroups} component={Network}/>
@@ -313,9 +315,9 @@ const AppRoutes =
         </Route>
 
         {/* Security - routes */}
-        <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION)}>
+        <Route path={routes.security} component={UserCanListAccounts('securityAccount')(UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION))}>
           <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
-          <Route path={routes.securityBrand} component={UserCanListAccounts(Security)} />
+          <Route path={routes.securityBrand} component={Security} />
           <Route path={routes.securityAccount} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
             <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
@@ -338,18 +340,24 @@ const AppRoutes =
         </Route>
 
         {/* Services - routes */}
-        <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION)}>
+        <Route path={routes.services} component={UserCanListAccounts('servicesAccount')(UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION))}>
           <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
-          <Route path={routes.servicesBrand} component={UserCanListAccounts(Services)}/>
-          <Route path={routes.servicesAccount} component={Services}/>
-          <Route path={routes.servicesGroup} component={Services}/>
+          <Route path={routes.servicesBrand} component={Services}/>
+          <Route path={routes.servicesAccount} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
+          <Route path={routes.servicesGroup} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
           <Route path={routes.servicesProperty} component={Services}/>
         </Route>
 
         {/* Support - routes */}
-        <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION)}>
+        <Route path={routes.support} component={UserCanListAccounts('supportAccount')((UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION)))}>
           <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
-          <Route path={routes.supportBrand} component={UserCanTicketAccounts(Support)}>
+          <Route path={routes.supportBrand} component={Support}>
               {getSupportTabRoutes}
           </Route>
           <Route path={routes.supportAccount} component={Support}>
@@ -364,9 +372,9 @@ const AppRoutes =
         </Route>
 
         {/* Account management - routes */}
-        <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION)}>
+        <Route path={routes.accountManagement} component={UserCanListAccounts('accountManagementAccount')(UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION))}>
           <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
-          <Route path={routes.accountManagementBrand} component={UserCanManageAccounts(AccountManagement)}>
+          <Route path={routes.accountManagementBrand} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
             <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
             <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
@@ -409,9 +417,9 @@ const AppRoutes =
         </Route>
 
         {/* Dashboard - routes */}
-        <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION)}>
+        <Route path={routes.dashboard} component={UserCanListAccounts('dashboardAccount')(UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION))}>
           <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
-          <Route path={routes.dashboardBrand} component={Dashboard}/>
+          <Route path={routes.dashboardBrand} component={CanViewBrandDashboard(BrandDashboard)}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
           <Route path={routes.dashboardProperty} component={Dashboard}/>

@@ -14,7 +14,15 @@ function intlMaker() {
 }
 
 const fakeAccount = Immutable.fromJS({id: 11, name: 'Account A'})
-const fakeGroup = Immutable.fromJS({id: 1, name: 'Group A'})
+const fakeGroup = Immutable.fromJS({
+  id: 1, 
+  name: 'Group A',
+  services: [
+    {
+      service_id: 1
+    }
+  ]
+})
 const fakeParams = { brand: 'udn', account: 1, group: 1 }
 const fakeProperties = Immutable.fromJS([
   {

@@ -21,7 +21,7 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 import groupActions from '../../redux/modules/entities/groups/actions'
 
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
-import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
+import { getByAccountWithMetrics as getGroupsByAccountWithMetrics } from '../../redux/modules/entities/groups/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
 import { getCurrentUser } from '../../redux/modules/user'
@@ -30,9 +30,6 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
 import { parseResponseError } from '../../redux/util'
-
-//TODO: UDNP-3177 Remove when fetchItem is not needed anymore
-import * as groupActionCreators from '../../redux/modules/group'
 
 import PROVIDER_TYPES from '../../constants/provider-types'
 
@@ -64,6 +61,7 @@ export class Account extends React.Component {
       groupToDelete: null
     }
   }
+
   componentWillMount() {
     this.props.fetchData()
   }
@@ -226,7 +224,6 @@ export class Account extends React.Component {
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
           isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_GROUP)}
           locationPermissions={getLocationPermissions(currentUser)}
-          metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
           selectionStartTier="group"
           selectionDisabled={selectionDisabled}
@@ -240,8 +237,7 @@ export class Account extends React.Component {
           user={this.props.user}
           viewingChart={this.props.viewingChart}
           fetchItem={(id) => {
-            console.warn('UDNP-3177 fetchItem will be deprecated')
-            return this.props.oldGroupActions.fetchGroup(brand, account, id)
+            return this.props.fetchGroup({brand, account, id})
           }}
         />
 
@@ -261,11 +257,10 @@ Account.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
-  metrics: PropTypes.instanceOf(List),
-  oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
   sortDirection: PropTypes.number,
@@ -282,7 +277,6 @@ Account.defaultProps = {
   activeGroup: Map(),
   dailyTraffic: List(),
   groups: List(),
-  metrics: List(),
   sortValuePath: List(),
   user: Map()
 }
@@ -300,9 +294,8 @@ const mapStateToProps = (state, ownProps) => {
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
-    groups: getGroupsByAccount(state, account),
+    groups: getGroupsByAccountWithMetrics(state, account),
 
-    metrics: state.metrics.get('groupMetrics'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,
@@ -312,14 +305,10 @@ const mapStateToProps = (state, ownProps) => {
 
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {params} = ownProps
-  const {account} = params
+  const { brand, account } = ownProps.params
 
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-
-  //TODO: UDNP-3177 Remove when fetchItem is not needed anymore
-  const oldGroupActions = bindActionCreators(groupActionCreators, dispatch)
 
   const metricsOpts = {
     account: account,
@@ -328,8 +317,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
   const fetchData = () => {
     return Promise.all([
-      dispatch(accountActions.fetchOne({...params, id: params.account})),
-      dispatch(groupActions.fetchAll(params)),
+      dispatch(accountActions.fetchOne({brand, id: account})),
+      dispatch(groupActions.fetchAll({brand, account})),
 
       metricsActions.startGroupFetching(),
       metricsActions.fetchGroupMetrics(metricsOpts),
@@ -340,11 +329,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchData: fetchData,
     uiActions,
-    oldGroupActions,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     createGroup: (params) => dispatch(groupActions.create(params)),
     updateGroup: (params) => dispatch(groupActions.update(params)),
-    removeGroup: (params) => dispatch(groupActions.remove(params))
+    removeGroup: (params) => dispatch(groupActions.remove(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne({...params, forceReload: true}))
   };
 }
 

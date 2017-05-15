@@ -8,6 +8,9 @@ jest.unmock('../content-items.jsx')
 
 import ContentItems from '../content-items.jsx'
 
+jest.unmock('../../../util/helpers.js')
+import { getPage } from '../../../util/helpers.js'
+
 const fakeMetrics = Immutable.fromJS([
   {
     "avg_cache_hit_rate": 94,
@@ -44,7 +47,8 @@ const fakeMetrics = Immutable.fromJS([
 const fakeItems = Immutable.fromJS([
   {
     id: 3,
-    name: 'aaa'
+    name: 'aaa',
+    metrics: {}
   }
 ])
 

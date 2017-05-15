@@ -13,7 +13,7 @@ const rolePermissionSchema = new schema.Entity('roles', {}, {
   processStrategy: (value, parent, key) => {
 
     //To provide compability with the old permissionMapping
-    const reduced = value.services.reduce((acc,val) => {
+    const reduced = value.rolePermissions.reduce((acc,val) => {
       acc[val.service.toLowerCase()] = val.permissions.resources
       return acc;
     }, {})
@@ -22,15 +22,37 @@ const rolePermissionSchema = new schema.Entity('roles', {}, {
   }
 })
 
+
+
 export const fetch = ({id}) => {
   return axios.get(baseUrl(id), PAGINATION_MOCK)
   .then(({data}) => {
-    return normalize(
+
+    const aaaService = data.data.find(service => service.service === 'AAA')
+    const allowedRoles = aaaService && aaaService.permissions && aaaService.permissions.roles && aaaService.permissions.roles.allowed_assigning
+
+    const normalized = normalize(
       {
         id,
-        services: data.data
+        rolePermissions: data.data
       }, rolePermissionSchema
     )
+
+    //Merge allowed roles into response payload, so that they can be saved using receiveEntity({ key: 'allowedRoles' }),
+    const normalizedEntities = normalized.entities
+
+    const mergedEntities = {
+      ...normalized,
+
+      entities: {
+        ...normalizedEntities,
+        allowedRoles: {
+          [id]: allowedRoles
+        }
+      }
+    }
+
+    return mergedEntities
 
   })
 }

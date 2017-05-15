@@ -1,8 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
+jest.unmock('../../../redux/modules/fetching/actions.js')
 jest.unmock('../storage-kpi')
-import StorageKPI from '../storage-kpi'
+import {StorageKPI} from '../storage-kpi'
 
 const intlMaker = () => {
   return {
@@ -18,6 +19,7 @@ const subject = shallow(
     ]}
     chartDataKey='bytes'
     currentValue={112}
+    fetchData={() => {}}
     gainPercentage={0.2}
     locations={['San Jose', 'Frankfurt']}
     peakValue={120}

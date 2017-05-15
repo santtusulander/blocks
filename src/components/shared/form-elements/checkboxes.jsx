@@ -71,10 +71,10 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
           const index = field.value.indexOf(checkbox.value)
           const hasValue = index >= 0
           return (
-            <div key={i} className={checkboxDivClassName}>
+            <div key={i} className={classnames(checkboxDivClassName, { disabled: checkbox.disabled })}>
               <Checkbox
                 checked={hasValue}
-                disabled={disabled}
+                disabled={disabled || checkbox.disabled}
                 onChange={e => handleChange(checkbox, hasValue, index, e)}>
                 {checkbox.label}
               </Checkbox>

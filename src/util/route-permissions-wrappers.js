@@ -10,7 +10,7 @@ import { getFetchingByTag } from '../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../redux/modules/user'
 
 import { getServicePermissions } from '../util/services-helpers'
-
+import { getRoute } from '../util/routes'
 import {
   hasService
 } from '../util/helpers'
@@ -47,44 +47,21 @@ export const UserHasPermission = (permission) => UserAuthWrapper({
   allowRedirectBack: false
 })(props => props.children)
 
-export const UserCanListAccounts =
+export const UserCanListAccounts = (failureRoute) =>
   UserAuthWrapper({
-    authSelector: authSelector,
+    authSelector: (state, { params }) => ({ user: getCurrentUser(state), params }),
     failureRedirectPath: (state, ownProps) => {
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
+
+      return getRoute(failureRoute, { ...ownProps.params, account: getCurrentUser(state).get('account_id') })
+
     },
     wrapperDisplayName: 'UserCanListAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
-    allowRedirectBack: false
-  })
+    predicate: ({ user, params }) => {
 
-export const UserCanManageAccounts =
-  UserAuthWrapper({
-    authSelector: authSelector,
-    failureRedirectPath: (state, ownProps) => {
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/accounts$/, '')
-        .replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
-    },
-    wrapperDisplayName: 'UserCanManageAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
-    allowRedirectBack: false
-  })
+      const userHasAccount = String(user.get('account_id')) === params.account
 
-export const UserCanTicketAccounts =
-  UserAuthWrapper({
-    authSelector: authSelector,
-    failureRedirectPath: (state, ownProps) => {
-      const currentUser = getCurrentUser(state)
-      const path = ownProps.location.pathname.replace(/\/tickets$/, '')
-        .replace(/\/$/, '')
-      return `${path}/${currentUser.get('account_id')}`
+      return user.size <= 1 || checkUserPermissions(user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS) || userHasAccount
     },
-    wrapperDisplayName: 'UserCanTicketAccounts',
-    predicate: permissionChecker(PERMISSIONS.VIEW_CONTENT_ACCOUNTS),
     allowRedirectBack: false
   })
 
@@ -183,16 +160,39 @@ export const CanViewStorageSummary =
 
 export const CanViewStorageTab =
   UserAuthWrapper({
-    authSelector: authSelector,
+    authSelector: (state, ownProps) => {
+      return {
+        currentUser: authSelector(state),
+        account: getAccountById(state, ownProps.params.account)
+      }
+    },
     failureRedirectPath: (state, ownProps) => {
       const path = ownProps.location.pathname.replace(/\/storage$/, '')
 
       return `${path}`
     },
     wrapperDisplayName: 'CanViewStorageTab',
-    predicate: permissionChecker(PERMISSIONS.LIST_STORAGE),
+    predicate: ({ currentUser, account }) => {
+      return accountIsContentProviderType(account) && permissionChecker(PERMISSIONS.LIST_STORAGE)(currentUser)
+    },
     allowRedirectBack: false
   })
+
+export const CanViewBrandDashboard =
+  UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const currentUser = state.user.get('currentUser')
+      const path = `${ownProps.location.pathname}/${currentUser.get('account_id')}`
+      const backupPath = ownProps.location.pathname.replace(/\/dashboard\/\w+/, 'content')
+
+      return currentUser ? path : backupPath
+    },
+    wrapperDisplayName: 'CanViewBrandDashboard',
+    predicate: permissionChecker(PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION),
+    allowRedirectBack: false
+  })
+
 
 export const UserCanViewGTM = UserAuthWrapper({
   authSelector: (state, ownProps) => {

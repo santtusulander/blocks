@@ -11,19 +11,16 @@ import {
 } from '../../util/routes.js'
 
 import accountActions from '../../redux/modules/entities/accounts/actions'
-import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
+import { getById as getAccountById, getByBrandWithMetrics  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../redux/modules/user'
-
-import * as accountActionCreators from '../../redux/modules/account'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
 
 import {
-  filterMetricsByAccounts,
   userIsCloudProvider,
   userIsServiceProvider
 } from '../../util/helpers'
@@ -85,7 +82,6 @@ export class Brand extends React.Component {
       accounts,
       fetching,
       fetchingMetrics,
-      metrics,
       params,
       sortDirection,
       sortValuePath,
@@ -95,15 +91,17 @@ export class Brand extends React.Component {
 
     // Only UDN admins can see list of all accounts
     const showAccountList = activeAccount && activeAccount.isEmpty() && userIsCloudProvider(currentUser)
+
     const contentItems = showAccountList
                       ? accounts
-                      : List.of(activeAccount)
+                      : List.of(
+                        accounts.find(account => account.get('id') === Number(params.account)) || Map()
+                      )
+
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
     const selectionDisabled = !showAccountList && userIsServiceProvider(currentUser)
-
-    const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
     const nextPageURLBuilder = (accountID, account) => {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
@@ -134,7 +132,6 @@ export class Brand extends React.Component {
         fetchingMetrics={fetchingMetrics}
         headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
         isAllowedToConfigure={checkUserPermissions(currentUser, PERMISSIONS.MODIFY_ACCOUNT)}
-        metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
         showSlices={true}
@@ -146,9 +143,7 @@ export class Brand extends React.Component {
         user={currentUser}
         viewingChart={viewingChart}
         fetchItem={(id) => {
-          /*eslint-disable no-console */
-          //console.warn('fetchItem will be deprecated in UDNP-3177')
-          return this.props.oldAccountActions.fetchAccount(brand, id)
+          return this.props.fetchAccount({brand, id})
         }}
       />
     )
@@ -162,11 +157,11 @@ Brand.propTypes = {
   createAccount: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
+  fetchAccount: PropTypes.func,
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
-  oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
   sortDirection: PropTypes.number,
@@ -180,7 +175,6 @@ Brand.defaultProps = {
   accounts: List(),
   activeAccount: Map(),
   dailyTraffic: List(),
-  metrics: List(),
   currentUser: Map()
 }
 
@@ -188,11 +182,10 @@ Brand.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     activeAccount: getAccountById(state, ownProps.params.account),
-    accounts: getByBrand(state, ownProps.params.brand),
+    accounts: getByBrandWithMetrics(state, ownProps.params.brand),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
-    metrics: state.metrics.get('accountMetrics'),
     roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
@@ -206,7 +199,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   const {brand, account} = ownProps.params
 
-  const oldAccountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
 
   const metricsOpts = {
@@ -233,13 +225,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
       metricsActions.fetchDailyAccountTraffic(metricsOpts)
     },
-
-    oldAccountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch),
 
     createAccount: (params) => dispatch(accountActions.create(params)),
     updateAccount: (params) => dispatch(accountActions.update(params)),
-    removeAccount: (params) => dispatch(accountActions.remove(params))
+    removeAccount: (params) => dispatch(accountActions.remove(params)),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, forceReload: true}))
   };
 }
 

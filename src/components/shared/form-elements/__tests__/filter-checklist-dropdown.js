@@ -1,6 +1,7 @@
 jest.unmock('../filter-checklist-dropdown.jsx');
 
-import React from 'react';
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { shallow } from 'enzyme'
 import { FilterChecklistDropdown } from '../filter-checklist-dropdown.jsx'
 
@@ -32,4 +33,16 @@ describe('FilterChecklistDropdown', function() {
   it('should reflect className prop', () => {
     expect(subject('test_class').find('.test_class').length).toBe(1)
   })
-});
+
+  it('should reflect defaultAllSelected prop default behaviour', () => {
+    expect(subject().instance().getLabel().props.id).toBe('portal.analytics.dropdownMenu.all')
+  })
+
+  it('should reflect defaultAllSelected prop changed', () => {
+    const component = subject()
+
+    component.setProps({defaultAllSelected: false})
+
+    expect(component.instance().getLabel().props.id).toBe('portal.analytics.dropdownMenu.pleaseSelect')
+  })
+})

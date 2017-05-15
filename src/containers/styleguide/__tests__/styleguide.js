@@ -2,6 +2,7 @@ import React from 'react'
 import {shallow} from 'enzyme'
 
 jest.unmock('../styleguide.jsx')
+jest.unmock('../../../redux/modules/fetching/actions')
 jest.unmock('../../../decorators/select-auto-close')
 
 jest.mock('../../../util/helpers', () => { return {

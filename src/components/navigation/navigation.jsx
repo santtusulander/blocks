@@ -71,7 +71,7 @@ const Navigation = ({ activeAccount, currentUser, params, router }) => {
     <nav className='navigation-sidebar text-sm'>
       <ul>
         {/* Display Dashboard icon as a first item in navbar when account is UDN Core */}
-        { isUDNCore &&
+        { (isUDNCore || isUDNAdmin) &&
           <IsAllowed to={VIEW_CONTENT_SECTION}>
             <li>
               <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
@@ -128,18 +128,6 @@ const Navigation = ({ activeAccount, currentUser, params, router }) => {
             </Link>
           </li>
         </IsAllowed>
-
-        {/* Display Dashboard icon as a third item in navbar when the user is UDN admin */}
-        { isUDNAdmin &&
-          <IsAllowed to={VIEW_CONTENT_SECTION} not={isUDNCore}>
-            <li>
-              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
-                <IconDashboard />
-                <FormattedMessage id="portal.navigation.dashboard.text"/>
-              </Link>
-            </li>
-          </IsAllowed>
-        }
 
         <IsAllowed to={VIEW_SECURITY_SECTION}>
           <li>

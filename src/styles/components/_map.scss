@@ -244,6 +244,41 @@ $slider-height: 100px;
   }
 }
 
+.map-markers-legend {
+  position: absolute;
+  //right: 0;
+  bottom: 25px;
+  left: 0;
+  z-index: $zindex-default-low;
+  display: flex;
+  width: 186px;
+  padding: 5px 10px 4px;
+  margin: 0 auto;
+  flex-direction: row;
+  align-items: center;
+
+  .dark-theme & {
+    background: rgba($black, 0.75);
+  }
+
+  .light-theme & {
+    background: rgba($white, 0.75);
+  }
+
+  .core {
+    color: $pale-blue;
+  }
+
+  .edge {
+    color: $yellow;
+  }
+
+  .space {
+    width: 10px;
+  }
+}
+
+
 .mapboxgl-ctrl-bottom-right {
   right: auto !important;
   left: 0;

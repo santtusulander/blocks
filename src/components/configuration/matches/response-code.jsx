@@ -82,6 +82,7 @@ class ResponseCode extends React.Component {
                   name="codes"
                   component={FieldFilterChecklistDropdown}
                   options={responseCodesOptions}
+                  defaultAllSelected={false}
                 />
               </Col>
             </Row>
