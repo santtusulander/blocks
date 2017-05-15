@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.json$/,
-        exclude: /(bower_components)/,
+        exclude: /(bower_components | node_modules(?!\/moment-timezone))/,
         loader: 'json'
       },
       {

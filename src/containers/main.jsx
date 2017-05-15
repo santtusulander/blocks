@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { is, Map, List } from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
+import 'moment-timezone'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
