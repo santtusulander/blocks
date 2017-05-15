@@ -10,7 +10,7 @@
              "application" : "zh-CN"
          },
          {
-             "smartling" : "es",
+             "smartling" : "es-ES",
              "application" : "es-ES"
          },
          {
@@ -46,6 +46,8 @@
          {
             "type"      : "json",
             "pathRegex" : "src\\/locales\\/en\\/.*\\.json",
+            "translationPathExpression" : "src\\/locales\\/${locale}\\/${originalFile.name}",
+            "translationCommitMessage"  : "Translate ${originalFile.fullName} to ${locale}",
             "authorizeContent" : "true"
          }
      ]

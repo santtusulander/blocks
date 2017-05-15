@@ -752,6 +752,10 @@ export function getCISname(originHostname) {
   return matchedResult ? matchedResult[1] : ''
 }
 
+export function isDefined(value) {
+  return typeof value !== 'undefined'
+}
+
 /**
  * Slice current page out of items
  * @param  {List} items

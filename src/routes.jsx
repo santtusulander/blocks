@@ -78,7 +78,8 @@ import Security from './containers/security/security'
 import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificate'
 import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
 import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
-import Services from './containers/services'
+import Services from './containers/services/services'
+import ServicesTabLogDelivery from './containers/services/tabs/log-delivery-service'
 import Storage from './containers/storage/storage'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'
@@ -337,8 +338,14 @@ const AppRoutes =
         <Route path={routes.services} component={UserCanListAccounts('servicesAccount')(UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION))}>
           <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
           <Route path={routes.servicesBrand} component={Services}/>
-          <Route path={routes.servicesAccount} component={Services}/>
-          <Route path={routes.servicesGroup} component={Services}/>
+          <Route path={routes.servicesAccount} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
+          <Route path={routes.servicesGroup} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
           <Route path={routes.servicesProperty} component={Services}/>
         </Route>
 

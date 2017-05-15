@@ -1,5 +1,24 @@
 {
   "portal.services.xxx": "value xxx",
   "portal.services.header.text": "SERVICES",
-  "portal.services.comingSoon.text": "Coming soon!"
+  "portal.services.comingSoon.text": "Coming soon!",
+  "portal.services.tab.logDelivery.text": "Log Delivery",
+  "portal.services.logDelivery.properties.text": "PROPERTIES",
+  "portal.services.logDelivery.configureLogDelivery.text": "Configure Log Delivery",
+  "portal.services.logDelivery.enableLogDelivery.text": "Enable Log Delivery",
+  "portal.services.logDelivery.requestedLogTypes.text": "Requested Log Types",
+  "portal.services.logDelivery.exportFileFormat.text": "Export File Format",
+  "portal.services.logDelivery.logAggregationInterval.text": "Log Aggregation Interval",
+  "portal.services.logDelivery.every.text": "Every",
+  "portal.services.logDelivery.contactPerson.text": "Contact Person",
+  "portal.services.logDelivery.email.text": "Email",
+  "portal.services.logDelivery.firstName.text": "First Name",
+  "portal.services.logDelivery.lastName.text": "Last Name",
+  "portal.services.logDelivery.phone.text": "Phone Number",
+  "portal.services.logDelivery.save.text": "Save",
+  "portal.services.logDelivery.cancel.text": "Cancel",
+  "portal.services.logDelivery.selectGroup.text": "Please select a group from top left to see Logs",
+  "portal.services.logDelivery.exportFileFormat.tooltip.message": "Export File Format",
+  "portal.services.logDelivery.logAggregationInterval.tooltip.message": "Log Aggregation Interval",
+  "portal.services.logDelivery.currentLogStorage.text": "Current Log Storage"
 }

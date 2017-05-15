@@ -15,7 +15,7 @@ const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, 
     <li className="action-container" style={{padding: 0}}>
       <div className="header-text-container">
         {parentId &&
-          <a onClick={handleParentCaretClick}>
+          <a className="drillable-header-back-caret" onClick={handleParentCaretClick}>
             <IconArrowLeft/>
           </a>
         }

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 import SectionContainer from '../shared/layout/section-container'
 import MiniChart from '../charts/mini-chart'
-import ComparisonBars from './comparison-bars'
+import ComparisonBars from '../shared/comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
 import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
@@ -111,6 +111,7 @@ export class StorageKPI extends Component {
           <div className='storage-kpi-item-content'>
             <div className='storage-kpi-text'>{locations.join(', ')}</div>
           </div>
+          <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
         </div>
         <div className='storage-kpi-item'>
           <KPIFormattedMessage id='portal.storage.kpi.workflowProfile.title' type='title' />
@@ -142,14 +143,16 @@ StorageKPI.propTypes = {
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   if (!storage) {
-    return {}
+    return {
+      chartDataKey: 'bytes'
+    }
   }
 
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
   const ending = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'ending']) : 0
   const currentValue = formatBytesToUnit(ending, unit, FORMAT)
   const peakValue = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit, FORMAT) : 0
-  const gainPercentage = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
+  const gainPercentage = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) || 0 : 0
 
   const locations = storage.get('clusters').map((cluster) => {
     const clusterData = getClusterById(state, cluster)

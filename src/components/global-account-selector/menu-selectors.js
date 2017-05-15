@@ -22,6 +22,19 @@ import { accountIsServiceProviderType } from '../../util/helpers'
 
 export const requestTag = 'GAS-REQUEST'
 
+const sorter = (a, b) => {
+  const aLower = a[ a.labelKey || 'name' ].toLowerCase()
+  const bLower = b[ b.labelKey || 'name' ].toLowerCase()
+
+  if (aLower < bLower) {
+    return -1
+  }
+  if (aLower > bLower) {
+    return 1
+  }
+  return 0
+}
+
 /**
  * For the account selector in property configuration; this won't include storages.
  * Gets a single group from store and properties that belong to it.
@@ -74,7 +87,7 @@ export const getGroups = (state, parents, canView) => {
         nodes
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -87,16 +100,19 @@ export const getProperties = (state, parents) => {
 
   return getPropertiesByGroup(state, parents.group).toJS().map((property) => {
 
+    //default to media delivery
+    const serviceType = property.services[0].service_type || 'large'
     return {
       ...property,
       idKey: 'published_host_id',
       labelKey: 'published_host_id',
       nodeInfo: {
+        category: `portal.configuration.details.serviceType.${serviceType}`,
         entityType: 'property',
         parents
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -114,11 +130,12 @@ export const getStorages = (state, parents) => {
       labelKey: 'ingest_point_id',
       idKey: 'ingest_point_id',
       nodeInfo: {
+        category: 'portal.account.storage.text',
         entityType: 'storage',
         parents
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
@@ -145,7 +162,7 @@ export const getAccounts = (state, parents, canView) => {
         nodes
       }
     }
-  })
+  }).sort(sorter)
 }
 
 /**
