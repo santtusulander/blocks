@@ -192,7 +192,12 @@ class Mapbox extends Component {
     if (map.style._loaded) {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
-      const layers = [...this.state.layers, 'markers']
+      let layers
+      if (this.props.markers && this.props.markers.size) {
+        layers = [...this.state.layers, 'markers']
+      } else {
+        layers = [...this.state.layers]
+      }
 
       const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
