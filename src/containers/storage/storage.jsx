@@ -60,32 +60,16 @@ class Storage extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
     this.initFileUploader = this.initFileUploader.bind(this)
+    this.fetchStorageData = this.fetchStorageData.bind(this)
   }
 
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
       const { brand, account, group, storage } = this.props.params
-      this.props.fetchStorage({
-        brand: brand,
-        account: account,
-        group: group,
-        id: storage
-      })
 
-      const metricsOpts = {
-        brand: brand,
-        account: account,
-        group: group,
-        ingest_point: storage,
-        list_children: false,
-        startDate: moment().utc().startOf('month').format('X'),
-        endDate: moment.utc().endOf('day').format('X')
-      }
-
-      this.props.fetchStorageMetrics({...metricsOpts})
-
-      this.props.fetchClusters({})
+      this.fetchStorageData(brand, account, group, storage)
     }
+
     //fetch Active group if there is none in redux
     if (!this.props.group && this.props.params) {
       this.props.fetchGroupData(this.props.params)
@@ -107,6 +91,41 @@ class Storage extends Component {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
     }
+
+    if (JSON.stringify(params) !== JSON.stringify(this.props.params)) {
+      const { brand, account, group, storage } = params
+
+      if (checkPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
+        this.props.initStorageAccessKey(brand, account, group, storage)
+          .then(this.initFileUploader)
+          .catch(parseResponseError)
+      }
+
+      this.fetchStorageData(brand, account, group, storage)
+    }
+  }
+
+  fetchStorageData(brand, account, group, storage) {
+    this.props.fetchStorage({
+      brand: brand,
+      account: account,
+      group: group,
+      id: storage
+    })
+
+    const metricsOpts = {
+      brand: brand,
+      account: account,
+      group: group,
+      ingest_point: storage,
+      list_children: false,
+      startDate: moment().utc().startOf('month').format('X'),
+      endDate: moment.utc().endOf('day').format('X')
+    }
+
+    this.props.fetchStorageMetrics({...metricsOpts})
+
+    this.props.fetchClusters({})
   }
 
   /**
