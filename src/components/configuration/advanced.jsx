@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import { Row, Col, FormGroup } from 'react-bootstrap'
 import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
@@ -18,6 +20,8 @@ import { getById as getMetadata } from '../../redux/modules/entities/metadata/se
 
 import propertiesActions from '../../redux/modules/entities/properties/actions'
 import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
+
+import * as hostActionCreators from '../../redux/modules/host'
 
 import { buildReduxId, parseResponseError } from '../../redux/util'
 
@@ -61,11 +65,16 @@ class ConfigurationAdvanced extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const {brand, account, group, property} = nextProps.params
 
     //If property Changed, fetch metadata
     if (!nextProps.property.isEmpty() && !is(this.props.property, nextProps.property)) {
       this.fetchMetadata(nextProps)
     }
+
+    // TODO: when/if the configuration uses new Redux, replace the the following fetching statement by this:
+    // !is(this.props.metadata, nextProps.metadata) && this.props.fetchProperty({brand, account, group, id: property, forceReload: true})
+    !is(this.props.metadata, nextProps.metadata) && this.props.hostActions.fetchHost(brand, account, group, property)
 
   }
 
@@ -404,7 +413,9 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchProperty: (params) => dispatch(propertiesActions.fetchOne(params)) ,
+    fetchProperty: (params) => dispatch(propertiesActions.fetchOne(params)),
+    //TODO: no need for hostActions after changing the configuration to use new Redux
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
 
     fetchMetadata: (params) => dispatch(metadataActions.fetchAll(params)),
     createMetadata: (params) => dispatch(metadataActions.create(params)),
