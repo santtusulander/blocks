@@ -85,7 +85,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
   generateSubmittableRules(values) {
 
-    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
+    const udnPlaceholder = '{%customer_cname%}'
     const rules = !values.rules
       ? []
       : values.rules.reduce((generatedRules, rule) => {
@@ -161,7 +161,6 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     const gtmConfig = {
       rules: this.generateSubmittableRules(values),
       title: values.cdnName,
-      customer_cname: `${propertyId}.${propertyServiceType}.${customerId}.gtm.geocity.cdx-dev.unifieddeliverynetwork.net`,
       policy_name: propertyId,
       customer_id: customerId
     }
@@ -254,6 +253,22 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
         {/* TRAFFIC CONFIGURATION */}
         <SectionContainer className="traffic-config">
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.gtm.trafficConfig.customerCname.label"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <Field
+                  name="customerCname"
+                  component={FieldFormGroup}
+                  disabled={true}
+                />
+              </Col>
+            </FormGroup>
+          </Row>
           <Row>
 
             <FormGroup>
