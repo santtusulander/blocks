@@ -3,10 +3,10 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 
 import { getCurrentUser } from '../redux/modules/user'
 
-import MESSAGES_EN from '../locales/en'
-import MESSAGES_ZH from '../locales/zh'
-import MESSAGES_ES from '../locales/es'
-import MESSAGES_FR from '../locales/fr'
+import MESSAGES_EN from '../locales/en-US'
+import MESSAGES_ZH from '../locales/zh-CN'
+import MESSAGES_ES from '../locales/es-ES'
+import MESSAGES_FR from '../locales/fr-FR'
 
 import en from 'react-intl/locale-data/en';
 import zh from 'react-intl/locale-data/zh';
