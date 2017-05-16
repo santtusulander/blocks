@@ -119,7 +119,7 @@ export class Dashboard extends React.Component {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id}).then(() => {
+      this.props.fetchAccount({brand, id, forceReload: this.props.activeAccount.isEmpty()}).then((response) => {
         const params = { brand: urlParams.brand, account: urlParams.account }
 
         const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
