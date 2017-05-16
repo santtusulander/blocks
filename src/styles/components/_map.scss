@@ -161,9 +161,16 @@ $thumb-margin: -11px;
           transform: rotate(-90deg);
           -webkit-appearance: none;
 
-          &::-moz-range-track {
-            width: $slider-height;
-            height: 6px;
+          &::-moz-focus-outer {
+            border: 0;
+          }
+
+          &::-ms-thumb {
+            width: $thumb-width;
+            height: $thumb-height;
+            margin-top: $thumb-margin;
+            cursor: pointer;
+            border-radius: 4px;
 
             .dark-theme & {
               background: $black !important;
@@ -174,13 +181,12 @@ $thumb-margin: -11px;
             }
           }
 
-          &::-moz-focus-outer {
-            border: 0;
-          }
-
           &::-moz-range-thumb {
             width: $thumb-width;
             height: $thumb-height;
+            margin-top: $thumb-margin;
+            cursor: pointer;
+            border-radius: 4px;
             border: 0;
 
             .dark-theme & {
@@ -200,6 +206,50 @@ $thumb-margin: -11px;
             border-radius: 4px;
             appearance: none;
             -webkit-appearance: none;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-ms-track {
+            width: $slider-height;
+            height: 6px;
+
+            /* Hides the slider so custom styles can be added */
+
+            background: transparent;
+            border-color: transparent;
+            color: transparent;
+          }
+
+          &::-ms-fill-lower {
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-ms-fill-upper {
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-moz-range-track {
+            width: $slider-height;
+            height: 6px;
 
             .dark-theme & {
               background: $black !important;
