@@ -199,7 +199,7 @@ export class AccountManagementAccountUsers extends Component {
   getRoleOptions({ account, roles, allowedRoles }) {
     return getRoleOptionsByProviderType(roles, account.get('provider_type'))
       .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
-      .map(role => [role.get('id'), role.get('name')])
+      .map(role => [role.get('id'), role.get('name')]).toJS()
   }
 
   getInlineAddFields() {
