@@ -8,7 +8,6 @@ import { Col, Row, Table } from 'react-bootstrap'
 
 import {
   accountIsContentProviderType,
-  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
@@ -128,12 +127,6 @@ export class Dashboard extends React.Component {
         const accountType = this.props.activeAccount.get('provider_type')
         const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
-        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
-
         /**
          * If user has permission to list storages and view storage analytics and if the active account is a content provider:
          * fetch all groups and storage metrics of this account, all storages of each group.
@@ -162,7 +155,6 @@ export class Dashboard extends React.Component {
         return Promise.all([
           this.props.dashboardActions.startFetching(),
           this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-          fetchProviders,
           fetchStorageData
         ])
         .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
@@ -195,7 +187,7 @@ export class Dashboard extends React.Component {
   }
 
   renderContent() {
-    const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
+    const { activeAccount, dashboard, intl, user, theme } = this.props
 
     if (!activeAccount.size) {
       return (
@@ -258,8 +250,6 @@ export class Dashboard extends React.Component {
 
     const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-    const topProvidersAccounts = filterOptions.getIn([isCP ? 'serviceProviders' : 'contentProviders'], List())
-
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
 
     return (
@@ -344,7 +334,7 @@ export class Dashboard extends React.Component {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
-                      <td><b>{topProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
+                      <td><b>{provider.get('name')}</b></td>
                       <td>
                         <MiniChart
                           kpiRight={true}

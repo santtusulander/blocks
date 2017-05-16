@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactMapboxGl, { Popup, Layer, Feature } from 'react-mapbox-gl'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import IconAdd from '../shared/icons/icon-add.jsx'
@@ -63,7 +63,11 @@ class Mapbox extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map || nextProps.dataKey !== this.props.dataKey) {
+    if (this.props.theme !== nextProps.theme) {
+      location.reload();
+    }
+
+    if (this.state.map && !is(this.props.countryData, nextProps.countryData) || nextProps.dataKey !== this.props.dataKey || this.props.theme !== nextProps.theme) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
@@ -76,7 +80,7 @@ class Mapbox extends Component {
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (!nextProps.cityData.equals(this.props.cityData) ||
+    if (!is(nextProps.cityData, this.props.cityData) ||
         (nextProps.dataKey !== this.props.dataKey && this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
@@ -195,11 +199,15 @@ class Mapbox extends Component {
     if (map.style._loaded) {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
-      const layers = [...this.state.layers, 'markers']
+      const layers = [...this.state.layers]
+
+      if (map.getLayer('markers')) {
+        layers.push('markers')
+      }
 
       const features = map.queryRenderedFeatures(feature.point, { layers: layers })
 
-      if (features.length) {
+      if (features && features.length) {
         // Check if hovered feature is a cluster since we need to apply different hover style methods on clusters
         const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
         const isMarker = (features[0].layer.id === 'markers')
@@ -433,7 +441,15 @@ class Mapbox extends Component {
     // Choose a color for the country based on its score
     // See if it's possible to use Mapbox's data-driven styling here.
     // https://www.mapbox.com/blog/data-driven-styling/
-    const colorIndex = trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length ? trafficHeat - 1 : null
+    let colorIndex
+    if (trafficHeat === 0) {
+      colorIndex = 0
+    } else if (trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length) {
+      colorIndex = trafficHeat - 1
+    } else {
+      colorIndex = null
+    }
+
     const countryColor = colorIndex !== null ? MAPBOX_HEAT_MAP_COLORS[colorIndex] : MAPBOX_HEAT_MAP_DEFAULT_COLOR
 
     map.addLayer({
@@ -679,7 +695,7 @@ class Mapbox extends Component {
         scrollZoom={false}
         dragRotate={false}>
 
-        { (this.props.markers && this.props.markers.size) &&
+        { (this.props.markers && !this.props.markers.isEmpty()) &&
           <Layer
             id="markers"
             layout={{
@@ -725,16 +741,14 @@ class Mapbox extends Component {
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
-              {this.state.popupContent.total &&
                 <table>
                   <tbody>
                     <tr>
                       <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
-                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
+                      <td>{this.state.popupContent.total !== undefined ? this.props.dataKeyFormat(this.state.popupContent.total) : '-'}</td>
                     </tr>
                   </tbody>
                 </table>
-              }
             </div>
           </Popup>
         }
@@ -794,12 +808,15 @@ class Mapbox extends Component {
           </div>
         }
 
-        { (this.props.markers && this.props.markers.size) &&
-          <div className="map-markers-legend">
-            <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
-            <span className="space" />
-            <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
-          </div>
+        { (this.props.markers && this.props.markers.size)
+          ?
+            <div className="map-markers-legend">
+              <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+              <span className="space" />
+              <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+            </div>
+          :
+            null
         }
       </ReactMapboxGl>
     )
@@ -822,6 +839,8 @@ Mapbox.propTypes = {
 }
 
 Mapbox.defaultProps = {
+  cityData: List(),
+  countryData: List(),
   dataKeyFormat: data => data,
   getCitiesWithinBounds: () => {
     // no-op
