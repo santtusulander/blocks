@@ -162,9 +162,16 @@ $thumb-margin: -11px;
           -webkit-appearance: none;
 
           &::-moz-range-track {
-            background-color: transparent;
-            border: 0;
-            box-shadow: none;
+            width: $slider-height;
+            height: 6px;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
           }
 
           &::-moz-focus-outer {
