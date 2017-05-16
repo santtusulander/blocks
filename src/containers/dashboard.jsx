@@ -17,7 +17,6 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import { getDashboardUrl } from '../util/routes'
 
 import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
@@ -42,13 +41,11 @@ import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/s
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
-import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/shared/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
-import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import MiniChart from '../components/charts/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
@@ -391,7 +388,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    const { activeAccount, filterOptions, filters, intl, params, router, user } = this.props
+    const { activeAccount, filterOptions, filters, intl, user } = this.props
     const showFilters = List(['dateRange'])
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
@@ -403,30 +400,12 @@ export class Dashboard extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
-          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <AccountSelector
-              params={params}
-              onItemClick={(entity) => {
-
-                const { nodeInfo, idKey = 'id' } = entity
-                router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
-
-              }}
-              levels={[ 'brand' ]}>
-              <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1>
-                  <TruncatedTitle
-                    content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
-                    tooltipPlacement="bottom"
-                    className="account-property-title"/>
-                </h1>
-                <IconCaretDown />
-              </div>
-            </AccountSelector>
-          </IsAllowed>
-          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-          </IsAllowed>
+          <h1>
+            <TruncatedTitle
+              content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
+              tooltipPlacement="bottom"
+              className="account-property-title"/>
+          </h1>
         </PageHeader>
         {activeAccount.size ?
           <AnalyticsFilters
@@ -465,7 +444,6 @@ Dashboard.propTypes = {
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
   params: PropTypes.object,
-  router: PropTypes.object,
   theme: PropTypes.string,
   trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)

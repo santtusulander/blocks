@@ -51,6 +51,6 @@
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",
-  "portal.storage.topBar.account.label": "UDN Admin",
-  "portal.storage.topBar.brand.label": "UDN Admin"
+  "portal.storage.topBar.account.label": "UDN Mgmt",
+  "portal.storage.topBar.brand.label": "UDN Mgmt"
 }
