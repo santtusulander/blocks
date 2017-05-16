@@ -137,7 +137,7 @@ export class Dashboard extends React.Component {
           checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
           accountIsContentProviderType(this.props.activeAccount) &&
 
-          this.props.fetchGroups(params).then((response) => {
+          this.props.fetchGroups(params).then(() => {
             let groupIds = []
             if (response) {
               groupIds = Object.keys(response.entities.groups)
