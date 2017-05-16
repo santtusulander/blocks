@@ -226,6 +226,7 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
         return {
           // Use different provider account id depending on main account type
           account: provider.getIn([cpContribution ? 'account' : 'sp_account'], null),
+          name: provider.getIn(['name'], null),
           bytes: bytes,
           bits_per_second: bits_per_second,
           detail: provider.getIn(['detail'], []),
