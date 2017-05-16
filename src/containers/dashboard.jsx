@@ -119,7 +119,7 @@ export class Dashboard extends React.Component {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
       const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id, forceReload: this.props.activeAccount.isEmpty()}).then((response) => {
+      this.props.fetchAccount({brand, id, forceReload: this.props.activeAccount.isEmpty()}).then(() => {
         const params = { brand: urlParams.brand, account: urlParams.account }
 
         const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
@@ -137,7 +137,7 @@ export class Dashboard extends React.Component {
           checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
           accountIsContentProviderType(this.props.activeAccount) &&
 
-          this.props.fetchGroups(params).then(() => {
+          this.props.fetchGroups(params).then((response) => {
             let groupIds = []
             if (response) {
               groupIds = Object.keys(response.entities.groups)
