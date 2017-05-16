@@ -80,7 +80,8 @@ class ConfigurationDefaults extends React.Component {
   }
 
   render() {
-    const { config, intl, readOnly } = this.props
+    const { config, intl, customPolicyIsUsed } = this.props
+    const readOnly = this.props.readOnly || customPolicyIsUsed
     const cacheControlEtagOptions = [
       { value: 'strong', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>},
       { value: 'weak', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>},
@@ -101,6 +102,13 @@ class ConfigurationDefaults extends React.Component {
 
     return (
       <div className="configuration-defaults">
+        { customPolicyIsUsed &&
+           <div className="banner-container">
+             <div className="policy-override-banner">
+               <h3 className="banner-message"><FormattedMessage id="portal.policy.override.banner.message"/></h3>
+             </div>
+           </div>
+         }
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
         <SectionContainer>
@@ -222,6 +230,7 @@ ConfigurationDefaults.displayName = 'ConfigurationDefaults'
 ConfigurationDefaults.propTypes = {
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
+  customPolicyIsUsed: React.PropTypes.bool,
   intl: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
   ...reduxFormPropTypes
