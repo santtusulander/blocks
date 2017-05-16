@@ -14,7 +14,6 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
 
 import { buildReduxId, parseResponseError } from '../../../redux/util'
@@ -23,7 +22,7 @@ import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 
-import checkPermissions from '../../../util/permissions'
+import { checkUserPermissions } from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 class NetworkFormContainer extends React.Component {
@@ -236,7 +235,6 @@ const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
-  const roles = getRoles(state)
   const currentUser = getCurrentUser(state)
 
   return {
@@ -244,7 +242,7 @@ const mapStateToProps = (state, ownProps) => {
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network,
     pops,
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_NETWORK),
     initialValues: {
       name: edit && network ? network.get('name') : '',
       description: edit && network ? network.get('description') : ''

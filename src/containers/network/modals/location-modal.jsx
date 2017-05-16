@@ -12,7 +12,6 @@ import { parseResponseError } from '../../../redux/util'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
@@ -21,7 +20,7 @@ import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
 
-import checkPermissions from '../../../util/permissions'
+import { checkUserPermissions } from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 const LOCATION_ADDRESS_HELP_TEXT_ID = 'portal.network.locationForm.latLongFields.helperTextHint.address'
@@ -316,9 +315,7 @@ NetworkLocationFormContainer.propTypes = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const roles = getRoles(state)
   const currentUser = getCurrentUser(state)
-
   const selector = formValueSelector('networkLocationForm')
   let values = {}
 
@@ -331,7 +328,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_NODE),
     latLng: selector(state, 'latitude', 'longitude'),
     cloudProvidersOptions: LOCATION_CLOUD_PROVIDER_OPTIONS,
     cloudProvidersIdOptions: LOCATION_CLOUD_PROVIDER_ID_OPTIONS,
