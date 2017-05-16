@@ -112,6 +112,10 @@ $thumb-margin: -11px;
     margin-top: 2px;
   }
 
+  .map-zoom-btn {
+    @extend %map-control-style;
+  }
+
   .control {
     @extend %map-control-style;
 
@@ -215,22 +219,6 @@ $thumb-margin: -11px;
           &:focus {
             outline: none;
           }
-        }
-      }
-
-      button {
-        position: relative;
-        display: block;
-        min-width: 32px;
-        min-height: 32px;
-        font-size: 2rem;
-
-        .dark-theme & {
-          background: $black !important;
-        }
-
-        .light-theme & {
-          background: $white !important;
         }
       }
     }

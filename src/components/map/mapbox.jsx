@@ -3,7 +3,6 @@ import ReactMapboxGl, { Popup, Layer, Feature } from 'react-mapbox-gl'
 import { Map, List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import UDNButton from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add.jsx'
 import IconDelete from '../shared/icons/icon-delete.jsx'
 
@@ -53,6 +52,8 @@ class Mapbox extends Component {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
     this.resetZoom = this.resetZoom.bind(this)
+    this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
+    this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
   }
 
   componentDidMount() {
@@ -148,6 +149,17 @@ class Mapbox extends Component {
     this.setState({ zoom: parseInt(e.target.value) })
   }
 
+  onIncreaseZoom() {
+    if (this.state.zoom < MAPBOX_ZOOM_MAX) {
+      this.setState({ zoom: this.state.zoom + 1 })
+    }
+  }
+
+  onDecreaseZoom() {
+    if (this.state.zoom > MAPBOX_ZOOM_MIN) {
+      this.setState({ zoom: this.state.zoom - 1 })
+    }
+  }
   /**
    * Sets content to the Popup and allows it to be displayed.
    * Displaying the Popup is based on if the Popup has content –– popupContent
@@ -734,10 +746,10 @@ class Mapbox extends Component {
             </div>
           */}
           <div className="control map-zoom">
-            <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
-              <IconAdd width={16} height={16}/>
-            </UDNButton>
 
+          <div className="map-zoom-btn" onClick={this.onIncreaseZoom}>
+            <IconAdd width={32} height={32}/>
+          </div>
             <div className="map-slider">
               <div className="map-slider__wrapper">
                 <input type="range"
@@ -746,19 +758,20 @@ class Mapbox extends Component {
                   step={1}
                   defaultValue={MAPBOX_ZOOM_MIN}
                   onMouseUp={this.onZoom}
+                  value={this.state.zoom}
                   />
               </div>
 
               <div className="map-label">
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.earth"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
                 <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.earth"/></span>
               </div>
             </div>
 
-            <UDNButton bsStyle="primary" icon={true} onClick={this.onIncreaseZoom}>
-              <IconDelete width={16} height={16}/>
-            </UDNButton>
+            <div className="map-zoom-btn" onClick={this.onDecreaseZoom}>
+              <IconDelete width={32} height={32}/>
+            </div>
             <div
               className="map-zoom-reset"
               onClick={this.resetZoom}>
