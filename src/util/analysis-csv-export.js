@@ -84,7 +84,7 @@ export function createCSVExporters(filenamePart) {
       const data = storageStats.map(item => {
         return item
           .set('historical_timestamp', formatMoment(moment.unix(item.get('historical_timestamp'))))
-          .set('timestamp', formatMoment(moment.unix(item.get('timestamp'), 'X')))
+          .set('timestamp', formatMoment(moment.unix(item.get('timestamp'))))
       })
       generate('Storage Usage', data)
     }
