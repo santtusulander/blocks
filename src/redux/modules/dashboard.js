@@ -1,6 +1,7 @@
 import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
@@ -44,8 +45,10 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
-  const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
-  const allContributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  //Changing the granularity to 'hour' when the range equals one day 
+  const dateRange = moment.unix(opts.endDate).diff(moment.unix(opts.startDate), 'days')
+  const contributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
+  const allContributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
 
   const dashboardRequests = []
 
