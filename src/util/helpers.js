@@ -777,6 +777,26 @@ export const getPage = (items, page, limit) => {
   return items.slice(offset, offset + limit)
 }
 
+export const getRoleOptionsById = (roles, id) => {
+  const userRoleData = roles.find(role => role.get('id') === id)
+  const providerType = userRoleData && userRoleData.getIn(['account_provider_types', 0])
+  return getRoleOptionsByProviderType(roles, providerType)
+}
+
+export const getRoleOptionsByProviderType = (roles, providerType) => {
+  return roles.filter(role => {
+    return role.get('account_provider_types').includes(providerType)
+  })
+}
+
+export const roleIsEditableByCurrentUser = (allowedRoles, userRoleId) => {
+  /*
+    This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
+    we have to treat it this way
+  */
+  return allowedRoles.get(0) === '*' || allowedRoles.includes(userRoleId)
+}
+
 /**
  * Detects if WebGL is enabled.
  *
@@ -807,4 +827,4 @@ export const isWebGLEnabled = () => {
 
   /* WebGL not supported. */
   return false
-};
+}
