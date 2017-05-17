@@ -29,7 +29,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
     const asnMatches = gtmConfig.get('asns') || List()
     let ttl = 0
     let rowServedByThirdParty = false
-    const udnPlaceholder = 'UDN'//'{%customer_cname%}'
+    let udnCname = undefined
 
     const aggregatedRules = gtmConfig.get('rules').toJS().reduce((aggregate, rule) => {
 
@@ -39,8 +39,12 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
       const matchValue = rule.request_match.value
       let labelValue = matchValue
 
-      if (matchType === 'no_filter' && rule.response_value.value !== udnPlaceholder) {
-        rowServedByThirdParty = true
+      if (matchType === 'no_filter') {
+
+        if (udnCname !== rule.response_value.value) {
+
+          rowServedByThirdParty = true
+        }
       }
 
       if (!hasNegativeMatch && matchType !== 'no_filter') {
@@ -89,11 +93,12 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
           aggregate.values[rule.rule_name] = [ { id: matchValue, label: labelValue } ]
 
           // get amount of traffic being served via UDN
-          // and the name of third party CDN
-          rule.traffic_split_targets.forEach(target => {
+          // and the name of third party CDN, The first one in the array is always UDN.
+          rule.traffic_split_targets.forEach((target, index) => {
 
-            if (target.cname === udnPlaceholder) {
+            if (index === 0) {
               ttl = Number(target.ttl)
+              udnCname = target.cname
               amountServedByUDN = target.percent
 
             } else {
@@ -126,6 +131,7 @@ export const formatConfigToInitialValues = (state, propertyId, formatMessage) =>
 
     return {
       GTMToggle: true,
+      customerCname: gtmConfig.get('customer_cname'),
       ttl,
       cdnName: gtmConfig.get('title'),
       cName: thirdPartyCName,

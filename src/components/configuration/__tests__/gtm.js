@@ -48,16 +48,16 @@ describe('ConfigurationGlobalTrafficManager', () => {
     expect(subject().find('LoadingSpinner').length).toBe(0)
   })
 
-  it('should display five Field components when data is loaded', () => {
-    expect(subject().find('Field').length).toBe(5)
+  it('should display six Field components when data is loaded', () => {
+    expect(subject().find('Field').length).toBe(6)
   })
 
   it('should display Add button', () => {
     expect(subject().find('Button').length).toBe(1)
   })
 
-  it('should not display Field components when readOnly prop is passed', () => {
-    expect(subject(true).find('Field').length).toBe(0)
+  it('should not display active Field components when readOnly prop is passed', () => {
+    expect(subject(true).find('Field').length).toBe(1)
   })
 
   it('should not display Add button when readOnly prop is passed', () => {
