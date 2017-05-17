@@ -166,6 +166,7 @@
 
   "portal.common.total.text": "Total",
   "portal.common.no-data.text": "No data available.",
+  "portal.common.no-webgl-support.text": "Failed to initialize WebGL. Please contact your administrator.",
 
   "portal.common.time.day": "Day",
   "portal.common.time.month": "Month",

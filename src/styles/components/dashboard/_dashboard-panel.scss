@@ -68,6 +68,10 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
     padding: $dashboard-panel-vertical-padding $dashboard-panel-horizontal-padding;
   }
 
+  .no-webgl-support {
+    padding: $dashboard-panel-vertical-padding $dashboard-panel-horizontal-padding;
+  }
+
   .dashboard-panel-header {
 
     .dark-theme & {
