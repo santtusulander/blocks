@@ -11,7 +11,6 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { parseResponseError } from '../../../redux/util'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
-import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
 
 import SidePanel from '../../../components/shared/side-panel'
@@ -19,7 +18,7 @@ import FootprintForm from '../../../components/network/forms/footprint-form'
 
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
 
-import checkPermissions from '../../../util/permissions'
+import { checkUserPermissions } from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
 
 const normalizeValueToAPI = (value, type) => value.map(item => {
@@ -210,8 +209,6 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
-
-  const roles = getRoles(state)
   const currentUser = getCurrentUser(state)
 
   const defaultValues = {
@@ -231,7 +228,7 @@ const mapStateToProps = (state, ownProps) => {
   initialValues.value_asnlist = normalizeValueFromAPI(initialValues.value && initialValues.data_type === 'asnlist' ? initialValues.value : [])
 
   return {
-    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_FOOTPRINT),
+    allowModify: checkUserPermissions(currentUser, PERMISSIONS.MODIFY_FOOTPRINT),
     footprint,
     initialValues
   }

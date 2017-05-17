@@ -14,9 +14,7 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import { getDashboardUrl } from '../util/routes'
 import { ACCOUNT_TYPE_CLOUD_PROVIDER, UDN_CORE_ACCOUNT_ID } from '../constants/account-management-options'
-import * as PERMISSIONS from '../constants/permissions'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import { defaultFilters } from '../redux/modules/filters'
 import * as filterActionCreators from '../redux/modules/filters'
@@ -33,21 +31,18 @@ import { getById as getAccountById} from '../redux/modules/entities/accounts/sel
 import groupActions from '../redux/modules/entities/groups/actions'
 import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
 
-import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/shared/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
-import IconCaretDown from '../components/shared/icons/icon-caret-down'
-import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import MiniChart from '../components/charts/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
 import PageHeader from '../components/shared/layout/page-header'
 import StackedByTimeSummary from '../components/charts/stacked-by-time-summary'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
 
-import { buildAnalyticsOptsForContribution, buildFetchOpts } from '../util/helpers.js'
+import { buildFetchOpts } from '../util/helpers.js'
 import { getCitiesWithinBounds } from '../util/mapbox-helpers'
 
 export class BrandDashboard extends React.Component {
@@ -87,19 +82,13 @@ export class BrandDashboard extends React.Component {
   fetchData(urlParams, filters) {
     // Dashboard should fetch only account level data
     const params = { brand: urlParams.brand }
-
     const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-    dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-
     const accountType = this.props.activeAccount.get('provider_type')
-    const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
     return Promise.all([
       this.props.fetchMarkers(),
       this.props.dashboardActions.startFetching(),
-      this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-      this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts),
-      this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
+      this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType)
     ]).then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
   }
 
@@ -162,12 +151,10 @@ export class BrandDashboard extends React.Component {
   }
 
   renderContent() {
-    const { dashboard, filterOptions, intl, theme, markers } = this.props
+    const { dashboard, intl, theme, markers } = this.props
     const chartTraffic = dashboard && dashboard.get('all_sp_providers')
-
     const coreData = []
     const spEdgaData = []
-    let dataIsReady = false
 
     /* Separate SP Edges & UDN Core accounts */
     chartTraffic && chartTraffic.get('detail').forEach((accountData) => {
@@ -179,14 +166,12 @@ export class BrandDashboard extends React.Component {
     })
 
     /* Verify that data is ready */
-    if ((coreData && spEdgaData) &&
-        (coreData.length && spEdgaData.length)) {
-      dataIsReady = true
-    }
+    const coreDataIsReady = coreData && coreData.length
+    const spDataIsReady = spEdgaData && spEdgaData.length
 
     /* Prepared data for Stacked Summary */
-    const coreResultData = dataIsReady && coreData[0]
-    const spResultData = dataIsReady && this.spDataAggregation(spEdgaData)
+    const coreResultData = coreDataIsReady && coreData[0]
+    const spResultData = spDataIsReady && this.spDataAggregation(spEdgaData)
 
     const coreTrafficDetail = coreResultData && coreResultData.get('detail')
     const spTrafficDetail = spResultData && spResultData.get('detail')
@@ -211,9 +196,8 @@ export class BrandDashboard extends React.Component {
       }).toJS()
 
     /* Prepare ammount of traffic for chart */
-    const udn_core_traffic = dataIsReady && Number(coreResultData.get('bytes'))
-    const sp_edges_traffic = dataIsReady && Number(spResultData.get('bytes'))
-
+    const udn_core_traffic = coreDataIsReady && Number(coreResultData.get('bytes'))
+    const sp_edges_traffic = spDataIsReady && Number(spResultData.get('bytes'))
     const trafficBytes = chartTraffic && chartTraffic.getIn(['total', 'bytes'])
     const totalTraffic = separateUnit(formatBytes(trafficBytes))
     const totalTrafficValue = totalTraffic.value
@@ -237,14 +221,13 @@ export class BrandDashboard extends React.Component {
     /* END - MAPBOX */
 
     /* TOP 5 SERVICE/CONTENT PROVICERS */
-    const topProvidersSp = !dashboard.size ? List() : dashboard.get('sp_providers') && dashboard.get('sp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
+    const topProvidersSp = !dashboard.size ? List() : dashboard.get('all_sp_providers') && dashboard.getIn(['all_sp_providers', 'detail']).sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
-    })
+    }).slice(0, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH)
+
     const topProvidersCp = !dashboard.size ? List() : dashboard.get('cp_providers') && dashboard.get('cp_providers').sortBy((provider) => provider.get('bytes'), (a, b) => {
       return a < b
     })
-    const topSPProvidersAccounts = filterOptions.getIn(['serviceProviders'], List())
-    const topCPProvidersAccounts = filterOptions.getIn(['contentProviders'], List())
     /* END - TOP 5 SERVICE/CONTENT PROVICERS */
 
     return (
@@ -308,7 +291,7 @@ export class BrandDashboard extends React.Component {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
-                      <td><b>{topSPProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
+                      <td><b>{provider.get('name')}</b></td>
                       <td>
                         <MiniChart
                           kpiRight={true}
@@ -354,7 +337,7 @@ export class BrandDashboard extends React.Component {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
-                      <td><b>{topCPProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
+                      <td><b>{provider.get('name')}</b></td>
                       <td>
                         <MiniChart
                           kpiRight={true}
@@ -391,7 +374,7 @@ export class BrandDashboard extends React.Component {
   }
 
   render() {
-    const { activeAccount, filterOptions, filters, intl, params, router, user } = this.props
+    const { activeAccount, filterOptions, filters, intl, user } = this.props
     const showFilters = List(['dateRange'])
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
@@ -403,30 +386,12 @@ export class BrandDashboard extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
-          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <AccountSelector
-              params={params}
-              onItemClick={(entity) => {
-
-                const { nodeInfo, idKey = 'id' } = entity
-                router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
-
-              }}
-              levels={[ 'brand' ]}>
-              <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1>
-                  <TruncatedTitle
-                    content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
-                    tooltipPlacement="bottom"
-                    className="account-property-title"/>
-                </h1>
-                <IconCaretDown />
-              </div>
-            </AccountSelector>
-          </IsAllowed>
-          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-          </IsAllowed>
+          <h1>
+            <TruncatedTitle
+              content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
+              tooltipPlacement="bottom"
+              className="account-property-title"/>
+          </h1>
         </PageHeader>
 
         {activeAccount.size ?
@@ -463,7 +428,6 @@ BrandDashboard.propTypes = {
   mapboxActions: PropTypes.object,
   markers: PropTypes.instanceOf(List),
   params: PropTypes.object,
-  router: PropTypes.object,
   theme: PropTypes.string,
   trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)

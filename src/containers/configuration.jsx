@@ -273,9 +273,9 @@ export class Configuration extends React.Component {
     }
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
-    const updateMoment = moment(activeConfig.get('config_updated'), 'X')
+    const updateMoment = moment.unix(activeConfig.get('config_updated'))
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
-    const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
+    const deployMoment = moment.unix(activeConfig.get('configuration_status').get('deployment_date'))
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
     const serviceType = activeHost.getIn(['services', 0, 'service_type'])
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })

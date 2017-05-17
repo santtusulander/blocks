@@ -33,7 +33,7 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
 
-import checkPermissions from '../../util/permissions'
+import { checkUserPermissions } from '../../util/permissions'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
 
@@ -56,6 +56,7 @@ class Storage extends Component {
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
       const { brand, account, group, storage } = this.props.params
+
       this.props.fetchStorage({
         brand: brand,
         account: account,
@@ -63,6 +64,7 @@ class Storage extends Component {
         id: storage
       })
     }
+
     //fetch Active group if there is none in redux
     if (!this.props.group && this.props.params) {
       this.props.fetchGroupData(this.props.params)
@@ -72,7 +74,7 @@ class Storage extends Component {
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
 
-    if (checkPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
+    if (checkUserPermissions(this.context.currentUser, CREATE_ACCESS_KEY)) {
       this.props.initStorageAccessKey(brand, account, group, storage)
         .then(this.initFileUploader)
         .catch(parseResponseError)
@@ -83,6 +85,23 @@ class Storage extends Component {
     if (group && !hasStorageService) {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
+    }
+
+    if (JSON.stringify(params) !== JSON.stringify(this.props.params)) {
+      const { brand, account, group, storage } = params
+
+      if (checkUserPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
+        this.props.initStorageAccessKey(brand, account, group, storage)
+          .then(this.initFileUploader)
+          .catch(parseResponseError)
+      }
+
+      this.props.fetchStorage({
+        brand: brand,
+        account: account,
+        group: group,
+        id: storage
+      })
     }
   }
 

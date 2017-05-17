@@ -1,6 +1,7 @@
 import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
+import moment from 'moment'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
@@ -44,8 +45,10 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
-  const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
-  const allContributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  //Changing the granularity to 'hour' when the range equals one day 
+  const dateRange = moment.unix(opts.endDate).diff(moment.unix(opts.startDate), 'days')
+  const contributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
+  const allContributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
 
   const dashboardRequests = []
 
@@ -78,7 +81,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(null)
-    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    dashboardRequests.push(null)
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(allContributionOpts)}`).then(parseResponseData))
@@ -226,6 +229,7 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
         return {
           // Use different provider account id depending on main account type
           account: provider.getIn([cpContribution ? 'account' : 'sp_account'], null),
+          name: provider.getIn(['name'], null),
           bytes: bytes,
           bits_per_second: bits_per_second,
           detail: provider.getIn(['detail'], []),
@@ -249,29 +253,7 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
         return {
           // Use different provider account id depending on main account type
           account: provider.getIn(['account'], null),
-          bytes: bytes,
-          bits_per_second: bits_per_second,
-          detail: provider.getIn(['detail'], []),
-          percent_total: provider.getIn(['percent_total'], null)
-        }
-      }).toJS(),
-      sp_providers: spContribution && Immutable.fromJS(spContribution).getIn(['data', 'details'], Immutable.List()).map(provider => {
-        // Calculate bytes and bits_per_second since these are not returned as totals
-        const bytes = (
-          provider.getIn(['http', 'net_off_bytes'], 0) +
-          provider.getIn(['http', 'net_on_bytes'], 0) +
-          provider.getIn(['https', 'net_off_bytes'], 0) +
-          provider.getIn(['https', 'net_on_bytes'], 0)
-        )
-        const bits_per_second = (
-          provider.getIn(['http', 'net_off_bps'], 0) +
-          provider.getIn(['http', 'net_on_bps'], 0) +
-          provider.getIn(['https', 'net_off_bps'], 0) +
-          provider.getIn(['https', 'net_on_bps'], 0)
-        )
-        return {
-          // Use different provider account id depending on main account type
-          account: provider.getIn(['sp_account'], null),
+          name: provider.getIn(['name'], null),
           bytes: bytes,
           bits_per_second: bits_per_second,
           detail: provider.getIn(['detail'], []),
@@ -299,6 +281,7 @@ export function processDashboardData(traffic, countries, trafficTime, spContribu
           return {
             // Use different provider account id depending on main account type
             account: provider.getIn(['sp_account'], null),
+            name: provider.getIn(['name'], null),
             bytes: bytes,
             bits_per_second: bits_per_second,
             detail: provider.getIn(['detail'], []),

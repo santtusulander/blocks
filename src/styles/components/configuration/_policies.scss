@@ -31,14 +31,20 @@
     display: flex;
     width: 100%;
     height: $md-bar-height * 1.5;
-    background-color: rgba($medium-blue, 0.6);
+    background-color: rgba($medium-blue, 0.85);
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
   }
 
-
   .banner-message {
-    color: $pale-blue;
+    .dark-theme & {
+      color: $pale-blue;
+    }
+
+    .light-theme & {
+      color: $white;
+    }
   }
 }

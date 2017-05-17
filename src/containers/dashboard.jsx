@@ -8,7 +8,6 @@ import { Col, Row, Table } from 'react-bootstrap'
 
 import {
   accountIsContentProviderType,
-  accountIsServiceProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
@@ -17,7 +16,6 @@ import {
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
-import { getDashboardUrl } from '../util/routes'
 
 import { checkUserPermissions } from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
@@ -29,7 +27,6 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
-import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
 import groupActions from '../redux/modules/entities/groups/actions'
@@ -43,13 +40,11 @@ import { getCurrentUser } from '../redux/modules/user'
 import StorageChartContainer from './storage-item-containers/storage-chart-container'
 import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
-import AccountSelector from '../components/global-account-selector/account-selector-container'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/shared/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
-import IconCaretDown from '../components/shared/icons/icon-caret-down'
 import IsAllowed from '../components/shared/permission-wrappers/is-allowed'
 import MiniChart from '../components/charts/mini-chart'
 import PageContainer from '../components/shared/layout/page-container'
@@ -64,29 +59,17 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      byLocationWidth: 100
-    }
-
     this.fetchData = this.fetchData.bind(this)
-    this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
-    this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
   }
 
   componentWillMount() {
     if (is(defaultFilters, this.props.filters)) {
-      this.fetchData(this.props.params, this.props.filters)
+      this.fetchData(this.props.params, this.props.filters, this.props.activeAccount)
     } else {
       this.props.filterActions.resetFilters()
     }
-  }
-
-  componentDidMount() {
-    this.measureContainers()
-    // TODO: remove this timeout as part of UDNP-1426
-    window.addEventListener('resize', this.measureContainers)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -97,84 +80,59 @@ export class Dashboard extends React.Component {
       this.props.filterActions.resetContributionFilters()
     }
 
-    if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
-      this.fetchData(nextProps.params, nextProps.filters)
+    if (prevParams !== params ||
+      !is(this.props.filters,nextProps.filters) ||
+      !is(this.props.activeAccount, nextProps.activeAccount)
+    ) {
+      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
-    // TODO: remove this timeout as part of UDNP-1426
-    if (this.measureContainersTimeout) {
-      clearTimeout(this.measureContainersTimeout)
-    }
-    this.measureContainersTimeout = setTimeout(() => {
-      this.measureContainers()
-    }, 500)
   }
 
   componentWillUnmount() {
     this.props.filterActions.resetContributionFilters()
-    window.removeEventListener('resize', this.measureContainers)
-    // TODO: remove this timeout as part of UDNP-1426
-    clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(urlParams, filters) {
-    if (urlParams.account) {
+  fetchData(urlParams, filters, activeAccount) {
+    if (urlParams.account && !activeAccount.isEmpty()) {
       // Dashboard should fetch only account level data
-      const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id}).then(() => {
-        const params = { brand: urlParams.brand, account: urlParams.account }
-
-        const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-        dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-        const accountType = this.props.activeAccount.get('provider_type')
-        const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
-
-        const fetchProvidersForCP = accountIsContentProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
-        const fetchProvidersForSP = accountIsServiceProviderType(this.props.activeAccount) &&
-          this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
-        const fetchProviders = fetchProvidersForCP || fetchProvidersForSP
+      const params = { brand: urlParams.brand, account: urlParams.account }
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+      const accountType = activeAccount.get('provider_type')
+      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
         /**
          * If user has permission to list storages and view storage analytics and if the active account is a content provider:
          * fetch all groups and storage metrics of this account, all storages of each group.
          * @type {[Promise]}
          */
-        const fetchStorageData =
-          checkUserPermissions(this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-          checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-          accountIsContentProviderType(this.props.activeAccount) &&
+      const fetchStorageData =
+        checkUserPermissions(this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+        checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+        accountIsContentProviderType(activeAccount) &&
 
-          this.props.fetchGroups(params).then((response) => {
-            let groupIds = []
-            if (response) {
-              groupIds = Object.keys(response.entities.groups)
-            } else {
-              // We don't always have to fetch groups because of caching, in those cases use selector
-              // to get group IDs for this account from the store.
-              groupIds = this.props.getGroupIds()
-            }
-            return Promise.all([
-              ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
-              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
-            ])
-          })
+        this.props.fetchGroups(params).then((response) => {
+          let groupIds = []
+          if (response) {
+            groupIds = Object.keys(response.entities.groups)
+          } else {
+            // We don't always have to fetch groups because of caching, in those cases use selector
+            // to get group IDs for this account from the store.
+            groupIds = this.props.getGroupIds()
+          }
+          return Promise.all([
+            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
+            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
+          ])
+        })
 
-        return Promise.all([
-          this.props.dashboardActions.startFetching(),
-          this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-          fetchProviders,
-          fetchStorageData
-        ])
-        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
-      })
+      return Promise.all([
+        this.props.dashboardActions.startFetching(),
+        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+        fetchStorageData
+      ])
+      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
     }
-  }
-
-  measureContainers() {
-    const containerWidth = this.refs.byLocationHolder &&  this.refs.byLocationHolder.clientWidth
-    this.setState({
-      byLocationWidth: containerWidth < 640 ? containerWidth : 640
-    })
   }
 
   onFilterChange(filterName, filterValue) {
@@ -195,7 +153,7 @@ export class Dashboard extends React.Component {
   }
 
   renderContent() {
-    const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
+    const { activeAccount, dashboard, intl, user, theme } = this.props
 
     if (!activeAccount.size) {
       return (
@@ -258,8 +216,6 @@ export class Dashboard extends React.Component {
 
     const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-    const topProvidersAccounts = filterOptions.getIn([isCP ? 'serviceProviders' : 'contentProviders'], List())
-
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
 
     return (
@@ -323,7 +279,7 @@ export class Dashboard extends React.Component {
                 cityData={this.props.cityData}
                 getCityData={this.getCityData}
                 theme={theme}
-                height={this.state.byLocationWidth / 1.6}
+                height={400}
                 dataKey="bits_per_second"
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}
@@ -344,7 +300,7 @@ export class Dashboard extends React.Component {
                   const traffic = separateUnit(formatBytes(provider.get('bytes')))
                   return (
                     <tr key={i}>
-                      <td><b>{topProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
+                      <td><b>{provider.get('name')}</b></td>
                       <td>
                         <MiniChart
                           kpiRight={true}
@@ -392,7 +348,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    const { activeAccount, filterOptions, filters, intl, params, router, user } = this.props
+    const { activeAccount, filterOptions, filters, intl, user } = this.props
     const showFilters = List(['dateRange'])
     // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
@@ -404,30 +360,12 @@ export class Dashboard extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
-          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <AccountSelector
-              params={params}
-              onItemClick={(entity) => {
-
-                const { nodeInfo, idKey = 'id' } = entity
-                router.push(getDashboardUrl(nodeInfo.entityType, entity[idKey], nodeInfo.parents))
-
-              }}
-              levels={[ 'brand' ]}>
-              <div className="btn btn-link dropdown-toggle header-toggle">
-                <h1>
-                  <TruncatedTitle
-                    content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
-                    tooltipPlacement="bottom"
-                    className="account-property-title"/>
-                </h1>
-                <IconCaretDown />
-              </div>
-            </AccountSelector>
-          </IsAllowed>
-          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
-          </IsAllowed>
+          <h1>
+            <TruncatedTitle
+              content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
+              tooltipPlacement="bottom"
+              className="account-property-title"/>
+          </h1>
         </PageHeader>
         {activeAccount.size ?
           <AnalyticsFilters
@@ -453,7 +391,6 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
-  fetchAccount: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -466,7 +403,6 @@ Dashboard.propTypes = {
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
   params: PropTypes.object,
-  router: PropTypes.object,
   theme: PropTypes.string,
   trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)
@@ -502,7 +438,6 @@ const mapStateToProps = (state, { params: { account } }) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
     fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),

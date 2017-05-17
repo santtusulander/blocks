@@ -459,12 +459,10 @@ export class AccountManagementAccountUsers extends Component {
                     inputs={this.getInlineAddFields()}
                     unmount={this.toggleInlineAdd}
                     save={this.newUser}/>}
-                  {/*
-                    Note, this is the temporary approach to fix bug when deleting user cause by pagination, remove filter() when
-                    the pagination is fixed
-                  */}
-                  {users && users.filter(user => user).map((user, i) => {
+
+                  {users && users.map((user, i) => {
                     const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
+
                     return (
                       <tr key={i}>
                         <td>

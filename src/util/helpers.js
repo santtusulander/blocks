@@ -350,7 +350,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @param format
  * @returns {*}
  */
-export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+export function formatUnixTimestamp(unix, format) {
   return moment.unix(unix).format(format)
 }
 
@@ -370,7 +370,7 @@ export function unixTimestampToDate(unix) {
  * @param format
  * @returns {*}
  */
-export function formatDate(date, format = 'MM/DD/YYYY') {
+export function formatDate(date, format) {
   return moment(date).format(format)
 }
 
@@ -380,7 +380,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
  * @param format
  * @returns {*}
  */
-export function formatMoment(momentObj, format = 'MM/DD/YYYY') {
+export function formatMoment(momentObj, format) {
   return momentObj.format(format)
 }
 
@@ -789,11 +789,42 @@ export const getRoleOptionsByProviderType = (roles, providerType) => {
   })
 }
 
-
 export const roleIsEditableByCurrentUser = (allowedRoles, userRoleId) => {
   /*
     This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
     we have to treat it this way
   */
   return allowedRoles.get(0) === '*' || allowedRoles.includes(userRoleId)
+}
+
+/**
+ * Detects if WebGL is enabled.
+ *
+ * @return { bool } false if supported or disabled
+ *                  true if enabled
+ */
+export const isWebGLEnabled = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement("canvas")
+    const names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"]
+    let context = false
+
+    for (const i in names) {
+      try {
+        context = canvas.getContext(names[i]);
+        if (context && typeof context.getParameter === "function") {
+          /* WebGL is enabled. */
+          return true
+        }
+      } catch (e) {
+        /* no-op */
+      }
+    }
+
+    /* WebGL is supported, but disabled. */
+    return false
+  }
+
+  /* WebGL not supported. */
+  return false
 }
