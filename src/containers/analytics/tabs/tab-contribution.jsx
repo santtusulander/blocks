@@ -170,6 +170,7 @@ class AnalyticsTabContribution extends React.Component {
         stats={contributionWithName}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
+        fetching={this.props.fetching}
       />
     )
   }
@@ -181,6 +182,7 @@ AnalyticsTabContribution.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
@@ -205,7 +207,8 @@ function mapStateToProps(state, ownProps) {
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
     currentUser: getCurrentUser(state),
-    filterOptions: state.filters.get('filterOptions')
+    filterOptions: state.filters.get('filterOptions'),
+    fetching: state.traffic.get('fetching') || state.traffic.get('fetching')
   }
 }
 
