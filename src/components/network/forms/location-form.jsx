@@ -13,7 +13,7 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 import IsAllowed from '../../shared/permission-wrappers/is-allowed'
 
 import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
-import { isValidLatitude, isValidLongitude, isValidTextField, isValidCloudLocationId } from '../../../util/validators.js'
+import { isValidLatitude, isValidLongitude, isValidTextField, isValidLocationText } from '../../../util/validators.js'
 
 import {
   LOCATION_NAME_MIN_LENGTH,
@@ -37,12 +37,14 @@ const validate = ({
   const customConditions = {
     name: [
       {
-        condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
+        condition: !isValidLocationText(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel='portal.network.locationForm.name.label'
             minValue={LOCATION_NAME_MIN_LENGTH}
-            maxValue={LOCATION_NAME_MAX_LENGTH}/>
+            maxValue={LOCATION_NAME_MAX_LENGTH}
+            customValidationErrorText="portal.network.locationForm.locationText.allowedSpecialChars.error"
+            />
         )
       }
     ],
@@ -68,13 +70,13 @@ const validate = ({
     ],
     cloudProviderLocationId: [
       {
-        condition: !isValidCloudLocationId(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
+        condition: !isValidLocationText(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel='portal.network.locationForm.cloudProviderLocationId.label'
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}
-            customValidationErrorText="portal.network.locationForm.cloudProviderLocationId.allowedSpecialChars.error"/>
+            customValidationErrorText="portal.network.locationForm.locationText.allowedSpecialChars.error"/>
         )
       }
     ]
