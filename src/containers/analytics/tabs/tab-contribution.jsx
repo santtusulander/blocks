@@ -64,23 +64,19 @@ class AnalyticsTabContribution extends React.Component {
   getChartName() {
     const { contribution, accountType, filterOptions, filters } = this.props
     const isCP = accountType === ProviderTypes.CONTENT_PROVIDER
-    if (isCP) {
-      const filterSPByGroup = filters.get('serviceProviderGroups') && !filters.get('serviceProviderGroups').isEmpty()
-      const providers =  filterSPByGroup ? filterOptions.get('serviceProviderGroups') : filterOptions.get('serviceProviders')
 
-      return contribution.map(item => {
-        const service = providers.find(provider => provider.get('id') === item.get(filterSPByGroup ? 'sp_group':'sp_account'))
-        return service ? item.set('chartName', service.get('name')) : item
-      })
-    } else {
-      const filterCPByGroup = filters.get('contentProviderGroups') && !filters.get('contentProviderGroups').isEmpty()
-      const providers =  filterCPByGroup ? filterOptions.get('contentProviderGroups') : filterOptions.get('contentProviders')
+    const accountTier = isCP ? 'serviceProviders' : 'contentProviders'
+    const groupTier = isCP ? 'serviceProviderGroups': 'contentProviderGroups'
+    const groupTag = isCP ? 'sp_group' : 'group'
+    const accountTag = isCP ? 'sp_account' : 'account'
 
-      return contribution.map(item => {
-        const service = providers.find(provider => provider.get('id') === item.get(filterCPByGroup ? 'group':'account'))
-        return service ? item.set('chartName', service.get('name')) : item
-      })
-    }
+    const isFilterByGroup = filters.get(groupTier) && !filters.get(groupTier).isEmpty()
+    const providers =  isFilterByGroup ? filterOptions.get(groupTier) : filterOptions.get(accountTier)
+
+    return contribution.map(item => {
+      const service = providers.find(provider => provider.get('id') === item.get(isFilterByGroup ? groupTag : accountTag))
+      return service ? item.set('chartName', service.get('name')) : item
+    })
   }
 
   fetchData(params, filters, location, hostConfiguredName, accountType) {
