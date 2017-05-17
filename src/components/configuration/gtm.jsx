@@ -90,15 +90,16 @@ class ConfigurationGlobalTrafficManager extends React.Component {
       ? []
       : values.rules.reduce((generatedRules, rule) => {
 
+        // The order of this array is significant
         const traffic_split_targets = [
-          {
-            percent: String(100 - rule.policyWeight),
-            cname: values.cName,
-            ttl: String(values.ttl)
-          },
           {
             percent: String(rule.policyWeight),
             cname: udnPlaceholder,
+            ttl: String(values.ttl)
+          },
+          {
+            percent: String(100 - rule.policyWeight),
+            cname: values.cName,
             ttl: String(values.ttl)
           }
         ]
