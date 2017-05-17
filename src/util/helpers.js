@@ -793,7 +793,7 @@ export const isWebGLEnabled = () => {
       try {
         context = canvas.getContext(names[i]);
         if (context && typeof context.getParameter === "function") {
-            // WebGL is enabled.
+          /* WebGL is enabled. */
           return true
         }
       } catch (e) {
@@ -801,10 +801,10 @@ export const isWebGLEnabled = () => {
       }
     }
 
-    // WebGL is supported, but disabled.
+    /* WebGL is supported, but disabled. */
     return false
   }
 
-  // WebGL not supported.
+  /* WebGL not supported. */
   return false
 };
