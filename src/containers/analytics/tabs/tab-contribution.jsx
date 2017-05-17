@@ -16,6 +16,12 @@ import { getCurrentUser } from '../../../redux/modules/user'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.getProviderName = this.getProviderName.bind(this)
+  }
+
   componentDidMount() {
     if (this.props.accountType) {
       this.fetchData(
@@ -53,6 +59,28 @@ class AnalyticsTabContribution extends React.Component {
 
   componentWillUnmount() {
     this.props.filterActions.resetContributionFilters()
+  }
+
+  getProviderName() {
+    const { contribution, accountType, filterOptions, filters } = this.props
+    const isCP = accountType === ProviderTypes.CONTENT_PROVIDER
+    if (isCP) {
+      const filterSPByGroup = filters.get('serviceProviderGroups') && !filters.get('serviceProviderGroups').isEmpty()
+      const providers =  filterSPByGroup ? filterOptions.get('serviceProviderGroups') : filterOptions.get('serviceProviders')
+
+      return contribution.map(item => {
+        const service = providers.find(provider => provider.get('id') === item.get(filterSPByGroup ? 'sp_group':'sp_account'))
+        return service ? item.set('name', service.get('name')) : item
+      })
+    } else {
+      const filterCPByGroup = filters.get('contentProviderGroups') && !filters.get('contentProviderGroups').isEmpty()
+      const providers =  filterCPByGroup ? filterOptions.get('contentProviderGroups') : filterOptions.get('contentProviders')
+
+      return contribution.map(item => {
+        const service = providers.find(provider => provider.get('id') === item.get(filterCPByGroup ? 'group':'account'))
+        return service ? item.set('name', service.get('name')) : item
+      })
+    }
   }
 
   fetchData(params, filters, location, hostConfiguredName, accountType) {
@@ -118,14 +146,7 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render() {
-    const { contribution, filterOptions } = this.props
-    const isCP = this.props.accountType === ProviderTypes.CONTENT_PROVIDER
-
-    const providers = filterOptions.get(isCP ? 'serviceProviders' : 'contentProviders')
-    const contributionWithName = contribution.map(item => {
-      const service = providers.find(provider => provider.get('id') === item.get(isCP ? 'sp_account':'account'))
-      return service ? item.set('name', service.get('name')) : item
-    })
+    const contributionWithName = this.getProviderName()
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
