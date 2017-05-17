@@ -19,7 +19,7 @@ class AnalyticsTabContribution extends React.Component {
   constructor(props) {
     super(props)
 
-    this.getProviderName = this.getProviderName.bind(this)
+    this.getChartName = this.getChartName.bind(this)
   }
 
   componentDidMount() {
@@ -61,7 +61,7 @@ class AnalyticsTabContribution extends React.Component {
     this.props.filterActions.resetContributionFilters()
   }
 
-  getProviderName() {
+  getChartName() {
     const { contribution, accountType, filterOptions, filters } = this.props
     const isCP = accountType === ProviderTypes.CONTENT_PROVIDER
     if (isCP) {
@@ -70,7 +70,7 @@ class AnalyticsTabContribution extends React.Component {
 
       return contribution.map(item => {
         const service = providers.find(provider => provider.get('id') === item.get(filterSPByGroup ? 'sp_group':'sp_account'))
-        return service ? item.set('name', service.get('name')) : item
+        return service ? item.set('chartName', service.get('name')) : item
       })
     } else {
       const filterCPByGroup = filters.get('contentProviderGroups') && !filters.get('contentProviderGroups').isEmpty()
@@ -78,7 +78,7 @@ class AnalyticsTabContribution extends React.Component {
 
       return contribution.map(item => {
         const service = providers.find(provider => provider.get('id') === item.get(filterCPByGroup ? 'group':'account'))
-        return service ? item.set('name', service.get('name')) : item
+        return service ? item.set('chartName', service.get('name')) : item
       })
     }
   }
@@ -146,7 +146,7 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render() {
-    const contributionWithName = this.getProviderName()
+    const contributionWithName = this.getChartName()
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {

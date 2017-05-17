@@ -96,7 +96,7 @@ class AnalysisContribution extends React.Component {
       }
 
       return {
-        name: provider.get('name'),
+        name: provider.get('chartName'),
         ...dataObject
       }
 
