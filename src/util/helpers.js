@@ -776,3 +776,35 @@ export const getPage = (items, page, limit) => {
 
   return items.slice(offset, offset + limit)
 }
+
+/**
+ * Detects if WebGL is enabled.
+ *
+ * @return { bool } false if supported or disabled
+ *                  true if enabled
+ */
+export const isWebGLEnabled = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement("canvas")
+    const names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"]
+    let context = false
+
+    for (const i in names) {
+      try {
+        context = canvas.getContext(names[i]);
+        if (context && typeof context.getParameter === "function") {
+            // WebGL is enabled.
+          return true
+        }
+      } catch (e) {
+        /* no-op */
+      }
+    }
+
+    // WebGL is supported, but disabled.
+    return false
+  }
+
+  // WebGL not supported.
+  return false
+};
