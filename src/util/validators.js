@@ -269,7 +269,7 @@ export function isSafari() {
  * @return {Boolean}
  */
 export function isValidPhoneNumber(str) {
-  return matchesRegexp(str, /^(|\d{7,})$/)
+  return matchesRegexp(str, /^\+?(|\d{7,})$/)
 }
 
 
