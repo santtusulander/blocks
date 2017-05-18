@@ -16,6 +16,7 @@ import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -125,6 +126,32 @@ class StorageContents extends Component {
       values={{ folders, files }} />)
   }
 
+  getHeaderBreadcrumb() {
+    const { params, params: { storage, splat } } = this.props
+    const links = []
+    if (splat && splat.length > 0) {
+      const pathArray = splat.split('/')
+      links.push({
+        url: null,
+        label: pathArray.slice(-1).shift()
+      })
+
+      pathArray.slice(0, -1).reverse().forEach((dir, index) => {
+        links.push({
+          url: getContentUrl('storageContents', pathArray.slice(0, -(index + 1)).join('/'), params),
+          label: dir
+        })
+      })
+    }
+
+    links.push({
+      url: getContentUrl('storage', storage, params),
+      label: storage
+    })
+
+    return <Breadcrumbs links={links.reverse()} />
+  }
+
   setDragState(event) {
     let node = event.target
     let dropzone, isDragging, draggingOver
@@ -185,11 +212,11 @@ class StorageContents extends Component {
 
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const hasContents = contents && contents.size > 0
-    const headerTitle = hasContents
-                        ?
-                          this.getHeader(contents)
-                        :
-                          <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
+    // const headerTitle = hasContents
+    //                     ?
+    //                       this.getHeader(contents)
+    //                     :
+    //                       <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
 
     const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
     const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
@@ -213,7 +240,7 @@ class StorageContents extends Component {
     :
       (<SectionContainer>
         <SectionHeader
-          sectionHeaderTitle={headerTitle}>
+          sectionSubHeaderTitle={this.getHeaderBreadcrumb()}>
           <FormGroup className="upload-toggle-group">
             <Col xs={6} className="pull-left">
               <FormControl
