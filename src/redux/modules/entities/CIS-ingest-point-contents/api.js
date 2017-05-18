@@ -21,41 +21,41 @@ const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
   )
 })
 
-const mockData = {
-  "offset": 0,
-  "page_size": 50,
-  "stat": {"atime": 1491277462,
-    "mode": 509,
-    "mtime": 1491277462,
-    "size": 52,
-    "type": "directory"},
-  "items": [
-    {"name": "dir1",
-      "stat": {"atime": 1491277462,
-        "mode": 509,
-        "mtime": 1491277462,
-        "size": 6,
-        "type": "directory"}},
-    {"name": "dir2",
-      "stat": {"atime": 1491277462,
-        "mode": 509,
-        "mtime": 1491277462,
-        "size": 6,
-        "type": "directory"}}
-    // {"name": "file1",
-    //   "stat": {"atime": 1491277462,
-    //     "mode": 436,
-    //     "mtime": 1491277462,
-    //     "size": 100,
-    //     "type": "file"}},
-    // {"name": "file2",
-    //   "stat": {"atime": 1491277462,
-    //     "mode": 436,
-    //     "mtime": 1491277462,
-    //     "size": 100,
-    //     "type": "file"}}
-  ]
-}
+// const mockData = {
+//   "offset": 0,
+//   "page_size": 50,
+//   "stat": {"atime": 1491277462,
+//     "mode": 509,
+//     "mtime": 1491277462,
+//     "size": 52,
+//     "type": "directory"},
+//   "items": [
+//     {"name": "dir1",
+//       "stat": {"atime": 1491277462,
+//         "mode": 509,
+//         "mtime": 1491277462,
+//         "size": 6,
+//         "type": "directory"}},
+//     {"name": "dir2",
+//       "stat": {"atime": 1491277462,
+//         "mode": 509,
+//         "mtime": 1491277462,
+//         "size": 6,
+//         "type": "directory"}}
+//     // {"name": "file1",
+//     //   "stat": {"atime": 1491277462,
+//     //     "mode": 436,
+//     //     "mtime": 1491277462,
+//     //     "size": 100,
+//     //     "type": "file"}},
+//     // {"name": "file2",
+//     //   "stat": {"atime": 1491277462,
+//     //     "mode": 436,
+//     //     "mtime": 1491277462,
+//     //     "size": 100,
+//     //     "type": "file"}}
+//   ]
+// }
 
 /**
  * Fetch list of Contents
