@@ -18,10 +18,11 @@ const StorageContentBrowser = ({
   contents,
   isRootDirectory,
   openDirectoryHandler,
-  sorterProps
+  sorterProps,
+  highlightItem
 }) => {
   return (
-    <Table striped={true}>
+    <Table striped={true} className='storage-contents-table'>
       <thead>
         <tr>
           <TableSorter {...sorterProps} column='name'>
@@ -36,7 +37,7 @@ const StorageContentBrowser = ({
           <th width="1%"/>
         </tr>
       </thead>
-      <tbody>
+      <tbody className={`${(highlightItem === null) ? 'highlight' : ''}`}>
         {!isRootDirectory &&
           <tr>
             <td className='storage-contents-cell-directory' onDoubleClick={backButtonHandler}>
@@ -51,11 +52,23 @@ const StorageContentBrowser = ({
         {contents.map((item, index) => {
           const name = item.get('name')
           const isDirectory = item.get('type') === 'directory'
+          const dataAttributes = {
+            'data-drop-zone': true
+          }
+          if (isDirectory) {
+            dataAttributes['data-drop-dir'] = name
+          }
           return (
-            <tr key={index}>
-              <td className={`${isDirectory ? 'storage-contents-cell-directory' : ''}`} onDoubleClick={() => {
-                isDirectory ? openDirectoryHandler(name) : null
-              }}>
+            <tr
+              key={index}
+              {...dataAttributes}
+              className={`${(highlightItem === name) ? 'highlight' : ''}`}>
+              <td
+                className={`${isDirectory ? 'storage-contents-cell-directory' : ''}`}
+                onDoubleClick={() => {
+                  isDirectory ? openDirectoryHandler(name) : null
+                }}
+              >
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
                 <div className='storage-contents-name'>
                   <TruncatedTitle content={name} />

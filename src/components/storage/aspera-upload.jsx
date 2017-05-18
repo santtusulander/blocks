@@ -214,28 +214,32 @@ class AsperaUpload extends Component {
     })
   }
 
-  onDragEnter() {
-    this.setState({
-      isDragActive: true
-    })
+  onDragEnter(event) {
+    this.props.onDragEnter(event)
+    // this.setState({
+    //   isDragActive: true
+    // })
   }
 
-  onDragLeave() {
-    this.setState({
-      isDragActive: false
-    })
+  onDragLeave(event) {
+    this.props.onDragLeave(event)
+    // this.setState({
+    //   isDragActive: false
+    // })
   }
 
-  onDragOver() {
-    this.setState({
-      isDragActive: true
-    })
+  onDragOver(event) {
+    this.props.onDragOver(event)
+    // this.setState({
+    //   isDragActive: true
+    // })
   }
 
   onDrop(event, data) {
-    this.setState({
-      isDragActive: false
-    })
+    this.props.onDrop(event)
+    // this.setState({
+    //   isDragActive: false
+    // })
 
     this.startTransfer(data.dataTransfer.files)
   }
@@ -243,15 +247,15 @@ class AsperaUpload extends Component {
   asperaListener({event, files}) {
     switch (event.type) {
       case DRAG_ENTER_EVENT_NAME:
-        this.onDragEnter()
+        this.onDragEnter(event)
         break;
 
       case DRAG_LEAVE_EVENT_NAME:
-        this.onDragLeave()
+        this.onDragLeave(event)
         break;
 
       case DRAG_OVER_EVENT_NAME:
-        this.onDragOver()
+        this.onDragOver(event)
         break;
 
       case DROP_EVENT_NAME:
@@ -287,13 +291,15 @@ class AsperaUpload extends Component {
       <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
              className="filedrop-container"
-             onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
-
-          <div className={classNames}>
+             /*onClick={openUploadModalOnClick ? this.onFileUploadClick : null}*/ >
+          <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+            {this.props.children}
+          </div>
+          {/*<div className={classNames}>
             <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
               { this.displayInsideDropZone() }
             </div>
-          </div>
+          </div>*/}
 
         </div>
       </div>

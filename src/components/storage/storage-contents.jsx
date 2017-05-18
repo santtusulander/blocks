@@ -31,6 +31,8 @@ class StorageContents extends Component {
     super(props)
 
     this.state = {
+      isDragging: false,
+      draggingOver: null,
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -40,6 +42,10 @@ class StorageContents extends Component {
     this.changeSearch = this.changeSearch.bind(this)
     this.backButtonHandler = this.backButtonHandler.bind(this)
     this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
+
+    this.onDragEnter = this.onDragEnter.bind(this)
+    this.onDragLeave = this.onDragLeave.bind(this)
+    this.onDragOver = this.onDragOver.bind(this)
   }
 
   componentWillMount() {
@@ -119,6 +125,50 @@ class StorageContents extends Component {
       values={{ folders, files }} />)
   }
 
+  setDragState(event) {
+    let node = event.target
+    let dropzone, isDragging, draggingOver
+    while (node !== document.body) {
+      if (node.dataset && node.dataset.dropZone) {
+        dropzone = node
+        break
+      }
+      node = node.parentNode
+    }
+
+    if (dropzone) {
+      const { dataset } = dropzone
+      isDragging = true
+      draggingOver = dataset.dropDir ? dataset.dropDir : null
+    } else {
+      isDragging = false
+      draggingOver = null
+    }
+    if (isDragging !== this.state.isDragging || draggingOver !== this.state.draggingOver) {
+      this.setState({ isDragging, draggingOver })
+    }
+  }
+
+  onDragEnter(event) {
+    this.setDragState(event)
+    // console.log('enter', event)
+    // console.log(event)
+  }
+
+  onDragLeave(event) {
+    // this.setDragState(event.path)
+    // console.log('leave', event)
+  }
+
+  onDragOver(event) {
+    // this.setDragState(event.path)
+    // console.log('over', event)
+  }
+
+  onDrop(event) {
+    // console.log('drop', event)
+  }
+
   render() {
     const { search, sortBy, sortDir } = this.state
     const {
@@ -134,7 +184,8 @@ class StorageContents extends Component {
       params } = this.props
 
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
-    const hasContents = contents && contents.size > 0
+    // const hasContents = contents && contents.size > 0
+    const hasContents = false
     const headerTitle = hasContents
                         ?
                           this.getHeader(contents)
@@ -232,7 +283,20 @@ class StorageContents extends Component {
               groupId={groupId}
               storageId={storageId}
               asperaGetaway={gatewayHostname}
-            />
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+            >
+              <StorageContentBrowser
+                contents={sortedContents}
+                openDirectoryHandler={this.openDirectoryHandler}
+                backButtonHandler={this.backButtonHandler}
+                isRootDirectory={isRootDirectory}
+                sorterProps={sorterProps}
+                highlightItem={this.state.isDragging && this.state.draggingOver}
+              />
+            </AsperaUpload>
           : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
         }
       </SectionContainer>
