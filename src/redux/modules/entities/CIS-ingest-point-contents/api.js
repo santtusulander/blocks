@@ -62,15 +62,15 @@ const mockData = {
  * @return {Object} normalzed list of contents
  */
 export const fetchAll = (params) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 200)
-  }).then(() => {
-    return normalize({ group: params.group, id: params.id, path: params.path , contents: mockData }, [ ingestPointContentSchema ])
-  })
-  // return axios.get(baseUrl(params))
-  // .then(({data}) => {
-  //   return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve()
+  //   }, 200)
+  // }).then(() => {
+  //   return normalize({ group: params.group, id: params.id, path: params.path , contents: mockData }, [ ingestPointContentSchema ])
   // })
+  return axios.get(baseUrl(params))
+  .then(({data}) => {
+    return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
+  })
 }
