@@ -280,10 +280,10 @@ class AsperaUpload extends Component {
   }
 
   render() {
-    const { openUploadModalOnClick } = this.props
+    const { openUploadModalOnClick, highlightZoneOnDrag } = this.props
     const classNames = classnames(
       "filedrop-area",
-      { "drag-active": this.state.isDragActive },
+      { "drag-active": this.state.isDragActive && highlightZoneOnDrag },
       { "error": this.state.asperaError },
     )
 
@@ -294,7 +294,7 @@ class AsperaUpload extends Component {
           <div id={ASPERA_UPLOAD_CONTAINER_ID}>
             {this.props.children}
             {this.props.renderDropZone &&
-              <div className={classNames}>
+              <div className={classNames} data-drop-zone={true}>
                 <div
                   className="welcome-text"
                   onClick={openUploadModalOnClick ? this.onFileUploadClick : null}>

@@ -4,7 +4,7 @@
   tbody,
   tr {
     &.highlight {
-      border: 1px solid $pale-blue;
+      box-shadow: 0 0 0 1px $pale-blue;
 
       td:before {
         position: absolute;
@@ -25,7 +25,7 @@
 }
 
 .storage-contents-icon-cell {
-  border-right: 0 !important;
+  border-right-color: rgba($black, 0) !important;
 }
 
 .storage-contents-cell-directory {

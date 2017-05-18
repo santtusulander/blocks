@@ -47,6 +47,7 @@ class StorageContents extends Component {
     this.onDragEnter = this.onDragEnter.bind(this)
     this.onDragLeave = this.onDragLeave.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
+    this.onDrop = this.onDrop.bind(this)
   }
 
   componentWillMount() {
@@ -111,6 +112,7 @@ class StorageContents extends Component {
     })
   }
 
+  // UDNP-3365 - remove this
   getHeader(contents) {
     const { foldersCount: folders, filesCount: files } = contents.reduce(({ foldersCount, filesCount }, item) => {
       if (item.get('type') === 'directory') {
@@ -154,8 +156,6 @@ class StorageContents extends Component {
       })
     }
 
-
-
     return (
       <div className='storage-contents-breadcrumb'>
         <Breadcrumbs links={links.reverse()} />
@@ -163,9 +163,19 @@ class StorageContents extends Component {
     )
   }
 
-  setDragState(event) {
+  clearDragState() {
+    this.setDragState(false, null)
+  }
+
+  setDragState(isDragging, draggingOver) {
+    if (isDragging !== this.state.isDragging || draggingOver !== this.state.draggingOver) {
+      this.setState({ isDragging, draggingOver })
+    }
+  }
+
+  setDragEventState(event) {
     let node = event.target
-    let dropzone, isDragging, draggingOver
+    let dropzone
     while (node !== document.body) {
       if (node.dataset && node.dataset.dropZone) {
         dropzone = node
@@ -176,35 +186,28 @@ class StorageContents extends Component {
 
     if (dropzone) {
       const { dataset } = dropzone
-      isDragging = true
-      draggingOver = dataset.dropDir ? dataset.dropDir : null
+      this.setDragState(true, dataset.dropDir ? dataset.dropDir : null)
     } else {
-      isDragging = false
-      draggingOver = null
-    }
-    if (isDragging !== this.state.isDragging || draggingOver !== this.state.draggingOver) {
-      this.setState({ isDragging, draggingOver })
+      this.clearDragState()
     }
   }
 
   onDragEnter(event) {
-    this.setDragState(event)
-    // console.log('enter', event)
-    // console.log(event)
+    this.setDragEventState(event)
   }
 
-  onDragLeave(event) {
-    // this.setDragState(event.path)
-    // console.log('leave', event)
+  onDragLeave() {
+    this.clearDragState()
   }
 
   onDragOver(event) {
-    // this.setDragState(event.path)
-    // console.log('over', event)
+    if (!this.state.isDragging) {
+      this.setDragEventState(event)
+    }
   }
 
-  onDrop(event) {
-    // console.log('drop', event)
+  onDrop() {
+    this.clearDragState()
   }
 
   render() {
@@ -223,11 +226,7 @@ class StorageContents extends Component {
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
-    // const headerTitle = hasContents
-    //                     ?
-    //                       this.getHeader(contents)
-    //                     :
-    //                       <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
+    const hasFiles = hasContents && contents.filter(item => item.get('type') !== 'directory').size > 0
 
     const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
     const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
@@ -244,6 +243,14 @@ class StorageContents extends Component {
     const filteredContents = contents && this.getFilteredItems(contents, search)
     const modifiedContents = filteredContents && this.getModifiedContents(filteredContents)
     const sortedContents = modifiedContents && getSortData(modifiedContents, sortBy, sortDir)
+
+    const highlightedItem = hasFiles
+      ?
+        (this.state.isDragging) ? this.state.draggingOver : undefined
+      :
+        (this.state.isDragging && this.state.draggingOver) ? this.state.draggingOver : undefined
+    const renderDropZone = !hasContents || !hasFiles
+    const highlightZoneOnDrag = this.state.isDragging && this.state.draggingOver === null
 
     return isFetchingContents
     ?
@@ -313,7 +320,8 @@ class StorageContents extends Component {
               groupId={groupId}
               storageId={storageId}
               asperaGetaway={gatewayHostname}
-              renderDropZone={true}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
               onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave}
               onDragOver={this.onDragOver}
@@ -326,7 +334,7 @@ class StorageContents extends Component {
                   backButtonHandler={this.backButtonHandler}
                   isRootDirectory={isRootDirectory}
                   sorterProps={sorterProps}
-                  highlightedItem={this.state.isDragging && this.state.draggingOver}
+                  highlightedItem={highlightedItem}
                 />
               }
             </AsperaUpload>
@@ -334,7 +342,8 @@ class StorageContents extends Component {
             <HttpUpload
               processFiles={processFiles}
               openFileDialog={openFileDialog}
-              renderDropZone={true}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
               onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave}
               onDragOver={this.onDragOver}
@@ -347,7 +356,7 @@ class StorageContents extends Component {
                   backButtonHandler={this.backButtonHandler}
                   isRootDirectory={isRootDirectory}
                   sorterProps={sorterProps}
-                  highlightedItem={this.state.isDragging && this.state.draggingOver}
+                  highlightedItem={highlightedItem}
                 />
               }
             </HttpUpload>

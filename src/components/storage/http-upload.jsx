@@ -96,7 +96,7 @@ class HTTPUpload extends Component {
   render() {
     const dropZoneClassNames = classNames(
       "filedrop-area",
-      { "drag-active": this.state.dropZoneActive },
+      { "drag-active": this.state.dropZoneActive && this.props.highlightZoneOnDrag },
       { "error": this.state.dropZoneInvalid }
     );
 
@@ -120,7 +120,7 @@ class HTTPUpload extends Component {
         >
           {this.props.children}
           {this.props.renderDropZone &&
-            <div className={dropZoneClassNames}>
+            <div className={dropZoneClassNames} data-drop-zone={true}>
               <div className="welcome-text">
                 <FormattedMessage id="portal.fileInput.dropFile.text"/>
               </div>

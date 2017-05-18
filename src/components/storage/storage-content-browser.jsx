@@ -6,7 +6,6 @@ import classNames from 'classnames'
 
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
-import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
@@ -100,7 +99,7 @@ StorageContentBrowser.displayName = "StorageContentBrowser"
 StorageContentBrowser.propTypes = {
   backButtonHandler: PropTypes.func,
   contents: PropTypes.instanceOf(List),
-  highlightedItem: PropTypes.oneOfType(PropTypes.object, PropTypes.string),
+  highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
   sorterProps: PropTypes.object
