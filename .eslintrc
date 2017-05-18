@@ -9,7 +9,8 @@
     "TOPO_BASE_URI_PRODUCTION": false,
     "GA_TRACKING_ID": false,
     "GOOGLE_SITE_KEY": false,
-    "MAPBOX_ACCESS_TOKEN": false
+    "MAPBOX_ACCESS_TOKEN": false,
+    "BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE": false,
   },
   "ecmaFeatures": {
     "jsx": true,
