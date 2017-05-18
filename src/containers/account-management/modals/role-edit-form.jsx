@@ -3,7 +3,7 @@ import {Map, Iterable} from 'immutable'
 import { connect } from 'react-redux'
 import { reduxForm, Field } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Table } from 'react-bootstrap'
+import { Accordion, Panel, Button, Table } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -13,6 +13,8 @@ import FormFooterButtons from '../../../components/shared/form-elements/form-foo
 
 import { getById as getRoleById } from '../../../redux/modules/entities/roles/selectors'
 import { getById as getRoleNameById } from '../../../redux/modules/entities/role-names/selectors'
+
+import './role-edit-form.scss'
 
 const validate = ({ roleName }) => {
   const conditions = {}
@@ -51,6 +53,7 @@ class RoleEditForm extends React.Component {
         title={intl.formatMessage({ id: 'portal.account.roleEdit.title' })}
         subTitle={roleName}
         cancel={onCancel}
+        className='role-edit-form'
       >
 
 
@@ -67,41 +70,39 @@ class RoleEditForm extends React.Component {
 
             {this.props.role.map((resources, service) => {
               return (
-                <Table className="table-striped">
-                  <thead>
-                    <tr>
-                      <th colSpan="2">{service}</th>
-                    </tr>
-                  </thead>
+                <Accordion>
+                  <Panel header={service}>
+                    <Table className="table-striped">
+                      <tbody>
+                        <tr>
+                          <th colSpan="2"><FormattedMessage id='portal.accountManagement.resources.text' /></th>
+                        </tr>
 
-                  <tbody>
-                    <tr>
-                      <th colSpan="2"><FormattedMessage id='portal.accountManagement.resources.text' /></th>
-                    </tr>
+                        {resources.map((perms, resource) => {
+                          return (
+                              perms && <tr>
+                                <td>
+                                  {resource}
+                                </td>
 
-                    {resources.map((perms, resource) => {
-                      return (
-                          perms && <tr>
-                            <td>
-                              {resource}
-                            </td>
-
-                            {
-                              Iterable.isIterable(perms)
-                                && <td>
-                                  {
-                                    perms.filter(perm => perm.get('allowed')).map((name,key) => {
-                                      return key
-                                    }).join(', ')
-                                  }
-                                  </td>
-                            }
-                          </tr>
-                      )
-                    }).toArray()
-                    }
-                  </tbody>
-              </Table>
+                                {
+                                  Iterable.isIterable(perms)
+                                    && <td>
+                                      {
+                                        perms.filter(perm => perm.get('allowed')).map((name,key) => {
+                                          return key
+                                        }).join(', ')
+                                      }
+                                      </td>
+                                }
+                              </tr>
+                          )
+                        }).toArray()
+                        }
+                      </tbody>
+                  </Table>
+              </Panel>
+            </Accordion>
 
               )
             }).toArray()
