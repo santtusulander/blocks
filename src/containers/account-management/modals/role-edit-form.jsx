@@ -107,12 +107,17 @@ class RoleEditForm extends React.Component {
             }
 
           <FormFooterButtons>
-            {[<Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>]}
+              {/*
+                 Needs to be put inside [] as FormFooterButtons is expecting array of components
+              */}
+              {[<Button
+                key='cancel-btn'
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={onCancel}
+              >
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>]}
           </FormFooterButtons>
         </form>
       </SidePanel>
