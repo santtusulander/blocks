@@ -60,7 +60,7 @@ const StorageContentBrowser = ({
           }
           const rowClassnames = classNames(
             {'content-browser-row-directory': isDirectory},
-            {'highlight':  (highlightedItem === name)}
+            {'highlight': (highlightedItem === name)}
           )
           return (
             <tr

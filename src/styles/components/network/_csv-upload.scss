@@ -1,13 +1,13 @@
 @import '../styles/base/colors';
 
-$filedrop-min-height: 200px;
+$filedrop-min-height: 100px;
 
 .filedrop-container .filedrop-area {
   width: 100%;
   min-height: $filedrop-min-height;
 
   border-style: dashed;
-  border-width: 2px;
+  border-width: 1px;
   border-radius: 5px;
 
   .dark-theme & {
