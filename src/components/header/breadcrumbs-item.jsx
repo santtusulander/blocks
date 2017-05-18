@@ -82,23 +82,6 @@ class BreadcrumbsItem extends React.Component {
     }
   }
 
-  addStorageContentsLinks(props, links, urlMethod) {
-    const { params, params: { splat } } = props
-    const pathArray = splat.split('/')
-
-    links.push({
-      url: null,
-      label: pathArray.slice(-1).shift()
-    })
-
-    pathArray.slice(0, -1).reverse().forEach((dir, index) => {
-      links.push({
-        url: urlMethod('storageContents', pathArray.slice(0, -(index + 1)).join('/'), params),
-        label: dir
-      })
-    })
-  }
-
   updateLinks(props) {
     const links = []
     const { pathname, params, activeGroup } = props
@@ -136,11 +119,6 @@ class BreadcrumbsItem extends React.Component {
           label: <FormattedMessage id="portal.header.configuration.text"/>
         })
 
-        storageLinkIsLast = false
-      }
-
-      if (params.splat && params.splat.length > 0) {
-        this.addStorageContentsLinks(props, links, getContentUrl)
         storageLinkIsLast = false
       }
 

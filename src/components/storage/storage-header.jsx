@@ -25,10 +25,6 @@ const StorageHeader = ({
   router,
   toggleConfigModal
 }) => {
-
-  const { splat, storage } = params
-  const accountSelectorTitle = (splat && splat.length > 0) ? splat.split('/').slice(-1).shift() : storage
-
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.storage.summaryPage.title"/>}>
       <AccountSelector
@@ -47,7 +43,7 @@ const StorageHeader = ({
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
-            <TruncatedTitle content={accountSelectorTitle}
+            <TruncatedTitle content={params.storage}
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>

@@ -25,6 +25,16 @@ const StorageContentBrowser = ({
     <Table striped={true} className='storage-contents-table'>
       <thead>
         <tr>
+          <th width="1%">
+            {!isRootDirectory &&
+              <div onDoubleClick={backButtonHandler}>
+                <IconBack
+                  className='storage-contents-icon back'
+                  height={20}
+                  viewBox='0 0 36 20' />
+              </div>
+            }
+          </th>
           <TableSorter {...sorterProps} column='name'>
             <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
           </TableSorter>
@@ -38,17 +48,6 @@ const StorageContentBrowser = ({
         </tr>
       </thead>
       <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
-        {!isRootDirectory &&
-          <tr>
-            <td className='storage-contents-cell-directory' onDoubleClick={backButtonHandler}>
-              <IconBack className='storage-contents-icon back' />
-              <div className='storage-contents-name'>
-                <FormattedMessage id='portal.storage.summaryPage.contentBrowser.backButton.text' />
-              </div>
-            </td>
-            <td/><td/><td/>
-          </tr>
-        }
         {contents.map((item, index) => {
           const name = item.get('name')
           const isDirectory = item.get('type') === 'directory'
@@ -64,12 +63,14 @@ const StorageContentBrowser = ({
               {...dataAttributes}
               className={`${(highlightedItem === name) ? 'highlight' : ''}`}>
               <td
-                className={`${isDirectory ? 'storage-contents-cell-directory' : ''}`}
+                className='storage-contents-icon-cell'>
+                {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
+              </td>
+              <td
                 onDoubleClick={() => {
                   isDirectory ? openDirectoryHandler(name) : null
                 }}
               >
-                {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
                 <div className='storage-contents-name'>
                   <TruncatedTitle content={name} />
                 </div>

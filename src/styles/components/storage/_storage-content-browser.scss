@@ -20,6 +20,10 @@
   }
 }
 
+.storage-contents-icon-cell {
+  border-right: 0;
+}
+
 .storage-contents-cell-directory {
   > .storage-contents-name,
   > .storage-contents-icon {
@@ -40,12 +44,10 @@
 
 .storage-contents-icon {
   display: inline-block;
-  margin-right: rem(20px);
   fill: $pale-blue !important;
 
   &.back {
     position: relative;
-    top: rem(5px);
     left: rem(5px);
   }
 }

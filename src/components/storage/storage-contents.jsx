@@ -205,12 +205,12 @@ class StorageContents extends Component {
       asperaInstanse,
       gatewayHostname,
       fileUploader,
-      isRootDirectory,
       isFetchingContents,
       intl,
       params } = this.props
 
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
+    const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
     // const headerTitle = hasContents
     //                     ?
@@ -357,7 +357,6 @@ StorageContents.propTypes = {
   gatewayHostname: PropTypes.string,
   intl: intlShape,
   isFetchingContents: PropTypes.bool,
-  isRootDirectory: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object

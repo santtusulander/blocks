@@ -129,7 +129,6 @@ class Storage extends Component {
       isFetchingContents
     } = this.props
 
-    const isRootDirectory = params.splat ? false : true
     return (
       <Content>
         {group && hasStorageService &&
@@ -143,9 +142,7 @@ class Storage extends Component {
             />
 
             <PageContainer>
-              { isRootDirectory &&
-                <StorageKPI storage={storage} params={params}/>
-              }
+              <StorageKPI storage={storage} params={params}/>
               <IsAllowed to={CREATE_ACCESS_KEY}>
                 <StorageContents
                   gatewayHostname={gatewayHostname}
@@ -154,7 +151,6 @@ class Storage extends Component {
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
                   fileUploader={this.state.fileUploader}
-                  isRootDirectory={isRootDirectory}
                   params={params}
                   router={this.props.router}
                   isFetchingContents={isFetchingContents}

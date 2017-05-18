@@ -2,9 +2,9 @@ import React from 'react'
 import Icon from '../icon.jsx'
 
 const IconBack = (props) => {
-  const {className, height, width} = props
+  const {className, height, viewBox, width} = props
   return (
-    <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
+    <Icon className={className} width={width} height={height} viewbox={viewBox}>
       <g>
         <path d="M9.5367,0.2273 L0.2277,7.5403 C-0.0753,7.8423 -0.0753,8.3373 0.2277,8.6403
         L9.5367,15.9183 C9.6857,16.0693 9.8847,16.1473 10.0857,16.1473
@@ -22,6 +22,7 @@ IconBack.displayName = "IconBack"
 IconBack.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,
+  viewBox: React.PropTypes.string,
   width: React.PropTypes.number
 }
 
