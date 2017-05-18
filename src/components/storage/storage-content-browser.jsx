@@ -13,6 +13,7 @@ import { formatDate, formatBytes } from '../../util/helpers'
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
+import IconContextMenu from '../shared/icons/icon-context-menu'
 
 const StorageContentBrowser = ({
   backButtonHandler,
@@ -83,9 +84,7 @@ const StorageContentBrowser = ({
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
                 <IsAllowed to={MODIFY_STORAGE}>
-                  <ActionButtons onDelete={() => {
-                    // no-op
-                  }} />
+                  <IconContextMenu className="storage-contents-context-menu-icon" />
                 </IsAllowed>
               </td>
             </tr>

@@ -21,6 +21,7 @@ import IconChevronRight  from '../../components/shared/icons/icon-chevron-right'
 import IconChevronRightBold from '../../components/shared/icons/icon-chevron-right-bold'
 import IconClose         from '../../components/shared/icons/icon-close'
 import IconContent       from '../../components/shared/icons/icon-content'
+import IconContextMenu   from '../../components/shared/icons/icon-context-menu'
 import IconComments      from '../../components/shared/icons/icon-comments'
 import IconConfiguration from '../../components/shared/icons/icon-configuration'
 import IconClock         from '../../components/shared/icons/icon-clock'
@@ -305,6 +306,11 @@ const StyleguideIcons = () => {
         <IconBack />
         <br />
         IconBack
+      </span>
+      <span className="col-xs-3" style={{marginBottom: '1em'}}>
+        <IconContextMenu />
+        <br />
+        IconContextMenu
       </span>
     </div>
   )
