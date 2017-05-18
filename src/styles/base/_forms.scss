@@ -27,7 +27,6 @@ label {
   textarea[disabled] {
     background-color: rgba($black, 0.1);
     opacity: 0.6;
-    user-select: none;
 
     &:active {
       color: $dt-text-color;
@@ -41,7 +40,6 @@ label {
   textarea[disabled] {
     color: rgba($lt-text-color, 0.4);
     opacity: 0.6;
-    user-select: none;
 
     &:active {
       box-shadow: 0 0 0 1px rgba($black, 0.1);
