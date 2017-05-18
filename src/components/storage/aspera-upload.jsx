@@ -216,30 +216,30 @@ class AsperaUpload extends Component {
 
   onDragEnter(event) {
     this.props.onDragEnter(event)
-    // this.setState({
-    //   isDragActive: true
-    // })
+    this.setState({
+      isDragActive: true
+    })
   }
 
   onDragLeave(event) {
     this.props.onDragLeave(event)
-    // this.setState({
-    //   isDragActive: false
-    // })
+    this.setState({
+      isDragActive: false
+    })
   }
 
   onDragOver(event) {
     this.props.onDragOver(event)
-    // this.setState({
-    //   isDragActive: true
-    // })
+    this.setState({
+      isDragActive: true
+    })
   }
 
   onDrop(event, data) {
     this.props.onDrop(event)
-    // this.setState({
-    //   isDragActive: false
-    // })
+    this.setState({
+      isDragActive: false
+    })
 
     this.startTransfer(data.dataTransfer.files)
   }
@@ -290,17 +290,19 @@ class AsperaUpload extends Component {
     return (
       <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
-             className="filedrop-container"
-             /*onClick={openUploadModalOnClick ? this.onFileUploadClick : null}*/ >
+             className="filedrop-container">
           <div id={ASPERA_UPLOAD_CONTAINER_ID}>
             {this.props.children}
+            {this.props.renderDropZone &&
+              <div className={classNames}>
+                <div
+                  className="welcome-text"
+                  onClick={openUploadModalOnClick ? this.onFileUploadClick : null}>
+                  { this.displayInsideDropZone() }
+                </div>
+              </div>
+            }
           </div>
-          {/*<div className={classNames}>
-            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
-              { this.displayInsideDropZone() }
-            </div>
-          </div>*/}
-
         </div>
       </div>
     )

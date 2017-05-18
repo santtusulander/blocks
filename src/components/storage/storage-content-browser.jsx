@@ -16,10 +16,10 @@ import IconBack from '../shared/icons/icon-back'
 const StorageContentBrowser = ({
   backButtonHandler,
   contents,
+  highlightedItem,
   isRootDirectory,
   openDirectoryHandler,
-  sorterProps,
-  highlightItem
+  sorterProps
 }) => {
   return (
     <Table striped={true} className='storage-contents-table'>
@@ -37,7 +37,7 @@ const StorageContentBrowser = ({
           <th width="1%"/>
         </tr>
       </thead>
-      <tbody className={`${(highlightItem === null) ? 'highlight' : ''}`}>
+      <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
         {!isRootDirectory &&
           <tr>
             <td className='storage-contents-cell-directory' onDoubleClick={backButtonHandler}>
@@ -62,7 +62,7 @@ const StorageContentBrowser = ({
             <tr
               key={index}
               {...dataAttributes}
-              className={`${(highlightItem === name) ? 'highlight' : ''}`}>
+              className={`${(highlightedItem === name) ? 'highlight' : ''}`}>
               <td
                 className={`${isDirectory ? 'storage-contents-cell-directory' : ''}`}
                 onDoubleClick={() => {
@@ -96,6 +96,7 @@ StorageContentBrowser.displayName = "StorageContentBrowser"
 StorageContentBrowser.propTypes = {
   backButtonHandler: PropTypes.func,
   contents: PropTypes.instanceOf(List),
+  highlightedItem: PropTypes.oneOfType(PropTypes.object, PropTypes.string),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
   sorterProps: PropTypes.object

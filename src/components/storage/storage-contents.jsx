@@ -184,8 +184,7 @@ class StorageContents extends Component {
       params } = this.props
 
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
-    // const hasContents = contents && contents.size > 0
-    const hasContents = false
+    const hasContents = contents && contents.size > 0
     const headerTitle = hasContents
                         ?
                           this.getHeader(contents)
@@ -267,37 +266,53 @@ class StorageContents extends Component {
             </Button>
           }
         </SectionHeader>
-        { hasContents
-          ? <StorageContentBrowser
-              contents={sortedContents}
-              openDirectoryHandler={this.openDirectoryHandler}
-              backButtonHandler={this.backButtonHandler}
-              isRootDirectory={isRootDirectory}
-              sorterProps={sorterProps}
-            />
-          : asperaUpload
-          ? <AsperaUpload
+        { asperaUpload
+          ?
+            <AsperaUpload
               multiple={true}
               brandId={brandId}
               accountId={accountId}
               groupId={groupId}
               storageId={storageId}
               asperaGetaway={gatewayHostname}
+              renderDropZone={true}
               onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave}
               onDragOver={this.onDragOver}
               onDrop={this.onDrop}
             >
-              <StorageContentBrowser
-                contents={sortedContents}
-                openDirectoryHandler={this.openDirectoryHandler}
-                backButtonHandler={this.backButtonHandler}
-                isRootDirectory={isRootDirectory}
-                sorterProps={sorterProps}
-                highlightItem={this.state.isDragging && this.state.draggingOver}
-              />
+              {hasContents &&
+                <StorageContentBrowser
+                  contents={sortedContents}
+                  openDirectoryHandler={this.openDirectoryHandler}
+                  backButtonHandler={this.backButtonHandler}
+                  isRootDirectory={isRootDirectory}
+                  sorterProps={sorterProps}
+                  highlightedItem={this.state.isDragging && this.state.draggingOver}
+                />
+              }
             </AsperaUpload>
-          : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
+          :
+            <HttpUpload
+              processFiles={processFiles}
+              openFileDialog={openFileDialog}
+              renderDropZone={true}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+            >
+              {hasContents &&
+                <StorageContentBrowser
+                  contents={sortedContents}
+                  openDirectoryHandler={this.openDirectoryHandler}
+                  backButtonHandler={this.backButtonHandler}
+                  isRootDirectory={isRootDirectory}
+                  sorterProps={sorterProps}
+                  highlightedItem={this.state.isDragging && this.state.draggingOver}
+                />
+              }
+            </HttpUpload>
         }
       </SectionContainer>
       )

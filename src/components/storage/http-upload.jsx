@@ -28,7 +28,7 @@ class HTTPUpload extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !(nextProps.uploads === this.props.uploads && fromJS(this.state).equals(fromJS(nextState)))
+    return !(nextProps.uploads === this.props.uploads && nextProps.children === this.props.children && fromJS(this.state).equals(fromJS(nextState)))
   }
 
   /**
@@ -52,16 +52,26 @@ class HTTPUpload extends Component {
     return Map([
       [
         'dragenter',
-        muteEventHandler(() => this.setState({dropZoneActive: true}))
+        muteEventHandler(() => {
+          this.props.onDragEnter(event)
+          this.setState({dropZoneActive: true})
+        })
       ], [
         'dragover',
-        muteEventHandler(() => this.setState({dropZoneActive: true}))
+        muteEventHandler(() => {
+          this.props.onDragOver(event)
+          this.setState({dropZoneActive: true})
+        })
       ], [
         'dragleave',
-        muteEventHandler(() => this.setState({dropZoneActive: false}))
+        muteEventHandler(() => {
+          this.props.onDragLeave(event)
+          this.setState({dropZoneActive: false})
+        })
       ], [
         'drop',
         muteEventHandler((e) => {
+          this.props.onDrop(event)
           this.setState({ dropZoneActive: false })
           this.props.processFiles(e.dataTransfer.files)
         })
@@ -108,11 +118,14 @@ class HTTPUpload extends Component {
           className="filedrop-container"
           ref={this.bindEventsHandlers}
         >
-          <div className={dropZoneClassNames}>
-            <div className="welcome-text">
-              <FormattedMessage id="portal.fileInput.dropFile.text"/>
+          {this.props.children}
+          {this.props.renderDropZone &&
+            <div className={dropZoneClassNames}>
+              <div className="welcome-text">
+                <FormattedMessage id="portal.fileInput.dropFile.text"/>
+              </div>
             </div>
-          </div>
+          }
         </div>
         <UploadStatusContainer
           cancelAll={cancelAll}
