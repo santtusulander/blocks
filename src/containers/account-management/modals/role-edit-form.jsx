@@ -72,8 +72,8 @@ class RoleEditForm extends React.Component {
                   <Panel header={service}>
                     <Table className="table-striped">
                       <tbody>
-                        <tr>
-                          <th colSpan="2"><FormattedMessage id='portal.accountManagement.resources.text' /></th>
+                        <tr className="resource-header">
+                          <th colSpan="2"><FormattedMessage id='portal.accountManagement.resource.text' /></th>
                         </tr>
 
                         {resources.map((perms, resource) => {
