@@ -74,12 +74,16 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
   } else if (account_type === ACCOUNT_TYPE_CLOUD_PROVIDER) {
     contributionOpts.limit = BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
     contributionOpts.show_detail = true
-    contributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
 
     allContributionOpts.limit = 0
     allContributionOpts.show_detail = true
-    allContributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
 
+    /* Exclude demo accounts */
+    if (process.env.NODE_ENV === 'production') {
+      contributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
+      allContributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
+    }
+    
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
     dashboardRequests.push(null)
