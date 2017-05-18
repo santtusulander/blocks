@@ -14,8 +14,6 @@ import FormFooterButtons from '../../../components/shared/form-elements/form-foo
 import { getById as getRoleById } from '../../../redux/modules/entities/roles/selectors'
 import { getById as getRoleNameById } from '../../../redux/modules/entities/role-names/selectors'
 
-import './role-edit-form.scss'
-
 const validate = ({ roleName }) => {
   const conditions = {}
 
