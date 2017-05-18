@@ -762,7 +762,7 @@ class Mapbox extends Component {
           <div className="control map-zoom">
 
           <div className="map-zoom-btn" onClick={this.onIncreaseZoom}>
-            <IconAdd width={32} height={32}/>
+            <IconAdd width={16} height={16}/>
           </div>
             <div className="map-slider">
               <div className="map-slider__wrapper">
@@ -773,6 +773,7 @@ class Mapbox extends Component {
                   defaultValue={MAPBOX_ZOOM_MIN}
                   onMouseUp={this.onZoom}
                   value={this.state.zoom}
+                  onChange={this.onZoom}
                   />
               </div>
 
@@ -784,7 +785,7 @@ class Mapbox extends Component {
             </div>
 
             <div className="map-zoom-btn" onClick={this.onDecreaseZoom}>
-              <IconDelete width={32} height={32}/>
+              <IconDelete width={16} height={16}/>
             </div>
             <div
               className="map-zoom-reset"

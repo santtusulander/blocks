@@ -4,6 +4,8 @@ $track-width: 10px;
 $track-margin: 13px;
 $slider-height: 130px;
 $slider-width: 120px;
+$slider-top: 62px;
+$slider-left: -44px;
 $thumb-margin: -11px;
 
 .mapboxgl-popup {
@@ -114,6 +116,9 @@ $thumb-margin: -11px;
 
   .map-zoom-btn {
     @extend %map-control-style;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .control {
@@ -123,7 +128,7 @@ $thumb-margin: -11px;
       display: flex;
       background: none;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-end;
 
       .map-label {
         display: flex;
@@ -133,7 +138,7 @@ $thumb-margin: -11px;
 
         span {
           font-size: 1.3rem;
-          text-align: right;
+          text-align: left;
 
           .dark-theme & {
             color: $white !important;
@@ -146,17 +151,20 @@ $thumb-margin: -11px;
       }
 
       .map-slider {
-        position: relative;
         display: flex;
-        width: $slider-width;
-        height: $slider-height;
+        flex-direction: row-reverse;
 
         &__wrapper {
-          position: absolute;
-          top: 48%;
+          position: relative;
+          width: 32px;
+          height: $slider-height;
         }
 
         input[type=range] {
+          position: absolute;
+          top: $slider-top;
+          left: $slider-left;
+          width: $slider-width;
           background: transparent;
           transform: rotate(-90deg);
           -webkit-appearance: none;
