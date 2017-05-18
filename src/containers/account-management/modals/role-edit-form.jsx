@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import Immutable from 'immutable'
+import {Map, Iterable} from 'immutable'
 import { connect } from 'react-redux'
 import { reduxForm, Field } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -7,10 +7,12 @@ import { Button, Table } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 
-import SidePanel from '../../shared/side-panel'
-import FieldFormGroup from '../../shared/form-fields/field-form-group'
-import FieldFormGroupToggle from '../../shared/form-fields/field-form-group-toggle'
-import FormFooterButtons from '../../shared/form-elements/form-footer-buttons'
+import SidePanel from '../../../components/shared/side-panel'
+import FieldFormGroup from '../../../components/shared/form-fields/field-form-group'
+import FormFooterButtons from '../../../components/shared/form-elements/form-footer-buttons'
+
+import { getById as getRoleById } from '../../../redux/modules/entities/roles/selectors'
+import { getById as getRoleNameById } from '../../../redux/modules/entities/role-names/selectors'
 
 const validate = ({ roleName }) => {
   const conditions = {}
@@ -35,31 +37,23 @@ class RoleEditForm extends React.Component {
 
   render() {
     const {
-      dirty,
       handleSubmit,
       intl,
-      invalid,
       onCancel,
-      permissions,
-      show,
-      submitting,
-      editPermsUI,
       initialValues: {
         roleName
       }
     } = this.props
 
-    const getPermissionName = (permissionKey, section) => {
-      return permissions.getIn(section).find(value => value.get('name') === permissionKey).get('title')
-    }
-
     return (
       <SidePanel
-        show={show}
+        show={true}
         title={intl.formatMessage({ id: 'portal.account.roleEdit.title' })}
         subTitle={roleName}
         cancel={onCancel}
       >
+
+
         <form onSubmit={handleSubmit(this.onSubmit)}>
           <Field
             type="text"
@@ -71,48 +65,55 @@ class RoleEditForm extends React.Component {
             <FormattedMessage id="portal.account.roleEdit.name.text"/>
           </Field>
 
-          <label><FormattedMessage id="portal.account.roleEdit.permissions.label"/></label>
-
-          <Table className="table-striped">
-            <thead>
-            <tr>
-              <th colSpan="3"><FormattedMessage id="portal.account.roleEdit.permission.title"/></th>
-            </tr>
-            </thead>
-            <tbody>
-            {editPermsUI.map((permission, key) => {
+            {this.props.role.map((resources, service) => {
               return (
-                <tr key={key}>
-                  <td className="no-border">
-                    {getPermissionName(key, ['UI','resources'])}
-                  </td>
-                  <td>
-                    <Field
-                      readonly={true}
-                      name={key}
-                      className="pull-right"
-                      component={FieldFormGroupToggle}/>
-                  </td>
-                </tr>
+                <Table className="table-striped">
+                  <thead>
+                    <tr>
+                      <th colSpan="2">{service}</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <th colSpan="2"><FormattedMessage id='portal.accountManagement.resources.text' /></th>
+                    </tr>
+
+                    {resources.map((perms, resource) => {
+                      return (
+                          perms && <tr>
+                            <td>
+                              {resource}
+                            </td>
+
+                            {
+                              Iterable.isIterable(perms)
+                                && <td>
+                                  {
+                                    perms.filter(perm => perm.get('allowed')).map((name,key) => {
+                                      return key
+                                    }).join(', ')
+                                  }
+                                  </td>
+                            }
+                          </tr>
+                      )
+                    }).toArray()
+                    }
+                  </tbody>
+              </Table>
+
               )
-            }).toList()}
-            </tbody>
-          </Table>
+            }).toArray()
+            }
 
           <FormFooterButtons>
-            <Button
+            {[<Button
               id="cancel-btn"
               className="btn-secondary"
               onClick={onCancel}>
               <FormattedMessage id="portal.button.cancel"/>
-            </Button>
-
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || !dirty}>
-              <FormattedMessage id="portal.button.save"/>
-            </Button>
+            </Button>]}
           </FormFooterButtons>
         </form>
       </SidePanel>
@@ -122,35 +123,31 @@ class RoleEditForm extends React.Component {
 
 RoleEditForm.displayName = 'RoleEditForm'
 RoleEditForm.propTypes = {
-  dirty: PropTypes.bool,
-  editPermsUI: PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
-  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  permissions: PropTypes.instanceOf(Immutable.Map),
-  show: PropTypes.bool,
-  submitting: PropTypes.bool
+  role: PropTypes.instanceOf(Map)
+}
+
+RoleEditForm.defaultProps = {
+  role: Map()
 }
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
 
-  const editPermsUI = Immutable.Map([
-    ...ownProps.editRole.getIn(['permissions', 'ui'], Immutable.List())
-  ])
+  const role = getRoleById(state, ownProps.roleId)
+  const roleNameEntity = getRoleNameById(state, ownProps.roleId)
 
-  const initialPermissions = ownProps.editRole.getIn(['permissions', 'ui'], Immutable.List()).toJS()
+  const roleName = roleNameEntity && roleNameEntity.get('name')
 
   return {
-    editPermsUI,
-    initialValues: Object.assign({}, initialPermissions, {
-      roleName: ownProps.editRole.get('name') || null,
-      roles: null,
-      roleTypes: null
-    })
+    role,
+    initialValues: {
+      roleName
+    }
   }
 }
 
