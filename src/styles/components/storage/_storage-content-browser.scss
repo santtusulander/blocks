@@ -60,3 +60,25 @@
 .storage-contents-context-menu-icon {
   fill: $silver-60 !important;
 }
+
+.storage-contents-breadcrumb {
+  li {
+    &:first-child {
+      a,
+      span {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+
+    .truncated-title {
+      color: $silver-60;
+    }
+
+    &.active {
+      .truncated-title {
+        color: $white;
+      }
+    }
+  }
+}

@@ -142,14 +142,25 @@ class StorageContents extends Component {
           label: dir
         })
       })
+
+      links.push({
+        url: getContentUrl('storage', storage, params),
+        label: storage
+      })
+    } else {
+      links.push({
+        url: null,
+        label: storage
+      })
     }
 
-    links.push({
-      url: getContentUrl('storage', storage, params),
-      label: storage
-    })
 
-    return <Breadcrumbs links={links.reverse()} />
+
+    return (
+      <div className='storage-contents-breadcrumb'>
+        <Breadcrumbs links={links.reverse()} />
+      </div>
+    )
   }
 
   setDragState(event) {
