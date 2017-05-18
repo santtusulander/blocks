@@ -20,8 +20,12 @@
   }
 }
 
+.content-browser-row-directory {
+  cursor: pointer;
+}
+
 .storage-contents-icon-cell {
-  border-right: 0;
+  border-right: 0 !important;
 }
 
 .storage-contents-cell-directory {
@@ -49,5 +53,6 @@
   &.back {
     position: relative;
     left: rem(5px);
+    cursor: pointer;
   }
 }

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
+import classNames from 'classnames'
 
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
@@ -57,20 +58,23 @@ const StorageContentBrowser = ({
           if (isDirectory) {
             dataAttributes['data-drop-dir'] = name
           }
+          const rowClassnames = classNames(
+            {'content-browser-row-directory': isDirectory},
+            {'highlight':  (highlightedItem === name)}
+          )
           return (
             <tr
               key={index}
               {...dataAttributes}
-              className={`${(highlightedItem === name) ? 'highlight' : ''}`}>
+              className={rowClassnames}
+              onDoubleClick={() => {
+                isDirectory ? openDirectoryHandler(name) : null
+              }}>
               <td
                 className='storage-contents-icon-cell'>
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
               </td>
-              <td
-                onDoubleClick={() => {
-                  isDirectory ? openDirectoryHandler(name) : null
-                }}
-              >
+              <td>
                 <div className='storage-contents-name'>
                   <TruncatedTitle content={name} />
                 </div>
