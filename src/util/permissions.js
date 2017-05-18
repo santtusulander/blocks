@@ -321,21 +321,6 @@ export const getStoragePermissions = (user) => ({
 })
 
 /**
- * Determine if a user has a permission.
- * @param  {List}    roles       The roles list stored on the roles redux store.
- * @param  {Map}     user        The currentUser Map stored on the user redux store.
- * @param  {String}  permission  A constant from the permissions constants file.
- * @return {Boolean}             True if the user has permission, else false
- */
-export default function checkPermissions(roles, user, permission) {
-  /*eslint-disable no-console */
-  console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
-  /*eslint-enble no-console */
-
-  return checkUserPermissions(user, permission)
-}
-
-/**
  * checkUserPermissons check if user has permission
  * @param  {Map} user currentUser (merged with permissions - Map (usually from redux - currentUserPermissions))
  * @param  {String} permissionToCheck

@@ -1,5 +1,0 @@
-{
-  "portal.validators.required": "{field} is required.",
-  "portal.validators.type.number": "{field} must be a number.",
-  "portal.validators.type.fqdn": "{field} must be a fully qualified domain name."
-}

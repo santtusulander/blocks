@@ -300,7 +300,7 @@ class Mapbox extends Component {
           'circle-color': feature.layer.paint['circle-color'],
           'circle-radius': feature.layer.paint['circle-radius']
         }
-      })
+      }, 'water-label')
     }
   }
 
@@ -461,7 +461,7 @@ class Mapbox extends Component {
         'fill-opacity': 0.5
       },
       type: 'fill'
-    })
+    }, 'water-label')
 
     map.addLayer({
       id: `country-stroke-${trafficCountry.code}`,
@@ -472,7 +472,7 @@ class Mapbox extends Component {
         'line-width': 2
       },
       type: 'line'
-    })
+    }, `water-label`)
   }
 
   /**
@@ -585,7 +585,7 @@ class Mapbox extends Component {
         },
         'circle-opacity': 0.5
       }
-    })
+    }, 'water-label')
 
     // If the layer exists, we should remove it in order to do a full reset for changed data
     if (map.getLayer('clustered-cities')) {
@@ -604,7 +604,7 @@ class Mapbox extends Component {
         'circle-opacity': 0.5
       },
       filter: ['all', ['>=', 'point_count', 2]]
-    })
+    }, 'water-label')
   }
 
   /**

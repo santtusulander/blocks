@@ -15,7 +15,7 @@ import { FormattedMessage } from 'react-intl';
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { logOut, destroyStore } from './redux/modules/user'
-import { SENTRY_HOSTNAMES, SENTRY_DSN } from './constants/sentry'
+import { SENTRY_HOSTNAMES, SENTRY_DSN, SMARTLING_HOSTNAMES, SMARTLING_ORG_ID } from './constants/app'
 
 import { tokenDidExpire } from './util/user-helpers'
 
@@ -24,6 +24,7 @@ import './styles/style.scss'
 import Root from './root'
 
 const useRaven = SENTRY_HOSTNAMES.includes(window.location.hostname)
+const useSmartling = SMARTLING_HOSTNAMES.includes(window.location.hostname)
 
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
@@ -183,6 +184,27 @@ if (useRaven) {
       errorDisplayed = true;
     }
   })
+}
+
+if (useSmartling) {
+  try {
+    const h = document.getElementsByTagName('head')[0];
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = 1;
+    s.crossorigin = 'anonymous';
+    s.src = '//d2c7xlmseob604.cloudfront.net/tracker.min.js';
+    s.onload = function () {
+      window.SmartlingContextTracker.init({
+        orgId: SMARTLING_ORG_ID
+      })
+    }
+    h.insertBefore(s, h.firstChild)
+  } catch (ex) {
+    /* eslint-disable no-console */
+    console.error('Unrecoverable error happened.', ex)
+    /* eslint-enable no-console */
+  }
 }
 
 // Check if Intl polyfill required

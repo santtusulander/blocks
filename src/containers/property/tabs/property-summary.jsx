@@ -369,8 +369,8 @@ class PropertySummary extends React.Component {
           <Col xs={4} className="kpi">
             <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
-              {formatMoment(moment(
-                activeConfig.get('configuration_status').get('deployment_date'), 'X'
+              {formatMoment(moment.unix(
+                activeConfig.get('configuration_status').get('deployment_date')
               ), 'M/D/YYYY, h:mma')}
             </h3>
           </Col>

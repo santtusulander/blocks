@@ -70,6 +70,7 @@
   "portal.common.date": "Date",
   "portal.common.date.created": "Created",
   "portal.common.date.updated": "Updated",
+  "portal.common.delete.disclaimer.text": "Are you sure you want to delete it?",
   "portal.common.value": "Value",
   "portal.common.unknown": "Unknown",
 
@@ -165,6 +166,7 @@
 
   "portal.common.total.text": "Total",
   "portal.common.no-data.text": "No data available.",
+  "portal.common.no-webgl-support.text": "Failed to initialize WebGL. Please contact your administrator.",
 
   "portal.common.time.day": "Day",
   "portal.common.time.month": "Month",
@@ -247,15 +249,15 @@
   "portal.constants.date-ranges.yesterday": "Yesterday",
   "portal.constants.date-ranges.custom_timerange": "Custom Date Range",
 
-  "portal.navigation.content.text": "内容",
-  "portal.navigation.browse.text": "浏览",
-  "portal.navigation.analytics.text": "分析",
-  "portal.navigation.security.text": "安全",
-  "portal.navigation.services.text": "服务",
-  "portal.navigation.account.text": "帐户",
-  "portal.navigation.support.text": "支持",
-  "portal.navigation.network.text": "网络",
-  "portal.navigation.dashboard.text": "仪表板",
+  "portal.navigation.content.text": "Content",
+  "portal.navigation.browse.text": "Browse",
+  "portal.navigation.analytics.text": "Analytics",
+  "portal.navigation.security.text": "Security",
+  "portal.navigation.services.text": "Services",
+  "portal.navigation.account.text": "Account",
+  "portal.navigation.support.text": "Support",
+  "portal.navigation.network.text": "Network",
+  "portal.navigation.dashboard.text": "Dashboard",
 
   "portal.notFound.pageNotFound.text": "We couldn\u0027t find the page you were looking for",
 
@@ -284,6 +286,7 @@
   "portal.commom.select.placeholder": "Please Select",
 
   "portal.common.copyToClipboard": "Copy to Clipboard",
+  "portal.common.dropFilesHere.text": "Drop files here",
   "portal.common.goToProfileSettings": "Go to profile settings ",
   "portal.common.toSaveForFutureUse": "to save for future use",
 

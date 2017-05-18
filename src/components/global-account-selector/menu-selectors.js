@@ -177,7 +177,7 @@ export const getBrands = (state, canView) => {
   const headerSubtitle = <FormattedMessage id="portal.common.account.multiple" values={{numAccounts: nodes.length || 0}}/>
   return [{
     id: 'udn',
-    name: 'UDN Admin',
+    name: <FormattedMessage id="portal.content.property.topBar.brand.label" />,
     nodeInfo: {
       entityType: 'brand',
       headerSubtitle,
