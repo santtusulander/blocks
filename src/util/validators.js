@@ -185,7 +185,7 @@ export function isValidTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_L
  * @param maxLength
  * @returns {boolean}
  */
-export function isValidCloudLocationId(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
+export function isValidLocationText(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
   const textFieldRegexp = new RegExp(`^[a-zA-Z0-9-_\.]{${minLength},${maxLength}}$`)
   return text && textFieldRegexp.test(text)
 }
