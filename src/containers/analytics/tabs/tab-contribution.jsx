@@ -204,7 +204,7 @@ function mapStateToProps(state, ownProps) {
     filters: state.filters.get('filters'),
     currentUser: getCurrentUser(state),
     filterOptions: state.filters.get('filterOptions'),
-    fetching: state.traffic.get('fetching') || state.traffic.get('fetching')
+    fetching: state.traffic.get('fetching') || state.filters.get('fetching')
   }
 }
 
