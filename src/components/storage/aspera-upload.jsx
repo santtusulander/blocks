@@ -314,7 +314,7 @@ AsperaUpload.propTypes = {
   accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
   brandId: React.PropTypes.string,
-  children: React.PropTypes.array,
+  children: React.PropTypes.object,
   groupId: React.PropTypes.string,
   highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,

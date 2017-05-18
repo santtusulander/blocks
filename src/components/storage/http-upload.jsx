@@ -138,7 +138,7 @@ class HTTPUpload extends Component {
 }
 
 HTTPUpload.propTypes = {
-  children: React.PropTypes.array,
+  children: React.PropTypes.object,
   highlightZoneOnDrag: React.PropTypes.bool,
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
