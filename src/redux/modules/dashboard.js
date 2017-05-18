@@ -4,7 +4,10 @@ import Immutable from 'immutable'
 import moment from 'moment'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
-import { TOP_PROVIDER_LENGTH, BRAND_DASHBOARD_TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
+import {
+  TOP_PROVIDER_LENGTH,
+  BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
+} from '../../constants/dashboard'
 import { ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../../constants/account-management-options'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
@@ -71,12 +74,17 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     dashboardRequests.push(null)
 
   } else if (account_type === ACCOUNT_TYPE_CLOUD_PROVIDER) {
-    // Limit the amount of results for providers
     contributionOpts.limit = BRAND_DASHBOARD_TOP_PROVIDER_LENGTH
-    // Show detailed data for providers
     contributionOpts.show_detail = true
-    allContributionOpts.show_detail = true
+
     allContributionOpts.limit = 0
+    allContributionOpts.show_detail = true
+
+    /* Exclude demo accounts */
+    if ((process.env.NODE_ENV === 'production') && BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE) {
+      contributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
+      allContributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
+    }
 
     dashboardRequests.push(null)
     dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
