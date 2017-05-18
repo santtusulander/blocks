@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 import SectionContainer from '../shared/layout/section-container'
-import MiniChart from '../charts/mini-chart'
+import LineChart from '../charts/line-chart'
 import ComparisonBars from '../shared/comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
@@ -51,7 +51,7 @@ export class StorageKPI extends Component {
 
   render() {
     const {
-      chartData = [],
+      chartData,
       chartDataKey,
       currentValue = 0,
       gainPercentage = 0,
@@ -60,7 +60,6 @@ export class StorageKPI extends Component {
       peakValue = 0,
       referenceValue,
       valuesUnit = '' } = this.props
-
     return (
       <SectionContainer>
         <div className='storage-kpi-item'>
@@ -98,10 +97,12 @@ export class StorageKPI extends Component {
               </span>
             </div>
             <div className='storage-kpi-chart'>
-              <MiniChart
-                dataKey={chartDataKey}
-                data={chartData}
-                />
+                {chartData
+                  ? <LineChart dataKey={chartDataKey} showTooltip={false} height="100%" data={chartData} />
+                  : <div className="mini-chart-container no-data">
+                    <FormattedMessage id='portal.common.no-data.text'/>
+                  </div>
+                }
             </div>
           </div>
           <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
@@ -160,7 +161,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     return clusterData ? clusterData.get('description').split(',')[0] : ''
   }).toJS()
 
-  const lineChartData = storageMetrics ? storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data})) : []
+  const lineChartData = storageMetrics && storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
 
   return {
     chartData: lineChartData,
