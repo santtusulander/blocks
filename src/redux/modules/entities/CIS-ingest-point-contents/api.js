@@ -65,7 +65,7 @@ export const fetchAll = (params) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
-    }, 100)
+    }, 200)
   }).then(() => {
     return normalize({ group: params.group, id: params.id, path: params.path , contents: mockData }, [ ingestPointContentSchema ])
   })

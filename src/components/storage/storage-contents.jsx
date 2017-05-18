@@ -12,6 +12,7 @@ import SectionHeader from '../shared/layout/section-header'
 import AsperaUpload from './aspera-upload'
 import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
+import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
@@ -252,11 +253,10 @@ class StorageContents extends Component {
     const renderDropZone = !hasContents || !hasFiles
     const highlightZoneOnDrag = this.state.isDragging && this.state.draggingOver === null
 
-    return isFetchingContents
-    ?
-      <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-    :
-      (<SectionContainer>
+    const uploadDestinationFolder = this.state.draggingOver ? this.state.draggingOver : (isRootDirectory ? storageId : params.splat.slice(-1).shift())
+
+    return (
+      <SectionContainer>
         <SectionHeader
           sectionSubHeaderTitle={this.getHeaderBreadcrumb()}>
           <FormGroup className="upload-toggle-group">
@@ -311,58 +311,65 @@ class StorageContents extends Component {
             </Button>
           }
         </SectionHeader>
-        { asperaUpload
+        {isFetchingContents
           ?
-            <AsperaUpload
-              multiple={true}
-              brandId={brandId}
-              accountId={accountId}
-              groupId={groupId}
-              storageId={storageId}
-              asperaGetaway={gatewayHostname}
-              renderDropZone={renderDropZone}
-              highlightZoneOnDrag={highlightZoneOnDrag}
-              onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave}
-              onDragOver={this.onDragOver}
-              onDrop={this.onDrop}
-            >
-              {hasContents &&
-                <StorageContentBrowser
-                  contents={sortedContents}
-                  openDirectoryHandler={this.openDirectoryHandler}
-                  backButtonHandler={this.backButtonHandler}
-                  isRootDirectory={isRootDirectory}
-                  sorterProps={sorterProps}
-                  highlightedItem={highlightedItem}
-                />
-              }
-            </AsperaUpload>
+            <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
           :
-            <HttpUpload
-              processFiles={processFiles}
-              openFileDialog={openFileDialog}
-              renderDropZone={renderDropZone}
-              highlightZoneOnDrag={highlightZoneOnDrag}
-              onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave}
-              onDragOver={this.onDragOver}
-              onDrop={this.onDrop}
-            >
-              {hasContents &&
-                <StorageContentBrowser
-                  contents={sortedContents}
-                  openDirectoryHandler={this.openDirectoryHandler}
-                  backButtonHandler={this.backButtonHandler}
-                  isRootDirectory={isRootDirectory}
-                  sorterProps={sorterProps}
-                  highlightedItem={highlightedItem}
-                />
-              }
-            </HttpUpload>
+            asperaUpload
+              ?
+                <AsperaUpload
+                  multiple={true}
+                  brandId={brandId}
+                  accountId={accountId}
+                  groupId={groupId}
+                  storageId={storageId}
+                  asperaGetaway={gatewayHostname}
+                  renderDropZone={renderDropZone}
+                  highlightZoneOnDrag={highlightZoneOnDrag}
+                  onDragEnter={this.onDragEnter}
+                  onDragLeave={this.onDragLeave}
+                  onDragOver={this.onDragOver}
+                  onDrop={this.onDrop}
+                >
+                  {hasContents &&
+                    <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                    />
+                  }
+                </AsperaUpload>
+              :
+                <HttpUpload
+                  processFiles={processFiles}
+                  openFileDialog={openFileDialog}
+                  renderDropZone={renderDropZone}
+                  highlightZoneOnDrag={highlightZoneOnDrag}
+                  onDragEnter={this.onDragEnter}
+                  onDragLeave={this.onDragLeave}
+                  onDragOver={this.onDragOver}
+                  onDrop={this.onDrop}
+                >
+                  {hasContents &&
+                    <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                    />
+                  }
+                </HttpUpload>
+        }
+        { this.state.isDragging &&
+          <UploadDestinationStatus folderName={uploadDestinationFolder} />
         }
       </SectionContainer>
-      )
+    )
   }
 }
 
