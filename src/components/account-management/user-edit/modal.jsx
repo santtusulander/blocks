@@ -6,10 +6,8 @@ import AccountManagementUserEditForm from './form'
 
 import SidePanel from '../../shared/side-panel'
 
-
-import { ROLES_MAPPING } from '../../../constants/account-management-options'
-
 import { getCheckboxArrayOptions } from '../../../util/group-helpers'
+import { getRoleOptionsById , roleIsEditableByCurrentUser } from '../../../util/helpers'
 
 class UserEditModal extends React.Component {
   constructor(props) {
@@ -19,16 +17,17 @@ class UserEditModal extends React.Component {
   }
 
   getRoleOptions() {
-    return ROLES_MAPPING
-      .filter(role => role.accountTypes.includes(this.props.accountType))
-      .map(mapped_role => [
-        mapped_role.id,
-        this.props.roles.find(role => role.get('id') === mapped_role.id).get('name')
-      ])
+    const {roles, user, allowedRoles} = this.props
+    const userRoleId = user.getIn(['roles', 0])
+    const roleOptions = getRoleOptionsById(roles, userRoleId) || List()
+    return roleOptions
+            .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
+            .map(role => [role.get('id'), role.get('name')]).toJS()
   }
 
   render() {
     const { user, groups, show, onSave, onCancel } = this.props
+
     const initialValues = user ? {
       email: user.get('email'),
       role: user.get('roles').toJS().pop(),
@@ -63,7 +62,7 @@ class UserEditModal extends React.Component {
 UserEditModal.displayName = "UserEditModal"
 
 UserEditModal.propTypes = {
-  accountType: PropTypes.number,
+  allowedRoles: PropTypes.instanceOf(List),
   groups: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

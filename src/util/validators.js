@@ -64,7 +64,7 @@ export function isValidIP(addresses, IPversion = 4) {
  * @param  {[type]}       cidr
  * @return {Boolean}      is valid
  */
-export const isValidIPv4Cidr = (cidr) => matchesRegexp(cidr, /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.?){3}0(\/([0-9]|[1-2][0-9]|3[0-2]))?$/)
+export const isValidIPv4Cidr = (cidr) => matchesRegexp(cidr, /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.){3}0(\/([0-9]|[1-2][0-9]|3[0-2]))$/)
 
 /**
  * Check if valid IPv4 address
@@ -185,7 +185,7 @@ export function isValidTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_L
  * @param maxLength
  * @returns {boolean}
  */
-export function isValidCloudLocationId(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
+export function isValidLocationText(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
   const textFieldRegexp = new RegExp(`^[a-zA-Z0-9-_\.]{${minLength},${maxLength}}$`)
   return text && textFieldRegexp.test(text)
 }
@@ -384,5 +384,5 @@ export function isValidCName(cName) {
   if (cName.length > 255) {
     return false
   }
-  return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
+  return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)+[.]?$/)
 }

@@ -6,6 +6,8 @@ import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
 import BarChart from '../charts/bar-chart'
 import TableSorter from '../shared/table-sorter'
+import LoadingSpinner from '../../components/loading-spinner/loading-spinner'
+
 import {formatBytes} from '../../util/helpers'
 
 import {getTrafficByDateRangeLabel} from './helpers'
@@ -96,7 +98,7 @@ class AnalysisContribution extends React.Component {
       }
 
       return {
-        name: provider.get('name'),
+        name: provider.get('chartName'),
         ...dataObject
       }
 
@@ -127,7 +129,7 @@ class AnalysisContribution extends React.Component {
     return (
       <div>
         <SectionHeader sectionHeaderTitle={this.props.sectionHeaderTitle} />
-        <div>
+        {this.props.fetching ? <LoadingSpinner /> : <div>
           <SectionContainer className="analysis-chart-container">
             <BarChart
               chartLabel={trafficByDateRangeLabel}
@@ -168,7 +170,7 @@ class AnalysisContribution extends React.Component {
               </tbody>
             </table>
           </SectionContainer>
-        </div>
+        </div>}
       </div>
     )
   }
@@ -178,6 +180,7 @@ AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
   dateRange: React.PropTypes.instanceOf(Immutable.Map),
   dateRangeLabel: React.PropTypes.string,
+  fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   sectionHeaderTitle: React.PropTypes.object,

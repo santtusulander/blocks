@@ -177,6 +177,7 @@
   "portal.configuration.gtm.gtmToggle.readOnly.enabled.text": "enabled",
   "portal.configuration.gtm.gtmToggle.readOnly.disabled.text": "disabled",
   "portal.configuration.gtm.trafficConfig.label": "Traffic Configuration",
+  "portal.configuration.gtm.trafficConfig.customerCname.label": "UDN GTM CNAME",
   "portal.configuration.gtm.trafficConfig.cdnName.label": "3rd Party CDN Name",
   "portal.configuration.gtm.trafficConfig.cdnName.placeholder": "Enter name",
   "portal.configuration.gtm.trafficConfig.cdnName.required": "CDN Name is required",

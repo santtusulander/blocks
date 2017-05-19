@@ -27,7 +27,6 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
-import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
 import groupActions from '../redux/modules/entities/groups/actions'
@@ -60,29 +59,17 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      byLocationWidth: 100
-    }
-
     this.fetchData = this.fetchData.bind(this)
-    this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
-    this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
   }
 
   componentWillMount() {
     if (is(defaultFilters, this.props.filters)) {
-      this.fetchData(this.props.params, this.props.filters)
+      this.fetchData(this.props.params, this.props.filters, this.props.activeAccount)
     } else {
       this.props.filterActions.resetFilters()
     }
-  }
-
-  componentDidMount() {
-    this.measureContainers()
-    // TODO: remove this timeout as part of UDNP-1426
-    window.addEventListener('resize', this.measureContainers)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -93,77 +80,59 @@ export class Dashboard extends React.Component {
       this.props.filterActions.resetContributionFilters()
     }
 
-    if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
-      this.fetchData(nextProps.params, nextProps.filters)
+    if (prevParams !== params ||
+      !is(this.props.filters,nextProps.filters) ||
+      !is(this.props.activeAccount, nextProps.activeAccount)
+    ) {
+      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
-    // TODO: remove this timeout as part of UDNP-1426
-    if (this.measureContainersTimeout) {
-      clearTimeout(this.measureContainersTimeout)
-    }
-    this.measureContainersTimeout = setTimeout(() => {
-      this.measureContainers()
-    }, 500)
   }
 
   componentWillUnmount() {
     this.props.filterActions.resetContributionFilters()
-    window.removeEventListener('resize', this.measureContainers)
-    // TODO: remove this timeout as part of UDNP-1426
-    clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(urlParams, filters) {
-    if (urlParams.account) {
+  fetchData(urlParams, filters, activeAccount) {
+    if (urlParams.account && !activeAccount.isEmpty()) {
       // Dashboard should fetch only account level data
-      const {brand, account: id} = urlParams
-      this.props.fetchAccount({brand, id, forceReload: this.props.activeAccount.isEmpty()}).then(() => {
-        const params = { brand: urlParams.brand, account: urlParams.account }
-
-        const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-        dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-        const accountType = this.props.activeAccount.get('provider_type')
-        const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+      const params = { brand: urlParams.brand, account: urlParams.account }
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+      const accountType = activeAccount.get('provider_type')
+      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
         /**
          * If user has permission to list storages and view storage analytics and if the active account is a content provider:
          * fetch all groups and storage metrics of this account, all storages of each group.
          * @type {[Promise]}
          */
-        const fetchStorageData =
-          checkUserPermissions(this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
-          checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
-          accountIsContentProviderType(this.props.activeAccount) &&
+      const fetchStorageData =
+        checkUserPermissions(this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+        checkUserPermissions(this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+        accountIsContentProviderType(activeAccount) &&
 
-          this.props.fetchGroups(params).then((response) => {
-            let groupIds = []
-            if (response) {
-              groupIds = Object.keys(response.entities.groups)
-            } else {
-              // We don't always have to fetch groups because of caching, in those cases use selector
-              // to get group IDs for this account from the store.
-              groupIds = this.props.getGroupIds()
-            }
-            return Promise.all([
-              ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
-              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
-            ])
-          })
+        this.props.fetchGroups(params).then((response) => {
+          let groupIds = []
+          if (response) {
+            groupIds = Object.keys(response.entities.groups)
+          } else {
+            // We don't always have to fetch groups because of caching, in those cases use selector
+            // to get group IDs for this account from the store.
+            groupIds = this.props.getGroupIds()
+          }
+          return Promise.all([
+            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
+            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
+          ])
+        })
 
-        return Promise.all([
-          this.props.dashboardActions.startFetching(),
-          this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-          fetchStorageData
-        ])
-        .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
-      })
+      return Promise.all([
+        this.props.dashboardActions.startFetching(),
+        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+        fetchStorageData
+      ])
+      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
     }
-  }
-
-  measureContainers() {
-    const containerWidth = this.refs.byLocationHolder &&  this.refs.byLocationHolder.clientWidth
-    this.setState({
-      byLocationWidth: containerWidth < 640 ? containerWidth : 640
-    })
   }
 
   onFilterChange(filterName, filterValue) {
@@ -310,7 +279,7 @@ export class Dashboard extends React.Component {
                 cityData={this.props.cityData}
                 getCityData={this.getCityData}
                 theme={theme}
-                height={this.state.byLocationWidth / 1.6}
+                height={400}
                 dataKey="bits_per_second"
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}
@@ -422,7 +391,6 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
-  fetchAccount: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -470,7 +438,6 @@ const mapStateToProps = (state, { params: { account } }) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
     fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),

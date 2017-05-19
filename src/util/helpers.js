@@ -776,3 +776,55 @@ export const getPage = (items, page, limit) => {
 
   return items.slice(offset, offset + limit)
 }
+
+export const getRoleOptionsById = (roles, id) => {
+  const userRoleData = roles.find(role => role.get('id') === id)
+  const providerType = userRoleData && userRoleData.getIn(['account_provider_types', 0])
+  return getRoleOptionsByProviderType(roles, providerType)
+}
+
+export const getRoleOptionsByProviderType = (roles, providerType) => {
+  return roles.filter(role => {
+    return role.get('account_provider_types').includes(providerType)
+  })
+}
+
+export const roleIsEditableByCurrentUser = (allowedRoles, userRoleId) => {
+  /*
+    This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
+    we have to treat it this way
+  */
+  return allowedRoles.get(0) === '*' || allowedRoles.includes(userRoleId)
+}
+
+/**
+ * Detects if WebGL is enabled.
+ *
+ * @return { bool } false if supported or disabled
+ *                  true if enabled
+ */
+export const isWebGLEnabled = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement("canvas")
+    const names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"]
+    let context = false
+
+    for (const i in names) {
+      try {
+        context = canvas.getContext(names[i]);
+        if (context && typeof context.getParameter === "function") {
+          /* WebGL is enabled. */
+          return true
+        }
+      } catch (e) {
+        /* no-op */
+      }
+    }
+
+    /* WebGL is supported, but disabled. */
+    return false
+  }
+
+  /* WebGL not supported. */
+  return false
+}
