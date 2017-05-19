@@ -36,6 +36,10 @@ import { getContentUrl } from '../../util/routes.js'
 import { checkUserPermissions } from '../../util/permissions'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
+import {
+  ASPERA_DEFAULT_DESTINATION_FOLDER,
+  HTTP_DEFAULT_DESTINATION_FOLDER
+} from '../../constants/storage'
 
 class Storage extends Component {
   constructor(props) {
@@ -43,7 +47,8 @@ class Storage extends Component {
 
     this.state = {
       asperaUpload: false,
-      fileUploader: null
+      fileUploader: null,
+      uploadPath: ''
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
@@ -51,6 +56,7 @@ class Storage extends Component {
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
     this.initFileUploader = this.initFileUploader.bind(this)
+    this.generateUploadPath = this.generateUploadPath.bind(this)
   }
 
   componentWillMount() {
@@ -74,6 +80,8 @@ class Storage extends Component {
   componentDidMount() {
     const { brand, account, group, storage } = this.props.params
 
+    this.generateUploadPath()
+
     if (checkUserPermissions(this.context.currentUser, CREATE_ACCESS_KEY)) {
       this.props.initStorageAccessKey(brand, account, group, storage)
         .then(this.initFileUploader)
@@ -81,7 +89,7 @@ class Storage extends Component {
     }
   }
 
-  componentWillReceiveProps ({ group, hasStorageService, params}) {
+  componentWillReceiveProps({ group, hasStorageService, params}) {
     if (group && !hasStorageService) {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
@@ -89,6 +97,8 @@ class Storage extends Component {
 
     if (JSON.stringify(params) !== JSON.stringify(this.props.params)) {
       const { brand, account, group, storage } = params
+
+      this.generateUploadPath()
 
       if (checkUserPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
         this.props.initStorageAccessKey(brand, account, group, storage)
@@ -112,12 +122,14 @@ class Storage extends Component {
   initFileUploader(action) {
     const { gatewayHostname, uploadHandlers } = this.props
     this.setState({
-      fileUploader: FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers)
+      fileUploader: FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers, this.state.uploadPath)
     })
   }
 
   toggleUploadMehtod(asperaUpload) {
     this.setState({ asperaUpload })
+
+    this.generateUploadPath(asperaUpload)
   }
 
   editStorage(storageId, groupId) {
@@ -131,6 +143,38 @@ class Storage extends Component {
       router.push(getContentUrl('group', params.group, params))
     }
     this.props.toggleModal()
+  }
+
+  generateUploadPath(isAsperaUpload) {
+    const { params } = this.props
+    const asperaUpload = this.state.asperaUpload || isAsperaUpload
+    const isUploadToRoot = params.splat ? false : true
+
+    let uploadPath = ''
+    if (isUploadToRoot) {
+      uploadPath = (asperaUpload ? ASPERA_DEFAULT_DESTINATION_FOLDER : HTTP_DEFAULT_DESTINATION_FOLDER)
+    } else {
+      uploadPath = params.splat
+
+      /* Upload path for Aspera should include './' prefix */
+      if (asperaUpload && uploadPath.indexOf('.') !== 0) {
+        uploadPath = ASPERA_DEFAULT_DESTINATION_FOLDER + uploadPath
+      }
+
+      /* Upload path for HTTP should include '/' prefix */
+      if (!asperaUpload && uploadPath.indexOf('/') !== 0) {
+        uploadPath = '/' + uploadPath
+      }
+
+      /* Taling slash is reqired for both upload methods */
+      if (uploadPath.substr(-1) !== '/') {
+        uploadPath = uploadPath + '/'
+      }
+    }
+
+    this.setState({
+      uploadPath: uploadPath
+    })
   }
 
   render() {
@@ -173,6 +217,7 @@ class Storage extends Component {
                   params={params}
                   router={this.props.router}
                   isFetchingContents={isFetchingContents}
+                  uploadPath={this.state.uploadPath}
                 />
               </IsAllowed>
             </PageContainer>

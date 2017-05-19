@@ -207,7 +207,9 @@ class StorageContents extends Component {
       fileUploader,
       isFetchingContents,
       intl,
-      params } = this.props
+      params,
+      uploadPath
+    } = this.props
 
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
@@ -315,6 +317,7 @@ class StorageContents extends Component {
                   onDragLeave={this.onDragLeave}
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
+                  uploadPath={uploadPath}
                 >
                   {hasContents &&
                     <StorageContentBrowser
@@ -337,6 +340,7 @@ class StorageContents extends Component {
                   onDragLeave={this.onDragLeave}
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
+                  uploadPath={uploadPath}
                 >
                   {hasContents &&
                     <StorageContentBrowser
@@ -371,7 +375,8 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
-  router: PropTypes.object
+  router: PropTypes.object,
+  uploadPath: React.PropTypes.string
 }
 
 /* istanbul ignore next */
