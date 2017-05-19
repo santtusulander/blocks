@@ -21,56 +21,13 @@ const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
   )
 })
 
-const mockData = {
-  "offset": 0,
-  "page_size": 50,
-  "stat": {"atime": 1491277462,
-    "mode": 509,
-    "mtime": 1491277462,
-    "size": 52,
-    "type": "directory"},
-  "items": [
-    {"name": "dir1",
-      "stat": {"atime": 1491277462,
-        "mode": 509,
-        "mtime": 1491277462,
-        "size": 6,
-        "type": "directory"}},
-    {"name": "dir2",
-      "stat": {"atime": 1491277462,
-        "mode": 509,
-        "mtime": 1491277462,
-        "size": 6,
-        "type": "directory"}},
-    {"name": "file1",
-      "stat": {"atime": 1491277462,
-        "mode": 436,
-        "mtime": 1491277462,
-        "size": 100,
-        "type": "file"}},
-    {"name": "file2",
-      "stat": {"atime": 1491277462,
-        "mode": 436,
-        "mtime": 1491277462,
-        "size": 100,
-        "type": "file"}}
-  ]
-}
-
 /**
  * Fetch list of Contents
  * @return {Object} normalzed list of contents
  */
 export const fetchAll = (params) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 200)
-  }).then(() => {
-    return normalize({ group: params.group, id: params.id, path: params.path , contents: mockData }, [ ingestPointContentSchema ])
+  return axios.get(baseUrl(params))
+  .then(({data}) => {
+    return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
   })
-  // return axios.get(baseUrl(params))
-  // .then(({data}) => {
-  //   return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
-  // })
 }
