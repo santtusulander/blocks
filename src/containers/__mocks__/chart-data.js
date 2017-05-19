@@ -1411,6 +1411,15 @@ export const composedChartData = [
  * @type {Array}
  */
 
+export const miniAreaChartDataset = [
+  {
+    "dataKey": "bytes",
+    "name": "MiniChart",
+    "className": "mini-chart-bytes",
+    "stackId": 1
+  }
+]
+
 export const nonStackedAreaDataset = [
   {
     "dataKey": "http",
