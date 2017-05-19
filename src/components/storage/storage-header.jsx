@@ -25,7 +25,6 @@ const StorageHeader = ({
   router,
   toggleConfigModal
 }) => {
-
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.storage.summaryPage.title"/>}>
       <AccountSelector

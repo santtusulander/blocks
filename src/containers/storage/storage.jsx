@@ -144,7 +144,8 @@ class Storage extends Component {
       params,
       storage,
       storageContents,
-      gatewayHostname
+      gatewayHostname,
+      isFetchingContents
     } = this.props
 
     return (
@@ -163,16 +164,15 @@ class Storage extends Component {
               <StorageKPI storage={storage} params={params}/>
               <IsAllowed to={CREATE_ACCESS_KEY}>
                 <StorageContents
-                  brandId={params.brand}
-                  accountId={params.account}
-                  storageId={params.storage}
-                  groupId={params.group}
                   gatewayHostname={gatewayHostname}
                   asperaInstanse={asperaInstanse}
                   contents={storageContents}
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
                   fileUploader={this.state.fileUploader}
+                  params={params}
+                  router={this.props.router}
+                  isFetchingContents={isFetchingContents}
                 />
               </IsAllowed>
             </PageContainer>
@@ -206,10 +206,11 @@ Storage.propTypes = {
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
   initStorageAccessKey: PropTypes.func,
+  isFetchingContents: PropTypes.bool,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
-  storageContents: PropTypes.array,
+  storageContents: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func,
   uploadHandlers: PropTypes.object
 }
@@ -217,33 +218,6 @@ Storage.propTypes = {
 Storage.contextTypes = {
   currentUser: PropTypes.instanceOf(Map),
   roles: PropTypes.instanceOf(List)
-}
-
-const getMockContents = (storage) => {
-  return storage === 'with-contents' ? [
-    {
-      type: 'file',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'In Progress'
-    },
-    {
-      type: 'file',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'In Progress'
-    },
-    {
-      type: 'directory',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'Completed',
-      noOfFiles: 1000
-    },
-    {
-      type: 'directory',
-      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-      status: 'Failed',
-      noOfFiles: 800
-    }
-  ] : []
 }
 
 /* istanbul ignore next */
@@ -254,6 +228,7 @@ const mapStateToProps = (state, ownProps) => {
   if (ownProps.params.storage && ownProps.params.group) {
     const storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
+
   }
 
   const gateway = storage && storage.get('gateway')
@@ -271,8 +246,7 @@ const mapStateToProps = (state, ownProps) => {
     storageAccessToken: state.user.get('storageAccessToken'),
     group: state.group.get('activeGroup'),
     hasStorageService,
-    storage,
-    storageContents: getMockContents(ownProps.params.storage)
+    storage
   }
 }
 
