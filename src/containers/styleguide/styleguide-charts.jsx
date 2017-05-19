@@ -33,6 +33,7 @@ const StyleguideCharts = () => {
           <SectionContainer className="mini-chart-container">
             <MiniAreaChart
               areas={miniAreaChartDataset}
+              data={miniChartKPIData}
             />
           </SectionContainer>
         </Col>

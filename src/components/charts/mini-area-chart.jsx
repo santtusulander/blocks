@@ -53,29 +53,26 @@ export default class MiniAreaChart extends Component {
 
   render() {
     const { chartLabel, data, className } = this.props
-    const isEmptyData = !!data && !!data.length
-    debugger
     return (
       <div className="mini-area-chart">
         <span className="mini-area-chart-label">{chartLabel}</span>
         <ResponsiveContainer minHeight={50} aspect={2}>
-          { isEmptyData &&
-            <AreaChart data={mockEmptyArea} className={className}>
-              <Area
-                isAnimationActive={false}
-                stroke={colors[0]}
-                strokeWidth="2"
-                dataKey="emptyDatakey"
-              />
-            </AreaChart>
-          }
-          { !isEmptyData &&
+          { !!data && !!data.length ?
             <AreaChart data={data} className={className}>
               <defs>
                 { this.renderGradients() }
               </defs>
               { this.renderAreas() }
             </AreaChart>
+
+            :<AreaChart data={mockEmptyArea} className={className}>
+                <Area
+                  isAnimationActive={false}
+                  stroke={colors[0]}
+                  strokeWidth="2"
+                  dataKey="emptyDatakey"
+                />
+              </AreaChart>
           }
       </ResponsiveContainer>
       </div>);
