@@ -112,3 +112,39 @@ $bg-permission-panel: #1e6a86;
     border: 0;
   }
 }
+
+//Role Edit form (account management)
+.role-edit-form {
+  .panel-heading {
+    padding: 0;
+    text-transform: uppercase;
+    background-color: transparent;
+
+
+    a {
+      display: block;
+      padding: 10px 15px;
+      color: $white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $pale-blue-opacity-30;
+      }
+
+      &.collapsed {
+        background-color: $black-20;
+
+        &:hover {
+          background-color: $pale-blue-opacity-30;
+        }
+      }
+
+    }
+  }
+
+  .resource-header {
+    th {
+      background-color: $pale-blue-opacity-30;
+    }
+  }
+}

@@ -1,10 +1,11 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Map, List, is } from 'immutable'
 
-import PageContainer from '../../shared/layout/page-container'
-import LoadingSpinner from '../../loading-spinner/loading-spinner'
-import RolesList from '../role-edit/roles-list.jsx'
+import PageContainer from '../../../components/shared/layout/page-container'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import RolesList from '../../../components/account-management/role-edit/roles-list.jsx'
+import RoleEditForm from '../modals/role-edit-form.jsx'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import roleNamesActions from '../../../redux/modules/entities/role-names/actions'
@@ -12,20 +13,24 @@ import serviceTitleActions from '../../../redux/modules/entities/serviceTitles/a
 import rolesActions from '../../../redux/modules/entities/roles/actions'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
+import { getAll as getRoleNames } from '../../../redux/modules/entities/role-names/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getAll as getServiceTitles } from '../../../redux/modules/entities/serviceTitles/selectors'
 
-class AccountManagementSystemRoles extends React.Component {
+class AccountManagementSystemRoles extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      editRole: null,
       showAddNewDialog: false
     }
 
-    this.editRole = this.editRole.bind(this)
     this.showAddNewRoleDialog = this.showAddNewRoleDialog.bind(this)
     this.hideAddNewRoleDialog = this.hideAddNewRoleDialog.bind(this)
+
+    this.editRole = this.editRole.bind(this)
     this.saveRole = this.saveRole.bind(this)
+
     this.populateRoleNames = this.populateRoleNames.bind(this)
   }
 
@@ -46,7 +51,7 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!Immutable.is(this.props.roleNames, nextProps.roleNames)) {
+    if (!is(this.props.roleNames, nextProps.roleNames)) {
       Promise.all(
         nextProps.roleNames.map(roleName => {
           return this.props.fetchRolePermissions({id: roleName.get('id')})
@@ -72,12 +77,11 @@ class AccountManagementSystemRoles extends React.Component {
   }
 
   editRole(id) {
-    const roleWithPermissions = this.populateRoleNames()
+    this.setState({
+      selectedRoleId: id
+    })
 
     this.showAddNewRoleDialog()
-    this.setState({
-      editRole: roleWithPermissions.find(role => role.get('id') === id)
-    })
   }
 
   saveRole() {
@@ -87,18 +91,25 @@ class AccountManagementSystemRoles extends React.Component {
   render() {
     const { fetchingAccounts, fetchingRoles, fetchingRoleNames, fetchingPermissionNames } = this.props
     const roleWithPermissions = this.populateRoleNames()
+
+    const {showAddNewDialog} = this.state
+
     return (
       <PageContainer>
         {fetchingAccounts || fetchingRoles || fetchingPermissionNames || fetchingRoleNames
           ? <LoadingSpinner/>
           : <RolesList
-            editRole={this.state.editRole}
-            roles={roleWithPermissions}
-            permissions={this.props.permissions}
+              roles={roleWithPermissions}
+              permissions={this.props.permissions}
+              //onSave={this.saveRole}
+              onEdit={this.editRole}
+            />
+        }
+
+        {showAddNewDialog && <RoleEditForm
+            roleId={this.state.selectedRoleId}
             onCancel={this.hideAddNewRoleDialog}
-            onSave={this.saveRole}
-            onEdit={this.editRole}
-            showAddNewDialog={this.state.showAddNewDialog} />
+          />
         }
       </PageContainer>
     )
@@ -107,39 +118,41 @@ class AccountManagementSystemRoles extends React.Component {
 
 AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
-  fetchAccounts: React.PropTypes.func,
-  fetchRoleNames: React.PropTypes.func,
-  fetchRolePermissions: React.PropTypes.func,
-  fetchServiceTitle: React.PropTypes.func,
-  fetchingAccounts: React.PropTypes.bool,
-  fetchingPermissionNames: React.PropTypes.bool,
-  fetchingRoleNames: React.PropTypes.bool,
-  fetchingRoles: React.PropTypes.bool,
-  params: React.PropTypes.object,
-  permissions: React.PropTypes.instanceOf(Immutable.Map),
-  roleNames: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.Map)
+  fetchAccounts: PropTypes.func,
+  fetchRoleNames: PropTypes.func,
+  fetchRolePermissions: PropTypes.func,
+  fetchServiceTitle: PropTypes.func,
+  fetchingAccounts: PropTypes.bool,
+  fetchingPermissionNames: PropTypes.bool,
+  fetchingRoleNames: PropTypes.bool,
+  fetchingRoles: PropTypes.bool,
+  params: PropTypes.object,
+  permissions: PropTypes.instanceOf(Map),
+  roleNames: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map)
 }
 AccountManagementSystemRoles.defaultProps = {
-  permissions: Immutable.Map(),
-  roles: Immutable.Map(),
-  roleNames: Immutable.List(),
-  users: Immutable.List()
+  permissions: Map(),
+  roles: Map(),
+  roleNames: List(),
+  users: List()
 }
 
-function mapStateToProps(state) {
+/* istanbul ignore next */
+const mapStateToProps = (state) => {
   return {
-    fetchingAccounts: state.account.get('fetching'),
+    fetchingAccounts: getFetchingByTag(state, 'accounts'),
     fetchingRoles: getFetchingByTag(state, 'roles'),
     fetchingRoleNames: getFetchingByTag(state, 'roleNames'),
     fetchingPermissionNames: getFetchingByTag(state, 'serviceTitles'),
-    roleNames: state.entities.roleNames.toList(),
-    roles: state.entities.roles,
-    permissions: state.entities.serviceTitles
+    roleNames: getRoleNames(state),
+    roles: getRoles(state),
+    permissions: getServiceTitles(state)
   }
 }
 
-function mapDispatchToProps(dispatch) {
+/* istanbul ignore next */
+const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
     fetchRoleNames: () => dispatch(roleNamesActions.fetchAll({})),
