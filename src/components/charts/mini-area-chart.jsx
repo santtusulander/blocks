@@ -1,16 +1,11 @@
 import React, {PropTypes, Component} from 'react';
 import { ResponsiveContainer, Area, AreaChart } from 'recharts'
 
+import { mockEmptyArea } from '../../constants/chart'
 import { paleblue, orange } from '../../constants/colors'
 
 const colors = [ paleblue, orange ]
-const mockEmptyArea = [
-  {emptyDatakey: 0},
-  {emptyDatakey: 0},
-  {emptyDatakey: 0},
-  {emptyDatakey: 0},
-  {emptyDatakey: 0}
-]
+
 export default class MiniAreaChart extends Component {
   constructor() {
     super()
