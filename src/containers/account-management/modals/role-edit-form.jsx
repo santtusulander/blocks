@@ -155,14 +155,9 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-/* istanbul ignore next */
-const mapDispatchToProps = () => {
-  return {}
-}
-
 const form = reduxForm({
   form: 'role-edit',
   validate
 })(RoleEditForm)
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
+export default connect(mapStateToProps)(injectIntl(form))
