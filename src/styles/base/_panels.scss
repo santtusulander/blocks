@@ -128,14 +128,14 @@ $bg-permission-panel: #1e6a86;
       cursor: pointer;
 
       &:hover {
-        background-color: rgba(0, 169, 212, 0.3);
+        background-color: $pale-blue-opacity-30;
       }
 
       &.collapsed {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: $black-20;
 
         &:hover {
-          background-color: rgba(0, 169, 212, 0.3);
+          background-color: $pale-blue-opacity-30;
         }
       }
 
@@ -144,7 +144,7 @@ $bg-permission-panel: #1e6a86;
 
   .resource-header {
     th {
-      background-color: rgba(0, 169, 212, 0.3);
+      background-color: $pale-blue-opacity-30;
     }
   }
 }
