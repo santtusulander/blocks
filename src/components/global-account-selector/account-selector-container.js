@@ -29,6 +29,7 @@ import DrillableMenu from '../drillable-menu/menu'
  * passed to the menu component contains entities for a level corresponding that permission.
  * @param  {[Array]}   levels      desired levels for the account selector
  * @param  {[Map]}     user        current active user
+ * @param  {[Map]}     account     current active account
  * @param  {[String]}  permission  permission to check against
  * @return Boolean
  */
