@@ -33,7 +33,13 @@
 }
 
 .storage-contents-context-menu-icon {
-  fill: $silver-60 !important;
+  .dark-theme & {
+    fill: $silver-60 !important;
+  }
+
+  .light-theme & {
+    fill: $grey-80 !important;
+  }
 }
 
 .storage-contents-breadcrumb {
