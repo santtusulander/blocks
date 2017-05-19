@@ -13,6 +13,9 @@ import serviceTitleActions from '../../../redux/modules/entities/serviceTitles/a
 import rolesActions from '../../../redux/modules/entities/roles/actions'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
+import { getAll as getRoleNames } from '../../../redux/modules/entities/role-names/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
+import { getAll as getServiceTitles } from '../../../redux/modules/entities/serviceTitles/selectors'
 
 class AccountManagementSystemRoles extends Component {
   constructor(props) {
@@ -135,19 +138,20 @@ AccountManagementSystemRoles.defaultProps = {
   users: List()
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state) => {
   return {
     fetchingAccounts: getFetchingByTag(state, 'accounts'),
     fetchingRoles: getFetchingByTag(state, 'roles'),
     fetchingRoleNames: getFetchingByTag(state, 'roleNames'),
     fetchingPermissionNames: getFetchingByTag(state, 'serviceTitles'),
-    //TODO: Should use selectors
-    roleNames: state.entities.roleNames.toList(),
-    roles: state.entities.roles,
-    permissions: state.entities.serviceTitles
+    roleNames: getRoleNames(state),
+    roles: getRoles(state),
+    permissions: getServiceTitles(state)
   }
 }
 
+/* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccounts: (params) => dispatch(accountActions.fetchAll(params)),
