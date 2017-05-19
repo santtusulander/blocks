@@ -261,8 +261,8 @@ class StorageContents extends Component {
               <Col className="pull-right">
                 <Toggle
                   value={asperaUpload}
-                  onText='ON'
-                  offText='OFF'
+                  onText={intl.formatMessage({id: 'portal.shared.toggle.label.on'})}
+                  offText={intl.formatMessage({id: 'portal.shared.toggle.label.off'})}
                   changeValue={onMethodToggle}
                 />
               </Col>
