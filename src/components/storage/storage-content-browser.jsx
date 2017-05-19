@@ -28,7 +28,7 @@ const StorageContentBrowser = ({
         <tr>
           <th width="1%">
             {!isRootDirectory &&
-              <div onDoubleClick={backButtonHandler}>
+              <div onClick={backButtonHandler}>
                 <IconBack
                   className='storage-contents-icon back'
                   height={20}
@@ -67,7 +67,7 @@ const StorageContentBrowser = ({
               key={index}
               {...dataAttributes}
               className={rowClassnames}
-              onDoubleClick={() => {
+              onClick={() => {
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
               <td
