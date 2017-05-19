@@ -11,10 +11,6 @@ import UploadStatusContainer from './file-upload-status-container'
  * Represents file upload dropZone
  */
 class HTTPUpload extends Component {
-  static get displayName() {
-    return 'HTTPUpload'
-  }
-
   constructor(props) {
     super(props)
 
@@ -137,6 +133,7 @@ class HTTPUpload extends Component {
   }
 }
 
+HTTPUpload.displayName = "HTTPUpload"
 HTTPUpload.propTypes = {
   children: React.PropTypes.object,
   highlightZoneOnDrag: React.PropTypes.bool,
