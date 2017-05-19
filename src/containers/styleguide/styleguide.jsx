@@ -59,6 +59,7 @@ import SortableMultiSelector from '../../components/shared/form-elements/sortabl
 import FileUploadStatus from '../../components/storage/file-upload-status-container.jsx'
 import PolicyWeight from '../../components/configuration/policy-weight'
 import Mapbox from '../../components/map/mapbox'
+import ContentItemChart from '../../components/content/content-item-chart'
 
 import IconAdd from '../../components/shared/icons/icon-add'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
@@ -70,7 +71,7 @@ import DateRanges, { startOfThisDay, endOfThisDay, startOfThisMonth } from '../.
 import country_list from '../../constants/country-list'
 import { cityData, filterCheckboxOptions, spDashboardData,
          countryData, multiOptionSelectorOptions, typeaheadOptions,
-         miniChartKPIData, storageKPIData } from '../__mocks__/styleguide-data.js'
+         miniChartKPIData, storageKPIData, starburstPrimaryData, starburstSecondaryData, starburstTrafficData, starburstDifferenceData } from '../__mocks__/styleguide-data.js'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
@@ -748,6 +749,59 @@ class Styleguide extends React.Component {
             onSelect={() => null}
             onEdit={() => null} />
 
+          <h1 className="page-header">Starbursts</h1>
+
+          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
+
+            <ContentItemChart
+              avgTransfer={'1.82 Gbps'}
+              cacheHitRate={93}
+              contentMethod={'Large'}
+              name={'Media Delivery'}
+              isAllowedToConfigure={true}
+              showSlices={true}
+              timeToFirstByte={'33 ms'}
+              primaryData={starburstPrimaryData}
+              secondaryData={starburstSecondaryData}
+              dailyTraffic={starburstTrafficData}
+              differenceData={starburstDifferenceData}
+              fetchingMetrics={false}
+              chartWidth='500'
+              barMaxHeight='71' />
+
+            <ContentItemChart
+              avgTransfer={'1.82 Gbps'}
+              cacheHitRate={93}
+              contentMethod={'msd'}
+              name={'Vod Streaming'}
+              isAllowedToConfigure={true}
+              showSlices={true}
+              timeToFirstByte={'33 ms'}
+              primaryData={starburstPrimaryData}
+              secondaryData={starburstSecondaryData}
+              dailyTraffic={starburstTrafficData}
+              differenceData={starburstDifferenceData}
+              fetchingMetrics={false}
+              chartWidth='500'
+              barMaxHeight='71' />
+
+            <ContentItemChart
+              avgTransfer={'1.82 Gbps'}
+              cacheHitRate={93}
+              contentMethod={'livestream'}
+              name={'Live Streaming'}
+              isAllowedToConfigure={true}
+              showSlices={true}
+              timeToFirstByte={'33 ms'}
+              primaryData={starburstPrimaryData}
+              secondaryData={starburstSecondaryData}
+              dailyTraffic={starburstTrafficData}
+              differenceData={starburstDifferenceData}
+              fetchingMetrics={false}
+              chartWidth='500'
+              barMaxHeight='71' />
+
+          </div>
           <h1 className="page-header">Storage</h1>
 
           <div style={{height: '600px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>

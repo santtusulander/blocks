@@ -175,25 +175,54 @@
     }
   }
 
-  .primary-data .content-item-chart-line {
+  .primary-data {
     stroke-width: 2;
 
-    .dark-theme &,
-    .light-theme  & {
+    .content-item-chart-line {
       stroke: $pale-blue;
       fill: $pale-blue;
     }
+
+    .media-delivery-line {
+      stroke: $pale-blue;
+      fill: $pale-blue;
+    }
+
+    .vod-streaming-line {
+      stroke: $yellow;
+      fill: $yellow;
+    }
+
+    .live-streaming-line {
+      stroke: $green;
+      fill: $green;
+    }
   }
 
-  .secondary-data .content-item-chart-line {
+
+  .secondary-data {
     stroke: transparent;
 
-    .dark-theme & {
+    .content-item-chart-line {
+      .light-theme & {
+        fill: $silver-40;
+      }
+
+      .dark-theme & {
+        fill: rgba($pale-blue, 0.2);
+      }
+    }
+
+    .media-delivery-line {
       fill: rgba($pale-blue, 0.2);
     }
 
-    .light-theme & {
-      fill: $silver-40;
+    .vod-streaming-line {
+      fill: rgba($yellow, 0.2);
+    }
+
+    .live-streaming-line {
+      fill: rgba($green, 0.2);
     }
   }
 

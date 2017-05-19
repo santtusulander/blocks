@@ -45,6 +45,15 @@ function groupData(rawData, groupSize, key) {
   }, [])
 }
 
+const determineLineColor = (contentMethod) => {
+  switch (contentMethod) {
+    case 'large': return 'media-delivery-line'
+    case 'msd': return 'vod-streaming-line'
+    case 'livestream': return 'live-streaming-line'
+    default: return 'content-item-chart-line'
+  }
+}
+
 class ContentItemChart extends React.Component {
   constructor(props) {
     super(props);
@@ -181,6 +190,7 @@ class ContentItemChart extends React.Component {
             minTransfer={minTransfer}/>
         }
       </Tooltip>)
+    const { contentMethod } = this.props
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div
@@ -203,7 +213,7 @@ class ContentItemChart extends React.Component {
               {!this.props.fetchingMetrics && this.props.secondaryData.size ?
                 <svg className="content-item-chart-svg secondary-data">
                   {/* Add center point as last coordinate to close the path */}
-                  <path className="content-item-chart-line"
+                  <path className={determineLineColor(contentMethod)}
                     d={secondaryLine(secondaryData)
                       + 'L' + outerRadius + ' ' + outerRadius} />
                 </svg>
@@ -221,7 +231,7 @@ class ContentItemChart extends React.Component {
                   to add extra points to the array so that the path draws the lines outwards
                   from the center of the graph. Every other value on the array is set to
                   'center', which is translated in the d3 function in to coordinates */}
-                  <path className="content-item-chart-line"
+                  <path className={determineLineColor(contentMethod)}
                     d={primaryLine(primaryData.reduce(
                       (points, data) => {
                         points.push('center')
@@ -351,6 +361,7 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
+  contentMethod: React.PropTypes.string,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   differenceData: React.PropTypes.instanceOf(Immutable.List),
   disableLinkTo: React.PropTypes.bool,
