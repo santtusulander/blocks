@@ -1,38 +1,95 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import { List } from 'immutable'
+import classNames from 'classnames'
 
-import ActionButtons from '../shared/action-buttons'
+import TableSorter from '../shared/table-sorter'
+import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
-import { formatDate } from '../../util/helpers'
+import { formatDate, formatBytes } from '../../util/helpers'
+import IconFolder from '../shared/icons/icon-folder'
+import IconFile from '../shared/icons/icon-file'
+import IconBack from '../shared/icons/icon-back'
+import IconContextMenu from '../shared/icons/icon-context-menu'
 
-const StorageContentBrowser = ({ contents }) => {
+const StorageContentBrowser = ({
+  backButtonHandler,
+  contents,
+  highlightedItem,
+  isRootDirectory,
+  openDirectoryHandler,
+  sorterProps
+}) => {
   return (
-    <Table striped={true}>
+    <Table striped={true} className='storage-contents-table'>
       <thead>
         <tr>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' /></th>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.status.label' /></th>
-          <th><FormattedMessage id='portal.storage.summaryPage.contentBrowser.noOfFiles.label' /></th>
+          <th width="1%">
+            {!isRootDirectory &&
+              <div onClick={backButtonHandler}>
+                <IconBack
+                  className='storage-contents-icon back'
+                  height={20}
+                  viewBox='0 0 36 20' />
+              </div>
+            }
+          </th>
+          <TableSorter {...sorterProps} column='name'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
+          </TableSorter>
+          <TableSorter {...sorterProps} column='lastModified'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' />
+          </TableSorter>
+          <TableSorter {...sorterProps} column='size'>
+            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.size.label' />
+          </TableSorter>
           <th width="1%"/>
         </tr>
       </thead>
-      <tbody>
-        {contents.map((item, index) => (
-          <tr key={index}>
-            <td>{formatDate(item.lastModified)}</td>
-            <td>{item.status}</td>
-            <td>{item.type === 'directory' ? item.noOfFiles : '-'}</td>
-            <td>
-              <IsAllowed to={MODIFY_STORAGE}>
-                <ActionButtons onDelete={() => {
-                  // no-op
-                }} />
-              </IsAllowed>
-            </td>
-          </tr>
-        ))}
+      <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
+        {contents.map((item, index) => {
+          const name = item.get('name')
+          const isDirectory = item.get('type') === 'directory'
+          const dataAttributes = {
+            'data-drop-zone': true
+          }
+          if (isDirectory) {
+            dataAttributes['data-drop-dir'] = name
+          }
+          const rowClassnames = classNames(
+            {'content-browser-row-directory': isDirectory},
+            {'highlight': (highlightedItem === name)}
+          )
+          return (
+            <tr
+              key={index}
+              {...dataAttributes}
+              className={rowClassnames}
+              onClick={() => {
+                isDirectory ? openDirectoryHandler(name) : null
+              }}>
+              <td
+                className='storage-contents-icon-cell'>
+                {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
+              </td>
+              <td>
+                <div className='storage-contents-name'>
+                  <TruncatedTitle content={name} />
+                </div>
+              </td>
+              <td>{formatDate(item.get('lastModified'))}</td>
+              <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
+              <td>
+                <IsAllowed to={MODIFY_STORAGE}>
+                  <IconContextMenu className="storage-contents-context-menu-icon" />
+                </IsAllowed>
+              </td>
+            </tr>
+          )
+        })
+      }
       </tbody>
     </Table>
   )
@@ -40,7 +97,12 @@ const StorageContentBrowser = ({ contents }) => {
 
 StorageContentBrowser.displayName = "StorageContentBrowser"
 StorageContentBrowser.propTypes = {
-  contents: PropTypes.array
+  backButtonHandler: PropTypes.func,
+  contents: PropTypes.instanceOf(List),
+  highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  isRootDirectory: PropTypes.bool,
+  openDirectoryHandler: PropTypes.func,
+  sorterProps: PropTypes.object
 }
 
 export default StorageContentBrowser

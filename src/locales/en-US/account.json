@@ -168,6 +168,7 @@
   "portal.accountManagement.roles.text": "ROLES",
   "portal.accountManagement.groups.created": "Group created.",
   "portal.accountManagement.groups.delete": "Group deleted.",
+  "portal.accountManagement.resource.text": "RESOURCE",
 
   "portal.accountManagement.storages.text": "STORAGE",
   "portal.accountManagement.properties.text": "PROPERTIES",

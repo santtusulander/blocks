@@ -90,6 +90,12 @@ const CISIngestPoints =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const CISIngestPointContents =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPointContents' }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 const CISClusters =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'clusters' }),
@@ -170,6 +176,7 @@ export default combineReducers({
   groups,
   iataCodes,
   CISIngestPoints,
+  CISIngestPointContents,
   gtm,
   CISClusters,
   CISWorkflowProfiles,
