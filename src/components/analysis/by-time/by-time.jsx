@@ -233,12 +233,8 @@ class AnalysisByTime extends React.Component {
                     className="area"
                     fill={`url(#${dataset.id}-${i}-gradient)`} />}
                 <defs>
-                  {/*
-                    Generating the random key to the component is obviously a bad practice. However, forcing linearGradient to
-                    rerender every time, that we change the account, seems to be the only way to solve this problem
-                    */}
                   <linearGradient
-                    key={Math.random()} id={`${dataset.id}-${i}-gradient`}
+                    key={i} id={`${dataset.id}-${i}-gradient`}
                     x1="0%" y1="0%" x2="0%" y2="100%">
 
                     <stop offset="0%" stopColor={dataset.color} stopOpacity="0.5" />
