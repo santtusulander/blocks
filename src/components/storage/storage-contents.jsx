@@ -340,7 +340,6 @@ class StorageContents extends Component {
                   onDragLeave={this.onDragLeave}
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
-                  uploadPath={uploadPath}
                 >
                   {hasContents &&
                     <StorageContentBrowser
