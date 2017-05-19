@@ -780,7 +780,7 @@ class Mapbox extends Component {
               <div className="map-label">
                 <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
                 <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.earth"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.world"/></span>
               </div>
             </div>
 
