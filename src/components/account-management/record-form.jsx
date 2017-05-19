@@ -72,7 +72,7 @@ const RecordForm = ({ type, submitting, domain, edit, onSubmit, cancel, handleSu
       <FormFooterButtons>
         <Button
           id='cancel-button'
-          className="btn-outline"
+          className="btn-secondary"
           onClick={cancel}>
           <FormattedMessage id='portal.common.button.cancel' />
         </Button>
