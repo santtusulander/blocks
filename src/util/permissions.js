@@ -31,6 +31,8 @@ permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
 // TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
 permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
   (role) => role.getIn([ 'ui', 'content'])
+permissionMapping[PERMISSIONS.VIEW_BRAND_DASHBOARD_SECTION] =
+  (role) => role.getIn([ 'ui', 'analytics_dashboard'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn([ 'ui', 'security'])
 permissionMapping[PERMISSIONS.VIEW_SERVICES_SECTION] =
@@ -317,21 +319,6 @@ export const getStoragePermissions = (user) => ({
   deleteAllowed: checkUserPermissions(user, PERMISSIONS.DELETE_STORAGE),
   modifyAllowed: checkUserPermissions(user, PERMISSIONS.MODIFY_STORAGE)
 })
-
-/**
- * Determine if a user has a permission.
- * @param  {List}    roles       The roles list stored on the roles redux store.
- * @param  {Map}     user        The currentUser Map stored on the user redux store.
- * @param  {String}  permission  A constant from the permissions constants file.
- * @return {Boolean}             True if the user has permission, else false
- */
-export default function checkPermissions(roles, user, permission) {
-  /*eslint-disable no-console */
-  console.warn('checkPermissions is deprecated - use checkUserPermissons instead')
-  /*eslint-enble no-console */
-
-  return checkUserPermissions(user, permission)
-}
 
 /**
  * checkUserPermissons check if user has permission

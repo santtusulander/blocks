@@ -282,10 +282,20 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       net_type: netType,
       status_codes: statusCodes || errorCodes
     }
-  } else if (
-    accountType === PROVIDER_TYPES.SERVICE_PROVIDER ||
-    accountType === PROVIDER_TYPES.CLOUD_PROVIDER
-  ) {
+  } else if (accountType === PROVIDER_TYPES.CLOUD_PROVIDER) {
+    return {
+      brand: params.brand,
+      startDate: startDate.format('X'),
+      endDate: endDate.format('X'),
+      account_ids: contentProviders,
+      group_ids: contentProviderGroups,
+      sp_account_ids: serviceProviders,
+      sp_group_ids: serviceProviderGroups,
+      service_type: serviceType,
+      net_type: netType,
+      status_codes: statusCodes || errorCodes
+    }
+  } else {
     return {
       sp_account: params.account,
       brand: params.brand,
@@ -299,8 +309,6 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
       status_codes: statusCodes || errorCodes
     }
   }
-
-  return null
 }
 
 export function filterChangeNeedsReload(currentFilters, nextFilters) {
@@ -342,7 +350,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @param format
  * @returns {*}
  */
-export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
+export function formatUnixTimestamp(unix, format) {
   return moment.unix(unix).format(format)
 }
 
@@ -362,7 +370,7 @@ export function unixTimestampToDate(unix) {
  * @param format
  * @returns {*}
  */
-export function formatDate(date, format = 'MM/DD/YYYY') {
+export function formatDate(date, format) {
   return moment(date).format(format)
 }
 
@@ -372,7 +380,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
  * @param format
  * @returns {*}
  */
-export function formatMoment(momentObj, format = 'MM/DD/YYYY') {
+export function formatMoment(momentObj, format) {
   return momentObj.format(format)
 }
 
@@ -752,6 +760,10 @@ export function getCISname(originHostname) {
   return matchedResult ? matchedResult[1] : ''
 }
 
+export function isDefined(value) {
+  return typeof value !== 'undefined'
+}
+
 /**
  * Slice current page out of items
  * @param  {List} items
@@ -763,4 +775,56 @@ export const getPage = (items, page, limit) => {
   const offset = (page - 1) * limit
 
   return items.slice(offset, offset + limit)
+}
+
+export const getRoleOptionsById = (roles, id) => {
+  const userRoleData = roles.find(role => role.get('id') === id)
+  const providerType = userRoleData && userRoleData.getIn(['account_provider_types', 0])
+  return getRoleOptionsByProviderType(roles, providerType)
+}
+
+export const getRoleOptionsByProviderType = (roles, providerType) => {
+  return roles.filter(role => {
+    return role.get('account_provider_types').includes(providerType)
+  })
+}
+
+export const roleIsEditableByCurrentUser = (allowedRoles, userRoleId) => {
+  /*
+    This is considered to be hacky but since API return ['*'] as allowedRoles for Super Admin,
+    we have to treat it this way
+  */
+  return allowedRoles.get(0) === '*' || allowedRoles.includes(userRoleId)
+}
+
+/**
+ * Detects if WebGL is enabled.
+ *
+ * @return { bool } false if supported or disabled
+ *                  true if enabled
+ */
+export const isWebGLEnabled = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement("canvas")
+    const names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"]
+    let context = false
+
+    for (const i in names) {
+      try {
+        context = canvas.getContext(names[i]);
+        if (context && typeof context.getParameter === "function") {
+          /* WebGL is enabled. */
+          return true
+        }
+      } catch (e) {
+        /* no-op */
+      }
+    }
+
+    /* WebGL is supported, but disabled. */
+    return false
+  }
+
+  /* WebGL not supported. */
+  return false
 }

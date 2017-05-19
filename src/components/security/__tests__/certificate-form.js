@@ -1,10 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { fromJS } from 'immutable'
+import { List, fromJS } from 'immutable'
 jest.unmock('../certificate-form.jsx')
 import CertificateForm from '../certificate-form.jsx'
 
-const REQUIRED = 'Required'
 
 const intlMaker = () => {
   return {
@@ -22,14 +21,13 @@ describe('Certificate Form', () => {
       props = {
         intl: intlMaker(),
         errors: {},
-        accounts: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
-        groups: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
+        groupsOptions: [{ label: 'aaa', value: 1 }, { label: 'bbb', value: 2 }],
         onSubmit,
         onCancel,
+        certificateToEdit: List(),
         fields: {
-          account: { touched, error, value: '' },
           group: { touched, error, value: '' },
-          title: { touched, error, value: '' },
+          title: { touched, error, value: ''},
           privateKey: { touched, error, value: '' },
           intermediateCertificates: { touched, error, value: '' },
           certificate: { touched, error, value: '' }
@@ -42,13 +40,26 @@ describe('Certificate Form', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should handle onSave click', () => {
-    subject().find('#save_button').simulate('click')
-    expect(onSubmit.mock.calls.length).toBe(1)
+  it('should have 2 buttons', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should have 5 fields', () => {
+    expect(subject().find('Field').length).toBe(5)
+  })
+
+  it('should submit form', () => {
+    subject().find('form').simulate('submit')
+    expect(onSubmit).toBeCalled();
   })
 
   it('should handle onCancel click', () => {
     subject().find('#cancel_button').simulate('click')
     expect(onCancel.mock.calls.length).toBe(1)
+  })
+
+  it('should render an error message', () => {
+    touched = true
+    expect(subject().find('input .error-msg').at(0)).toBeTruthy()
   })
 })

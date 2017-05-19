@@ -16,8 +16,6 @@ import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getCurrentUser } from '../../redux/modules/user'
 
-import * as accountActionCreators from '../../redux/modules/account'
-
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
@@ -93,9 +91,13 @@ export class Brand extends React.Component {
 
     // Only UDN admins can see list of all accounts
     const showAccountList = activeAccount && activeAccount.isEmpty() && userIsCloudProvider(currentUser)
+
     const contentItems = showAccountList
                       ? accounts
-                      : List.of(activeAccount)
+                      : List.of(
+                        accounts.find(account => account.get('id') === Number(params.account)) || Map()
+                      )
+
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
@@ -141,9 +143,7 @@ export class Brand extends React.Component {
         user={currentUser}
         viewingChart={viewingChart}
         fetchItem={(id) => {
-          /*eslint-disable no-console */
-          //console.warn('fetchItem will be deprecated in UDNP-3177')
-          return this.props.oldAccountActions.fetchAccount(brand, id)
+          return this.props.fetchAccount({brand, id})
         }}
       />
     )
@@ -157,11 +157,11 @@ Brand.propTypes = {
   createAccount: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
+  fetchAccount: PropTypes.func,
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
-  oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
   sortDirection: PropTypes.number,
@@ -199,7 +199,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   const {brand, account} = ownProps.params
 
-  const oldAccountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
 
   const metricsOpts = {
@@ -226,13 +225,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
       metricsActions.fetchDailyAccountTraffic(metricsOpts)
     },
-
-    oldAccountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch),
 
     createAccount: (params) => dispatch(accountActions.create(params)),
     updateAccount: (params) => dispatch(accountActions.update(params)),
-    removeAccount: (params) => dispatch(accountActions.remove(params))
+    removeAccount: (params) => dispatch(accountActions.remove(params)),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne({...params, forceReload: true}))
   };
 }
 

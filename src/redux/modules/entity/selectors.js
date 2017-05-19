@@ -1,3 +1,5 @@
+import { List } from 'immutable'
+
 /**
  * Get entity from state by Id
  * @param id
@@ -30,7 +32,16 @@ export const getEntitiesByPage = (state, entityType, page, entityPaginationType)
 
   const ids = state.entities.entityPagination.getIn([entityPaginationType, String(page)])
 
-  return ids && ids.map(id => getEntityById(state, entityType,id))
+  //Need to use .reduce instead of map as getEntityById might return undefined (in case user was deleted etc) and
+  //using .map inserts also 'undefined' values in List
+  return ids && ids.reduce((mem, id) => {
+    const val = getEntityById(state, entityType,id)
+    if (val) {
+      mem = mem.push(val)
+    }
+
+    return mem
+  }, List())
 }
 
 export const getPaginationMeta = (state, entityPaginationType) => {

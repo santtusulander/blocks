@@ -2,6 +2,7 @@
 // ===================
 
 .configuration-policies {
+  position: relative;
   width: 100%;
   transition: width 0.3s ease-out;
 
@@ -11,6 +12,39 @@
         max-width: 200px;
         word-break: break-word;
       }
+    }
+  }
+
+
+  .banner-container {
+    position: absolute;
+    top: $btn-height;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .policy-override-banner {
+    position: absolute;
+    top: calc((100% - #{$md-bar-height} * 1.5) / 2);
+    z-index: $zindex-default-low;
+    display: flex;
+    width: 100%;
+    height: $md-bar-height * 1.5;
+    background-color: rgba($medium-blue, 0.85);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  .banner-message {
+    .dark-theme & {
+      color: $pale-blue;
+    }
+
+    .light-theme & {
+      color: $white;
     }
   }
 }

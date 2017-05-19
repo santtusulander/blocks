@@ -139,6 +139,7 @@ class ContentItems extends Component {
    */
   onActivePageChange(nextPage) {
     this.props.router.push({
+      pathname: this.context.location.pathname,
       query: {
         page: nextPage
       }
@@ -266,13 +267,14 @@ class ContentItems extends Component {
     }
   }
 
-  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
-      .then((response) => {
+      .then(({ entities }) => {
+        const item = this.getTier() === 'brand' ? entities.accounts[id] : entities.groups[id]
+
         this.setState({
           showModal: true,
-          itemToEdit: fromJS(response.payload)
+          itemToEdit: fromJS(item)
         })
       })
   }
@@ -544,7 +546,7 @@ class ContentItems extends Component {
                         const id = item.get('id')
                         const isTrialHost = false
                         const name = item.get('name')
-                        const contentMetrics = item.get('metrics')
+                        const contentMetrics = item.get('metrics') || Map()
 
                         const scaledWidth =  trafficScale(item.get('totalTraffic') || 0)
 

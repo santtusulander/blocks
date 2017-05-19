@@ -6,9 +6,10 @@ import Checkbox from './checkbox'
 const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   const handleChange = (option, hasValue, index, e) => {
     const copy = [...field.value]
+
     if (!hasValue && e.target.checked) {
       field.onChange(copy.concat(option.value))
-    } else if (!event.target.checked) {
+    } else if (!e.target.checked) {
       copy.splice(index, 1)
       field.onChange(copy)
     }

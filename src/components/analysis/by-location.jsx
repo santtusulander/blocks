@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import Mapbox from '../map/mapbox';
+import { isWebGLEnabled } from '../../util/helpers'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
@@ -16,11 +17,16 @@ const AnalysisByLocation = (props) => {
     mapBounds,
     mapboxActions,
     dataKey,
-    dataKeyFormat
+    dataKeyFormat,
+    markers
   } = props
 
   if (!countryData.size) {
     return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+  }
+
+  if (!isWebGLEnabled()) {
+    return <h4 className="no-webgl-support"><FormattedMessage id="portal.common.no-webgl-support.text" /></h4>
   }
 
   return (
@@ -35,7 +41,9 @@ const AnalysisByLocation = (props) => {
         mapBounds={mapBounds}
         mapboxActions={mapboxActions}
         dataKey={dataKey}
-        dataKeyFormat={dataKeyFormat} />
+        dataKeyFormat={dataKeyFormat}
+        markers={markers}
+      />
     </div>
   )
 
@@ -45,7 +53,9 @@ AnalysisByLocation.displayName = 'AnalysisByLocation'
 
 AnalysisByLocation.defaultProps = {
   cityData: Immutable.List(),
-  countryData: Immutable.List()
+  countryData: Immutable.List(),
+  fullScreen: false,
+  markers: Immutable.List()
 }
 
 AnalysisByLocation.propTypes = {
@@ -57,6 +67,7 @@ AnalysisByLocation.propTypes = {
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
+  markers: React.PropTypes.instanceOf(Immutable.List),
   theme: React.PropTypes.string
 }
 

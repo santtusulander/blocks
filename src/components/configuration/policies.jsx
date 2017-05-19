@@ -163,14 +163,17 @@ class ConfigurationPolicies extends React.Component {
       config,
       activeEditFormActions
     )
+
+    const { customPolicyIsUsed } = this.props
     return (
       <div id="configuration-policies">
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.policies.policyRules.text"/>}>
           <IsAllowed to={MODIFY_PROPERTY}>
             <Button bsStyle="success" className="btn-icon"
+              disabled={customPolicyIsUsed}
               onClick={() => {
-                this.addRule(POLICY_TYPES.REQUEST) 
+                this.addRule(POLICY_TYPES.REQUEST)
               }}>
               <IconAdd />
             </Button>
@@ -178,6 +181,7 @@ class ConfigurationPolicies extends React.Component {
         </SectionHeader>
         <SectionContainer>
           <ConfigurationPolicyRules
+            customPolicyIsUsed={customPolicyIsUsed}
             cancelDeletePolicyRoute={this.props.cancelEditPolicyRoute}
             params={this.props.params}
             requestPolicies={config.getIn([POLICY_TYPES.REQUEST, 'policy_rules'])}
@@ -230,6 +234,7 @@ ConfigurationPolicies.propTypes = {
   changeValue: React.PropTypes.func,
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
+  customPolicyIsUsed: React.PropTypes.bool,
   intl: React.PropTypes.object,
   originalConfig: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,

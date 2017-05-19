@@ -5,7 +5,7 @@ jest.unmock('../menu-items')
 import Items from '../menu-items'
 
 const defaultProps = {
-  menuNodes: [{ name: 'bbbb', nodeInfo: { nodes: [] } }, { name: 'aaaa', nodeInfo: {} }],
+  menuNodes: [{ name: 'bbbb', nodeInfo: { category: 'a', nodes: [] } }, { name: 'aaaa', nodeInfo: { } }],
   searchValue: '',
   handleCaretClick: () => {},
   onItemClick: () => {}
@@ -18,19 +18,17 @@ describe('DrillableMenuItems', () => {
     expect(subject().length).toBe(1)
   });
 
-  it('should show sorted items', () => {
+  it('should contain categorized items', () => {
     expect(subject()
-        .find('.scrollable-menu')
-        .childAt(0)
-        .contains(<span>aaaa</span>
-        )).toEqual(true)
+      .find('Accordion')
+      .prop('headerTitle')
+    ).toEqual('a')
   });
 
-  it('should show filtered items by search value', () => {
+  it('should filter out items by search value', () => {
     expect(subject({ searchValue: 'b' })
-          .find('.scrollable-menu')
-          .childAt(0)
-          .contains(<span>bbbb</span>
-          )).toEqual(true)
+      .find('MenuItem')
+      .length
+    ).toEqual(0)
   });
 })

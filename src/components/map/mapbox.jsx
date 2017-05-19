@@ -1,9 +1,10 @@
-import React from 'react'
-import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
-import Immutable from 'immutable'
+import React, {Component, PropTypes} from 'react'
+import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
+import {Map, List, is} from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 // import Typeahead from '../shared/form-elements/typeahead'
+
 
 import {
   MAPBOX_LIGHT_THEME,
@@ -21,11 +22,15 @@ import {
   checkChangeInBounds,
   getScore
 } from '../../util/mapbox-helpers.js'
-// import IconExpand from '../shared/icons/icon-expand';
+
 // import IconMinimap from '../shared/icons/icon-minimap';
+// import IconExpand from '../shared/icons/icon-expand';
 import IconGlobe from '../shared/icons/icon-globe';
+import IconSpMarker      from '../shared/icons/icon-sp-marker'
+import IconCoreMarker    from '../shared/icons/icon-core-marker'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
-class Mapbox extends React.Component {
+
+class Mapbox extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -49,7 +54,11 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map || nextProps.dataKey !== this.props.dataKey) {
+    if (this.props.theme !== nextProps.theme) {
+      location.reload();
+    }
+
+    if (this.state.map && !is(this.props.countryData, nextProps.countryData) || nextProps.dataKey !== this.props.dataKey || this.props.theme !== nextProps.theme) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
@@ -62,7 +71,7 @@ class Mapbox extends React.Component {
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (!nextProps.cityData.equals(this.props.cityData) ||
+    if (!is(nextProps.cityData, this.props.cityData) ||
         (nextProps.dataKey !== this.props.dataKey && this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
@@ -125,6 +134,7 @@ class Mapbox extends React.Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
+
     this.addCountryLayers(map, this.props.countryData.toJS())
 
     // If we don't reset hoveredLayer, Mapbox gives an error: Cannot read property 'getPaintProperty' of undefined
@@ -186,17 +196,26 @@ class Mapbox extends React.Component {
     if (map.style._loaded) {
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
-      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
+      const layers = [...this.state.layers]
 
-      if (features.length) {
+      if (map.getLayer('markers')) {
+        layers.push('markers')
+      }
+
+      const features = map.queryRenderedFeatures(feature.point, { layers: layers })
+
+      if (features && features.length) {
         // Check if hovered feature is a cluster since we need to apply different hover style methods on clusters
         const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
+        const isMarker = (features[0].layer.id === 'markers')
+
         // Sets the hovered layer so we can easily reference it in setHoverStyle method
         const hoveredLayer = {
           id: isCluster ? 'cluster-hover' : features[0].layer.id,
           type: features[0].layer.type,
           coordinates: features[0].geometry.coordinates
         }
+
 
         if (isCluster) {
           // We need to compare current and previous coordinates in order apply the hover effect
@@ -213,7 +232,10 @@ class Mapbox extends React.Component {
         }
 
         this.setState({ hoveredLayer })
-        this.setHoverStyle(map)('opacity', isCluster ? 0.7 : 0.9)('pointer')
+
+        if (!isMarker) {
+          this.setHoverStyle(map)('opacity', isCluster ? 0.7 : 0.9)('pointer')
+        }
 
         // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
@@ -230,14 +252,16 @@ class Mapbox extends React.Component {
         // if we had hovered an interactive layer and the moved mouse
         // out of the layer boundaries.
         if (this.state.hoveredLayer) {
-          this.setHoverStyle(map)('opacity', 0.5)('default')
+          if (this.state.hoveredLayer.id !== 'markers') {
+            this.setHoverStyle(map)('opacity', 0.5)('default')
+            this.removeClusterHoverStyles(map)
+          }
           this.setState({ hoveredLayer: null })
           this.closePopup()
 
           // Since cluster hovers are separate from the general hover styles,
           // they necessary layers and sources should be removed once hovered
           // outside of the cluster.
-          this.removeClusterHoverStyles(map)
         }
       }
     }
@@ -273,7 +297,7 @@ class Mapbox extends React.Component {
           'circle-color': feature.layer.paint['circle-color'],
           'circle-radius': feature.layer.paint['circle-radius']
         }
-      })
+      }, 'water-label')
     }
   }
 
@@ -414,7 +438,15 @@ class Mapbox extends React.Component {
     // Choose a color for the country based on its score
     // See if it's possible to use Mapbox's data-driven styling here.
     // https://www.mapbox.com/blog/data-driven-styling/
-    const colorIndex = trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length ? trafficHeat - 1 : null
+    let colorIndex
+    if (trafficHeat === 0) {
+      colorIndex = 0
+    } else if (trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length) {
+      colorIndex = trafficHeat - 1
+    } else {
+      colorIndex = null
+    }
+
     const countryColor = colorIndex !== null ? MAPBOX_HEAT_MAP_COLORS[colorIndex] : MAPBOX_HEAT_MAP_DEFAULT_COLOR
 
     map.addLayer({
@@ -426,7 +458,7 @@ class Mapbox extends React.Component {
         'fill-opacity': 0.5
       },
       type: 'fill'
-    })
+    }, 'water-label')
 
     map.addLayer({
       id: `country-stroke-${trafficCountry.code}`,
@@ -437,7 +469,7 @@ class Mapbox extends React.Component {
         'line-width': 2
       },
       type: 'line'
-    })
+    }, `water-label`)
   }
 
   /**
@@ -550,7 +582,7 @@ class Mapbox extends React.Component {
         },
         'circle-opacity': 0.5
       }
-    })
+    }, 'water-label')
 
     // If the layer exists, we should remove it in order to do a full reset for changed data
     if (map.getLayer('clustered-cities')) {
@@ -569,7 +601,7 @@ class Mapbox extends React.Component {
         'circle-opacity': 0.5
       },
       filter: ['all', ['>=', 'point_count', 2]]
-    })
+    }, 'water-label')
   }
 
   /**
@@ -630,9 +662,15 @@ class Mapbox extends React.Component {
     this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
 
+
+
   render() {
     const { isFetchingCityData } = this.state
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
+
+    //marker colors:
+    //#88BA17
+    //#00AAD4
 
     return (
       <ReactMapboxGl
@@ -655,6 +693,31 @@ class Mapbox extends React.Component {
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
         dragRotate={false}>
 
+        { (this.props.markers && !this.props.markers.isEmpty()) &&
+          <Layer
+            id="markers"
+            layout={{
+              "icon-image": "{icon}-15",
+              //"text-field": "{title}",
+              "icon-allow-overlap": true
+            }}
+            >
+            {this.props.markers
+              .map(marker => (
+                <Feature
+                  key={marker.get('id')}
+                  coordinates={marker.get("lnglat").toJS()}
+                  properties={{
+                    "name": marker.get('id'),
+                    "icon": (marker.get('type') === 'core' ? "core-marker" : "sp-marker"),
+                    [this.props.dataKey]: marker.get('traffic')
+                  }}
+                />
+              )).toArray()
+            }
+          </Layer>
+        }
+
         {/*
         <div className="map-search">
           <Typeahead
@@ -676,25 +739,23 @@ class Mapbox extends React.Component {
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
-              {this.state.popupContent.total &&
                 <table>
                   <tbody>
                     <tr>
                       <td className="bold"><FormattedMessage id="portal.analytics.map.total"/></td>
-                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
+                      <td>{this.state.popupContent.total !== undefined ? this.props.dataKeyFormat(this.state.popupContent.total) : '-'}</td>
                     </tr>
                   </tbody>
                 </table>
-              }
             </div>
           </Popup>
         }
 
         <div className="map-controls">
-          {/*
-          <div className="control map-fullscreen">
-            <IconExpand width={32} height={32} />
-          </div>
+          {/* this.props.fullScreen &&
+            <div className="control map-fullscreen" onClick={this.goFullscreen}>
+              <IconExpand width={32} height={32} />
+            </div>
           */}
           <div className="control map-zoom">
             <ZoomControl
@@ -730,6 +791,16 @@ class Mapbox extends React.Component {
           </div>
         }
 
+        { (this.props.markers && this.props.markers.size)
+          ?
+            <div className="map-markers-legend">
+              <span className="core"><IconCoreMarker width={24} height={24} /><FormattedMessage id="portal.analytics.udnCore.title"/></span>
+              <span className="space" />
+              <span className="edge"><IconSpMarker width={24} height={24} /><FormattedMessage id="portal.analytics.spEdge.title"/></span>
+            </div>
+          :
+            null
+        }
       </ReactMapboxGl>
     )
   }
@@ -737,19 +808,22 @@ class Mapbox extends React.Component {
 
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
-  cityData: React.PropTypes.instanceOf(Immutable.List).isRequired,
-  countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
-  dataKey: React.PropTypes.string,
-  dataKeyFormat: React.PropTypes.func,
-  geoData: React.PropTypes.object.isRequired,
-  getCitiesWithinBounds: React.PropTypes.func,
-  height: React.PropTypes.number,
-  mapBounds: React.PropTypes.object,
-  mapboxActions: React.PropTypes.object,
-  theme: React.PropTypes.string
+  cityData: PropTypes.instanceOf(List).isRequired,
+  countryData: PropTypes.instanceOf(List).isRequired,
+  dataKey: PropTypes.string,
+  dataKeyFormat: PropTypes.func,
+  geoData: PropTypes.object.isRequired,
+  getCitiesWithinBounds: PropTypes.func,
+  height: PropTypes.number,
+  mapBounds: PropTypes.object,
+  mapboxActions: PropTypes.object,
+  markers: PropTypes.instanceOf(List),
+  theme: PropTypes.string
 }
 
 Mapbox.defaultProps = {
+  cityData: List(),
+  countryData: List(),
   dataKeyFormat: data => data,
   getCitiesWithinBounds: () => {
     // no-op
@@ -758,7 +832,8 @@ Mapbox.defaultProps = {
     setMapBounds: () => null,
     setMapZoom: () => null
   },
-  mapBounds: Immutable.Map()
+  mapBounds: Map(),
+  markers: List()
 }
 
 export default Mapbox

@@ -10,6 +10,7 @@ var environment = helpers.parseDotenvConfig(
 );
 const googleSiteKey = environment.GOOGLE_SITE_KEY || '6LfO1AoUAAAAAKy1rnqNJzAqDXxoHnUAKdRfY5vB'
 const mapboxAccessToken = environment.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'
+const accountsToExclude = environment.BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE || ''
 
 // credit: http://stackoverflow.com/a/38733864/2715
 const isExternal = module => {
@@ -29,7 +30,8 @@ module.exports = Object.assign({}, {
       'process.env.NODE_ENV': '"production"',
       'GOOGLE_SITE_KEY': `"${googleSiteKey}"`,
       'VERSION': JSON.stringify(require('../package.json').version),
-      'MAPBOX_ACCESS_TOKEN': `"${mapboxAccessToken}"`
+      'MAPBOX_ACCESS_TOKEN': `"${mapboxAccessToken}"`,
+      'BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE': `"${accountsToExclude}"`
     }, environment)),
     new webpack.ProvidePlugin({
       // Polyfill here

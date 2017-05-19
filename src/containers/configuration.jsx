@@ -273,9 +273,9 @@ export class Configuration extends React.Component {
     }
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
-    const updateMoment = moment(activeConfig.get('config_updated'), 'X')
+    const updateMoment = moment.unix(activeConfig.get('config_updated'))
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
-    const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
+    const deployMoment = moment.unix(activeConfig.get('configuration_status').get('deployment_date'))
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
     const serviceType = activeHost.getIn(['services', 0, 'service_type'])
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
@@ -284,6 +284,7 @@ export class Configuration extends React.Component {
     const advancedTabReadOnly = this.isAdvancedTabReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     const diff = !Immutable.is(activeConfig, this.state.activeConfigOriginal)
+    const customPolicyIsUsed = activeHost.getIn(['services', 0, 'uses_custom_policy_xml'])
 
     return (
       <Content>
@@ -404,7 +405,8 @@ export class Configuration extends React.Component {
             showNotification: this.showNotification,
             storagePermission: this.props.storagePermission,
             serviceType: serviceType,
-            serviceTypeText: serviceTypeText
+            serviceTypeText: serviceTypeText,
+            customPolicyIsUsed
           })}
           </PageContainer>
 

@@ -23,6 +23,10 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
 
     &:nth-child(odd) {
       margin-right: $dashboard-panel-margin;
+
+      .full-width {
+        margin-right: 0;
+      }
     }
   }
 
@@ -64,6 +68,10 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
     padding: $dashboard-panel-vertical-padding $dashboard-panel-horizontal-padding;
   }
 
+  .no-webgl-support {
+    padding: $dashboard-panel-vertical-padding $dashboard-panel-horizontal-padding;
+  }
+
   .dashboard-panel-header {
 
     .dark-theme & {
@@ -73,6 +81,14 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
     .light-theme & {
       background-color: $white;
       border-bottom: 1px solid $dashboard-panel-header-bg;
+    }
+  }
+}
+
+.dashboard-panel.full-width {
+  .dashboard-panels & {
+    &:nth-child(odd) {
+      margin-right: 0;
     }
   }
 }

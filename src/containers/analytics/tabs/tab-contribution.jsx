@@ -16,6 +16,12 @@ import { getCurrentUser } from '../../../redux/modules/user'
 import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.getChartName = this.getChartName.bind(this)
+  }
+
   componentDidMount() {
     if (this.props.accountType) {
       this.fetchData(
@@ -53,6 +59,24 @@ class AnalyticsTabContribution extends React.Component {
 
   componentWillUnmount() {
     this.props.filterActions.resetContributionFilters()
+  }
+
+  getChartName() {
+    const { contribution, accountType, filterOptions, filters } = this.props
+    const isCP = accountType === ProviderTypes.CONTENT_PROVIDER
+
+    const accountTier = isCP ? 'serviceProviders' : 'contentProviders'
+    const groupTier = isCP ? 'serviceProviderGroups': 'contentProviderGroups'
+    const groupTag = isCP ? 'sp_group' : 'group'
+    const accountTag = isCP ? 'sp_account' : 'account'
+
+    const isFilterByGroup = filters.get(groupTier) && !filters.get(groupTier).isEmpty()
+    const providers =  isFilterByGroup ? filterOptions.get(groupTier) : filterOptions.get(accountTier)
+
+    return contribution.map(item => {
+      const service = providers.find(provider => provider.get('id') === item.get(isFilterByGroup ? groupTag : accountTag))
+      return service ? item.set('chartName', service.get('name')) : item
+    })
   }
 
   fetchData(params, filters, location, hostConfiguredName, accountType) {
@@ -118,14 +142,7 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render() {
-    const { contribution, filterOptions } = this.props
-    const isCP = this.props.accountType === ProviderTypes.CONTENT_PROVIDER
-
-    const providers = filterOptions.get(isCP ? 'serviceProviders' : 'contentProviders')
-    const contributionWithName = contribution.map(item => {
-      const service = providers.find(provider => provider.get('id') === item.get(isCP ? 'sp_account':'account'))
-      return service ? item.set('name', service.get('name')) : item
-    })
+    const contributionWithName = this.getChartName()
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
@@ -149,6 +166,7 @@ class AnalyticsTabContribution extends React.Component {
         stats={contributionWithName}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
+        fetching={this.props.fetching}
       />
     )
   }
@@ -160,6 +178,7 @@ AnalyticsTabContribution.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
@@ -184,7 +203,8 @@ function mapStateToProps(state, ownProps) {
     contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
     currentUser: getCurrentUser(state),
-    filterOptions: state.filters.get('filterOptions')
+    filterOptions: state.filters.get('filterOptions'),
+    fetching: state.traffic.get('fetching') || state.filters.get('fetching')
   }
 }
 

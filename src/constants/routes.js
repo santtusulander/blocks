@@ -1,5 +1,6 @@
 const ROUTES = {
   root: '/',
+  home: '/home',
 
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',
@@ -66,6 +67,8 @@ const ROUTES = {
   servicesAccount: '/services/:brand/:account',
   servicesGroup: '/services/:brand/:account/:group',
   servicesProperty: '/services/:brand/:account/:group/:property',
+
+  servicesTabLogDelivery: 'logDelivery',
 
   security: '/security',
   securityBrand: '/security/:brand',

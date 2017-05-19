@@ -14,6 +14,8 @@ import { parseResponseError } from '../../../redux/util'
 import roleNameActions from '../../../redux/modules/entities/role-names/actions'
 import { getAll as getRoles } from '../../../redux/modules/entities/role-names/selectors'
 
+import { getAllowedRolesById } from '../../../redux/modules/entities/roles/selectors'
+
 import rolesActions from '../../../redux/modules/entities/roles/actions'
 import {getAll as getAllPermissions} from '../../../redux/modules/entities/roles/selectors'
 
@@ -25,7 +27,7 @@ import { getByPage } from '../../../redux/modules/entities/users/selectors'
 import { getPaginationMeta } from '../../../redux/modules/entity/selectors'
 
 import groupsActions from '../../../redux/modules/entities/groups/actions'
-//import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import { getCurrentUser } from '../../../redux/modules/user'
@@ -47,14 +49,12 @@ import ModalWindow from '../../../components/shared/modal'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import Paginator from '../../../components/shared/paginator/paginator'
 
-import { ROLES_MAPPING } from '../../../constants/account-management-options'
+// import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, roleIsEditableByCurrentUser, getRoleOptionsByProviderType } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed'
 import { DELETE_USER, MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
-import { UDN_ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from '../../../constants/account-management-options'
-
 import { paginationChanged } from '../../../util/pagination'
 
 const PAGE_SIZE = 20
@@ -109,8 +109,8 @@ export class AccountManagementAccountUsers extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {brand, account} = nextProps.params
-    const {page, sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
-
+    const { sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
+    const page = nextProps.location.query.page ? nextProps.location.query.page : 1
     //if brand, account or pagination/sort has changed -> refetch
     if (brand !== this.props.params.brand
       || account !== this.props.params.account
@@ -196,28 +196,10 @@ export class AccountManagementAccountUsers extends Component {
     return checkForErrors({ email, roles }, conditions)
   }
 
-  getRoleOptions(roleMapping, props) {
-    const currentUserRole = this.props.currentUser && this.props.currentUser.get('roles').toJS().pop()
-    return roleMapping
-      .filter(role => role.accountTypes.includes(props.account.get('provider_type')))
-      .filter((roleToCheck) => {
-        // Don't allow UDN admin to create another UDN Admin or Super admin
-        // TODO: make dynamic check
-        if (String(currentUserRole) === String(UDN_ADMIN_ROLE_ID)) {
-          if ((String(roleToCheck.id) === String(SUPER_ADMIN_ROLE_ID)) ||
-              (String(roleToCheck.id) === String(UDN_ADMIN_ROLE_ID))) {
-            return false
-          }
-        }
-
-        return true
-      })
-      .map((mapped_role) => {
-        const matchedRole = props.roles.find(role => role.get('id') === mapped_role.id)
-        return matchedRole
-              ? [matchedRole.get('id'), matchedRole.get('name')]
-              : [mapped_role.id, <FormattedMessage id='portal.accountManagement.accountsType.unknown.text'/>]
-      })
+  getRoleOptions({ account, roles, allowedRoles }) {
+    return getRoleOptionsByProviderType(roles, account.get('provider_type'))
+      .filter(role => roleIsEditableByCurrentUser(allowedRoles, role.get('id')))
+      .map(role => [role.get('id'), role.get('name')]).toJS()
   }
 
   getInlineAddFields() {
@@ -234,7 +216,8 @@ export class AccountManagementAccountUsers extends Component {
           {error}
         </Tooltip>
 
-    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(this.props)
+
     return [
       [
         {
@@ -374,6 +357,7 @@ export class AccountManagementAccountUsers extends Component {
       users,
       roles,
       permissions,
+      allowedRoles,
       permissionServiceTitles,
       params: {account}
     } = this.props
@@ -453,66 +437,68 @@ export class AccountManagementAccountUsers extends Component {
 
         { fetching
           ? <LoadingSpinner />
-          : <Table striped={true}>
-          <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="email" width="40%">
-                <FormattedMessage id="portal.user.list.email.text" />
-              </TableSorter>
-              <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-              {/* TODO: UDNP-3529 - Removed until we have group_id in user
-                <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
-              */}
-              <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                <th width="1%"/>
-              </IsAllowed>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.addingNew && <InlineAdd
-              validate={this.validateInlineAdd}
-              inputs={this.getInlineAddFields()}
-              unmount={this.toggleInlineAdd}
-              save={this.newUser}/>}
-            {/*
-              Note, this is the temporary approach to fix bug when deleting user cause by pagination, remove filter() when
-              the pagination is fixed
-            */}
-            {users && users.filter(user => user).map((user, i) => {
-              return (
-                <tr key={i}>
-                  <td>
-                    {this.getEmailForUser(user)}
-                  </td>
-                  <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
-                  { /* TODO: UDNP-3529 removed until we have group data in user
-                  <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                  */ }
-                  <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                    <td className="nowrap-column">
-                        <ActionButtons
-                          permissions={{
-                            modify: MODIFY_USER,
-                            delete: DELETE_USER
-                          }}
-                          onEdit={() => {
-                            this.editUser(user)
-                          }}
-                          onDelete={() => this.deleteUser(user.get('email'))} />
-                    </td>
-                  </IsAllowed>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-        }
+          : <div>
+              <Table striped={true}>
+                <thead>
+                  <tr>
+                    <TableSorter {...sorterProps} column="email" width="40%">
+                      <FormattedMessage id="portal.user.list.email.text" />
+                    </TableSorter>
+                    <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+                    {/* TODO: UDNP-3529 - Removed until we have group_id in user
+                      <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+                    */}
+                    <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                      <th width="1%"/>
+                    </IsAllowed>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.addingNew && <InlineAdd
+                    validate={this.validateInlineAdd}
+                    inputs={this.getInlineAddFields()}
+                    unmount={this.toggleInlineAdd}
+                    save={this.newUser}/>}
 
-        { /* Show Pagination if more items than fit on PAGE_SIZE */
-          totalCount > PAGE_SIZE &&
-          <Paginator {...paginationProps} />
-        }
+                  {users && users.map((user, i) => {
+                    const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
 
+                    return (
+                      <tr key={i}>
+                        <td>
+                          {this.getEmailForUser(user)}
+                        </td>
+                        <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                        { /* TODO: UDNP-3529 removed until we have group data in user
+                        <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                        */ }
+                        <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                          <td className="nowrap-column">
+                              <ActionButtons
+                                editDisabled={!userIsEditable}
+                                deleteDisabled={!userIsEditable}
+                                permissions={{
+                                  modify: MODIFY_USER,
+                                  delete: DELETE_USER
+                                }}
+                                onEdit={() => {
+                                  this.editUser(user)
+                                }}
+                                onDelete={() => this.deleteUser(user.get('email'))} />
+                          </td>
+                        </IsAllowed>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+              {
+                // Show Pagination if more items than fit on PAGE_SIZE
+                totalCount > PAGE_SIZE &&
+                <Paginator {...paginationProps} />
+              }
+            </div>
+        }
 
         {users && users.size === 0 &&
           <div className="text-center">
@@ -537,11 +523,11 @@ export class AccountManagementAccountUsers extends Component {
           <UserEditModal
             show={this.state.showEditModal}
             user={this.state.userToEdit}
-            accountType={this.props.account.get('provider_type')}
             groups={this.props.groups}
             onCancel={this.cancelUserEdit}
             onSave={this.saveUser}
             roles={this.props.roles}
+            allowedRoles={allowedRoles}
           />
         }
 
@@ -591,6 +577,7 @@ export class AccountManagementAccountUsers extends Component {
 AccountManagementAccountUsers.displayName = 'AccountManagementAccountUsers'
 AccountManagementAccountUsers.propTypes = {
   account: PropTypes.instanceOf(Map),
+  allowedRoles: PropTypes.instanceOf(List),
   createUser: PropTypes.func,
   currentUser: PropTypes.instanceOf(Map),
   deleteUser: PropTypes.func,
@@ -616,19 +603,24 @@ AccountManagementAccountUsers.propTypes = {
 }
 
 AccountManagementAccountUsers.defaultProps = {
-  roles: List()
+  roles: List(),
+  allowedRoles: List()
 }
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const page = ownProps.location.query.page ? ownProps.location.query.page : 1
   const permissionTitles = getTitlesByID(state,'UI')
+  const currentUser = getCurrentUser(state)
+  const allowedRoles = getAllowedRolesById(state, currentUser.getIn(['roles', 0]))
   return {
+    account: getAccountById(state, ownProps.params.account),
     form: state.form,
     fetching: getFetchingByTag(state, 'user'),
     roles: getRoles(state),
     users: getByPage(state, page),
-    currentUser: getCurrentUser(state),
+    currentUser,
+    allowedRoles,
     permissions: getAllPermissions(state),
     paginationMeta: getPaginationMeta(state, 'user'),
     permissionServiceTitles: permissionTitles ? permissionTitles.get('resources'): List()

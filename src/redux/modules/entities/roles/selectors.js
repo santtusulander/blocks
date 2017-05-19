@@ -19,3 +19,13 @@ export const getById = (state, id) => {
 export const getAll = (state) => {
   return state.entities.roles
 }
+
+/**
+ * Get list of allowed roles by roleId
+ * @param  {} state [description]
+ * @param  {String} roleId
+ * @return {List} List of roleIds
+ */
+export const getAllowedRolesById = (state, id) => {
+  return getEntityById(state, 'allowedRoles', id)
+}
