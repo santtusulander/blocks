@@ -1,7 +1,7 @@
 import React from 'react'
 import { IntlProvider } from 'react-intl'
 
-import TRANSLATED_MESSAGES from '../../locales/en'
+//import TRANSLATED_MESSAGES from '../../locales/en'
 
 class ThemeWrap extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class ThemeWrap extends React.Component {
 
   render() {
     return (
-      <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
+      <IntlProvider locale="en" messages={''}>
         <div>
           <h5>Using: {this.state.theme} -theme <a onClick={this.toggleTheme}>Switch theme</a></h5>
           <hr/>

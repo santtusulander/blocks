@@ -3,7 +3,7 @@ import { storiesOf, action } from '@kadira/storybook';
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import ThemeWrap from './theme-wrap'
-import ButtonDropdown from '../shared/form-elements/button-dropdown'
+import ButtonDropdown from '../shared/page-elements/context-menu'
 
 const defaultProps = {
   bsStyle: 'success',

@@ -37,6 +37,7 @@ import SelectWrapper from '../../components/shared/form-elements/select-wrapper'
 import FilterChecklistDropdown from '../../components/shared/form-elements/filter-checklist-dropdown.jsx'
 import SelectorComponent from '../../components/global-account-selector/selector-component'
 import Tabs from '../../components/shared/page-elements/tabs'
+import ContextMenu from '../../components/shared/page-elements/context-menu'
 import MonthPicker from '../../components/shared/form-elements/month-picker'
 import StackedByTimeSummary from '../../components/charts/stacked-by-time-summary'
 import MiniChart from '../../components/charts/mini-chart'
@@ -812,6 +813,10 @@ class Styleguide extends React.Component {
               lastMonthPeak={260e12}
               diameter={300} />
 
+          </div>
+
+          <div>
+            <ContextMenu/>
           </div>
 
           <h1 className="page-header">File Upload Status</h1>

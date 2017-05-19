@@ -13,6 +13,7 @@ import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
 import IconContextMenu from '../shared/icons/icon-context-menu'
+import ContextMenu from '../shared/page-elements/context-menu'
 
 const StorageContentBrowser = ({
   backButtonHandler,
@@ -62,6 +63,8 @@ const StorageContentBrowser = ({
             {'content-browser-row-directory': isDirectory},
             {'highlight': (highlightedItem === name)}
           )
+          if (index > 5) return null
+
           return (
             <tr
               key={index}
@@ -85,7 +88,9 @@ const StorageContentBrowser = ({
                 <IsAllowed to={MODIFY_STORAGE}>
                   <IconContextMenu className="storage-contents-context-menu-icon" />
                 </IsAllowed>
+                {index === 2 && <ContextMenu/>}              
               </td>
+
             </tr>
           )
         })

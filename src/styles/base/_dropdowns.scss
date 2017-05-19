@@ -114,6 +114,31 @@ $search-input-left-padding: em(36px, $search-font-size);
     min-width: $button-dropdown-menu-min-width;
   }
 
+  &.context-menu {
+    a {
+      display: flex;
+      height: $md-bar-height;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .menu-header a {
+      height: 1.5 * $md-bar-height;
+      background-color: $deep-blue;
+
+      .header-title {
+        color: $white;
+      }
+
+      .icon {
+        fill: $pale-blue;
+      }
+    }
+
+
+
+  }
+
   .open & {
     animation: showDropdown 250ms ease-out;
   }
