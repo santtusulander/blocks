@@ -234,7 +234,7 @@ class AnalysisByTime extends React.Component {
                     fill={`url(#${dataset.id}-${i}-gradient)`} />}
                 <defs>
                   {/*
-                    Generating the random key to the component is obviously a bad practice. However, forcing linearGradient to 
+                    Generating the random key to the component is obviously a bad practice. However, forcing linearGradient to
                     rerender every time, that we change the account, seems to be the only way to solve this problem
                     */}
                   <linearGradient

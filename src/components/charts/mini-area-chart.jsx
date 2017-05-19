@@ -4,7 +4,13 @@ import { ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { paleblue, orange } from '../../constants/colors'
 
 const colors = [ paleblue, orange ]
-
+const mockEmptyArea = [
+  {emptyDatakey: 0},
+  {emptyDatakey: 0},
+  {emptyDatakey: 0},
+  {emptyDatakey: 0},
+  {emptyDatakey: 0}
+]
 export default class MiniAreaChart extends Component {
   constructor() {
     super()
@@ -47,17 +53,30 @@ export default class MiniAreaChart extends Component {
 
   render() {
     const { chartLabel, data, className } = this.props
-
+    const isEmptyData = !!data && !!data.length
+    debugger
     return (
       <div className="mini-area-chart">
         <span className="mini-area-chart-label">{chartLabel}</span>
         <ResponsiveContainer minHeight={50} aspect={2}>
-          <AreaChart data={data} className={className}>
-            <defs>
-              { this.renderGradients() }
-            </defs>
-            { this.renderAreas() }
-          </AreaChart>
+          { isEmptyData &&
+            <AreaChart data={mockEmptyArea} className={className}>
+              <Area
+                isAnimationActive={false}
+                stroke={colors[0]}
+                strokeWidth="2"
+                dataKey="emptyDatakey"
+              />
+            </AreaChart>
+          }
+          { !isEmptyData &&
+            <AreaChart data={data} className={className}>
+              <defs>
+                { this.renderGradients() }
+              </defs>
+              { this.renderAreas() }
+            </AreaChart>
+          }
       </ResponsiveContainer>
       </div>);
   }
@@ -65,7 +84,8 @@ export default class MiniAreaChart extends Component {
 
 MiniAreaChart.displayName = 'MiniAreaChart'
 MiniAreaChart.defaultProps = {
-  noGradient: false
+  noGradient: false,
+  data: []
 }
 MiniAreaChart.propTypes = {
   areas: PropTypes.array,
