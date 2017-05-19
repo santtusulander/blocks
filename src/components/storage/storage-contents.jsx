@@ -113,43 +113,28 @@ class StorageContents extends Component {
     })
   }
 
-  // UDNP-3365 - remove this
-  getHeader(contents) {
-    const { foldersCount: folders, filesCount: files } = contents.reduce(({ foldersCount, filesCount }, item) => {
-      if (item.get('type') === 'directory') {
-        foldersCount = foldersCount + 1
-      } else {
-        filesCount = filesCount + 1
-      }
-      return { foldersCount, filesCount }
-    }, { foldersCount: 0, filesCount: 0 })
-
-    return (<FormattedMessage
-      id='portal.storage.summaryPage.contents.hasContents.title'
-      values={{ folders, files }} />)
-  }
-
   getHeaderBreadcrumb() {
     const { params, params: { storage, splat } } = this.props
     const links = []
     if (splat && splat.length > 0) {
-      const pathArray = splat.split('/')
       links.push({
-        url: null,
-        label: pathArray.slice(-1).shift()
+        url: getContentUrl('storage', storage, params),
+        label: storage
       })
 
-      pathArray.slice(0, -1).reverse().forEach((dir, index) => {
+      const pathArray = splat.split('/')
+      pathArray.slice(0, -1).forEach((dir, index) => {
         links.push({
-          url: getContentUrl('storageContents', pathArray.slice(0, -(index + 1)).join('/'), params),
+          url: getContentUrl('storageContents', pathArray.slice(0, (index + 1)).join('/'), params),
           label: dir
         })
       })
 
       links.push({
-        url: getContentUrl('storage', storage, params),
-        label: storage
+        url: null,
+        label: pathArray.slice(-1).shift()
       })
+
     } else {
       links.push({
         url: null,
@@ -159,7 +144,7 @@ class StorageContents extends Component {
 
     return (
       <div className='storage-contents-breadcrumb'>
-        <Breadcrumbs links={links.reverse()} />
+        <Breadcrumbs links={links} />
       </div>
     )
   }
