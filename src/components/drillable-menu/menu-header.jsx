@@ -44,7 +44,7 @@ const DrillableMenuHeader = ({ searchValue, onSearchChange, subtitle, parentId, 
 
 DrillableMenuHeader.displayName = 'DrillableMenuHeader'
 DrillableMenuHeader.propTypes = {
-  activeNodeName: PropTypes.string,
+  activeNodeName: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   fetching: PropTypes.bool,
   goToActive: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   goToParent: PropTypes.func,

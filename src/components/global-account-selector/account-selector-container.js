@@ -2,8 +2,10 @@ import { connect } from 'react-redux'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
 import groupActions from '../../redux/modules/entities/groups/actions'
-import accountActions from '../../redux/modules/entities/accounts/actions'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+
+import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+import accountActions from '../../redux/modules/entities/accounts/actions'
 
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
@@ -18,20 +20,21 @@ import {
   LIST_STORAGE } from '../../constants/permissions'
 
 import { checkUserPermissions } from '../../util/permissions'
+import { accountIsServiceProviderType } from '../../util/helpers'
 
 import DrillableMenu from '../drillable-menu/menu'
 
 /**
  * Runs check for a permission to determine whether the entity tree
  * passed to the menu component contains entities for a level corresponding that permission.
- * @param  {[Array]} levels      desired levels for the account selector
- * @param  {[Map]}   user        current active user
- * @param  {[List]}  roles       all roles
- * @param  {[type]}  permission  permission to check against
+ * @param  {[Array]}   levels      desired levels for the account selector
+ * @param  {[Map]}     user        current active user
+ * @param  {[String]}  permission  permission to check against
  * @return Boolean
  */
-const permissionCheck = (levels, user) => permission => {
+const permissionCheck = (levels, user, account) => permission => {
   let hasLevel = false
+  const accountNotSP = !accountIsServiceProviderType(account)
 
   switch (permission) {
 
@@ -45,7 +48,7 @@ const permissionCheck = (levels, user) => permission => {
 
     case LIST_STORAGE:
     case VIEW_CONTENT_PROPERTIES:
-      hasLevel = levels.includes('group')
+      hasLevel = levels.includes('group') && accountNotSP
       break
   }
 
@@ -59,28 +62,15 @@ const permissionCheck = (levels, user) => permission => {
  * @param  {[type]} levels   [description]
  * @return {[type]}          [description]
  */
-const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property, storage }, levels = ['brand', 'account', 'group'] }) => {
+const accountSelectorDispatchToProps = dispatch => {
 
   return {
     dispatch,
-    fetchData: (user) => {
-
-      const shouldFetch = permissionCheck(levels, user)
-
-      return Promise.all([
-
-        shouldFetch(VIEW_CONTENT_ACCOUNTS) && brand && dispatch(accountActions.fetchAll({ brand })),
-
-        !shouldFetch(VIEW_CONTENT_ACCOUNTS) && account && dispatch(accountActions.fetchOne({ brand, id: account })),
-
-        shouldFetch(VIEW_CONTENT_GROUPS) && account && dispatch(groupActions.fetchAll({ brand, account })),
-
-        shouldFetch(VIEW_CONTENT_PROPERTIES) && (property || storage) && dispatch(propertyActions.fetchAll({ brand, account, group })),
-
-        shouldFetch(LIST_STORAGE) && (property || storage) && dispatch(storageActions.fetchAll({ brand, account, group }))
-
-      ])
-    }
+    fetchAccounts: brand => dispatch(accountActions.fetchAll({ brand })),
+    fetchAccount: (brand, account) => dispatch(accountActions.fetchOne({ brand, id: account })),
+    fetchGroups: (brand, account) => dispatch(groupActions.fetchAll({ brand, account })),
+    fetchProperties: (brand, account, group) => dispatch(propertyActions.fetchAll({ brand, account, group })),
+    fetchStorages: (brand, account, group) => dispatch(storageActions.fetchAll({ brand, account, group }))
   }
 }
 
@@ -93,7 +83,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   */
 const accountSelectorStateToProps = (state, { params: { group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
-  const canView = permissionCheck(levels, getCurrentUser(state))
+  const canView = permissionCheck(levels, getCurrentUser(state), getAccountById(state, account))
 
   const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
   const canViewAccount = canView(VIEW_CONTENT_GROUPS)
@@ -127,8 +117,42 @@ const accountSelectorStateToProps = (state, { params: { group, account, brand },
 
   return {
     fetching: getFetchingByTag(state, 'GAS-REQUEST'),
+    shouldFetch: canView,
     activeNode,
     tree
+  }
+}
+
+/**
+* mergeProps for the account selector
+* @param  {[type]} shouldFetch   permissionCheck curried from stateToProps
+* @param  {[type]} stateProps    object returned by stateToProps
+* @param  {[type]} dispatchProps object returned by dispatchToProps
+* @param  {[type]} params        url params
+* @param  {[type]} ownProps
+* @return {[type]}               props to pass to the component
+*/
+const accountSelectorMergeProps = ({ shouldFetch, ...stateProps }, dispatchProps, { params: { brand, account, group }, ...ownProps }) => {
+  return {
+    ...stateProps,
+    ...ownProps,
+    dispatch: dispatchProps.dispatch,
+    fetchData: () => {
+
+      return Promise.all([
+
+        shouldFetch(VIEW_CONTENT_ACCOUNTS) && brand && dispatchProps.fetchAccounts(brand),
+
+        !shouldFetch(VIEW_CONTENT_ACCOUNTS) && account && dispatchProps.fetchAccount(brand, account),
+
+        shouldFetch(VIEW_CONTENT_GROUPS) && account && dispatchProps.fetchGroups(brand, account),
+
+        shouldFetch(VIEW_CONTENT_PROPERTIES) && group && dispatchProps.fetchProperties(brand, account, group),
+
+        shouldFetch(LIST_STORAGE) && group && dispatchProps.fetchStorages(brand, account, group)
+
+      ])
+    }
   }
 }
 
@@ -155,6 +179,7 @@ const propertyConfigDispatchToProps = (dispatch, { params }) => {
 
 /**
  * state to props for property configuration page account selector
+ * excludes storages from group level
  * @param  {[type]} dispatch [description]
  * @param  {[type]} params   URL params
  * @return {[type]}          [description]
@@ -178,4 +203,4 @@ const propertyConfigStateToProps = (state, { params }) => {
 
 export const PropertyConfigAccountSelector = connect(propertyConfigStateToProps, propertyConfigDispatchToProps)(DrillableMenu)
 
-export default connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(DrillableMenu)
+export default connect(accountSelectorStateToProps, accountSelectorDispatchToProps, accountSelectorMergeProps)(DrillableMenu)
