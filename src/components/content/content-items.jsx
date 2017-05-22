@@ -23,6 +23,7 @@ import { userIsCloudProvider, hasService, hasAnyServices, getPage, getServiceTyp
 import { parseResponseError } from '../../redux/util'
 
 import AddHost from './add-host'
+import ColorLegend from './color-legend'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
@@ -478,10 +479,10 @@ class ContentItems extends Component {
             this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
-
             <div
               key={viewingChart}
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+              <ColorLegend />
 
                 { /* STORAGES -header on List view */
                   this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&

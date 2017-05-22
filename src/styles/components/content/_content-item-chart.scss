@@ -360,3 +360,38 @@
     background-color: $pale-blue;
   }
 }
+
+.color-legend-container {
+  .dark-theme & {
+    background-color: rgba($black, 0.4);
+  }
+
+  .light-theme & {
+    background-color: rgba($white, 0.8);
+  }
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 160px;
+}
+
+.color-legend {
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border: 1px solid $black;
+  @include md {
+    margin-top: 7px;
+  }
+
+  &.media-delivery {
+    background-color: $pale-blue;
+  }
+
+  &.vod-streaming {
+    background-color: $yellow;
+  }
+
+  &.live-streaming {
+    background-color: $green;
+  }
+}

@@ -60,6 +60,7 @@ import FileUploadStatus from '../../components/storage/file-upload-status-contai
 import PolicyWeight from '../../components/configuration/policy-weight'
 import Mapbox from '../../components/map/mapbox'
 import ContentItemChart from '../../components/content/content-item-chart'
+import ColorLegend from '../../components/content/color-legend'
 
 import IconAdd from '../../components/shared/icons/icon-add'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
@@ -750,6 +751,8 @@ class Styleguide extends React.Component {
             onEdit={() => null} />
 
           <h1 className="page-header">Starbursts</h1>
+
+          <ColorLegend />
 
           <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
 
