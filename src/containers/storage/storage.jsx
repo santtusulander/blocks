@@ -6,17 +6,13 @@ import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
-import { getStorageAccessKey } from '../../redux/modules/user'
 
-import uploadActions from '../../redux/modules/http-file-upload/actions'
-
-import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 import * as groupActionCreators from '../../redux/modules/group'
 import { hasService } from '../../util/helpers'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
-import { buildReduxId, parseResponseError } from '../../redux/util'
+import { buildReduxId } from '../../redux/util'
 import { getCurrentUser } from '../../redux/modules/user'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
@@ -33,30 +29,21 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
 
-import { checkUserPermissions } from '../../util/permissions'
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
-import {
-  ASPERA_DEFAULT_DESTINATION_FOLDER,
-  HTTP_DEFAULT_DESTINATION_FOLDER
-} from '../../constants/storage'
 
 class Storage extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      asperaUpload: false,
-      fileUploader: null,
-      uploadPath: ''
+      asperaUpload: false
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
-    this.initFileUploader = this.initFileUploader.bind(this)
-    this.generateUploadPath = this.generateUploadPath.bind(this)
   }
 
   componentWillMount() {
@@ -77,18 +64,6 @@ class Storage extends Component {
     }
   }
 
-  componentDidMount() {
-    const { brand, account, group, storage } = this.props.params
-
-    this.generateUploadPath()
-
-    if (checkUserPermissions(this.context.currentUser, CREATE_ACCESS_KEY)) {
-      this.props.initStorageAccessKey(brand, account, group, storage)
-        .then(this.initFileUploader)
-        .catch(parseResponseError)
-    }
-  }
-
   componentWillReceiveProps({ group, hasStorageService, params}) {
     if (group && !hasStorageService) {
       //redirect when the group doesn't have storage service
@@ -97,14 +72,6 @@ class Storage extends Component {
 
     if (JSON.stringify(params) !== JSON.stringify(this.props.params)) {
       const { brand, account, group, storage } = params
-
-      this.generateUploadPath()
-
-      if (checkUserPermissions(this.context.roles, this.context.currentUser, CREATE_ACCESS_KEY)) {
-        this.props.initStorageAccessKey(brand, account, group, storage)
-          .then(this.initFileUploader)
-          .catch(parseResponseError)
-      }
 
       this.props.fetchStorage({
         brand: brand,
@@ -115,21 +82,8 @@ class Storage extends Component {
     }
   }
 
-  /**
-   * Initialize File Uploader
-   * @param action {object} - action with type and payload
-   */
-  initFileUploader(action) {
-    const { gatewayHostname, uploadHandlers } = this.props
-    this.setState({
-      fileUploader: FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers, this.state.uploadPath)
-    })
-  }
-
   toggleUploadMehtod(asperaUpload) {
     this.setState({ asperaUpload })
-
-    this.generateUploadPath(asperaUpload)
   }
 
   editStorage(storageId, groupId) {
@@ -145,43 +99,12 @@ class Storage extends Component {
     this.props.toggleModal()
   }
 
-  generateUploadPath(isAsperaUpload) {
-    const { params } = this.props
-    const asperaUpload = this.state.asperaUpload || isAsperaUpload
-    const isUploadToRoot = params.splat ? false : true
-
-    let uploadPath = ''
-    if (isUploadToRoot) {
-      uploadPath = (asperaUpload ? ASPERA_DEFAULT_DESTINATION_FOLDER : HTTP_DEFAULT_DESTINATION_FOLDER)
-    } else {
-      uploadPath = params.splat
-
-      /* Upload path for Aspera should include './' prefix */
-      if (asperaUpload && uploadPath.indexOf('.') !== 0) {
-        uploadPath = ASPERA_DEFAULT_DESTINATION_FOLDER + uploadPath
-      }
-
-      /* Upload path for HTTP should include '/' prefix */
-      if (!asperaUpload && uploadPath.indexOf('/') !== 0) {
-        uploadPath = '/' + uploadPath
-      }
-
-      /* Taling slash is reqired for both upload methods */
-      if (uploadPath.substr(-1) !== '/') {
-        uploadPath = uploadPath + '/'
-      }
-    }
-
-    this.setState({
-      uploadPath: uploadPath
-    })
-  }
-
   render() {
     const {
       account,
       accountManagementModal,
-      asperaInstanse,
+      asperaInstance,
+      httpInstance,
       currentUser,
       group,
       hasStorageService,
@@ -209,7 +132,8 @@ class Storage extends Component {
               <IsAllowed to={CREATE_ACCESS_KEY}>
                 <StorageContents
                   gatewayHostname={gatewayHostname}
-                  asperaInstanse={asperaInstanse}
+                  asperaInstance={asperaInstance}
+                  httpInstance={httpInstance}
                   contents={storageContents}
                   asperaUpload={this.state.asperaUpload}
                   onMethodToggle={this.toggleUploadMehtod}
@@ -243,21 +167,20 @@ Storage.displayName = 'Storage'
 Storage.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountManagementModal: PropTypes.string,
-  asperaInstanse: PropTypes.instanceOf(Map),
+  asperaInstance: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
-  initStorageAccessKey: PropTypes.func,
+  httpInstance: PropTypes.instanceOf(Map),
   isFetchingContents: PropTypes.bool,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
   storageContents: PropTypes.instanceOf(List),
-  toggleModal: PropTypes.func,
-  uploadHandlers: PropTypes.object
+  toggleModal: PropTypes.func
 }
 
 Storage.contextTypes = {
@@ -267,7 +190,8 @@ Storage.contextTypes = {
 
 /* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
-  const asperaInstanse = state.ui.get('asperaUploadInstanse')
+  const asperaInstance = state.ui.get('asperaUploadInstance')
+  const httpInstance = state.ui.get('httpUploadInstance')
   let storage = undefined
 
   if (ownProps.params.storage && ownProps.params.group) {
@@ -286,7 +210,8 @@ const mapStateToProps = (state, ownProps) => {
     account: state.account.get('activeAccount'),
     accountManagementModal: state.ui.get('accountManagementModal'),
     gatewayHostname,
-    asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
+    asperaInstance: (asperaInstance && asperaInstance.get('asperaInitialized')) ? asperaInstance : new Map(),
+    httpInstance: (httpInstance && httpInstance.get('httpInitialized')) ? httpInstance : new Map(),
     currentUser: getCurrentUser(state),
     storageAccessToken: state.user.get('storageAccessToken'),
     group: state.group.get('activeGroup'),
@@ -302,8 +227,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
-    initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
-    uploadHandlers: bindActionCreators(uploadActions, dispatch),
     toggleModal: uiActions.toggleAccountManagementModal
   }
 }
