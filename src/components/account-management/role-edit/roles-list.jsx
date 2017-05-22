@@ -4,7 +4,6 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 import { FormGroup, FormControl } from 'react-bootstrap'
 
 import SectionHeader from '../../shared/layout/section-header'
-import RoleEditForm from './role-edit-form.jsx'
 import ActionButtons from '../../shared/action-buttons.jsx'
 
 import TableSorter from '../../shared/table-sorter'
@@ -145,15 +144,7 @@ class RolesList extends React.Component {
           </tbody>
         </table>
 
-        {this.props.showAddNewDialog &&
-          <RoleEditForm
-            permissions={this.props.permissions}
-            roles={this.props.roles}
-            editRole={this.props.editRole}
-            show={this.props.showAddNewDialog}
-            onCancel={this.props.onCancel}
-            onSave={this.props.onSave}/>
-        }
+
 
       </div>
     )
@@ -161,15 +152,12 @@ class RolesList extends React.Component {
 }
 RolesList.displayName  = 'RolesList'
 RolesList.propTypes = {
-  editRole: React.PropTypes.object,
   intl: React.PropTypes.object,
-  onCancel: React.PropTypes.func,
   onEdit: React.PropTypes.func,
-  onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  showAddNewDialog: React.PropTypes.bool
+  roles: React.PropTypes.instanceOf(Immutable.List)
 }
+
 RolesList.defaultProps = {
   permissions: Immutable.Map(),
   roles: Immutable.List()

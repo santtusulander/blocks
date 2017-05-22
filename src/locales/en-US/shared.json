@@ -1,5 +1,8 @@
 {
   "portal.shared.permissions.selection.permissions.x.text": "x",
   "portal.shared.permissions.selection.permissions.r.text": "R",
-  "portal.shared.permissions.selection.permissions.rw.text": "R/W"
+  "portal.shared.permissions.selection.permissions.rw.text": "R/W",
+
+  "portal.shared.toggle.label.on": "ON",
+  "portal.shared.toggle.label.off": "OFF"
 }

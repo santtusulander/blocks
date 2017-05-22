@@ -138,8 +138,8 @@ class PropertySummary extends React.Component {
 
   changeDateRange(startDate, endDate) {
     const { pathname } = this.props.location
-    const fStartDate = safeMomentStartDate(startDate).format('X')
-    const fEndDate = safeMomentEndDate(endDate).format('X')
+    const fStartDate = startDate.format('X')
+    const fEndDate = endDate.format('X')
     this.setState({
       activeSlice: null
     }, () => {

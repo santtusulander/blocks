@@ -393,7 +393,7 @@ class ConfigurationDetails extends React.Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup className="input-without-tooltip can-copy-to-clipboard">
+              <InputGroup className="input-without-tooltip">
                 <FormControl
                   type="text"
                   disabled={true}

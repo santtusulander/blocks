@@ -214,25 +214,29 @@ class AsperaUpload extends Component {
     })
   }
 
-  onDragEnter() {
+  onDragEnter(event) {
+    this.props.onDragEnter(event)
     this.setState({
       isDragActive: true
     })
   }
 
-  onDragLeave() {
+  onDragLeave(event) {
+    this.props.onDragLeave(event)
     this.setState({
       isDragActive: false
     })
   }
 
-  onDragOver() {
+  onDragOver(event) {
+    this.props.onDragOver(event)
     this.setState({
       isDragActive: true
     })
   }
 
   onDrop(event, data) {
+    this.props.onDrop(event)
     this.setState({
       isDragActive: false
     })
@@ -243,15 +247,15 @@ class AsperaUpload extends Component {
   asperaListener({event, files}) {
     switch (event.type) {
       case DRAG_ENTER_EVENT_NAME:
-        this.onDragEnter()
+        this.onDragEnter(event)
         break;
 
       case DRAG_LEAVE_EVENT_NAME:
-        this.onDragLeave()
+        this.onDragLeave(event)
         break;
 
       case DRAG_OVER_EVENT_NAME:
-        this.onDragOver()
+        this.onDragOver(event)
         break;
 
       case DROP_EVENT_NAME:
@@ -276,25 +280,29 @@ class AsperaUpload extends Component {
   }
 
   render() {
-    const { openUploadModalOnClick } = this.props
+    const { openUploadModalOnClick, highlightZoneOnDrag } = this.props
     const classNames = classnames(
       "filedrop-area",
-      { "drag-active": this.state.isDragActive },
+      { "drag-active": this.state.isDragActive && highlightZoneOnDrag },
       { "error": this.state.asperaError },
     )
 
     return (
       <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
-             className="filedrop-container"
-             onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
-
-          <div className={classNames}>
-            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
-              { this.displayInsideDropZone() }
-            </div>
+             className="filedrop-container">
+          <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+            {this.props.children}
+            {this.props.renderDropZone &&
+              <div className={classNames} data-drop-zone={true}>
+                <div
+                  className="welcome-text"
+                  onClick={openUploadModalOnClick ? this.onFileUploadClick : null}>
+                  { this.displayInsideDropZone() }
+                </div>
+              </div>
+            }
           </div>
-
         </div>
       </div>
     )
@@ -306,9 +314,16 @@ AsperaUpload.propTypes = {
   accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
   brandId: React.PropTypes.string,
+  children: React.PropTypes.object,
   groupId: React.PropTypes.string,
+  highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
+  onDragEnter: React.PropTypes.func,
+  onDragLeave: React.PropTypes.func,
+  onDragOver: React.PropTypes.func,
+  onDrop: React.PropTypes.func,
   openUploadModalOnClick: React.PropTypes.bool,
+  renderDropZone: React.PropTypes.bool,
   storageId: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object

@@ -40,7 +40,7 @@ import AccountManagementSystemUsers from './containers/account-management/tabs/u
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
 import AccountManagementStorages from './containers/account-management/tabs/storages'
-import AccountManagementRoles from './components/account-management/system/roles'
+import AccountManagementRoles from './containers/account-management/tabs/roles'
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
 import AnalyticsTabTraffic from './containers/analytics/tabs/tab-traffic.jsx'
@@ -297,6 +297,7 @@ const AppRoutes =
 
           {/* Storage - routes */}
           <Route path={routes.contentStorage} component={CanViewStorageSummary(Storage)} />
+          <Route path={routes.contentStorageContentsMatch} component={CanViewStorageSummary(Storage)} />
 
         </Route>
 
@@ -351,7 +352,10 @@ const AppRoutes =
             <IndexRedirect to={routes.servicesTabLogDelivery}/>
             <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
           </Route>
-          <Route path={routes.servicesProperty} component={Services}/>
+          <Route path={routes.servicesProperty} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
         </Route>
 
         {/* Support - routes */}
