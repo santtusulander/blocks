@@ -17,7 +17,7 @@ const ColorLegend = ({ serviceTypes }) => {
         </div>}
         {serviceTypes.includes('livestream') && <div>
           <div className="pull-left color-legend live-streaming" />
-          <span className="pull-left" >Live Streaming</span>
+          <span className="pull-left"> <FormattedMessage className="pull-left" id='portal.configuration.details.serviceType.livestream' /> </span>
         </div>}
       </div>
     </Row>)

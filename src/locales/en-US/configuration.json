@@ -163,6 +163,7 @@
   "portal.configuration.details.deploymentMode.text": "Deployment Mode",
   "portal.configuration.details.serviceType.text": "Service Type",
   "portal.configuration.details.serviceType.msd": "VOD Streaming",
+  "portal.configuration.details.serviceType.livestream": "Live Streaming",
   "portal.configuration.details.serviceType.large": "Media Delivery",
   "portal.configuration.details.serviceType.networkPartnerOnNet": "UDN Network Partner - On-Net",
   "portal.configuration.details.useUDNOrigin.text": "Use UDN Origin",
