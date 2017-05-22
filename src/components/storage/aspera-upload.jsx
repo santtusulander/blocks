@@ -57,10 +57,10 @@ class AsperaUpload extends Component {
     this.showNotification = this.showNotification.bind(this)
   }
 
-  componentWillMount() {
-    const { brandId, accountId, groupId, storageId } = this.props
+  componentDidMount() {
+    const { brand, account, group, storage } = this.props.params
 
-    this.props.userActions.getStorageAccessKey(brandId, accountId, groupId, storageId).then((res) => {
+    this.props.userActions.getStorageAccessKey(brand, account, group, storage).then((res) => {
       if (res.error) {
         this.setState({
           asperaError: parseResponseError(res.payload),
@@ -83,7 +83,7 @@ class AsperaUpload extends Component {
     }
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeAsperaNotification('')
-    this.props.uiActions.setAsperaUploadInstanse({
+    this.props.uiActions.setAsperaUploadInstance({
       asperaInitialized: false,
       asperaShowSelectFileDialog: null,
       asperaShowSelectFolderDialog: null
@@ -124,7 +124,7 @@ class AsperaUpload extends Component {
     if ((this.state.isAsperaInitialized) && (code === AW4.Connect.STATUS.RUNNING)) {
       this.notificationTimeout = setTimeout(this.props.uiActions.changeAsperaNotification, 10000)
 
-      this.props.uiActions.setAsperaUploadInstanse({
+      this.props.uiActions.setAsperaUploadInstance({
         asperaInitialized: true,
         asperaShowSelectFileDialog: this.onFileUploadClick,
         asperaShowSelectFolderDialog: this.onDirectoryUploadClick
@@ -311,11 +311,8 @@ class AsperaUpload extends Component {
 
 AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
-  accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
-  brandId: React.PropTypes.string,
   children: React.PropTypes.object,
-  groupId: React.PropTypes.string,
   highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
   onDragEnter: React.PropTypes.func,
@@ -323,8 +320,8 @@ AsperaUpload.propTypes = {
   onDragOver: React.PropTypes.func,
   onDrop: React.PropTypes.func,
   openUploadModalOnClick: React.PropTypes.bool,
+  params: React.PropTypes.object,
   renderDropZone: React.PropTypes.bool,
-  storageId: React.PropTypes.string,
   uiActions: React.PropTypes.object,
   uploadPath: React.PropTypes.string,
   userActions: React.PropTypes.object
