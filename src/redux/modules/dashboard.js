@@ -51,7 +51,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
   const allContributionOpts = Object.assign({}, opts, {granularity: 'day'})
 
   const dashboardRequests = []
-  const excludeAccounts = "BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE"
+  const excludeAccounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH
   // Show detailed data for providers
