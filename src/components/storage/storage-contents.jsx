@@ -113,11 +113,13 @@ class StorageContents extends Component {
     })
   }
 
-  getSortedData(modifiedContents, sortBy, sortDir, noOfFiles) {
-    const sortedByType = getSortData(modifiedContents, 'type', -1)
-    const files = sortedByType.slice(0, noOfFiles)
-    const folders = sortedByType.slice(-(sortedByType.size - noOfFiles))
-    return getSortData(folders, sortBy, sortDir).concat(getSortData(files, sortBy, sortDir))
+  getSortedData(modifiedContents, sortBy, sortDir) {
+    const sortedContents = modifiedContents
+      .groupBy(item => item.get('type'))
+      .map(items => getSortData(items, sortBy, sortDir))
+    const folders = sortedContents.get('directory') || List()
+    const files = sortedContents.get('file') || List()
+    return folders.concat(files)
   }
 
   getHeaderBreadcrumb() {
@@ -220,8 +222,7 @@ class StorageContents extends Component {
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
-    const noOfFiles = hasContents && contents.filter(item => item.get('type') !== 'directory').size
-    const hasFiles = noOfFiles > 0
+    const hasFiles = hasContents && contents.filter(item => item.get('type') !== 'directory').size > 0
 
     const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
     const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
@@ -237,7 +238,7 @@ class StorageContents extends Component {
     }
     const filteredContents = contents && this.getFilteredItems(contents, search)
     const modifiedContents = filteredContents && this.getModifiedContents(filteredContents)
-    const sortedContents = modifiedContents && this.getSortedData(modifiedContents, sortBy, sortDir, noOfFiles)
+    const sortedContents = modifiedContents && this.getSortedData(modifiedContents, sortBy, sortDir)
     const highlightedItem = hasFiles
       ?
         (this.state.isDragging) ? this.state.draggingOver : undefined
