@@ -1,3 +1,4 @@
+$storage-kpi-chart-width: rem(82px);
 $storage-kpi-item-height: rem(48px);
 $storage-kpi-item-margin: rem(60px);
 $storage-kpi-content-margin: rem(8px);
@@ -34,13 +35,14 @@ $storage-kpi-comparison-bars-width: rem(120px);
 }
 
 .storage-kpi-chart {
-  display: flex;
-  height: $storage-kpi-item-height;
+  width: $storage-kpi-chart-width;
+  height: rem(38px);
   margin-left: $storage-kpi-content-margin;
+  align-self: flex-end;
 
-  > .mini-chart {
-    width: $storage-kpi-mini-chart-width;
-    align-self: flex-end;
+  > .mini-area-chart {
+    width: 100%;
+    height: 100%;
   }
 
   .analysis-by-time {
