@@ -14,7 +14,7 @@ describe('FileUploader', () => {
   })
 
   describe('Initialization', () => {
-    const init = (key, gateway, handlers) => FileUploader.initialize(key, gateway, handlers)
+    const init = (key, gateway, handlers, uploadPath) => FileUploader.initialize(key, gateway, handlers, uploadPath)
 
     it('should throw an Error when initialized without required params', () => {
       expect(() => init()).toThrowError(INIT_ERROR)
@@ -24,7 +24,7 @@ describe('FileUploader', () => {
       expect(() => init('key', 'gateway', handlers)).toThrowError(INIT_ERROR)
     })
     it('should return an Uploader instance when all params specified', () => {
-      expect(() => init('key', 'gateway', {})).toBeInstanceOf(Object)
+      expect(() => init('key', 'gateway', {}, 'uploadPath')).toBeInstanceOf(Object)
     })
   })
 
@@ -36,7 +36,7 @@ describe('FileUploader', () => {
     let Uploader = null;
 
     beforeEach(() => {
-      Uploader = FileUploader.initialize(accessKey, gateway, uploadHandlers)
+      Uploader = FileUploader.initialize(accessKey, gateway, uploadHandlers, 'uploadPath')
     })
 
     describe('protected: ', () => {
@@ -82,10 +82,10 @@ describe('FileUploader', () => {
         expect(api.uploadFile).toHaveBeenCalledTimes(filesMock.length)
       })
 
-      it('uploading should be called with initialization params: "accessKey", "gateway", "uploadHandlers"', () => {
+      it('uploading should be called with initialization params: "accessKey", "gateway", "uploadHandlers", "uploadPath"', () => {
         const [ file ] = filesMock
-        const { accessKey, gateway, uploadHandlers } = Uploader
-        const expectedParams = [accessKey, gateway, file, uploadHandlers]
+        const { accessKey, gateway, uploadHandlers, uploadPath } = Uploader
+        const expectedParams = [accessKey, gateway, file, uploadHandlers, uploadPath]
 
         Uploader.uploadFile(file)
         expect(api.uploadFile).toBeCalledWith(...expectedParams)
