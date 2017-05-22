@@ -47,11 +47,11 @@ export default class MiniAreaChart extends Component {
   }
 
   render() {
-    const { chartLabel, data, className } = this.props
+    const { chartLabel, data, className, height, width } = this.props
     return (
       <div className="mini-area-chart">
         <span className="mini-area-chart-label">{chartLabel}</span>
-        <ResponsiveContainer minHeight={50} aspect={2}>
+        <ResponsiveContainer minHeight={50} height={height} width={width}>
           { !!data && !!data.length ?
             <AreaChart data={data} className={className}>
               <defs>
@@ -69,7 +69,7 @@ export default class MiniAreaChart extends Component {
                 />
               </AreaChart>
           }
-      </ResponsiveContainer>
+        </ResponsiveContainer>
       </div>);
   }
 }
@@ -77,12 +77,15 @@ export default class MiniAreaChart extends Component {
 MiniAreaChart.displayName = 'MiniAreaChart'
 MiniAreaChart.defaultProps = {
   noGradient: false,
-  data: []
+  data: [],
+  areas: []
 }
 MiniAreaChart.propTypes = {
   areas: PropTypes.array,
   chartLabel: PropTypes.string,
   className: PropTypes.string,
   data: PropTypes.array,
-  noGradient: PropTypes.bool
+  height: PropTypes.number,
+  noGradient: PropTypes.bool,
+  width: PropTypes.number
 };
