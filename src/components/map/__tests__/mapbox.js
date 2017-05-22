@@ -160,15 +160,6 @@ describe('Mapbox', () => {
     expect(mapbox.state().hoveredLayer).toBe(null)
   })
 
-  it('should handle scroll events', () => {
-    const mapbox = subject()
-    mapbox.instance().disableAndEnableZoom = jest.fn()
-    mapbox.instance().componentDidMount()
-    mapbox.instance().onPageScroll()
-
-    expect(mapbox.instance().disableAndEnableZoom.mock.calls).toHaveLength(1)
-  })
-
   it('should ignore scroll events if the map hasn\'t mounted yet', () => {
     const mapbox = subject()
     mapbox.state().map = null
@@ -181,16 +172,7 @@ describe('Mapbox', () => {
   })
 
   it('should prevent zoom events on page scroll', () => {
-    const mapbox = subject()
-    mapbox.instance().disableAndEnableZoom(defaultMap)
-
-    expect(setTimeout.mock.calls).toHaveLength(1)
-    expect(defaultMap.scrollZoom.disable.mock.calls).toHaveLength(1)
-
-    mapbox.instance().timeout = 1
-    mapbox.instance().disableAndEnableZoom(defaultMap)
-    expect(mapbox.instance().timeout).not.toBe(1)
-    expect(clearTimeout.mock.calls).toHaveLength(1)
+    expect(defaultMap.scrollZoom.disable.mock.calls).toHaveLength(0)
   })
 
   it('should perform cleanup on unmount', () => {
@@ -278,17 +260,6 @@ describe('Mapbox', () => {
     expect(mapbox.instance().updateLayers.mock.calls).toHaveLength(0)
   })
 
-  it('should store the map\'s zoom level and scale in state', () => {
-    defaultMap.transform = {
-      scale: 123,
-      _zoom: 456
-    }
-
-    const mapbox = subject()
-    mapbox.find('ReactMapboxGl').simulate('zoom', defaultMap)
-    expect(mapbox.state().scale).toBe(123)
-    expect(mapbox.state().zoom).toBe(456)
-  })
 
   it('should handle mouse movements', () => {
     defaultMap.style._loaded = true

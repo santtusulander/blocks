@@ -1,3 +1,13 @@
+$thumb-width: 10px;
+$thumb-height: 28px;
+$track-width: 10px;
+$track-margin: 13px;
+$slider-height: 130px;
+$slider-width: 120px;
+$slider-top: 62px;
+$slider-left: -44px;
+$thumb-margin: -11px;
+
 .mapboxgl-popup {
   min-width: 150px;
   margin-top: 3px;
@@ -97,11 +107,18 @@
   display: flex;
   height: calc(100% - 20px);
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 
   .map-zoom-reset {
     @extend %map-control-style;
     margin-top: 2px;
+  }
+
+  .map-zoom-btn {
+    @extend %map-control-style;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .control {
@@ -111,38 +128,163 @@
       display: flex;
       background: none;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
 
-      button {
-        position: relative;
-        display: block;
-        min-width: 32px;
-        min-height: 32px;
-        font-size: 2rem;
+      .map-label {
+        display: flex;
+        padding-left: 5px;
+        justify-content: space-between;
+        flex-direction: column;
+        flex-grow: 1;
 
-        &::after {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          display: block;
-          width: 100%;
-          text-align: center;
-          content: '+';
-          transform: translateY(-50%);
-        }
+        span {
+          font-size: 1.3rem;
+          text-align: left;
 
-        &:nth-child(2) {
-          &::after {
-            content: '-';
+          .dark-theme & {
+            color: $white !important;
+          }
+
+          .light-theme & {
+            color: $black !important;
           }
         }
+      }
 
-        .dark-theme & {
-          background: $black !important;
+      .map-slider {
+        display: flex;
+        flex-direction: row;
+
+        &__wrapper {
+          position: relative;
+          width: 32px;
+          height: $slider-height;
         }
 
-        .light-theme & {
-          background: $white !important;
+        input[type=range] {
+          position: absolute;
+          top: $slider-top;
+          left: $slider-left;
+          width: $slider-width;
+          background: transparent;
+          transform: rotate(-90deg);
+          -webkit-appearance: none;
+
+          &::-moz-focus-outer {
+            border: 0;
+          }
+
+          &::-ms-thumb {
+            width: $thumb-width;
+            height: $thumb-height;
+            margin-top: $thumb-margin;
+            cursor: pointer;
+            border-radius: 4px;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-moz-range-thumb {
+            width: $thumb-width;
+            height: $thumb-height;
+            margin-top: $thumb-margin;
+            cursor: pointer;
+            border: 0;
+            border-radius: 4px;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-webkit-slider-thumb {
+            width: $thumb-width;
+            height: $thumb-height;
+            margin-top: $thumb-margin;
+            cursor: pointer;
+            border-radius: 4px;
+            appearance: none;
+            -webkit-appearance: none;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-ms-track {
+            width: $slider-height;
+            height: 6px;
+
+            /* Hides the slider so custom styles can be added */
+
+            color: transparent;
+            background: transparent;
+            border-color: transparent;
+          }
+
+          &::-ms-fill-lower {
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-ms-fill-upper {
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-moz-range-track {
+            width: $slider-height;
+            height: 6px;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &::-webkit-slider-runnable-track {
+            width: $slider-height;
+            height: 6px;
+
+            .dark-theme & {
+              background: $black !important;
+            }
+
+            .light-theme & {
+              background: $white !important;
+            }
+          }
+
+          &:focus {
+            outline: none;
+          }
         }
       }
     }

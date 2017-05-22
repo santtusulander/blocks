@@ -48,12 +48,13 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
-  //Changing the granularity to 'hour' when the range equals one day 
+  //Changing the granularity to 'hour' when the range equals one day
   const dateRange = moment.unix(opts.endDate).diff(moment.unix(opts.startDate), 'days')
   const contributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
   const allContributionOpts = Object.assign({}, opts, {granularity: dateRange >= 1 ? 'day' : 'hour'})
 
   const dashboardRequests = []
+  const excludeAccounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
 
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH
@@ -81,9 +82,9 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_typ
     allContributionOpts.show_detail = true
 
     /* Exclude demo accounts */
-    if ((process.env.NODE_ENV === 'production') && BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE) {
-      contributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
-      allContributionOpts.exclude_accounts = BRAND_DASHBOARD_ACCOUNTS_TO_EXCLUDE
+    if ((process.env.NODE_ENV === 'production') && excludeAccounts) {
+      contributionOpts.exclude_accounts = excludeAccounts
+      allContributionOpts.exclude_accounts = excludeAccounts
     }
 
     dashboardRequests.push(null)

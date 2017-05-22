@@ -13,10 +13,10 @@ const UPLOAD_PORT = ':443'
  * @param uploadHandlers {object} - action creators map
  * @returns {*|Promise.<T>}
  */
-export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
+export const uploadFile = (accessKey, gateway, file, uploadHandlers, uploadPath) => {
   const [ fileName ] = Object.keys(file)
   const [ data ] = Object.values(file)
-  const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${fileName}`
+  const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${uploadPath}${fileName}`
   const headers = { 'X-Auth-Token': accessKey }
   const { cancel, token: cancelToken } = CancelToken.source()
 

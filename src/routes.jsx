@@ -352,7 +352,10 @@ const AppRoutes =
             <IndexRedirect to={routes.servicesTabLogDelivery}/>
             <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
           </Route>
-          <Route path={routes.servicesProperty} component={Services}/>
+          <Route path={routes.servicesProperty} component={Services}>
+            <IndexRedirect to={routes.servicesTabLogDelivery}/>
+            <Route path={routes.servicesTabLogDelivery} component={ServicesTabLogDelivery}/>
+          </Route>
         </Route>
 
         {/* Support - routes */}
