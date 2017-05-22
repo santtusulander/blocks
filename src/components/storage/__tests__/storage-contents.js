@@ -5,7 +5,7 @@ import { Map, fromJS } from 'immutable'
 jest.unmock('../storage-contents.jsx')
 import StorageContents from '../storage-contents.jsx'
 
-const asperaInstanse = fromJS({
+const asperaInstance = fromJS({
   get: jest.fn()
 })
 
@@ -24,7 +24,7 @@ const params = {
 
 const subject = () => {
   return shallow(<StorageContents
-    asperaInstanse={asperaInstanse}
+    asperaInstance={asperaInstance}
     fetchStorageContents={jest.fn()}
     intl={intlMaker()}
     params={params}
