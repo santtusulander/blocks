@@ -18,7 +18,7 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService, hasAnyServices, getPage } from '../../util/helpers'
+import { userIsCloudProvider, hasService, hasAnyServices, getPage, getServiceType } from '../../util/helpers'
 
 import { parseResponseError } from '../../redux/util'
 
@@ -531,6 +531,7 @@ class ContentItems extends Component {
                 { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
+                      serviceType={getServiceType(property)}
                       key={i}
                       propertyId={property.get('published_host_id')}
                       params={params}

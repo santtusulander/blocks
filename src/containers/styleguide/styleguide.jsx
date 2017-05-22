@@ -756,7 +756,7 @@ class Styleguide extends React.Component {
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              contentMethod={'Large'}
+              serviceType={'Large'}
               name={'Media Delivery'}
               isAllowedToConfigure={true}
               showSlices={true}
@@ -772,7 +772,7 @@ class Styleguide extends React.Component {
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              contentMethod={'msd'}
+              serviceType={'msd'}
               name={'Vod Streaming'}
               isAllowedToConfigure={true}
               showSlices={true}
@@ -788,7 +788,7 @@ class Styleguide extends React.Component {
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              contentMethod={'livestream'}
+              serviceType={'livestream'}
               name={'Live Streaming'}
               isAllowedToConfigure={true}
               showSlices={true}
