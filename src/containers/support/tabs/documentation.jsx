@@ -68,7 +68,7 @@ class SupportTabDocumentation extends React.Component {
     }
 
     return (
-      <div className="account-support-documentation">
+      <div className="account-support-documentation text-center">
         <div className="section">
           <h3><FormattedMessage id="portal.support.documentation.userGuide.header" /></h3>
           <p className="section-body"><FormattedMessage id="portal.support.documentation.body.text" values={{br: <br/>}} /></p>
