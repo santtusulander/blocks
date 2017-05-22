@@ -388,15 +388,18 @@ class StorageContents extends Component {
                   onDrop={this.onDrop}
                   uploadPath={uploadPath}
                 >
-                  {hasContents &&
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                    />
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                      />
+                    :
+                      null
                   }
                 </AsperaUpload>
               :
@@ -413,15 +416,18 @@ class StorageContents extends Component {
                   onDrop={this.onDrop}
                   uploadPath={uploadPath}
                 >
-                  {hasContents &&
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                    />
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                      />
+                    :
+                      null
                   }
                 </HttpUpload>
         }

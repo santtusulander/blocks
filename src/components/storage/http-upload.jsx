@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { Map, fromJS } from 'immutable'
+import { Map } from 'immutable'
 import classNames from 'classnames'
 import { bindActionCreators } from 'redux'
 
@@ -46,13 +46,6 @@ class HTTPUpload extends Component {
     })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !((nextProps.uploads === this.props.uploads) &&
-             (nextProps.uploadPath === this.props.uploadPath) &&
-             (nextProps.children === this.props.children) &&
-             fromJS(this.state).equals(fromJS(nextState)))
-  }
-
   componentWillUnmount() {
     this.props.uiActions.setHttpUploadInstance({
       httpInitialized: false,
@@ -66,7 +59,6 @@ class HTTPUpload extends Component {
   initFileUploader() {
     const { gatewayHostname, uploadHandlers, uploadPath } = this.props
 
-    console.log(uploadPath)
     this.setState({
       fileUploader: FileUploader.initialize(this.state.accessKey, gatewayHostname, uploadHandlers, uploadPath)
     })
