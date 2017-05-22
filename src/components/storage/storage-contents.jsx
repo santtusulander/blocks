@@ -113,6 +113,13 @@ class StorageContents extends Component {
     })
   }
 
+  getSortedData(modifiedContents, sortBy, sortDir, noOfFiles) {
+    const sortedByType = getSortData(modifiedContents, 'type', -1)
+    const files = sortedByType.slice(0, noOfFiles)
+    const folders = sortedByType.slice(-(sortedByType.size - noOfFiles))
+    return getSortData(folders, sortBy, sortDir).concat(getSortData(files, sortBy, sortDir))
+  }
+
   getHeaderBreadcrumb() {
     const { params, params: { storage, splat } } = this.props
     const links = []
@@ -208,11 +215,11 @@ class StorageContents extends Component {
       isFetchingContents,
       intl,
       params } = this.props
-
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
-    const hasFiles = hasContents && contents.filter(item => item.get('type') !== 'directory').size > 0
+    const noOfFiles = hasContents && contents.filter(item => item.get('type') !== 'directory').size
+    const hasFiles = noOfFiles > 0
 
     const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
     const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
@@ -228,8 +235,7 @@ class StorageContents extends Component {
     }
     const filteredContents = contents && this.getFilteredItems(contents, search)
     const modifiedContents = filteredContents && this.getModifiedContents(filteredContents)
-    const sortedContents = modifiedContents && getSortData(modifiedContents, sortBy, sortDir)
-
+    const sortedContents = modifiedContents && this.getSortedData(modifiedContents, sortBy, sortDir, noOfFiles)
     const highlightedItem = hasFiles
       ?
         (this.state.isDragging) ? this.state.draggingOver : undefined
@@ -316,15 +322,18 @@ class StorageContents extends Component {
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                 >
-                  {hasContents &&
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                    />
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                      />
+                    :
+                      null
                   }
                 </AsperaUpload>
               :
@@ -338,15 +347,18 @@ class StorageContents extends Component {
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                 >
-                  {hasContents &&
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                    />
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                      />
+                    :
+                      null
                   }
                 </HttpUpload>
         }
