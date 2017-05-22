@@ -129,6 +129,7 @@ export const DELETE_STORAGE = 'DELETE_STORAGE'
 export const VIEW_STORAGE = 'VIEW_STORAGE'
 export const LIST_STORAGE = 'LIST_STORAGE'
 export const CREATE_ACCESS_KEY = 'CREATE_ACCESS_KEY'
+export const SHOW_STORAGE_CONTENT = 'SHOW_STORAGE_CONTENT'
 
 // Advanced Permissions
 export const VIEW_ADVANCED = 'VIEW_ADVANCED'

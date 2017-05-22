@@ -128,16 +128,6 @@
 .storage-contents-table {
   margin-bottom: rem(25px);
 
-  td:last-child {
-    position: relative;
-
-    .menu {
-      position: absolute;
-      top: - $md-bar-height/4;
-      right: $dd-menu-min-width;
-    }
-  }
-
   .highlight {
     box-shadow: inset 0 0 0 2px $pale-blue;
 

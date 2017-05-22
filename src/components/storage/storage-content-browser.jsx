@@ -7,12 +7,11 @@ import classNames from 'classnames'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
-import { MODIFY_STORAGE } from '../../constants/permissions'
+import { SHOW_STORAGE_CONTENT } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
-import IconContextMenu from '../shared/icons/icon-context-menu'
 import ContextMenu from '../shared/page-elements/context-menu'
 
 const StorageContentBrowser = ({
@@ -23,6 +22,20 @@ const StorageContentBrowser = ({
   openDirectoryHandler,
   sorterProps
 }) => {
+  const menuOptions = [
+    {
+      label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
+      handleClick: (fileName) => {
+        fileName/*console.log('download', fileName)*/
+      }
+    },
+    {
+      label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
+      handleClick: (fileName) => {
+        fileName/*console.log('delete', fileName)*/
+      }
+    }
+  ];
   return (
     <Table striped={true} className='storage-contents-table'>
       <thead>
@@ -63,7 +76,6 @@ const StorageContentBrowser = ({
             {'content-browser-row-directory': isDirectory},
             {'highlight': (highlightedItem === name)}
           )
-          if (index > 5) return null
 
           return (
             <tr
@@ -79,16 +91,16 @@ const StorageContentBrowser = ({
               </td>
               <td>
                 <div className='storage-contents-name'>
-                  <TruncatedTitle content={name} />
+                  <TruncatedTitle content={name}/>
                 </div>
               </td>
               <td>{formatDate(item.get('lastModified'))}</td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
-                <IsAllowed to={MODIFY_STORAGE}>
-                  <IconContextMenu className="storage-contents-context-menu-icon" />
+                <IsAllowed to={SHOW_STORAGE_CONTENT}>
+                  <ContextMenu header={name} options={menuOptions}/>
                 </IsAllowed>
-                {index === 2 && <ContextMenu/>}              
+
               </td>
 
             </tr>

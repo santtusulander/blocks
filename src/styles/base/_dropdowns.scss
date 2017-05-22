@@ -19,6 +19,7 @@ $search-line-height: 1;
 $search-vertical-padding: em(9px, $dd-font-size);
 $search-input-vertical-padding: em(8px, $search-font-size);
 $search-input-left-padding: em(36px, $search-font-size);
+$menu-top-postion: -27px;
 
 %dropdown-item-properties {
   cursor: pointer;
@@ -122,11 +123,19 @@ $search-input-left-padding: em(36px, $search-font-size);
       align-items: center;
     }
 
+
+    .storage-contents-table & {
+      position: absolute;
+      top: $menu-top-postion;
+      right: - $md-btn-height / 2;
+    }
+
     .menu-header a {
       height: 1.5 * $md-bar-height;
       background-color: $deep-blue;
 
       .header-title {
+        width: 200px;
         color: $white;
       }
 

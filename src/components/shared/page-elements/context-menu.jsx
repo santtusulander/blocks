@@ -1,18 +1,36 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
+import TruncatedTitle from './truncated-title'
+import CustomToggle from '../form-elements/customToggle'
+
 import IconContextMenu from '../icons/icon-context-menu'
 
-const ContextMenu = (props) => {
+const ContextMenu = ({ header, options, disabled }) => {
   return (
-    <Dropdown className="open menu">
+    <Dropdown className="menu" id="context-menu" pullRight={true} disabled={disabled}>
+      <CustomToggle bsRole="toggle">
+        <IconContextMenu className="storage-contents-context-menu-icon"/>
+      </CustomToggle>
       <Dropdown.Menu className="context-menu">
         <MenuItem className="menu-header">
-          <span className="header-title">File_name1.mov</span>
+          <div className="header-title">
+            <TruncatedTitle content={header}/>
+          </div>
           <IconContextMenu/>
         </MenuItem>
-        <MenuItem>Download</MenuItem>
-        <MenuItem>Delete</MenuItem>
+        {options.map(({label, handleClick}, index) => (
+            <MenuItem
+              key={index}
+              onClick={e => {
+                e.stopPropagation()
+                handleClick(header)
+              }}
+            >
+              {label}
+            </MenuItem>
+          )
+        )}
       </Dropdown.Menu>
     </Dropdown>
   )
@@ -20,4 +38,19 @@ const ContextMenu = (props) => {
 
 
 ContextMenu.displayName = 'ButtonDropdown'
+
+ContextMenu.defaultProps = {
+  options: []
+}
+
+ContextMenu.propTypes = {
+  disabled: PropTypes.bool,
+  header: PropTypes.string,
+  options: PropTypes.arrayOf(
+    React.PropTypes.shape({
+      label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.node ]).isRequired,
+      handleClick: React.PropTypes.func.isRequired
+    })
+  ).isRequired
+}
 export default ContextMenu
