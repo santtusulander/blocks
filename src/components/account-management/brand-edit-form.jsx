@@ -122,7 +122,7 @@ const BrandEditForm = (props) => {
 
           </FormGroup>
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>
+          <Button bsStyle="primary" className="btn-secondary" onClick={props.onCancel}>
             <FormattedMessage id='portal.common.button.cancel' />
           </Button>
           <Button disabled={props.submitting || props.invalid} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>

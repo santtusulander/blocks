@@ -1,7 +1,10 @@
-import React, {Component, PropTypes} from 'react'
-import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
-import {Map, List, is} from 'immutable'
+import React, { Component, PropTypes } from 'react'
+import ReactMapboxGl, { Popup, Layer, Feature } from 'react-mapbox-gl'
+import { Map, List, is } from 'immutable'
 import { FormattedMessage } from 'react-intl'
+
+import IconAdd from '../shared/icons/icon-add.jsx'
+import IconDelete from '../shared/icons/icon-delete.jsx'
 
 // import Typeahead from '../shared/form-elements/typeahead'
 
@@ -11,7 +14,6 @@ import {
   MAPBOX_DARK_THEME,
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
-  MAPBOX_SCROLL_TIMEOUT,
   MAPBOX_CITY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
@@ -45,6 +47,13 @@ class Mapbox extends Component {
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
+    this.onZoom = this.onZoom.bind(this)
+    this.onStyleLoaded = this.onStyleLoaded.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
+    this.resetZoom = this.resetZoom.bind(this)
+    this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
+    this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
   }
 
   componentDidMount() {
@@ -101,25 +110,8 @@ class Mapbox extends Component {
     // We might not have the map instance saved in this.state yet, so we need to
     // get it from the the ReactMapboxGl components state instead.
     if (this.mapbox && this.mapbox.state && this.mapbox.state.map) {
-      this.disableAndEnableZoom(this.mapbox.state.map)
+      this.mapbox.state.map.scrollZoom.disable()
     }
-  }
-
-  /**
-   * Disables and enables zoom handlers on the map with a slight delay.
-   *
-   * @method disableAndEnableZoom
-   * @param  {object}             map Instance of Mapbox map
-   */
-  disableAndEnableZoom(map) {
-    map.scrollZoom.disable()
-
-    if (this.timeout) {
-      window.clearTimeout(this.timeout)
-      this.timeout = null
-    }
-
-    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
   /**
@@ -157,10 +149,21 @@ class Mapbox extends Component {
    * @method onZoom
    * @param  {object} map Instance of Mapbox map
    */
-  onZoom(map) {
-    this.setState({ scale: map.transform.scale, zoom: map.transform._zoom })
+  onZoom(e) {
+    this.setState({ zoom: parseInt(e.target.value) })
   }
 
+  onIncreaseZoom() {
+    if (this.state.zoom < MAPBOX_ZOOM_MAX) {
+      this.setState({ zoom: this.state.zoom + 1 })
+    }
+  }
+
+  onDecreaseZoom() {
+    if (this.state.zoom > MAPBOX_ZOOM_MIN) {
+      this.setState({ zoom: this.state.zoom - 1 })
+    }
+  }
   /**
    * Sets content to the Popup and allows it to be displayed.
    * Displaying the Popup is based on if the Popup has content –– popupContent
@@ -686,11 +689,10 @@ class Mapbox extends Component {
         zoom={[this.state.zoom]}
         minZoom={MAPBOX_ZOOM_MIN}
         maxZoom={MAPBOX_ZOOM_MAX}
-        onZoom={this.onZoom.bind(this)}
-        onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
-        onStyleLoad={this.onStyleLoaded.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}
-        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
+        onStyleLoad={this.onStyleLoaded}
+        onMouseMove={this.onMouseMove}
+        onDragEnd={this.getCitiesOnZoomDrag}
+        scrollZoom={false}
         dragRotate={false}>
 
         { (this.props.markers && !this.props.markers.isEmpty()) &&
@@ -758,20 +760,36 @@ class Mapbox extends Component {
             </div>
           */}
           <div className="control map-zoom">
-            <ZoomControl
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                boxShadow: 'none',
-                border: 0,
-                position: 'relative',
-                top: 'auto',
-                right: 'auto',
-                zIndex: 1
-              }}/>
+
+          <div className="map-zoom-btn" onClick={this.onIncreaseZoom}>
+            <IconAdd width={16} height={16}/>
+          </div>
+            <div className="map-slider">
+              <div className="map-slider__wrapper">
+                <input type="range"
+                  min={MAPBOX_ZOOM_MIN}
+                  max={MAPBOX_ZOOM_MAX}
+                  step={1}
+                  defaultValue={MAPBOX_ZOOM_MIN}
+                  onMouseUp={this.onZoom}
+                  value={this.state.zoom}
+                  onChange={this.onZoom}
+                  />
+              </div>
+
+              <div className="map-label">
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span><FormattedMessage id="portal.analytics.map.zoomPreset.world"/></span>
+              </div>
+            </div>
+
+            <div className="map-zoom-btn" onClick={this.onDecreaseZoom}>
+              <IconDelete width={16} height={16}/>
+            </div>
             <div
               className="map-zoom-reset"
-              onClick={this.resetZoom.bind(this)}>
+              onClick={this.resetZoom}>
               <IconGlobe width={32} height={32} />
             </div>
             {isFetchingCityData && <LoadingSpinnerSmall />}

@@ -72,7 +72,24 @@ class LogDeliveryService extends React.Component {
   }
 
   render() {
-    const propertiesOptions = this.props.properties.toJS().map((host) => ({label: host, value: host}))
+
+    const sorterCallback = (a, b) => {
+      const aLower = a.toLowerCase()
+      const bLower = b.toLowerCase()
+
+      if (aLower < bLower) {
+        return -1
+      }
+      if (aLower > bLower) {
+        return 1
+      }
+      return 0
+    }
+
+    const propertiesOptions = this.props.properties.toJS()
+      .sort(sorterCallback)
+      .map((host) => ({label: host, value: host}))
+
     const { currentProperty } = this.state
     const storage = { //TODO mock
       current: 100,
