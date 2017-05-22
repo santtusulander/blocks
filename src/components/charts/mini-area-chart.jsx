@@ -97,8 +97,8 @@ MiniAreaChart.propTypes = {
   chartLabel: PropTypes.string,
   className: PropTypes.string,
   data: PropTypes.array,
-  height: PropTypes.number,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   noGradient: PropTypes.bool,
   nullAllowed: PropTypes.bool,
-  width: PropTypes.number
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
