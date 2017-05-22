@@ -216,6 +216,7 @@ class StorageContents extends Component {
       intl,
       params,
       userDateFormat } = this.props
+
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
