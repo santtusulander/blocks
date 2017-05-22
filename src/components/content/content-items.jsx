@@ -482,7 +482,7 @@ class ContentItems extends Component {
             <div
               key={viewingChart}
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-              {this.props.showColorLegend ? <ColorLegend /> : null}
+              {this.props.showColorLegend ? <ColorLegend serviceTypes={[...new Set(properties.map(property => getServiceType(property)))]} /> : null}
 
                 { /* STORAGES -header on List view */
                   this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&

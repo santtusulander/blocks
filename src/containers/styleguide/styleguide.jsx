@@ -752,7 +752,7 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Starbursts</h1>
 
-          <ColorLegend />
+          <ColorLegend serviceTypes={['large', 'msd', 'livestream']} />
 
           <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
 
