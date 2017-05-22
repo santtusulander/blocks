@@ -55,6 +55,8 @@ class StorageContents extends Component {
     this.generateUploadPath = this.generateUploadPath.bind(this)
     this.appendTargetDirNameToPath = this.appendTargetDirNameToPath.bind(this)
 
+    this.handleAsperaEvents = this.handleAsperaEvents.bind(this)
+
     this.onDragEnter = this.onDragEnter.bind(this)
     this.onDragLeave = this.onDragLeave.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
@@ -283,6 +285,16 @@ class StorageContents extends Component {
     this.clearDragState()
   }
 
+  handleAsperaEvents(event, obj) {
+    if (event === 'transfer') {
+      console.log(event,obj);
+      if (obj.transfers.some(tr => tr.status === 'completed')) {
+        console.log('ASPERA COMPLETED - Refreshing view');
+        this.fetchStorageContents({forceReload: true, ...this.props.params})
+      }
+    }
+  }
+
   render() {
     const { search, sortBy, sortDir, uploadPath } = this.state
     const {
@@ -386,24 +398,28 @@ class StorageContents extends Component {
             </Button>
           }
         </SectionHeader>
+
+        { asperaUpload
+          && <AsperaUpload
+              params={params}
+              multiple={true}
+              asperaGetaway={gatewayHostname}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+              uploadPath={uploadPath}
+              handleTransferEvents={this.handleAsperaEvents}
+            >
+        }
+
         {isFetchingContents
           ?
             <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
           :
-            asperaUpload
-              ?
-                <AsperaUpload
-                  params={params}
-                  multiple={true}
-                  asperaGetaway={gatewayHostname}
-                  renderDropZone={renderDropZone}
-                  highlightZoneOnDrag={highlightZoneOnDrag}
-                  onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  uploadPath={uploadPath}
-                >
+
                   {hasContents
                     ?
                       <StorageContentBrowser

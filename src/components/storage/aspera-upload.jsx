@@ -78,6 +78,10 @@ class AsperaUpload extends Component {
   }
 
   componentWillUnmount() {
+    if (this.props.handleTransferEvents) {
+      this.aspera.asperaWeb.removeEventListener('transfer', this.props.handleTransferEvents)
+    }
+
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
     }
@@ -88,6 +92,7 @@ class AsperaUpload extends Component {
       asperaShowSelectFileDialog: null,
       asperaShowSelectFolderDialog: null
     })
+
   }
 
   initAspera() {
@@ -113,7 +118,12 @@ class AsperaUpload extends Component {
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
 
+    if (this.props.handleTransferEvents) {
+      this.aspera.asperaWeb.addEventListener('transfer', this.props.handleTransferEvents);
+    }
+
     this.setState({ isAsperaInitialized: true })
+
   }
 
   showNotification(code) {
