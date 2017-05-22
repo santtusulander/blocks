@@ -465,8 +465,8 @@ StorageContents.propTypes = {
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
-  userDateFormat: PropTypes.string,
-  uploadHandlers: PropTypes.object
+  uploadHandlers: PropTypes.object,
+  userDateFormat: PropTypes.string
 }
 
 /* istanbul ignore next */
