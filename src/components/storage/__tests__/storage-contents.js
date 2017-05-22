@@ -8,6 +8,9 @@ import StorageContents from '../storage-contents.jsx'
 const asperaInstance = fromJS({
   get: jest.fn()
 })
+const httpInstance = fromJS({
+  get: jest.fn()
+})
 
 const intlMaker = () => {
   return {
@@ -25,6 +28,7 @@ const params = {
 const subject = () => {
   return shallow(<StorageContents
     asperaInstance={asperaInstance}
+    httpInstance={httpInstance}
     fetchStorageContents={jest.fn()}
     intl={intlMaker()}
     params={params}

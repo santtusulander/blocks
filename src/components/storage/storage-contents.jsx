@@ -312,10 +312,7 @@ class StorageContents extends Component {
         (this.state.isDragging && this.state.draggingOver) ? this.state.draggingOver : undefined
     const renderDropZone = !hasContents || !hasFiles
     const highlightZoneOnDrag = this.state.isDragging && this.state.draggingOver === null
-
     const uploadDestinationFolder = this.state.draggingOver ? this.state.draggingOver : (isRootDirectory ? storageId : params.splat.split('/').slice(-1).shift())
-
-    console.log(uploadPath)
 
     return (
       <SectionContainer>
