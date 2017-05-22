@@ -3,7 +3,12 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Map, fromJS } from 'immutable'
 import classNames from 'classnames'
+import { bindActionCreators } from 'redux'
 
+import * as uiActionCreators from '../../redux/modules/ui'
+import * as userActionCreators from '../../redux/modules/user'
+
+import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 import selectors from '../../redux/modules/http-file-upload/selectors'
 import UploadStatusContainer from './file-upload-status-container'
 
@@ -15,16 +20,65 @@ class HTTPUpload extends Component {
     super(props)
 
     this.state = {
+      accessKey: null,
       dropZoneActive: false,
-      dropZoneInvalid: false
+      dropZoneInvalid: false,
+      fileUploader: null
     }
 
+    this.initFileUploader = this.initFileUploader.bind(this)
     this.getEventsHandlersMap = this.getEventsHandlersMap.bind(this)
     this.bindEventsHandlers = this.bindEventsHandlers.bind(this)
+    this.openFileDialog = this.openFileDialog.bind(this)
+  }
+
+  componentDidMount() {
+    const { brand, account, group, storage } = this.props.params
+
+    this.props.userActions.getStorageAccessKey(brand, account, group, storage).then((res) => {
+      if (res.error) {
+        /* TODO - show error message */
+      } else {
+        this.setState({
+          accessKey: res.payload
+        }, this.initFileUploader)
+      }
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !(nextProps.uploads === this.props.uploads && nextProps.children === this.props.children && fromJS(this.state).equals(fromJS(nextState)))
+    return !((nextProps.uploads === this.props.uploads) &&
+             (nextProps.uploadPath === this.props.uploadPath) &&
+             (nextProps.children === this.props.children) &&
+             fromJS(this.state).equals(fromJS(nextState)))
+  }
+
+  componentWillUnmount() {
+    this.props.uiActions.setHttpUploadInstance({
+      httpInitialized: false,
+      openFileDialog: null
+    })
+  }
+  /**
+   * Initialize File Uploader
+   * @param action {object} - action with type and payload
+   */
+  initFileUploader() {
+    const { gatewayHostname, uploadHandlers, uploadPath } = this.props
+
+    console.log(uploadPath)
+    this.setState({
+      fileUploader: FileUploader.initialize(this.state.accessKey, gatewayHostname, uploadHandlers, uploadPath)
+    })
+
+    this.props.uiActions.setHttpUploadInstance({
+      httpInitialized: true,
+      openFileDialog: this.openFileDialog
+    })
+  }
+
+  openFileDialog() {
+    return this.state.fileUploader.openFileDialog()
   }
 
   /**
@@ -69,7 +123,7 @@ class HTTPUpload extends Component {
         muteEventHandler((e) => {
           this.props.onDrop(event)
           this.setState({ dropZoneActive: false })
-          this.props.processFiles(e.dataTransfer.files)
+          this.state.fileUploader.processFiles(e.dataTransfer.files)
         })
       ]
     ])
@@ -136,14 +190,26 @@ class HTTPUpload extends Component {
 HTTPUpload.displayName = "HTTPUpload"
 HTTPUpload.propTypes = {
   children: React.PropTypes.object,
+  gatewayHostname: React.PropTypes.string,
   highlightZoneOnDrag: React.PropTypes.bool,
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
   onDragOver: React.PropTypes.func,
   onDrop: React.PropTypes.func,
-  processFiles: PropTypes.func,
+  params: React.PropTypes.object,
   renderDropZone: React.PropTypes.bool,
-  uploads: PropTypes.instanceOf(Map)
+  uiActions: React.PropTypes.object,
+  uploadHandlers: PropTypes.object,
+  uploadPath: React.PropTypes.string,
+  uploads: PropTypes.instanceOf(Map),
+  userActions: React.PropTypes.object
 }
 
-export default connect(selectors)(HTTPUpload)
+function mapDispatchToProps(dispatch) {
+  return {
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  }
+}
+
+export default connect(selectors, mapDispatchToProps)(HTTPUpload)
