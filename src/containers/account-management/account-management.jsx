@@ -337,7 +337,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           cancel: () => toggleModal(null),
           onSubmit: () => {
-            this.deleteAccount(brand, this.state.accountToDelete, router)
+            return this.deleteAccount(brand, this.state.accountToDelete, router)
           }
         }
         break
