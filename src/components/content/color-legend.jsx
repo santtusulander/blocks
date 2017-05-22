@@ -8,11 +8,11 @@ const ColorLegend = () =>
   <div className="pull-right color-legend-container col-xs-2">
     <div>
       <div className="pull-left color-legend media-delivery" />
-      <span className="pull-left" >Media Delivery</span>
+      <span className="pull-left"> <FormattedMessage id='portal.configuration.details.serviceType.large' /> </span>
     </div>
     <div>
       <div className="pull-left color-legend vod-streaming" />
-      <span className="pull-left" >VOD Streaming</span>
+      <span className="pull-left"> <FormattedMessage className="pull-left" id='portal.configuration.details.serviceType.msd' /> </span>
     </div>
     <div>
       <div className="pull-left color-legend live-streaming" />

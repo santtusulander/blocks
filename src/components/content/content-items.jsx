@@ -482,7 +482,7 @@ class ContentItems extends Component {
             <div
               key={viewingChart}
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-              <ColorLegend />
+              {this.props.showColorLegend ? <ColorLegend /> : null}
 
                 { /* STORAGES -header on List view */
                   this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
@@ -690,6 +690,7 @@ ContentItems.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   selectionStartTier: PropTypes.string, // this is used in a helper render method
   showAnalyticsLink: PropTypes.bool,
+  showColorLegend: PropTypes.bool,
   showInfoDialog: PropTypes.func,
   showSlices: PropTypes.bool,
   sortDirection: PropTypes.number,
