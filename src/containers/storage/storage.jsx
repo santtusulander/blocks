@@ -28,6 +28,7 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
+import { setStorageUploadMethod, getStorageUploadMethod } from '../../util/local-storage'
 
 import IsAllowed from '../../components/shared/permission-wrappers/is-allowed'
 import { CREATE_ACCESS_KEY } from '../../constants/permissions.js'
@@ -37,7 +38,8 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: false
+      asperaUpload: getStorageUploadMethod() === 'aspera',
+      fileUploader: null
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
@@ -83,6 +85,7 @@ class Storage extends Component {
   }
 
   toggleUploadMehtod(asperaUpload) {
+    setStorageUploadMethod(asperaUpload ? 'aspera' : 'http')
     this.setState({ asperaUpload })
   }
 

@@ -2,6 +2,7 @@ const LOCALSTORAGE_USER_TOKEN = 'EricssonUDNUserToken'
 const LOCALSTORAGE_USER_TOKEN_META = 'EricssonUDNUserTokenMeta'
 const LOCALSTORAGE_USER_NAME = 'EricssonUDNUserName'
 const LOCALSTORAGE_UI_THEME = 'EricssonUDNUiTheme'
+const LOCALSTORAGE_STORAGE_UPLOAD_METHOD = "EricssonUDNStorageUploadMethod"
 
 /**
  * Check whether LocalStorage is supported.
@@ -122,4 +123,20 @@ export const getUserName = () => {
  */
 export const deleteUserName = () => {
   localStorage.removeItem(LOCALSTORAGE_USER_NAME)
+}
+
+/**
+ * Set storageUploadMethod in localStorage
+ * @param {String} storageUploadMethod
+ */
+export const setStorageUploadMethod = (method) => {
+  localStorage.setItem(LOCALSTORAGE_STORAGE_UPLOAD_METHOD, method)
+}
+
+/**
+ * get storgeUploadMethod from localStorage]
+ * @return {String} storageUploadMethod
+ */
+export const getStorageUploadMethod = () => {
+  return localStorage.getItem(LOCALSTORAGE_STORAGE_UPLOAD_METHOD)
 }
