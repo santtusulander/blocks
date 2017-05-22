@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 import SectionContainer from '../shared/layout/section-container'
-import LineChart from '../charts/line-chart'
+import MiniAreaChart from '../charts/mini-area-chart'
 import ComparisonBars from '../shared/comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
@@ -20,6 +20,12 @@ import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/ent
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 import { endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 
+const chartAreas = [{
+  "dataKey": "bytes",
+  "name": "MiniChart",
+  "className": "mini-chart-bytes",
+  "stackId": 1
+}]
 const FORMAT = '0,0.0'
 
 /* eslint-disable react/no-multi-comp */
@@ -52,7 +58,6 @@ export class StorageKPI extends Component {
   render() {
     const {
       chartData,
-      chartDataKey,
       currentValue = 0,
       gainPercentage = 0,
       workflowProfile = Map(),
@@ -98,7 +103,10 @@ export class StorageKPI extends Component {
             </div>
             <div className='storage-kpi-chart'>
                 {chartData
-                  ? <LineChart dataKey={chartDataKey} showTooltip={false} height="100%" data={chartData} />
+                  ? <MiniAreaChart
+                      areas={chartAreas}
+                      height="100%"
+                      data={chartData} />
                   : <div className="mini-chart-container no-data">
                     <FormattedMessage id='portal.common.no-data.text'/>
                   </div>
@@ -130,7 +138,6 @@ export class StorageKPI extends Component {
 StorageKPI.displayName = "StorageKPI"
 StorageKPI.propTypes = {
   chartData: PropTypes.array,
-  chartDataKey: PropTypes.string,
   currentValue: PropTypes.number,
   fetchData: PropTypes.func,
   gainPercentage: PropTypes.number,
@@ -144,9 +151,7 @@ StorageKPI.propTypes = {
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   if (!storage) {
-    return {
-      chartDataKey: 'bytes'
-    }
+    return {}
   }
 
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
@@ -165,7 +170,6 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
 
   return {
     chartData: lineChartData,
-    chartDataKey: 'bytes',
     currentValue,
     referenceValue: parseFloat(estimated),
     peakValue,

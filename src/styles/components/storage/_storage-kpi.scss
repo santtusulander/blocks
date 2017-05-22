@@ -35,14 +35,14 @@ $storage-kpi-comparison-bars-width: rem(120px);
 }
 
 .storage-kpi-chart {
-  display: flex;
   width: $storage-kpi-chart-width;
-  height: $storage-kpi-item-height;
+  height: rem(38px);
   margin-left: $storage-kpi-content-margin;
+  align-self: flex-end;
 
-  > .mini-chart {
-    width: $storage-kpi-mini-chart-width;
-    align-self: flex-end;
+  > .mini-area-chart {
+    width: 100%;
+    height: 100%;
   }
 
   .analysis-by-time {
