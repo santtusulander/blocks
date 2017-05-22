@@ -20,7 +20,8 @@ const StorageContentBrowser = ({
   highlightedItem,
   isRootDirectory,
   openDirectoryHandler,
-  sorterProps
+  sorterProps,
+  userDateFormat
 }) => {
   return (
     <Table striped={true} className='storage-contents-table'>
@@ -79,7 +80,7 @@ const StorageContentBrowser = ({
                   <TruncatedTitle content={name} />
                 </div>
               </td>
-              <td>{formatDate(item.get('lastModified'))}</td>
+              <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
                 <IsAllowed to={MODIFY_STORAGE}>
@@ -102,7 +103,8 @@ StorageContentBrowser.propTypes = {
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
-  sorterProps: PropTypes.object
+  sorterProps: PropTypes.object,
+  userDateFormat: PropTypes.string
 }
 
 export default StorageContentBrowser

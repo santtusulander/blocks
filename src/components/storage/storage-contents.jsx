@@ -214,7 +214,8 @@ class StorageContents extends Component {
       fileUploader,
       isFetchingContents,
       intl,
-      params } = this.props
+      params,
+      userDateFormat } = this.props
     const { brand: brandId, account: accountId, storage: storageId, group: groupId } = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
@@ -331,6 +332,7 @@ class StorageContents extends Component {
                         isRootDirectory={isRootDirectory}
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
+                        userDateFormat={userDateFormat}
                       />
                     :
                       null
@@ -356,6 +358,7 @@ class StorageContents extends Component {
                         isRootDirectory={isRootDirectory}
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
+                        userDateFormat={userDateFormat}
                       />
                     :
                       null
@@ -383,7 +386,8 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
-  router: PropTypes.object
+  router: PropTypes.object,
+  userDateFormat: PropTypes.string
 }
 
 /* istanbul ignore next */
@@ -397,7 +401,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     contents,
-    isFetchingContents: getFetchingByTag(state, 'ingestPointContents')
+    isFetchingContents: getFetchingByTag(state, 'ingestPointContents'),
+    userDateFormat: state.user.get('currentUser').get('date_format')
   }
 }
 
