@@ -40,7 +40,7 @@ class MiniChart extends React.Component {
             </div>
           : null}
           <div ref="byTimeHolder" className="mini-chart-col mini-chart-graph">
-            <MiniAreaChart data={data} areas={area} height={32} width="100%" />
+            <MiniAreaChart data={data} areas={area} height={32} />
           </div>
         </div>
       </div>

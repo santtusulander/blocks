@@ -47,7 +47,17 @@ export default class MiniAreaChart extends Component {
   }
 
   render() {
-    const { chartLabel, data, className, height, width } = this.props
+    const { chartLabel, data, className, height, width, areas, nullAllowed } = this.props
+    if (!nullAllowed && data && data.length) {
+      data.forEach(item => {
+        areas.forEach(area => {
+          if (item[area.dataKey] === null) {
+            item[area.dataKey] = 0
+          }
+        })
+      })
+    }
+
     return (
       <div className="mini-area-chart">
         <span className="mini-area-chart-label">{chartLabel}</span>
@@ -78,7 +88,8 @@ MiniAreaChart.displayName = 'MiniAreaChart'
 MiniAreaChart.defaultProps = {
   noGradient: false,
   data: [],
-  areas: []
+  areas: [],
+  nullAllowed: false
 }
 MiniAreaChart.propTypes = {
   areas: PropTypes.array,
@@ -87,5 +98,6 @@ MiniAreaChart.propTypes = {
   data: PropTypes.array,
   height: PropTypes.number,
   noGradient: PropTypes.bool,
+  nullAllowed: PropTypes.bool,
   width: PropTypes.number
 };
