@@ -21,13 +21,15 @@ export const TWO_FA_METHODS_OPTIONS = [
   }
 ]
 
-export const LANGUAGE_CODE_ENGLISH = 'en-US'
+export const LANGUAGE_CODE_ENGLISH_US = 'en-US'
+export const LANGUAGE_CODE_ENGLISH_GB = 'en-GB'
 export const LANGUAGE_CODE_CHINESE = 'zh-CN'
 export const LANGUAGE_CODE_SPANISH = 'es-ES'
 export const LANGUAGE_CODE_FRENCH = 'fr-FR'
 
 export const LANGUAGE_OPTIONS = [
-  {value: LANGUAGE_CODE_ENGLISH, label: 'English(US)', secondLabel: 'EN'},
+  {value: LANGUAGE_CODE_ENGLISH_US, label: 'English(US)', secondLabel: 'EN'},
+  {value: LANGUAGE_CODE_ENGLISH_GB, label: 'English(GB)', secondLabel: 'EN'},
   {value: LANGUAGE_CODE_CHINESE, label: '中文', secondLabel: 'ZH'},
   {value: LANGUAGE_CODE_SPANISH, label: 'Español', secondLabel: 'ES'},
   {value: LANGUAGE_CODE_FRENCH, label: 'Françias', secondLabel: 'FR'}
