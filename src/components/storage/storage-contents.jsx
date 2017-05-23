@@ -290,10 +290,12 @@ class StorageContents extends Component {
       isFetchingContents,
       intl,
       params,
-      userDateFormat,
-      removeStorageContents
+      userDateFormat
     } = this.props
 
+    const removeStorageContents = (fileName) => {
+      return  this.props.removeStorageContents({...params, fileName})
+    }
 
     const { storage: storageId} = params
     const isRootDirectory = params.splat ? false : true
@@ -439,7 +441,6 @@ class StorageContents extends Component {
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
                         removeStorageContents={removeStorageContents}
-                        params={params}
                       />
                     :
                       null

@@ -37,7 +37,7 @@ const ContextMenu = ({ header, options, disabled }) => {
 }
 
 
-ContextMenu.displayName = 'ButtonDropdown'
+ContextMenu.displayName = 'ContextMenu'
 
 ContextMenu.defaultProps = {
   options: []
