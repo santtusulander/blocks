@@ -1,5 +1,5 @@
 {
-  "portal.storage.uploadContent.uploading.text": "Uploading {number, plural, one {# item} other {# items}}",
+  "portal.storage.uploadContent.uploading.text": "Uploading {number} items(s)",
   "portal.storage.uploadContent.cancel.text": "Cancel All",
   "portal.storage.uploadContent.destination.text": "Drop files to upload them to:",
 

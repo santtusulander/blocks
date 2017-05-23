@@ -116,7 +116,7 @@
   "portal.analytics.urlList.status.text": "STATUS",
   "portal.analytics.urlList.bytes.text": "Bytes",
   "portal.analytics.urlList.requests.text": "Requests",
-  "portal.analytics.urlList.top15.text": "{urlCount} Top {urlCount, plural, one{URL} other{URLs}}",
+  "portal.analytics.urlList.top15.text": "{urlCount} Top URL(s)",
   "portal.analytics.urlList.allUrls.text": "All URLs",
 
   "portal.analytics.visitors.visiorsByTime.text": "VISITORS BY TIME",
