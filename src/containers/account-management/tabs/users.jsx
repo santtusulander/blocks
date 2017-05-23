@@ -341,11 +341,13 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   onSearchChange(e) {
-    clearTimeout(this.searchTimer)
+    clearTimeout(this.searchTimeout)
     this.setState({
       search: e.target.value
+    }, () => {
+      this.searchTimeout = setTimeout(this.onActivePageChange, 1000)
     })
-    this.searchTimeout = setTimeout(this.onActivePageChange, 1000)
+
 
   }
 
