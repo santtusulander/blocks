@@ -11,7 +11,8 @@ import {
 
 import { DOCUMENTATION_PATH } from '../../../constants/support-documentation'
 import {
-  LANGUAGE_CODE_ENGLISH,
+  LANGUAGE_CODE_ENGLISH_US,
+  LANGUAGE_CODE_ENGLISH_GB,
   LANGUAGE_CODE_CHINESE,
   LANGUAGE_CODE_SPANISH,
   LANGUAGE_CODE_FRENCH
@@ -46,7 +47,8 @@ class SupportTabDocumentation extends React.Component {
         documentationObj = DOCUMENTATION_PATH.fr
         break;
 
-      case LANGUAGE_CODE_ENGLISH:
+      case LANGUAGE_CODE_ENGLISH_US:
+      case LANGUAGE_CODE_ENGLISH_GB:
       default:
         documentationObj = DOCUMENTATION_PATH.en
         break;
