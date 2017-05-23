@@ -8,11 +8,6 @@ import * as uiActionCreators from '../../redux/modules/ui'
 
 import { formatDate, formatBytes } from '../../util/helpers'
 
-const mockUrls = [
-  "http://pub_name1/path3/path6",
-  "http://pub_name1/path4"
-]
-
 class StorageItemProperties extends Component {
   constructor(props) {
     super(props)
@@ -57,7 +52,8 @@ class StorageItemProperties extends Component {
       isDirectory,
       lastModified,
       location,
-      size
+      size,
+      urls
     } = this.props
 
     return (
@@ -89,7 +85,7 @@ class StorageItemProperties extends Component {
            </div>
            <div className='info'>
              <FormattedMessage id='portal.storage.summaryPage.itemProperties.url.label' />
-             {mockUrls.map((url, index) => (
+             {urls.map((url, index) => (
                  <div key={index} className='url'>
                    <div className='url-text'>
                      {url}
@@ -120,8 +116,19 @@ StorageItemProperties.propTypes = {
   lastModified: PropTypes.number,
   location: PropTypes.string,
   size: PropTypes.number,
-  uiActions: PropTypes.objext
+  uiActions: PropTypes.objext,
+  urls: PropTypes.array
 }
+
+/* istanbul ignore next */
+const mapStateToProps = () => (
+  {
+    urls: [
+      "http://pub_name1/path3/path6",
+      "http://pub_name1/path4"
+    ]
+  }
+)
 
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => (
@@ -130,4 +137,4 @@ const mapDispatchToProps = (dispatch) => (
   }
 )
 
-export default connect(null, mapDispatchToProps)(StorageItemProperties)
+export default connect(mapStateToProps, mapDispatchToProps)(StorageItemProperties)
