@@ -130,7 +130,7 @@ class Mapbox extends Component {
     const minimumZoom = - 7.95 + (1.44 * Math.log(map._canvas.clientWidth / 2))
 
     // Fix to draw map correctly on reload
-    this.setState({ zoom: minimumZoom, minZoom: minimumZoom })
+    this.state.minZoom !== minimumZoom && this.setState({ zoom: minimumZoom, minZoom: minimumZoom })
     map.resize()
 
     this.addCountryLayers(map, this.props.countryData.toJS())

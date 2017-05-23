@@ -70,6 +70,7 @@ describe('Mapbox', () => {
       getCanvas: jest.fn(() => { return { style: {} } }),
       getStyle: jest.fn(() => { return { layers: [] } }),
       layers: [],
+      _canvas: { clientWidth: 400 },
       scrollZoom: {
         disable: jest.fn()
       },
@@ -103,6 +104,7 @@ describe('Mapbox', () => {
 
     expect(mapbox.state().layers.length).toBe(0)
     defaultMap.style._loaded = true
+
     mapbox.instance().onStyleLoaded(defaultMap)
     expect(mapbox.state().layers.length).toBe(4)
     expect(defaultMap.addSource.mock.calls.length).toBe(4)
@@ -115,6 +117,8 @@ describe('Mapbox', () => {
 
     const mapbox = subject({ countryData: defaultCountryData })
     defaultMap.style._loaded = true
+
+
     mapbox.instance().onStyleLoaded(defaultMap)
 
     expect(defaultMap.addSource.mock.calls).toHaveLength(0)
@@ -123,7 +127,9 @@ describe('Mapbox', () => {
 
   it('should load cities when zoomed in', () => {
     defaultMap.style._loaded = true
+
     const mapbox = subject({ cityData: defaultCityData })
+    mapbox.instance().onStyleLoaded(defaultMap)
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -133,6 +139,7 @@ describe('Mapbox', () => {
 
   it('should NOT load city layers if the map style isn\'t loaded', () => {
     const mapbox = subject({ cityData: defaultCityData })
+
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -144,7 +151,9 @@ describe('Mapbox', () => {
     defaultMap.getSource = jest.fn(() => true)
     defaultMap.getLayer = jest.fn(() => true)
     defaultMap.style._loaded = true
+
     const mapbox = subject({ cityData: defaultCityData })
+    mapbox.instance().onStyleLoaded(defaultMap)
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -154,6 +163,7 @@ describe('Mapbox', () => {
 
   it('should remove the hover layer when data changes', () => {
     const mapbox = subject()
+
     mapbox.setState({ hoveredLayer: 'abc' })
     mapbox.instance().onStyleLoaded(defaultMap)
 
