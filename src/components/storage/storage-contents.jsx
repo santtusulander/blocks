@@ -290,7 +290,7 @@ class StorageContents extends Component {
       isFetchingContents,
       intl,
       params,
-      userDateFormat 
+      userDateFormat
     } = this.props
 
 
@@ -408,6 +408,7 @@ class StorageContents extends Component {
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
+                        params={params}
                       />
                     :
                       null
@@ -437,6 +438,7 @@ class StorageContents extends Component {
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
+                        params={params}
                       />
                     :
                       null

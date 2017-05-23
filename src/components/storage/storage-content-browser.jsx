@@ -36,6 +36,7 @@ class StorageContentBrowser extends Component {
       highlightedItem,
       isRootDirectory,
       openDirectoryHandler,
+      params,
       sorterProps,
       userDateFormat
     } = this.props
@@ -70,7 +71,11 @@ class StorageContentBrowser extends Component {
         <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
           {contents.map((item, index) => {
             const name = item.get('name')
-            const isDirectory = item.get('type') === 'directory'
+            const type = item.get('type')
+            const created = item.get('created')
+            const lastModified = item.get('lastModified')
+            const size = item.get('size')
+            const isDirectory = type === 'directory'
             const isPropertiesOpen = this.state.expandedProperties === name
             const dataAttributes = {
               'data-drop-zone': true
@@ -112,8 +117,8 @@ class StorageContentBrowser extends Component {
                     <TruncatedTitle content={name} />
                   </div>
                 </td>
-                <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
-                <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
+                <td>{formatDate(lastModified, userDateFormat)}</td>
+                <td>{isDirectory ? '-' : formatBytes(size)}</td>
                 <td>
                   <IsAllowed to={MODIFY_STORAGE}>
                     <IconContextMenu className="storage-contents-context-menu-icon" />
@@ -124,10 +129,22 @@ class StorageContentBrowser extends Component {
 
             let rowData
             if (isPropertiesOpen) {
+              const location = isRootDirectory
+                ?
+                  params.storage
+                :
+                  `${params.storage}/${params.splat}`
               rowData = row.concat([
                 <tr className="storage-item-properties-row">
                   <td colSpan="6">
-                    <StorageItemProperties />
+                    <StorageItemProperties
+                      isDirectory={isDirectory}
+                      created={created}
+                      lastModified={lastModified}
+                      size={size}
+                      dateFormat={userDateFormat}
+                      location={location}
+                    />
                   </td>
                 </tr>,
                 <tr />
@@ -152,6 +169,7 @@ StorageContentBrowser.propTypes = {
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
+  params: PropTypes.object,
   sorterProps: PropTypes.object,
   userDateFormat: PropTypes.string
 }

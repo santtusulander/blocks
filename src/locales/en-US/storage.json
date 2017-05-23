@@ -53,7 +53,8 @@
 
   "portal.storage.summaryPage.itemProperties.created.label": "Created",
   "portal.storage.summaryPage.itemProperties.lastModified.label": "Last Modified",
-  "portal.storage.summaryPage.itemProperties.location.label": "File Location",
+  "portal.storage.summaryPage.itemProperties.location.file.label": "File Location",
+  "portal.storage.summaryPage.itemProperties.location.folder.label": "Folder Location",
   "portal.storage.summaryPage.itemProperties.size.label": "File Size",
   "portal.storage.summaryPage.itemProperties.url.label": "Published URL",
 
