@@ -399,6 +399,7 @@ export class AccountManagementAccountUsers extends Component {
 
     const finalUserText = <FormattedMessage id='portal.role.list.search.userCount.text' values={{userCount: totalCount}} />
 
+    // This spinner will hide tab content when first laoding the tab
     if (fetching && !users) {
       return <LoadingSpinner />
     }
