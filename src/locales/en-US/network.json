@@ -105,10 +105,10 @@
   "portal.network.editNodeForm.id": "ID",
   "portal.network.editNodeForm.node": "Node",
   "portal.network.editNodeForm.title": "Edit Node",
-  "portal.network.editNodeForm.title.multiple": "Edit {numNodes, plural, one {# Node} other {# Nodes}}",
+  "portal.network.editNodeForm.title.multiple": "Edit {numNodes} Node(s)}",
   "portal.network.editNodeForm.multipleValues": "Multiple values",
   "portal.network.editNodeForm.multipleValues.help": "Changing fields with multiple values will set the same value for all current edited nodes.",
-  "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes, plural, one {# node} other {# nodes}}?",
+  "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes} node(s)?",
   "portal.network.editNodeForm.updateNode.status": "Node updated successfully.",
   "portal.network.editNodeForm.deleteNode.status": "Node deleted successfully.",
 
