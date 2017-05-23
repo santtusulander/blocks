@@ -180,11 +180,6 @@
         visibility: hidden;
       }
 
-      .url-hidden-input {
-        position: absolute;
-        left: -1000px;
-      }
-
       &:hover {
         .url-copy-button {
           visibility: visible;
