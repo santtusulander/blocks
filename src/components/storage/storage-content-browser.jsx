@@ -38,6 +38,7 @@ const StorageContentBrowser = ({
       }
     }
   ];
+
   return (
     <Table striped={true} className='storage-contents-table'>
       <thead>

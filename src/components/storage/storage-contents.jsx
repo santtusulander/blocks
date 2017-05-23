@@ -17,8 +17,8 @@ import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
-import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -406,10 +406,6 @@ class StorageContents extends Component {
           }
         </SectionHeader>
 
-        {isFetchingContents
-          && <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-        }
-
         { asperaUpload
           ? <AsperaUpload
               params={params}
@@ -424,19 +420,21 @@ class StorageContents extends Component {
               uploadPath={uploadPath}
               handleTransferEvents={this.handleAsperaEvents}
             >
+            {isFetchingContents
+              ? <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+              : hasContents
+                  &&
+                    <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                      userDateFormat={userDateFormat}
+                      isFetchingContents={isFetchingContents}
+                    />}
 
-            {hasContents
-                &&
-                  <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                  />
-              }
             </AsperaUpload>
 
           : <HttpUpload
@@ -453,18 +451,23 @@ class StorageContents extends Component {
               uploadPath={uploadPath}
             >
 
-            {hasContents
-              && <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                    removeStorageContents={removeStorageContents}
-                />
+            {isFetchingContents
+              ? <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+              : hasContents
+                && <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                      userDateFormat={userDateFormat}
+                      removeStorageContents={removeStorageContents}
+                      isFetchingContents={isFetchingContents}
+                  />
+
             }
+
             </HttpUpload>
         }
 
