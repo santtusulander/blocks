@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Col, FormGroup, FormControl } from 'react-bootstrap'
-import { Map, List } from 'immutable'
+import { Map, List, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -55,6 +55,8 @@ class StorageContents extends Component {
     this.generateUploadPath = this.generateUploadPath.bind(this)
     this.appendTargetDirNameToPath = this.appendTargetDirNameToPath.bind(this)
 
+    this.handleAsperaEvents = this.handleAsperaEvents.bind(this)
+
     this.onDragEnter = this.onDragEnter.bind(this)
     this.onDragLeave = this.onDragLeave.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
@@ -71,6 +73,11 @@ class StorageContents extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    //upload was inProgress but is now empty ie. upload(s) were finnished => refresh view
+    if (!is(nextProps.uploadsInProgress, this.props.uploadsInProgress) && nextProps.uploadsInProgress.isEmpty()) {
+      this.fetchStorageContents({forceReload: true, ...nextProps.params})
+    }
+
     if (nextProps.params.splat !== this.props.params.splat) {
       this.fetchStorageContents(nextProps.params)
     }
@@ -132,13 +139,14 @@ class StorageContents extends Component {
   }
 
   fetchStorageContents(params) {
-    const { brand, account, group, storage, splat } = params
+    const { forceReload, brand, account, group, storage, splat } = params
     this.props.fetchStorageContents({
       brand,
       account,
       group,
       id: storage,
-      path: splat
+      path: splat,
+      forceReload
     })
   }
 
@@ -278,6 +286,18 @@ class StorageContents extends Component {
     this.clearDragState()
   }
 
+  /**
+   * This is an Event Handler for Aspera Events
+   * Handles 'transfer' -type events and reloads contents when transfer.status === 'completed'
+   */
+  handleAsperaEvents(event, obj) {
+    if (event === 'transfer') {
+      if (obj.transfers.some(tr => tr.status === 'completed')) {
+        this.fetchStorageContents({forceReload: true, ...this.props.params})
+      }
+    }
+  }
+
   render() {
     const { search, sortBy, sortDir, uploadPath } = this.state
     const {
@@ -352,6 +372,7 @@ class StorageContents extends Component {
               </Col>
             </Col>
           </FormGroup>
+
           { asperaUpload &&
             <ButtonDropdown
               bsStyle="success"
@@ -380,69 +401,68 @@ class StorageContents extends Component {
             </Button>
           }
         </SectionHeader>
+
         {isFetchingContents
-          ?
-            <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-          :
-            asperaUpload
-              ?
-                <AsperaUpload
-                  params={params}
-                  multiple={true}
-                  asperaGetaway={gatewayHostname}
-                  renderDropZone={renderDropZone}
-                  highlightZoneOnDrag={highlightZoneOnDrag}
-                  onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  uploadPath={uploadPath}
-                >
-                  {hasContents
-                    ?
-                      <StorageContentBrowser
-                        contents={sortedContents}
-                        openDirectoryHandler={this.openDirectoryHandler}
-                        backButtonHandler={this.backButtonHandler}
-                        isRootDirectory={isRootDirectory}
-                        sorterProps={sorterProps}
-                        highlightedItem={highlightedItem}
-                        userDateFormat={userDateFormat}
-                      />
-                    :
-                      null
-                  }
-                </AsperaUpload>
-              :
-                <HttpUpload
-                  params={params}
-                  uploadHandlers={uploadHandlers}
-                  gatewayHostname={gatewayHostname}
-                  openFileDialog={openFileDialog}
-                  renderDropZone={renderDropZone}
-                  highlightZoneOnDrag={highlightZoneOnDrag}
-                  onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  uploadPath={uploadPath}
-                >
-                  {hasContents
-                    ?
-                      <StorageContentBrowser
-                        contents={sortedContents}
-                        openDirectoryHandler={this.openDirectoryHandler}
-                        backButtonHandler={this.backButtonHandler}
-                        isRootDirectory={isRootDirectory}
-                        sorterProps={sorterProps}
-                        highlightedItem={highlightedItem}
-                        userDateFormat={userDateFormat}
-                      />
-                    :
-                      null
-                  }
-                </HttpUpload>
+          && <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
         }
+
+        { asperaUpload
+          ? <AsperaUpload
+              params={params}
+              multiple={true}
+              asperaGetaway={gatewayHostname}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+              uploadPath={uploadPath}
+              handleTransferEvents={this.handleAsperaEvents}
+            >
+
+            {hasContents
+                &&
+                  <StorageContentBrowser
+                    contents={sortedContents}
+                    openDirectoryHandler={this.openDirectoryHandler}
+                    backButtonHandler={this.backButtonHandler}
+                    isRootDirectory={isRootDirectory}
+                    sorterProps={sorterProps}
+                    highlightedItem={highlightedItem}
+                    userDateFormat={userDateFormat}
+                  />
+              }
+            </AsperaUpload>
+
+          : <HttpUpload
+              params={params}
+              uploadHandlers={uploadHandlers}
+              gatewayHostname={gatewayHostname}
+              openFileDialog={openFileDialog}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+              uploadPath={uploadPath}
+            >
+
+            {hasContents
+              && <StorageContentBrowser
+                    contents={sortedContents}
+                    openDirectoryHandler={this.openDirectoryHandler}
+                    backButtonHandler={this.backButtonHandler}
+                    isRootDirectory={isRootDirectory}
+                    sorterProps={sorterProps}
+                    highlightedItem={highlightedItem}
+                    userDateFormat={userDateFormat}
+                />
+            }
+            </HttpUpload>
+        }
+
         { this.state.isDragging &&
           <UploadDestinationStatus folderName={uploadDestinationFolder} />
         }
@@ -466,6 +486,7 @@ StorageContents.propTypes = {
   params: PropTypes.object,
   router: PropTypes.object,
   uploadHandlers: PropTypes.object,
+  uploadsInProgress: PropTypes.object,
   userDateFormat: PropTypes.string
 }
 
@@ -481,7 +502,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
     contents,
     isFetchingContents: getFetchingByTag(state, 'ingestPointContents'),
-    userDateFormat: state.user.get('currentUser').get('date_format')
+    userDateFormat: state.user.get('currentUser').get('date_format'),
+    uploadsInProgress: state.storageUploads
+
   }
 }
 
