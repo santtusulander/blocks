@@ -538,7 +538,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),
     tfa_toggle: formValueSelector('user-edit-form')(state, 'tfa_toggle'),
-    //tfa: formValueSelector('user-edit-form')(state, 'tfa'),
     selectedLocale: formValueSelector('user-edit-form')(state, 'language'),
     formValues: formValueSelector('user-edit-form')(state, ...Object.keys(ownProps.initialValues))
   }
