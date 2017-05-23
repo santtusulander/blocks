@@ -39,113 +39,131 @@ const StyleguideCharts = () => {
         </Col>
       </Row>
 
+      <hr />
+
       <Row>
-        <label>Stacked barchart</label>
-        <SectionContainer className="analysis-chart-container">
-          {<BarChart
-            chartLabel="Month to Date"
-            chartData={stackedBarChartData}
-            barModels={[
-              { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
-              { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-              { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
-              { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
-            ]}/>}
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Stacked barchart</label>
+          <SectionContainer className="analysis-chart-container">
+            {<BarChart
+              chartLabel="Month to Date"
+              chartData={stackedBarChartData}
+              barModels={[
+                { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
+                { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
+              ]}/>}
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr />
 
       <Row>
-        <label>Normal barchart</label>
-        <SectionContainer className="analysis-chart-container">
-          <BarChart
-            chartLabel="This Week"
-            chartData={singleBarChartData}
-            barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Normal barchart</label>
+          <SectionContainer className="analysis-chart-container">
+            <BarChart
+              chartLabel="This Week"
+              chartData={singleBarChartData}
+              barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
 
       <Row>
-        <label>Line chart</label>
-        <SectionContainer className="analysis-by-time">
-          <LineChart
-            data={lineChartData}
-            dataKey="bits_per_second"
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Line chart</label>
+          <SectionContainer className="analysis-by-time">
+            <LineChart
+              data={lineChartData}
+              dataKey="bits_per_second"
+            />
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
 
       <Row>
-        <label>Area chart</label>
-        <SectionContainer className="analysis-by-time">
-          <StackedAreaChart
-            chartLabel="Oct 2016 Month To Date"
-            areas={nonStackedAreaDataset}
-            data={AreaChartData}
-            valueFormatter={formatBitsPerSecond}
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Area chart</label>
+          <SectionContainer className="analysis-by-time">
+            <StackedAreaChart
+              chartLabel="Oct 2016 Month To Date"
+              areas={nonStackedAreaDataset}
+              data={AreaChartData}
+              valueFormatter={formatBitsPerSecond}
+            />
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
 
       <Row>
-        <label>Stacked area chart</label>
-        <SectionContainer className="analysis-by-time">
-          <StackedAreaChart
-            chartLabel="Oct 2016 Month To Date"
-            areas={stackedAreaDataset}
-            data={AreaChartData}
-            valueFormatter={formatBitsPerSecond}
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Stacked area chart</label>
+          <SectionContainer className="analysis-by-time">
+            <StackedAreaChart
+              chartLabel="Oct 2016 Month To Date"
+              areas={stackedAreaDataset}
+              data={AreaChartData}
+              valueFormatter={formatBitsPerSecond}
+            />
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
       <Row>
-        <label>Comparison area chart</label>
-        <SectionContainer className="analysis-by-time">
-          <StackedAreaChart
-            chartLabel="Oct 2016 Month To Date"
-            areas={comparisonAreaDataset}
-            data={AreaChartData}
-            valueFormatter={formatBitsPerSecond}
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Comparison area chart</label>
+          <SectionContainer className="analysis-by-time">
+            <StackedAreaChart
+              chartLabel="Oct 2016 Month To Date"
+              areas={comparisonAreaDataset}
+              data={AreaChartData}
+              valueFormatter={formatBitsPerSecond}
+            />
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
       <Row>
-        <label>Comparison chart for two stacked area</label>
-        <SectionContainer className="analysis-by-time">
-          <StackedAreaChart
-            chartLabel="Oct 2016 Month To Date"
-            areas={twoStackedAreaDataset}
-            data={AreaChartData}
-            valueFormatter={formatBitsPerSecond}
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Comparison chart for two stacked area</label>
+          <SectionContainer className="analysis-by-time">
+            <StackedAreaChart
+              chartLabel="Oct 2016 Month To Date"
+              areas={twoStackedAreaDataset}
+              data={AreaChartData}
+              valueFormatter={formatBitsPerSecond}
+            />
+          </SectionContainer>
+        </Col>
       </Row>
 
       <hr/>
 
       <Row>
-        <label>Comparison chart composed with line chart </label>
-        <SectionContainer className="analysis-by-time">
-          <LineAreaComposedChart
-            chartLabel="Oct 2016 Month To Date"
-            data={composedChartData}
-            keyLabel="Storage"
-            valueFormatter={formatBitsPerSecond}
-            comparisonKeyLabel="Comparison Storage"
-            isComparison={true}
-          />
-        </SectionContainer>
+        <Col xs={12}>
+          <label>Comparison chart composed with line chart </label>
+          <SectionContainer className="analysis-by-time">
+            <LineAreaComposedChart
+              chartLabel="Oct 2016 Month To Date"
+              data={composedChartData}
+              keyLabel="Storage"
+              valueFormatter={formatBitsPerSecond}
+              comparisonKeyLabel="Comparison Storage"
+              isComparison={true}
+            />
+          </SectionContainer>
+        </Col>
       </Row>
     </div>
   )
