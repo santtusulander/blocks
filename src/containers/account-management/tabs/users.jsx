@@ -142,7 +142,7 @@ export class AccountManagementAccountUsers extends Component {
     this.props.router.push({
       pathname,
       query: {
-        page: nextPage,
+        page: nextPage || 1,
         sortBy: this.state.sortBy,
         sortOrder: this.state.sortOrder,
         filterBy: 'email',
@@ -344,14 +344,16 @@ export class AccountManagementAccountUsers extends Component {
     clearTimeout(this.searchTimer)
     this.setState({
       search: e.target.value
-    }, () => {
-      this.searchTimeout = setTimeout(() => this.onSearchSubmit(), 1000)
     })
+    this.searchTimeout = setTimeout(this.onActivePageChange, 1000)
 
   }
 
-  onSearchSubmit() {
-    this.onActivePageChange(1)
+  onSearchSubmit(e) {
+    if (e.key === 'Enter') {
+      clearTimeout(this.searchTimer)
+      this.onActivePageChange(1)
+    }
   }
 
   render() {
@@ -393,6 +395,10 @@ export class AccountManagementAccountUsers extends Component {
     }
 
     const finalUserText = <FormattedMessage id='portal.role.list.search.userCount.text' values={{userCount: totalCount}} />
+
+    if (fetching && !users) {
+      return <LoadingSpinner />
+    }
 
     return (
       <PageContainer>
@@ -439,71 +445,70 @@ export class AccountManagementAccountUsers extends Component {
 
         </SectionHeader>
 
-        { fetching
-          ? <LoadingSpinner />
-          : <div>
-              { users && users.size !== 0 &&
-                <Table striped={true}>
-                  <thead>
-                    <tr>
-                      <TableSorter {...sorterProps} column="email" width="40%">
-                        <FormattedMessage id="portal.user.list.email.text" />
-                      </TableSorter>
-                      <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-                      {/* TODO: UDNP-3529 - Removed until we have group_id in user
-                        <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
-                      */}
+        { fetching && users && users.size === 0 && <LoadingSpinner /> }
+
+        { users && users.size !== 0 &&
+          <div>
+            <Table striped={true} style={{opacity: fetching ? 0.6 : 1.0}}>
+              <thead>
+                <tr>
+                  <TableSorter {...sorterProps} column="email" width="40%">
+                    <FormattedMessage id="portal.user.list.email.text" />
+                  </TableSorter>
+                  <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+                  {/* TODO: UDNP-3529 - Removed until we have group_id in user
+                    <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+                  */}
+                  <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                    <th width="1%"/>
+                  </IsAllowed>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.addingNew && <InlineAdd
+                  validate={this.validateInlineAdd}
+                  inputs={this.getInlineAddFields()}
+                  unmount={this.toggleInlineAdd}
+                  save={this.newUser}/>}
+
+                {users && users.map((user, i) => {
+                  const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
+
+                  return (
+                    <tr key={i}>
+                      <td>
+                        {this.getEmailForUser(user)}
+                      </td>
+                      <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                      { /* TODO: UDNP-3529 removed until we have group data in user
+                      <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                      */ }
                       <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                        <th width="1%"/>
+                        <td className="nowrap-column">
+                            <ActionButtons
+                              editDisabled={!userIsEditable}
+                              deleteDisabled={!userIsEditable}
+                              permissions={{
+                                modify: MODIFY_USER,
+                                delete: DELETE_USER
+                              }}
+                              onEdit={() => {
+                                this.editUser(user)
+                              }}
+                              onDelete={() => this.deleteUser(user.get('email'))} />
+                        </td>
                       </IsAllowed>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.addingNew && <InlineAdd
-                      validate={this.validateInlineAdd}
-                      inputs={this.getInlineAddFields()}
-                      unmount={this.toggleInlineAdd}
-                      save={this.newUser}/>}
-
-                    {users && users.map((user, i) => {
-                      const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
-
-                      return (
-                        <tr key={i}>
-                          <td>
-                            {this.getEmailForUser(user)}
-                          </td>
-                          <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
-                          { /* TODO: UDNP-3529 removed until we have group data in user
-                          <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                          */ }
-                          <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                            <td className="nowrap-column">
-                                <ActionButtons
-                                  editDisabled={!userIsEditable}
-                                  deleteDisabled={!userIsEditable}
-                                  permissions={{
-                                    modify: MODIFY_USER,
-                                    delete: DELETE_USER
-                                  }}
-                                  onEdit={() => {
-                                    this.editUser(user)
-                                  }}
-                                  onDelete={() => this.deleteUser(user.get('email'))} />
-                            </td>
-                          </IsAllowed>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              }
-              {
-                // Show Pagination if more items than fit on PAGE_SIZE
-                totalCount > PAGE_SIZE &&
-                <Paginator {...paginationProps} />
-              }
-            </div>
+                  )
+                })}
+              </tbody>
+            </Table>
+            {
+              // Show Pagination if more items than fit on PAGE_SIZE
+              totalCount > PAGE_SIZE &&
+              <Paginator {...paginationProps} />
+            }
+          </div>
         }
 
         {!fetching && users && users.size === 0 &&
