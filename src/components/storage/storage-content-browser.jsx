@@ -81,7 +81,7 @@ const StorageContentBrowser = ({
                   <TruncatedTitle content={name} />
                 </div>
               </td>
-              <td><FormattedDate value={unixTimestampToDate(item.get('lastModified'))} /> - <FormattedTime value={unixTimestampToDate(item.get('lastModified'))} /></td>
+              <td><FormattedDate value={unixTimestampToDate(item.get('lastModified'))} /> <FormattedMessage id="portal.dash" /> <FormattedTime value={unixTimestampToDate(item.get('lastModified'))} /></td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
                 <IsAllowed to={MODIFY_STORAGE}>
