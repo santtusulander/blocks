@@ -170,6 +170,11 @@ const mapMarkers =
     [actionTypes.RECEIVE]: receiveEntity({ key: 'mapMarkers' })
   }, Map())
 
+const publishedUrls =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'publishedUrls' })
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
@@ -195,5 +200,6 @@ export default combineReducers({
   users,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
   entityPagination,
-  mapMarkers
+  mapMarkers,
+  publishedUrls
 })
