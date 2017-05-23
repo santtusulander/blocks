@@ -12,12 +12,13 @@ import IconDelete from '../shared/icons/icon-delete.jsx'
 import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME,
-  MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
+  MAPBOX_CENTER,
   MAPBOX_CITY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
-  MAPBOX_HEAT_MAP_DEFAULT_COLOR
+  MAPBOX_HEAT_MAP_DEFAULT_COLOR,
+  MAPBOX_MAXBOUNDS
 } from '../../constants/mapbox'
 import {
   calculateMedian,
@@ -36,7 +37,8 @@ class Mapbox extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      zoom: MAPBOX_ZOOM_MIN,
+      minZoom: 0,
+      zoom: MAPBOX_CITY_LEVEL_ZOOM - 1,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
@@ -124,7 +126,11 @@ class Mapbox extends Component {
    * @param  {object}      map Instance of Mapbox map
    */
   onStyleLoaded(map) {
+    //minimumZoom is calculated based on an equation that describe the correlation between minimum zoom level and the container's size
+    const minimumZoom = - 7.95 + (1.44 * Math.log(map._canvas.clientWidth / 2))
+
     // Fix to draw map correctly on reload
+    this.setState({ zoom: minimumZoom, minZoom: minimumZoom })
     map.resize()
 
     this.addCountryLayers(map, this.props.countryData.toJS())
@@ -160,7 +166,7 @@ class Mapbox extends Component {
   }
 
   onDecreaseZoom() {
-    if (this.state.zoom > MAPBOX_ZOOM_MIN) {
+    if (this.state.zoom > this.state.minZoom) {
       this.setState({ zoom: this.state.zoom - 1 })
     }
   }
@@ -662,7 +668,7 @@ class Mapbox extends Component {
    * @method resetZoom
    */
   resetZoom() {
-    this.setState({ zoom: MAPBOX_ZOOM_MIN })
+    this.setState({ zoom: this.state.minZoom })
   }
 
 
@@ -677,6 +683,8 @@ class Mapbox extends Component {
 
     return (
       <ReactMapboxGl
+        renderWorldCopies={false}
+        center={MAPBOX_CENTER}
         ref={ref => {
           this.mapbox = ref
           return this.mapbox
@@ -687,12 +695,13 @@ class Mapbox extends Component {
           height: this.props.height
         }}
         zoom={[this.state.zoom]}
-        minZoom={MAPBOX_ZOOM_MIN}
+        minZoom={this.state.minZoom}
         maxZoom={MAPBOX_ZOOM_MAX}
         onStyleLoad={this.onStyleLoaded}
         onMouseMove={this.onMouseMove}
         onDragEnd={this.getCitiesOnZoomDrag}
         scrollZoom={false}
+        maxBounds={MAPBOX_MAXBOUNDS}
         dragRotate={false}>
 
         { (this.props.markers && !this.props.markers.isEmpty()) &&
@@ -767,10 +776,10 @@ class Mapbox extends Component {
             <div className="map-slider">
               <div className="map-slider__wrapper">
                 <input type="range"
-                  min={MAPBOX_ZOOM_MIN}
+                  min={this.state.minZoom}
                   max={MAPBOX_ZOOM_MAX}
                   step={1}
-                  defaultValue={MAPBOX_ZOOM_MIN}
+                  defaultValue={this.state.minZoom}
                   onMouseUp={this.onZoom}
                   value={this.state.zoom}
                   onChange={this.onZoom}
