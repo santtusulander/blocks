@@ -31,3 +31,17 @@ export const fetchAll = (params) => {
     return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
   })
 }
+
+export const remove = (params) => {
+  const {group, storage, splat, fileName} = params
+  const reduxID = buildReduxId(group, storage, splat || '')
+  const mockAPI = {
+    delete: () => {
+      return new Promise(resolve => {
+        resolve({reduxID, fileName})
+      })
+    }
+  }
+
+  return mockAPI.delete()
+}

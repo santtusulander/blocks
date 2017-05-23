@@ -75,6 +75,11 @@ export const removeEntity = (state, action) => {
   return state.delete(id)
 }
 
+export const removeCISContents = (state, action) => {
+  const {reduxID, fileName} = action.response
+  return state.update(reduxID, files => files.filter(file => file.get('name') !== fileName))
+}
+
 /**
  * Handles paginated resource entities / page
  * @param  {[type]} state  [description]

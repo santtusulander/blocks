@@ -21,7 +21,9 @@ const StorageContentBrowser = ({
   isRootDirectory,
   openDirectoryHandler,
   sorterProps,
-  userDateFormat
+  userDateFormat,
+  removeStorageContents,
+  params
 }) => {
   const menuOptions = [
     {
@@ -33,6 +35,7 @@ const StorageContentBrowser = ({
     {
       label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
       handleClick: (fileName) => {
+        removeStorageContents({...params, fileName})
         fileName/*console.log('delete', fileName)*/
       }
     }
@@ -120,6 +123,8 @@ StorageContentBrowser.propTypes = {
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
+  params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   sorterProps: PropTypes.object,
   userDateFormat: PropTypes.string
 }

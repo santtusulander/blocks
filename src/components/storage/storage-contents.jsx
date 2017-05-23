@@ -290,7 +290,8 @@ class StorageContents extends Component {
       isFetchingContents,
       intl,
       params,
-      userDateFormat 
+      userDateFormat,
+      removeStorageContents
     } = this.props
 
 
@@ -437,6 +438,8 @@ class StorageContents extends Component {
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
+                        params={params}
                       />
                     :
                       null
@@ -464,6 +467,7 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   router: PropTypes.object,
   uploadHandlers: PropTypes.object,
   userDateFormat: PropTypes.string
@@ -488,6 +492,7 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => ({
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
+  removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
   uploadHandlers: bindActionCreators(uploadActions, dispatch)
 })
 

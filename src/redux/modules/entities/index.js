@@ -4,7 +4,7 @@ import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination, removeCISContents} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -86,13 +86,13 @@ const networks =
 const CISIngestPoints =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPoints' }),
-    [actionTypes.REMOVE]: removeEntity,
     [actionTypes.FAIL]: failEntity
   }, Map())
 
 const CISIngestPointContents =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPointContents' }),
+    [actionTypes.REMOVE]: removeCISContents,
     [actionTypes.FAIL]: failEntity
   }, Map())
 
