@@ -47,11 +47,21 @@ export default class MiniAreaChart extends Component {
   }
 
   render() {
-    const { chartLabel, data, className } = this.props
+    const { chartLabel, data, className, height, width, areas, nullAllowed } = this.props
+    if (!nullAllowed && data && data.length) {
+      data.forEach(item => {
+        areas.forEach(area => {
+          if (item[area.dataKey] === null) {
+            item[area.dataKey] = 0
+          }
+        })
+      })
+    }
+
     return (
       <div className="mini-area-chart">
         <span className="mini-area-chart-label">{chartLabel}</span>
-        <ResponsiveContainer minHeight={50} aspect={2}>
+        <ResponsiveContainer height={height} width={width}>
           { !!data && !!data.length ?
             <AreaChart data={data} className={className}>
               <defs>
@@ -69,7 +79,7 @@ export default class MiniAreaChart extends Component {
                 />
               </AreaChart>
           }
-      </ResponsiveContainer>
+        </ResponsiveContainer>
       </div>);
   }
 }
@@ -77,12 +87,18 @@ export default class MiniAreaChart extends Component {
 MiniAreaChart.displayName = 'MiniAreaChart'
 MiniAreaChart.defaultProps = {
   noGradient: false,
-  data: []
+  data: [],
+  areas: [],
+  nullAllowed: false,
+  height: 50
 }
 MiniAreaChart.propTypes = {
   areas: PropTypes.array,
   chartLabel: PropTypes.string,
   className: PropTypes.string,
   data: PropTypes.array,
-  noGradient: PropTypes.bool
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  noGradient: PropTypes.bool,
+  nullAllowed: PropTypes.bool,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
