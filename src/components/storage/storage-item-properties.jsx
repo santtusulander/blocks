@@ -40,13 +40,12 @@ class StorageItemProperties extends Component {
 
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeSidePanelNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   render() {
     const {
-      copyToClipboard,
       created,
       dateFormat,
       isDirectory,
@@ -93,7 +92,7 @@ class StorageItemProperties extends Component {
                    <Button
                      className='url-copy-button'
                      bsStyle="link"
-                     onClick={() => copyToClipboard(url)}>
+                     onClick={() => this.copyToClipboard(url)}>
                      <FormattedMessage id="portal.storage.summaryPage.itemProperties.copyLink.label" />
                    </Button>
                  </div>
@@ -109,14 +108,13 @@ class StorageItemProperties extends Component {
 
 StorageItemProperties.displayName = "StorageItemProperties"
 StorageItemProperties.propTypes = {
-  copyToClipboard: PropTypes.func,
   created: PropTypes.number,
   dateFormat: PropTypes.string,
   isDirectory: PropTypes.bool,
   lastModified: PropTypes.number,
   location: PropTypes.string,
   size: PropTypes.number,
-  uiActions: PropTypes.objext,
+  uiActions: PropTypes.object,
   urls: PropTypes.array
 }
 
