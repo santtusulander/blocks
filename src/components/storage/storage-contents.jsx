@@ -67,6 +67,7 @@ class StorageContents extends Component {
 
   componentDidMount() {
     this.generateUploadPath()
+    this.appendTargetDirNameToPath()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,6 +76,7 @@ class StorageContents extends Component {
     }
 
     this.generateUploadPath()
+    this.appendTargetDirNameToPath()
   }
 
   /**
@@ -90,7 +92,6 @@ class StorageContents extends Component {
       baseUploadPath = (asperaUpload ? ASPERA_DEFAULT_DESTINATION_FOLDER : HTTP_DEFAULT_DESTINATION_FOLDER)
     } else {
       baseUploadPath = params.splat
-
       /* Upload path for Aspera should include './' prefix */
       if (asperaUpload && baseUploadPath.indexOf('.') !== 0) {
         baseUploadPath = `${ASPERA_DEFAULT_DESTINATION_FOLDER}${baseUploadPath}`
@@ -290,9 +291,8 @@ class StorageContents extends Component {
       isFetchingContents,
       intl,
       params,
-      userDateFormat 
+      userDateFormat
     } = this.props
-
 
     const { storage: storageId} = params
     const isRootDirectory = params.splat ? false : true
