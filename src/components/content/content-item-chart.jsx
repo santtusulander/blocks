@@ -361,7 +361,6 @@ ContentItemChart.propTypes = {
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
-  serviceType: React.PropTypes.string,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   differenceData: React.PropTypes.instanceOf(Immutable.List),
   disableLinkTo: React.PropTypes.bool,
@@ -376,6 +375,7 @@ ContentItemChart.propTypes = {
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
+  serviceType: React.PropTypes.string,
   showSlices: React.PropTypes.bool,
   tagText: React.PropTypes.string,
   timeToFirstByte: React.PropTypes.string
