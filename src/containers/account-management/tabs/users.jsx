@@ -91,6 +91,7 @@ export class AccountManagementAccountUsers extends Component {
     this.isLeaving = false;
 
     this.onActivePageChange = this.onActivePageChange.bind(this)
+    this.setSearchTimeout = this.setSearchTimeout.bind(this)
     this.searchTimeout = null
   }
 
@@ -340,15 +341,15 @@ export class AccountManagementAccountUsers extends Component {
       })
   }
 
+  setSearchTimeout(delay = 1000) {
+    this.searchTimeout = setTimeout(this.onActivePageChange, delay)
+  }
+
   onSearchChange(e) {
     clearTimeout(this.searchTimeout)
     this.setState({
       search: e.target.value
-    }, () => {
-      this.searchTimeout = setTimeout(this.onActivePageChange, 1000)
-    })
-
-
+    }, this.setSearchTimeout)
   }
 
   onSearchSubmit(e) {
