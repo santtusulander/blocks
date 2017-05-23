@@ -29,6 +29,25 @@ class StorageContentBrowser extends Component {
     this.setState({ expandedProperties })
   }
 
+  copyToClipboard(text) {
+    const textArea = document.createElement('textarea')
+    textArea.style.left = '-1000px'
+    textArea.style.position = 'absolute'
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+
+    try {
+      const result = document.execCommand('copy')
+      document.body.removeChild(textArea)
+      result ? console.log('yes') : console.log('no')
+    } catch (e) {
+      document.body.removeChild(textArea)
+      console.log('no')
+    }
+
+  }
+
   render() {
     const {
       backButtonHandler,
@@ -144,6 +163,7 @@ class StorageContentBrowser extends Component {
                       size={size}
                       dateFormat={userDateFormat}
                       location={location}
+                      copyToClipboard={this.copyToClipboard}
                     />
                   </td>
                 </tr>,

@@ -166,6 +166,31 @@
     >.text {
       color: $silver-60;
     }
+
+    .url {
+      .url-text {
+        display: inline-block;
+      }
+
+      .url-copy-button {
+        display: inline-block;
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 12px !important;
+        visibility: hidden;
+      }
+
+      .url-hidden-input {
+        position: absolute;
+        left: -1000px;
+      }
+
+      &:hover {
+        .url-copy-button {
+          visibility: visible;
+        }
+      }
+    }
   }
 }
 
