@@ -21,8 +21,6 @@ import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
          TWO_FA_DEFAULT_AUTH_METHOD,
          LANGUAGE_OPTIONS
-        //  ,
-        //  DATE_FORMAT_OPTIONS
         } from '../../constants/user'
 import { TIME_ZONES } from '../../constants/time-zones'
 
