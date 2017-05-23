@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Table } from 'react-bootstrap'
+import { Table, Panel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
 import classNames from 'classnames'
@@ -13,6 +13,7 @@ import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
 import IconContextMenu from '../shared/icons/icon-context-menu'
+import IconCaretDown from '../shared/icons/icon-caret-down'
 
 const StorageContentBrowser = ({
   backButtonHandler,
@@ -37,6 +38,7 @@ const StorageContentBrowser = ({
               </div>
             }
           </th>
+          <th/>
           <TableSorter {...sorterProps} column='name'>
             <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
           </TableSorter>
@@ -63,7 +65,7 @@ const StorageContentBrowser = ({
             {'content-browser-row-directory': isDirectory},
             {'highlight': (highlightedItem === name)}
           )
-          return (
+          return ([
             <tr
               key={index}
               {...dataAttributes}
@@ -72,8 +74,11 @@ const StorageContentBrowser = ({
                 isDirectory ? openDirectoryHandler(name) : null
               }}>
               <td
-                className='storage-contents-icon-cell'>
+                className='storage-contents-cell no-border'>
                 {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
+              </td>
+              <td className='storage-contents-cell no-border'>
+                <IconCaretDown/>
               </td>
               <td>
                 <div className='storage-contents-name'>
@@ -87,8 +92,16 @@ const StorageContentBrowser = ({
                   <IconContextMenu className="storage-contents-context-menu-icon" />
                 </IsAllowed>
               </td>
-            </tr>
-          )
+            </tr>,
+            <tr>
+              <td colSpan="6">
+                <Panel collapsible={true} expanded={true}>
+
+                </Panel>
+              </td>
+            </tr>,
+            <tr />
+          ])
         })
       }
       </tbody>

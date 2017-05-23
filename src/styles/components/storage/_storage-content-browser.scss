@@ -2,8 +2,10 @@
   cursor: pointer;
 }
 
-.storage-contents-icon-cell {
-  border-right-color: rgba($black, 0) !important;
+.storage-contents-cell {
+  &.no-border {
+    border-right-color: rgba($black, 0) !important;
+  }
 }
 
 .storage-contents-spinner {
