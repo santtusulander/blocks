@@ -80,7 +80,7 @@ class AsperaUpload extends Component {
   componentWillUnmount() {
 
     if (this.state.isAsperaInitialized) {
-      
+
       //Remove transferEventListener if set
       if (this.props.handleTransferEvents) {
         this.aspera.asperaWeb.removeEventListener('transfer', this.props.handleTransferEvents)
@@ -326,7 +326,7 @@ AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
   asperaGetaway: React.PropTypes.string,
   children: React.PropTypes.object,
-  handleTransferEvents: React.PropTypes.object,
+  handleTransferEvents: React.PropTypes.func,
   highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
   onDragEnter: React.PropTypes.func,
