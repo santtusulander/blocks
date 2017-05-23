@@ -119,7 +119,7 @@ permissionMapping[PERMISSIONS.DELETE_STORAGE] =
   (role) => role.getIn([ 'cis', 'ingest_points', 'delete', 'allowed'])
 permissionMapping[PERMISSIONS.CREATE_ACCESS_KEY] =
   (role) => role.getIn([ 'cis', 'access_keys', 'create', 'allowed'])
-permissionMapping[PERMISSIONS.SHOW_STORAGE_CONTENT] =
+permissionMapping[PERMISSIONS.SHOW_STORAGE_CONTEXT_MENU] =
     (role) => role.getIn([ 'cis', 'content', 'show', 'allowed'])
 
 // Advanced

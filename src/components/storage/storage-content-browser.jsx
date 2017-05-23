@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
-import { SHOW_STORAGE_CONTENT } from '../../constants/permissions'
+import { SHOW_STORAGE_CONTEXT_MENU } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
@@ -99,7 +99,7 @@ const StorageContentBrowser = ({
               <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
-                <IsAllowed to={SHOW_STORAGE_CONTENT}>
+                <IsAllowed to={SHOW_STORAGE_CONTEXT_MENU}>
                   <ContextMenu header={name} options={menuOptions}/>
                 </IsAllowed>
 
