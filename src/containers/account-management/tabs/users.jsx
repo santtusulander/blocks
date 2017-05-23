@@ -91,6 +91,7 @@ export class AccountManagementAccountUsers extends Component {
     this.isLeaving = false;
 
     this.onActivePageChange = this.onActivePageChange.bind(this)
+    this.searchTimeout = null
   }
 
   componentWillMount() {
@@ -340,15 +341,17 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   onSearchChange(e) {
+    clearTimeout(this.searchTimer)
     this.setState({
       search: e.target.value
+    }, () => {
+      this.searchTimeout = setTimeout(() => this.onSearchSubmit(), 1000)
     })
+
   }
 
-  onSearchSubmit(e) {
-    if (e.key === 'Enter') {
-      this.onActivePageChange(1)
-    }
+  onSearchSubmit() {
+    this.onActivePageChange(1)
   }
 
   render() {
@@ -359,7 +362,8 @@ export class AccountManagementAccountUsers extends Component {
       permissions,
       allowedRoles,
       permissionServiceTitles,
-      params: {account}
+      params: {account},
+      location: {query: {filterValue}}
     } = this.props
 
     //Merge corresponding UIpermissions to role object inorder to display permission modal
@@ -438,60 +442,62 @@ export class AccountManagementAccountUsers extends Component {
         { fetching
           ? <LoadingSpinner />
           : <div>
-              <Table striped={true}>
-                <thead>
-                  <tr>
-                    <TableSorter {...sorterProps} column="email" width="40%">
-                      <FormattedMessage id="portal.user.list.email.text" />
-                    </TableSorter>
-                    <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
-                    {/* TODO: UDNP-3529 - Removed until we have group_id in user
-                      <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
-                    */}
-                    <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                      <th width="1%"/>
-                    </IsAllowed>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.addingNew && <InlineAdd
-                    validate={this.validateInlineAdd}
-                    inputs={this.getInlineAddFields()}
-                    unmount={this.toggleInlineAdd}
-                    save={this.newUser}/>}
+              { users && users.size !== 0 &&
+                <Table striped={true}>
+                  <thead>
+                    <tr>
+                      <TableSorter {...sorterProps} column="email" width="40%">
+                        <FormattedMessage id="portal.user.list.email.text" />
+                      </TableSorter>
+                      <th width="19%"><FormattedMessage id="portal.user.list.role.text" /></th>
+                      {/* TODO: UDNP-3529 - Removed until we have group_id in user
+                        <th width="20%"><FormattedMessage id="portal.user.list.groups.text" /></th>
+                      */}
+                      <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                        <th width="1%"/>
+                      </IsAllowed>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.addingNew && <InlineAdd
+                      validate={this.validateInlineAdd}
+                      inputs={this.getInlineAddFields()}
+                      unmount={this.toggleInlineAdd}
+                      save={this.newUser}/>}
 
-                  {users && users.map((user, i) => {
-                    const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
+                    {users && users.map((user, i) => {
+                      const userIsEditable = roleIsEditableByCurrentUser(allowedRoles, user.getIn(['roles', 0]))
 
-                    return (
-                      <tr key={i}>
-                        <td>
-                          {this.getEmailForUser(user)}
-                        </td>
-                        <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
-                        { /* TODO: UDNP-3529 removed until we have group data in user
-                        <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
-                        */ }
-                        <IsAllowed to={MODIFY_USER || DELETE_USER}>
-                          <td className="nowrap-column">
-                              <ActionButtons
-                                editDisabled={!userIsEditable}
-                                deleteDisabled={!userIsEditable}
-                                permissions={{
-                                  modify: MODIFY_USER,
-                                  delete: DELETE_USER
-                                }}
-                                onEdit={() => {
-                                  this.editUser(user)
-                                }}
-                                onDelete={() => this.deleteUser(user.get('email'))} />
+                      return (
+                        <tr key={i}>
+                          <td>
+                            {this.getEmailForUser(user)}
                           </td>
-                        </IsAllowed>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </Table>
+                          <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
+                          { /* TODO: UDNP-3529 removed until we have group data in user
+                          <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
+                          */ }
+                          <IsAllowed to={MODIFY_USER || DELETE_USER}>
+                            <td className="nowrap-column">
+                                <ActionButtons
+                                  editDisabled={!userIsEditable}
+                                  deleteDisabled={!userIsEditable}
+                                  permissions={{
+                                    modify: MODIFY_USER,
+                                    delete: DELETE_USER
+                                  }}
+                                  onEdit={() => {
+                                    this.editUser(user)
+                                  }}
+                                  onDelete={() => this.deleteUser(user.get('email'))} />
+                            </td>
+                          </IsAllowed>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              }
               {
                 // Show Pagination if more items than fit on PAGE_SIZE
                 totalCount > PAGE_SIZE &&
@@ -500,10 +506,10 @@ export class AccountManagementAccountUsers extends Component {
             </div>
         }
 
-        {users && users.size === 0 &&
+        {!fetching && users && users.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
-              <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: this.state.search}} /></span>
+              <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: filterValue}} /></span>
             :
               <span><FormattedMessage id="portal.user.list.noUsersFound.text" /></span>
             }
