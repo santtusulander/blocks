@@ -75,9 +75,18 @@ export const removeEntity = (state, action) => {
   return state.delete(id)
 }
 
+/**
+ * reducer for removing an CIS_file/folder
+ * @param  {[type]} state  [description]
+ * @param  {[type]} action [description]
+ * @return {[type]}        [description]
+ */
 export const removeCISContents = (state, action) => {
   const {reduxID, fileName} = action.response
-  return state.update(reduxID, files => files.filter(file => file.get('name') !== fileName))
+  if (!reduxID || !fileName) {
+    return state
+  }
+  return state.update(reduxID, files => files && files.filter(file => file.get('name') !== fileName))
 }
 
 /**
