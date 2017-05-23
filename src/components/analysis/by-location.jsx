@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import Mapbox from '../map/mapbox';
-import { isWebGLEnabled } from '../../util/helpers'
+import { hasWebGLEnabled } from '../../app'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
@@ -25,7 +25,7 @@ const AnalysisByLocation = (props) => {
     return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
   }
 
-  if (!isWebGLEnabled()) {
+  if (!hasWebGLEnabled) {
     return <h4 className="no-webgl-support"><FormattedMessage id="portal.common.no-webgl-support.text" /></h4>
   }
 
