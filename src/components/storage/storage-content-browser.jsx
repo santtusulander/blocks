@@ -27,8 +27,8 @@ const StorageContentBrowser = ({
   const menuOptions = [
     {
       label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
-      handleClick: (fileName) => {
-        fileName/*console.log('download', fileName)*/
+      handleClick: (/*fileName*/) => {
+        //TODO: Implement download logic
       }
     },
     {
