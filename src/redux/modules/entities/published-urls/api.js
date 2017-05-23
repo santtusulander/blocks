@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {normalize, schema} from 'normalizr'
+import { normalize, schema } from 'normalizr'
 import { Map } from 'immutable'
 
 import { BASE_URL_NORTH, buildReduxId } from '../../../util'
