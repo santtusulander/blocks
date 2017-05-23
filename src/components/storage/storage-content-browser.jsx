@@ -1,9 +1,10 @@
-import React, { PropTypes } from 'react'
-import { Table, Panel } from 'react-bootstrap'
+import React, { PropTypes, Component } from 'react'
+import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
 import classNames from 'classnames'
 
+import StorageItemProperties from './storage-item-properties'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
@@ -15,98 +16,133 @@ import IconBack from '../shared/icons/icon-back'
 import IconContextMenu from '../shared/icons/icon-context-menu'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 
-const StorageContentBrowser = ({
-  backButtonHandler,
-  contents,
-  highlightedItem,
-  isRootDirectory,
-  openDirectoryHandler,
-  sorterProps,
-  userDateFormat
-}) => {
-  return (
-    <Table striped={true} className='storage-contents-table'>
-      <thead>
-        <tr>
-          <th width="1%">
-            {!isRootDirectory &&
-              <div onClick={backButtonHandler}>
-                <IconBack
-                  className='storage-contents-icon back'
-                  height={20}
-                  viewBox='0 0 36 20' />
-              </div>
-            }
-          </th>
-          <th/>
-          <TableSorter {...sorterProps} column='name'>
-            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
-          </TableSorter>
-          <TableSorter {...sorterProps} column='lastModified'>
-            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' />
-          </TableSorter>
-          <TableSorter {...sorterProps} column='size'>
-            <FormattedMessage id='portal.storage.summaryPage.contentBrowser.size.label' />
-          </TableSorter>
-          <th width="1%"/>
-        </tr>
-      </thead>
-      <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
-        {contents.map((item, index) => {
-          const name = item.get('name')
-          const isDirectory = item.get('type') === 'directory'
-          const dataAttributes = {
-            'data-drop-zone': true
-          }
-          if (isDirectory) {
-            dataAttributes['data-drop-dir'] = name
-          }
-          const rowClassnames = classNames(
-            {'content-browser-row-directory': isDirectory},
-            {'highlight': (highlightedItem === name)}
-          )
-          return ([
-            <tr
-              key={index}
-              {...dataAttributes}
-              className={rowClassnames}
-              onClick={() => {
-                isDirectory ? openDirectoryHandler(name) : null
-              }}>
-              <td
-                className='storage-contents-cell no-border'>
-                {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
-              </td>
-              <td className='storage-contents-cell no-border'>
-                <IconCaretDown/>
-              </td>
-              <td>
-                <div className='storage-contents-name'>
-                  <TruncatedTitle content={name} />
-                </div>
-              </td>
-              <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
-              <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
-              <td>
-                <IsAllowed to={MODIFY_STORAGE}>
-                  <IconContextMenu className="storage-contents-context-menu-icon" />
-                </IsAllowed>
-              </td>
-            </tr>,
-            <tr>
-              <td colSpan="6">
-                <Panel collapsible={true} expanded={true}>
+class StorageContentBrowser extends Component {
+  constructor(props) {
+    super(props)
 
-                </Panel>
-              </td>
-            </tr>,
-            <tr />
-          ])
-        })
-      }
-      </tbody>
-    </Table>
-  )
+    this.state = {
+      expandedProperties: null
+    }
+  }
+
+  setExpandedProperties(expandedProperties) {
+    this.setState({ expandedProperties })
+  }
+
+  render() {
+    const {
+      backButtonHandler,
+      contents,
+      highlightedItem,
+      isRootDirectory,
+      openDirectoryHandler,
+      sorterProps,
+      userDateFormat
+    } = this.props
+
+    return (
+      <Table striped={true} className='storage-contents-table'>
+        <thead>
+          <tr>
+            <th width="1%">
+              {!isRootDirectory &&
+                <div onClick={backButtonHandler}>
+                  <IconBack
+                    className='storage-contents-icon back'
+                    height={20}
+                    viewBox='0 0 36 20' />
+                </div>
+              }
+            </th>
+            <th/>
+            <TableSorter {...sorterProps} column='name'>
+              <FormattedMessage id='portal.storage.summaryPage.contentBrowser.name.label' />
+            </TableSorter>
+            <TableSorter {...sorterProps} column='lastModified'>
+              <FormattedMessage id='portal.storage.summaryPage.contentBrowser.lastModified.label' />
+            </TableSorter>
+            <TableSorter {...sorterProps} column='size'>
+              <FormattedMessage id='portal.storage.summaryPage.contentBrowser.size.label' />
+            </TableSorter>
+            <th width="1%"/>
+          </tr>
+        </thead>
+        <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
+          {contents.map((item, index) => {
+            const name = item.get('name')
+            const isDirectory = item.get('type') === 'directory'
+            const isPropertiesOpen = this.state.expandedProperties === name
+            const dataAttributes = {
+              'data-drop-zone': true
+            }
+            if (isDirectory) {
+              dataAttributes['data-drop-dir'] = name
+            }
+            const rowClassnames = classNames(
+              {'content-browser-row-directory': isDirectory},
+              {'highlight': (highlightedItem === name)}
+            )
+
+            const row = [
+              <tr
+                key={index}
+                {...dataAttributes}
+                className={rowClassnames}
+                onClick={() => {
+                  isDirectory ? openDirectoryHandler(name) : null
+                }}>
+                <td
+                  className='storage-contents-cell no-border'>
+                  {isDirectory ? <IconFolder className='storage-contents-icon' /> : <IconFile className='storage-contents-icon' />}
+                </td>
+                <td
+                  className='storage-contents-cell no-border'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    isPropertiesOpen
+                      ?
+                        this.setExpandedProperties(null)
+                      :
+                        this.setExpandedProperties(name)
+                  }}>
+                  <IconCaretDown className={classNames('storage-item-properties-icon', {'selected': isPropertiesOpen})}/>
+                </td>
+                <td>
+                  <div className='storage-contents-name'>
+                    <TruncatedTitle content={name} />
+                  </div>
+                </td>
+                <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
+                <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
+                <td>
+                  <IsAllowed to={MODIFY_STORAGE}>
+                    <IconContextMenu className="storage-contents-context-menu-icon" />
+                  </IsAllowed>
+                </td>
+              </tr>
+            ]
+
+            let rowData
+            if (isPropertiesOpen) {
+              rowData = row.concat([
+                <tr className="storage-item-properties-row">
+                  <td colSpan="6">
+                    <StorageItemProperties />
+                  </td>
+                </tr>,
+                <tr />
+              ])
+            } else {
+              rowData = row
+            }
+
+            return rowData
+          })
+          }
+        </tbody>
+      </Table>
+    )
+  }
 }
 
 StorageContentBrowser.displayName = "StorageContentBrowser"

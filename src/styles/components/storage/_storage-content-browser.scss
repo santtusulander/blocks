@@ -127,6 +127,49 @@
   }
 }
 
+.storage-item-properties-icon {
+  cursor: pointer;
+
+  &.selected {
+    transform: rotateZ(180deg);
+
+    polygon {
+      fill: $pale-blue !important;
+    }
+  }
+}
+
+.storage-item-properties-row {
+  background: rgba($deep-blue-20, 0.7) !important;
+}
+
+.storage-item-properties-container {
+  padding: 25px 0;
+}
+
+.storage-item-properties-column {
+  display: inline-block;
+
+  &.left {
+    width: 390px;
+  }
+
+  >.info {
+    margin-bottom: 30px;
+    font-size: 12px;
+
+    > span {
+      font-weight: bold;
+      color: $white;
+    }
+
+    >.text {
+      color: $silver-60;
+    }
+  }
+}
+
+
 .storage-contents-table {
   margin-bottom: rem(25px);
 
