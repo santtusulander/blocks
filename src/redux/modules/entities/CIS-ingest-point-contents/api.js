@@ -35,13 +35,7 @@ export const fetchAll = (params) => {
 export const remove = (params) => {
   const {brand, account, group, storage, splat, fileName} = params
   const reduxID = buildReduxId(group, storage, splat || '')
-  // const mockAPI = {
-  //   delete: () => {
-  //     return new Promise(resolve => {
-  //       setTimeout(() => resolve({reduxID, fileName}), 400)
-  //     })
-  //   }
-  // }
+
   const deleteParams = {
     brand,
     account,

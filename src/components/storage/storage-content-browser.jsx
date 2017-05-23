@@ -36,7 +36,6 @@ const StorageContentBrowser = ({
       label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
       handleClick: (fileName) => {
         removeStorageContents({...params, fileName})
-        fileName/*console.log('delete', fileName)*/
       }
     }
   ];
