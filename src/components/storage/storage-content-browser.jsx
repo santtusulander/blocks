@@ -1,14 +1,16 @@
 import React, { PropTypes } from 'react'
 import { Table } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl'
 import { List } from 'immutable'
 import classNames from 'classnames'
+
+import { unixTimestampToDate } from '../../util/helpers'
 
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
-import { formatDate, formatBytes } from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
@@ -20,8 +22,7 @@ const StorageContentBrowser = ({
   highlightedItem,
   isRootDirectory,
   openDirectoryHandler,
-  sorterProps,
-  userDateFormat
+  sorterProps
 }) => {
   return (
     <Table striped={true} className='storage-contents-table'>
@@ -80,7 +81,7 @@ const StorageContentBrowser = ({
                   <TruncatedTitle content={name} />
                 </div>
               </td>
-              <td>{formatDate(item.get('lastModified'), userDateFormat)}</td>
+              <td><FormattedDate value={unixTimestampToDate(item.get('lastModified'))} /> - <FormattedTime value={unixTimestampToDate(item.get('lastModified'))} /></td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
                 <IsAllowed to={MODIFY_STORAGE}>
@@ -103,8 +104,7 @@ StorageContentBrowser.propTypes = {
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
-  sorterProps: PropTypes.object,
-  userDateFormat: PropTypes.string
+  sorterProps: PropTypes.object
 }
 
 export default StorageContentBrowser
