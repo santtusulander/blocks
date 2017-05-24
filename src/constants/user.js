@@ -39,3 +39,29 @@ export const DATE_FORMAT_OPTIONS = [
   {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
   {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
 ]
+
+export const dateFormats = {
+  date: {
+    'day_num_month_num': {
+      day: 'numeric',
+      month: 'numeric'
+    },
+    'day_num_month_long': {
+      day: 'numeric',
+      month: 'long'
+    },
+    'datenum': {
+      day: '2-digit',
+      month: 'numeric',
+      year: 'numeric'
+    },
+    'datehour': {
+      day: '2-digit',
+      month: 'numeric',
+      year: 'numeric',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'
+    }
+  }
+}
