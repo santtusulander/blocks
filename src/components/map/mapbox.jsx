@@ -841,7 +841,7 @@ Mapbox.propTypes = {
   dataKeyFormat: PropTypes.func,
   geoData: PropTypes.object.isRequired,
   getCitiesWithinBounds: PropTypes.func,
-  height: PropTypes.number,
+  height: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   mapBounds: PropTypes.object,
   mapboxActions: PropTypes.object,
   markers: PropTypes.instanceOf(List),
