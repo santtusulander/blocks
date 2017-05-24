@@ -24,20 +24,6 @@ const StorageContentBrowser = ({
   userDateFormat,
   removeStorageContents
 }) => {
-  const menuOptions = [
-    {
-      label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
-      handleClick: (/*fileName*/) => {
-        //TODO: Implement download logic
-      }
-    },
-    {
-      label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
-      handleClick: (fileName) => {
-        removeStorageContents(fileName)
-      }
-    }
-  ];
 
   return (
     <Table striped={true} className='storage-contents-table'>
@@ -79,6 +65,19 @@ const StorageContentBrowser = ({
             {'content-browser-row-directory': isDirectory},
             {'highlight': (highlightedItem === name)}
           )
+
+          const menuOptions = [
+            {
+              label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
+              handleClick: (/*fileName*/) => {
+                //TODO: Implement download logic
+              }
+            },
+            {
+              label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
+              handleClick: () => removeStorageContents(name)
+            }
+          ];
 
           return (
             <tr
