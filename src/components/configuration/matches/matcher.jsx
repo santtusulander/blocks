@@ -3,9 +3,9 @@ import { Button, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { Field, reduxForm, 
-         formValueSelector, 
-         propTypes as reduxFormPropTypes 
+import { Field, reduxForm,
+         formValueSelector,
+         propTypes as reduxFormPropTypes
        } from 'redux-form'
 
 import FieldFormGroup from '../../shared/form-fields/field-form-group'
@@ -21,8 +21,14 @@ const MAX_FIELD_LENGTH = 255
 const validate = ({ val, containsVal, activeFilter }, props) => {
   const errors = {}
 
-  errors.val = !val ? <FormattedMessage id="portal.policy.edit.matcher.required.error"/> :
-               !isValidTextField(val, MIN_FIELD_LENGTH, MAX_FIELD_LENGTH) ? <FormattedMessage id="portal.policy.edit.matcher.invalid.error"/> : null
+  /* TODO: UDNP-3754 - Improve policy validation */
+  if (props.customValidator) {
+    errors.val = !val ? <FormattedMessage id="portal.policy.edit.matcher.required.error"/> :
+                 !props.customValidator(val) ? <FormattedMessage id="portal.policy.edit.matcher.invalid.error"/> : null
+  } else {
+    errors.val = !val ? <FormattedMessage id="portal.policy.edit.matcher.required.error"/> :
+                 !isValidTextField(val, MIN_FIELD_LENGTH, MAX_FIELD_LENGTH) ? <FormattedMessage id="portal.policy.edit.matcher.invalid.error"/> : null
+  }
 
   if (props.hasFieldDetail && hasValueField(activeFilter)) {
     errors.containsVal = !containsVal ? <FormattedMessage id="portal.policy.edit.matcher.required.error"/> :
@@ -206,6 +212,7 @@ Matcher.propTypes = {
   activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  customValidator: React.PropTypes.func,
   description: React.PropTypes.string,
   hasContains: React.PropTypes.bool,
   hasEmpty: React.PropTypes.bool,
