@@ -127,7 +127,7 @@ class StorageContentBrowser extends Component {
                   <IconCaretDown className={classNames('storage-item-properties-icon', {'selected': isPropertiesOpen})}/>
                 </td>
                 <td>
-                  <div className='storage-contents-name'>
+                  <div className={classNames('storage-contents-name', {'strong-text': isPropertiesOpen})}>
                     <TruncatedTitle content={name} />
                   </div>
                 </td>

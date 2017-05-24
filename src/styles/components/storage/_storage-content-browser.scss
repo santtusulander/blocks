@@ -17,6 +17,11 @@
 .storage-contents-name {
   display: inline-block;
   vertical-align: inherit;
+
+  &.strong-text {
+    font-weight: bold;
+    color: $white;
+  }
 }
 
 .storage-contents-icon {
