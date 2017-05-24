@@ -17,8 +17,8 @@ import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
-import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -314,6 +314,10 @@ class StorageContents extends Component {
       userDateFormat
     } = this.props
 
+    const removeStorageContents = (fileName) => {
+      return  this.props.removeStorageContents({...params, fileName})
+    }
+
     const { storage: storageId} = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
@@ -419,6 +423,7 @@ class StorageContents extends Component {
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   uploadPath={uploadPath}
+                  handleTransferEvents={this.handleAsperaEvents}
                 >
                   {hasContents
                     ?
@@ -489,6 +494,7 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   router: PropTypes.object,
   uploadHandlers: PropTypes.object,
   uploadsInProgress: PropTypes.object,
@@ -516,6 +522,7 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => ({
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
+  removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
   uploadHandlers: bindActionCreators(uploadActions, dispatch)
 })
 

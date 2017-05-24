@@ -15,6 +15,7 @@ import {
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
   MAPBOX_CITY_LEVEL_ZOOM,
+  MAPBOX_COUNTRY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
   MAPBOX_HEAT_MAP_DEFAULT_COLOR
@@ -54,6 +55,7 @@ class Mapbox extends Component {
     this.resetZoom = this.resetZoom.bind(this)
     this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
     this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
+    this.zoomTo = this.zoomTo.bind(this)
   }
 
   componentDidMount() {
@@ -163,6 +165,10 @@ class Mapbox extends Component {
     if (this.state.zoom > MAPBOX_ZOOM_MIN) {
       this.setState({ zoom: this.state.zoom - 1 })
     }
+  }
+
+  zoomTo(val) {
+    this.setState({ zoom: val })
   }
   /**
    * Sets content to the Popup and allows it to be displayed.
@@ -778,9 +784,18 @@ class Mapbox extends Component {
               </div>
 
               <div className="map-label">
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.world"/></span>
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_CITY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_COUNTRY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span />
+                <span />
+                <span />
               </div>
             </div>
 

@@ -50,6 +50,8 @@
   "portal.storage.summaryPage.contentBrowser.name.label": "Name",
   "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
   "portal.storage.summaryPage.contentBrowser.size.label": "Size",
+  "portal.storage.summaryPage.contentBrowser.menu.download": "Download",
+  "portal.storage.summaryPage.contentBrowser.menu.delete": "Delete",
 
   "portal.storage.summaryPage.itemProperties.created.label": "Created",
   "portal.storage.summaryPage.itemProperties.lastModified.label": "Last Modified",

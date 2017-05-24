@@ -8,12 +8,12 @@ import StorageItemProperties from './storage-item-properties'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
-import { MODIFY_STORAGE } from '../../constants/permissions'
+import { SHOW_STORAGE_CONTEXT_MENU } from '../../constants/permissions'
 import { formatDate, formatBytes } from '../../util/helpers'
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
-import IconContextMenu from '../shared/icons/icon-context-menu'
+import ContextMenu from '../shared/page-elements/context-menu'
 import IconCaretDown from '../shared/icons/icon-caret-down'
 
 class StorageContentBrowser extends Component {
@@ -37,6 +37,7 @@ class StorageContentBrowser extends Component {
       isRootDirectory,
       openDirectoryHandler,
       params,
+      removeStorageContents,
       sorterProps,
       userDateFormat
     } = this.props
@@ -88,6 +89,19 @@ class StorageContentBrowser extends Component {
               {'highlight': (highlightedItem === name)}
             )
 
+            const menuOptions = [
+              {
+                label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
+                handleClick: (/*fileName*/) => {
+                  //TODO: Implement download logic
+                }
+              },
+              {
+                label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
+                handleClick: () => removeStorageContents(name)
+              }
+            ]
+
             const row = [
               <tr
                 key={index}
@@ -120,8 +134,8 @@ class StorageContentBrowser extends Component {
                 <td>{formatDate(lastModified, userDateFormat)}</td>
                 <td>{isDirectory ? '-' : formatBytes(size)}</td>
                 <td>
-                  <IsAllowed to={MODIFY_STORAGE}>
-                    <IconContextMenu className="storage-contents-context-menu-icon" />
+                  <IsAllowed to={SHOW_STORAGE_CONTEXT_MENU}>
+                    <ContextMenu header={name} options={menuOptions}/>
                   </IsAllowed>
                 </td>
               </tr>
@@ -170,6 +184,7 @@ StorageContentBrowser.propTypes = {
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
   params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   sorterProps: PropTypes.object,
   userDateFormat: PropTypes.string
 }
