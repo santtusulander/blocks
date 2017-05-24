@@ -3,9 +3,11 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import Mapbox from '../map/mapbox';
-import { hasWebGLEnabled } from '../../app'
+import { isWebGLEnabled } from '../../util/helpers'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
+
+const hasWebGLEnabled = isWebGLEnabled()
 
 const AnalysisByLocation = (props) => {
   const {

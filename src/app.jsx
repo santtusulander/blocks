@@ -17,7 +17,6 @@ import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { logOut, destroyStore } from './redux/modules/user'
 import { SENTRY_HOSTNAMES, SENTRY_DSN, SMARTLING_HOSTNAMES, SMARTLING_ORG_ID } from './constants/app'
 
-import { isWebGLEnabled } from './util/helpers'
 import { tokenDidExpire } from './util/user-helpers'
 
 import './styles/style.scss'
@@ -26,7 +25,7 @@ import Root from './root'
 
 const useRaven = SENTRY_HOSTNAMES.includes(window.location.hostname)
 const useSmartling = SMARTLING_HOSTNAMES.includes(window.location.hostname)
-export const hasWebGLEnabled = isWebGLEnabled()
+
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
   useRaven
