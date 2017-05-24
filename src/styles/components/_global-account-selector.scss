@@ -141,12 +141,14 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   }
 
   .dropdown-menu {
+    top: 54px;
     width: $dropdown-selector-width;
     max-height: none;
     overflow-y: hidden !important;
 
     .menu-container {
-      height: 337px;
+      max-height: 498px;
+      min-height: 337px;
       justify-content: center;
 
       .loading-spinner {
@@ -174,6 +176,10 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
       &.accordion {
         flex-direction: column;
+
+        .accordion-menu {
+          padding: 0;
+        }
 
         &.active {
           border-bottom: 1px solid $pale-blue;
