@@ -608,7 +608,7 @@ class Styleguide extends React.Component {
               <p><FormattedDate value={new Date()} format="datenum" /></p>
             </Col>
             <Col xs={4}>
-              <p>Date in current timezone </p>
+              <p>Date in New York timezone </p>
               <p><FormattedDate value={new Date()} format="datehourTimezone"/></p>
             </Col>
             <Col xs={4}>

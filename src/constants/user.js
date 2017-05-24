@@ -43,7 +43,7 @@ export const DATE_FORMAT_OPTIONS = [
 export const dateFormats = (timezone) => {
   return {
     date: {
-      'day_num_month_num': {  // 11 11
+      'day_num_month_num': {  // 11/11
         timeZone: timezone,
         day: 'numeric',
         month: 'numeric'
@@ -53,13 +53,13 @@ export const dateFormats = (timezone) => {
         day: 'numeric',
         month: 'long'
       },
-      'datenum': {           // 11 11 2011
+      'datenum': {           // 11/11/2011
         timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
         year: 'numeric'
       },
-      'datehour': {         // 11 11 2011, 23 11
+      'datehour': {         // 11/11/2011, 23:11
         timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
@@ -68,13 +68,13 @@ export const dateFormats = (timezone) => {
         hour: '2-digit',
         minute: '2-digit'
       },
-      'dateInUTC': {       // 11 11 2011
+      'dateInUTC': {       // 11/11/2011  (UTC)
         timeZone: 'UTC',
         day: '2-digit',
         month: 'numeric',
         year: 'numeric'
       },
-      'datehourInUTC': {       // 11 11 2011, 11 11 GMT+0
+      'datehourInUTC': {       // 11/11/2011, 11:11 (UTC)
         timeZone: 'UTC',
         day: '2-digit',
         month: 'numeric',
@@ -83,7 +83,7 @@ export const dateFormats = (timezone) => {
         hour: '2-digit',
         minute: '2-digit'
       },
-      'datehourTimezone': {       // 11 11 2011, 11 11 GMT+3
+      'datehourTimezone': {       // 11 11 2011, 11:11 EDT
         timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
@@ -99,7 +99,7 @@ export const dateFormats = (timezone) => {
 
 export const defaultFormats = (timezone) => {
   return {
-    date: {               // 11 11 2011, 11 11 11 PM
+    date: {               // 11/11 2011, 11 11 11 PM
       timeZone: timezone,
       day: '2-digit',
       month: 'numeric',
