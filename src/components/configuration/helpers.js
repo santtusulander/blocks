@@ -80,6 +80,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             hasContains={true}
             hasEquals={true}
             hasEmpty={true}
+            customValidator={() => true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
