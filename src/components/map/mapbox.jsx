@@ -696,7 +696,7 @@ class Mapbox extends Component {
     //#00AAD4
 
     // Disable doubleClickZoom for us to override it – ReactMapboxGl has no support atm
-    if (this.mapbox && this.mapbox.state && this.mapbox.state.map) {
+    if (this.mapbox && this.mapbox.state && this.mapbox.state.map && this.mapbox.state.doubleClickZoom) {
       this.mapbox.state.map.doubleClickZoom.disable()
     }
 
