@@ -64,7 +64,7 @@
     }
 
     .light-theme .configuration-sidebar & {
-      color: rgba($silver-60, 0.2);
+      color: $lt-text-color;
       background-color: $white;
 
       &:focus,
