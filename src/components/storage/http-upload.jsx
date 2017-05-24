@@ -115,7 +115,7 @@ class HTTPUpload extends Component {
         muteEventHandler((e) => {
           this.props.onDrop(event)
           this.setState({ dropZoneActive: false })
-          this.state.fileUploader.processFiles(e.dataTransfer.files)
+          this.state.fileUploader.processFiles(e.dataTransfer.files, this.props.uploadPath)
         })
       ]
     ])
