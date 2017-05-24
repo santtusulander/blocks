@@ -9,7 +9,7 @@ const subject = shallow(
   <StorageItemProperties
     urls={List()}
     createUrls={jest.fn()}
-    params={{brand: 'brand', account: 'account', group: 'group', storage: 'storage', splat: 'splat'}}/>
+    params={{ brand: 'brand', account: 'account', group: 'group', storage: 'storage', splat: 'splat' }}/>
 )
 
 describe('StorageItemProperties', () => {
