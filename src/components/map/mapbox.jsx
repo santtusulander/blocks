@@ -174,7 +174,7 @@ class Mapbox extends Component {
 
   onDblClick(_, e) {
     if (this.state.zoom === MAPBOX_ZOOM_MAX) {
-      this.zoomTo(MAPBOX_ZOOM_MIN)
+      this.resetZoom()
     } else {
       this.onIncreaseZoom()
       this.mapbox.state.map.flyTo({
