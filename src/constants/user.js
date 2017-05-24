@@ -40,28 +40,34 @@ export const DATE_FORMAT_OPTIONS = [
   {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
 ]
 
-export const dateFormats = {
-  date: {
-    'day_num_month_num': {
-      day: 'numeric',
-      month: 'numeric'
-    },
-    'day_num_month_long': {
-      day: 'numeric',
-      month: 'long'
-    },
-    'datenum': {
-      day: '2-digit',
-      month: 'numeric',
-      year: 'numeric'
-    },
-    'datehour': {
-      day: '2-digit',
-      month: 'numeric',
-      year: 'numeric',
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit'
+export const dateFormats = (timezone) => {
+  return {
+    date: {
+      'day_num_month_num': {
+        timezone: timezone,
+        day: 'numeric',
+        month: 'numeric'
+      },
+      'day_num_month_long': {
+        timezone: timezone,
+        day: 'numeric',
+        month: 'long'
+      },
+      'datenum': {
+        timezone: timezone,
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric'
+      },
+      'datehour': {
+        timezone: timezone,
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      }
     }
   }
 }
