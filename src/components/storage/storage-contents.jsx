@@ -435,6 +435,7 @@ class StorageContents extends Component {
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
                         params={params}
                       />
                     :
@@ -465,6 +466,7 @@ class StorageContents extends Component {
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
                         params={params}
                       />
                     :
