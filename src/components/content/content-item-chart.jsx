@@ -19,6 +19,7 @@ import TrafficTooltip from './traffic-tooltip'
 import { formatBitsPerSecond, formatMoment } from '../../util/helpers'
 import { startOfLast28 } from '../../constants/date-ranges'
 import LinkWrapper from './link-wrapper'
+import { HOST_SERVICE_TYPES } from '../../constants/configuration'
 
 const dayHours = 24
 const rayHours = 3
@@ -47,9 +48,9 @@ function groupData(rawData, groupSize, key) {
 
 const determineLineColor = (serviceType) => {
   switch (serviceType) {
-    case 'large': return 'media-delivery-line'
-    case 'msd': return 'vod-streaming-line'
-    case 'livestream': return 'live-streaming-line'
+    case HOST_SERVICE_TYPES.MEDIA_DELIVERY: return 'media-delivery-line'
+    case HOST_SERVICE_TYPES.VOD_STREAMING: return 'vod-streaming-line'
+    case HOST_SERVICE_TYPES.LIVE_STREAMING: return 'live-streaming-line'
     default: return 'content-item-chart-line'
   }
 }

@@ -70,6 +70,7 @@ import { formatBytes, separateUnit, formatMoment } from '../../util/helpers'
 
 import DateRanges, { startOfThisDay, endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
+import { HOST_SERVICE_TYPES } from '../../constants/configuration'
 import { cityData, filterCheckboxOptions, spDashboardData,
          countryData, multiOptionSelectorOptions, typeaheadOptions,
          miniChartKPIData, storageKPIData, starburstPrimaryData, starburstSecondaryData, starburstTrafficData, starburstDifferenceData } from '../__mocks__/styleguide-data.js'
@@ -752,14 +753,14 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Starbursts</h1>
 
-          <ColorLegend serviceTypes={['large', 'msd', 'livestream']} />
+          <ColorLegend serviceTypes={[HOST_SERVICE_TYPES.MEDIA_DELIVERY, HOST_SERVICE_TYPES.VOD_STREAMING, HOST_SERVICE_TYPES.LIVE_STREAMING]} />
 
           <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
 
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              serviceType={'Large'}
+              serviceType={HOST_SERVICE_TYPES.MEDIA_DELIVERY}
               name={'Media Delivery'}
               isAllowedToConfigure={true}
               showSlices={true}
@@ -775,7 +776,7 @@ class Styleguide extends React.Component {
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              serviceType={'msd'}
+              serviceType={HOST_SERVICE_TYPES.VOD_STREAMING}
               name={'Vod Streaming'}
               isAllowedToConfigure={true}
               showSlices={true}
@@ -791,7 +792,7 @@ class Styleguide extends React.Component {
             <ContentItemChart
               avgTransfer={'1.82 Gbps'}
               cacheHitRate={93}
-              serviceType={'livestream'}
+              serviceType={HOST_SERVICE_TYPES.LIVE_STREAMING}
               name={'Live Streaming'}
               isAllowedToConfigure={true}
               showSlices={true}
