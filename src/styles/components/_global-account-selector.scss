@@ -251,6 +251,10 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         flex: 1;
       }
     }
+
+    .header__account-selector > .select-auto-close > & {
+      top: 48px;
+    }
   }
 
   // TODO: This needs to be updated once the back to accounts functionality is implemented
