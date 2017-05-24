@@ -143,11 +143,6 @@ class StorageContentBrowser extends Component {
 
             let rowData
             if (isPropertiesOpen) {
-              const location = isRootDirectory
-                ?
-                  params.storage
-                :
-                  `${params.storage}/${params.splat}`
               rowData = row.concat([
                 <tr className="storage-item-properties-row">
                   <td colSpan="6">
@@ -157,7 +152,7 @@ class StorageContentBrowser extends Component {
                       lastModified={lastModified}
                       size={size}
                       dateFormat={userDateFormat}
-                      location={location}
+                      params={params}
                     />
                   </td>
                 </tr>,

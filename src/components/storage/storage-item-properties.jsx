@@ -50,10 +50,16 @@ class StorageItemProperties extends Component {
       dateFormat,
       isDirectory,
       lastModified,
-      location,
+      params,
       size,
       urls
     } = this.props
+
+    const location = params.splat
+      ?
+        `${params.storage}/${params.splat}`
+      :
+        params.storage
 
     return (
      <div className='storage-item-properties-container'>
@@ -112,7 +118,7 @@ StorageItemProperties.propTypes = {
   dateFormat: PropTypes.string,
   isDirectory: PropTypes.bool,
   lastModified: PropTypes.number,
-  location: PropTypes.string,
+  params: PropTypes.object,
   size: PropTypes.number,
   uiActions: PropTypes.object,
   urls: PropTypes.array
