@@ -82,7 +82,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     return e => {
       e.preventDefault()
 
-      const newIndex = this.props.rule.getIn(path, Immutable.List()).size
+      const newIndex = this.props.rule && this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
       const actions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(Immutable.Map({_temp: true}))
 

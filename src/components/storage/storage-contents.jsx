@@ -17,8 +17,8 @@ import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
-import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -314,6 +314,10 @@ class StorageContents extends Component {
       userDateFormat
     } = this.props
 
+    const removeStorageContents = (fileName) => {
+      return  this.props.removeStorageContents({...params, fileName})
+    }
+
     const { storage: storageId} = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
@@ -402,10 +406,6 @@ class StorageContents extends Component {
           }
         </SectionHeader>
 
-        {isFetchingContents
-          && <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-        }
-
         { asperaUpload
           ? <AsperaUpload
               params={params}
@@ -420,19 +420,21 @@ class StorageContents extends Component {
               uploadPath={uploadPath}
               handleTransferEvents={this.handleAsperaEvents}
             >
+            {isFetchingContents
+              ? <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+              : hasContents
+                  &&
+                    <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                      userDateFormat={userDateFormat}
+                      isFetchingContents={isFetchingContents}
+                    />}
 
-            {hasContents
-                &&
-                  <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                  />
-              }
             </AsperaUpload>
 
           : <HttpUpload
@@ -449,17 +451,23 @@ class StorageContents extends Component {
               uploadPath={uploadPath}
             >
 
-            {hasContents
-              && <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                />
+            {isFetchingContents
+              ? <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+              : hasContents
+                && <StorageContentBrowser
+                      contents={sortedContents}
+                      openDirectoryHandler={this.openDirectoryHandler}
+                      backButtonHandler={this.backButtonHandler}
+                      isRootDirectory={isRootDirectory}
+                      sorterProps={sorterProps}
+                      highlightedItem={highlightedItem}
+                      userDateFormat={userDateFormat}
+                      removeStorageContents={removeStorageContents}
+                      isFetchingContents={isFetchingContents}
+                  />
+
             }
+
             </HttpUpload>
         }
 
@@ -484,6 +492,7 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   router: PropTypes.object,
   uploadHandlers: PropTypes.object,
   uploadsInProgress: PropTypes.object,
@@ -511,6 +520,7 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => ({
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
+  removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
   uploadHandlers: bindActionCreators(uploadActions, dispatch)
 })
 

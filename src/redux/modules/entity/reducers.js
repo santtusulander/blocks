@@ -76,6 +76,20 @@ export const removeEntity = (state, action) => {
 }
 
 /**
+ * reducer for removing an CIS_file/folder
+ * @param  {[type]} state  [description]
+ * @param  {[type]} action [description]
+ * @return {[type]}        [description]
+ */
+export const removeCISContents = (state, action) => {
+  const {reduxID, fileName} = action.response
+  if (!reduxID || !fileName) {
+    return state
+  }
+  return state.update(reduxID, files => files && files.filter(file => file.get('name') !== fileName))
+}
+
+/**
  * Handles paginated resource entities / page
  * @param  {[type]} state  [description]
  * @param  {[type]} action [description]
