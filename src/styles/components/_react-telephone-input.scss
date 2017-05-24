@@ -56,10 +56,15 @@
           color: transparent;
         }
       }
+
+      &[disabled] {
+        color: rgba($silver-60, 0.2);
+        background-color: rgba($black, 0.1);
+      }
     }
 
     .light-theme .configuration-sidebar & {
-      color: $lt-text-color;
+      color: rgba($silver-60, 0.2);
       background-color: $white;
 
       &:focus,
@@ -88,6 +93,12 @@
 
       &::placeholder {
         color: rgba($lt-text-color, 0.3);
+      }
+
+
+      &[disabled] {
+        color: rgba($grey-80, 0.2);
+        background: none;
       }
 
     }
