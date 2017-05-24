@@ -31,7 +31,7 @@ const validate = ({contact_email, contact_first_name, contact_second_name, phone
   }
 
   if (phone_number && !isValidPhoneNumber(phone_number)) {
-    errors.full_phone_number = <FormattedMessage id="portal.validators.invalid" values={{field: <FormattedMessage id="portal.services.logDelivery.phone.text"/>}}/>
+    errors.full_phone_number = <FormattedMessage id="portal.validators.invalid"  values={{field: <FormattedMessage id="portal.services.logDelivery.phone.text"/>}}/>
   }
 
   return errors
