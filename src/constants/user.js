@@ -43,30 +43,55 @@ export const DATE_FORMAT_OPTIONS = [
 export const dateFormats = (timezone) => {
   return {
     date: {
-      'day_num_month_num': {
-        timezone: timezone,
+      'day_num_month_num': {  // 11 11
+        timeZone: timezone,
         day: 'numeric',
         month: 'numeric'
       },
-      'day_num_month_long': {
-        timezone: timezone,
+      'day_num_month_long': { // 11 November
+        timeZone: timezone,
         day: 'numeric',
         month: 'long'
       },
-      'datenum': {
-        timezone: timezone,
+      'datenum': {           // 11 11 2011
+        timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
         year: 'numeric'
       },
-      'datehour': {
-        timezone: timezone,
+      'datehour': {         // 11 11 2011, 23 11
+        timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
         year: 'numeric',
         hour12: false,
         hour: '2-digit',
         minute: '2-digit'
+      },
+      'dateInUTC': {       // 11 11 2011
+        timeZone: 'UTC',
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric'
+      },
+      'datehourInUTC': {       // 11 11 2011, 11 11 GMT+0
+        timeZone: 'UTC',
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      },
+      'datehourTimezone': {       // 11 11 2011, 11 11 GMT+3
+        timeZone: timezone,
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
       }
     }
   }
@@ -74,8 +99,8 @@ export const dateFormats = (timezone) => {
 
 export const defaultFormats = (timezone) => {
   return {
-    date: {
-      timezone: timezone,
+    date: {               // 11 11 2011, 11 11 11 PM
+      timeZone: timezone,
       day: '2-digit',
       month: 'numeric',
       year: 'numeric',
@@ -85,7 +110,7 @@ export const defaultFormats = (timezone) => {
       second: '2-digit'
     },
     time: {
-      timezone: timezone
+      timeZone: timezone
     }
   }
 }
