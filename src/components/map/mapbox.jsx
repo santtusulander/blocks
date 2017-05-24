@@ -56,6 +56,7 @@ class Mapbox extends Component {
     this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
     this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
     this.zoomTo = this.zoomTo.bind(this)
+    this.onDblClick = this.onDblClick.bind(this)
   }
 
   componentDidMount() {
@@ -170,6 +171,19 @@ class Mapbox extends Component {
   zoomTo(val) {
     this.setState({ zoom: val })
   }
+
+  onDblClick(_, e) {
+    if (this.state.zoom === MAPBOX_ZOOM_MAX) {
+      this.resetZoom()
+    } else {
+      this.onIncreaseZoom()
+      this.mapbox.state.map.flyTo({
+        center: [e.lngLat.lng, e.lngLat.lat],
+        zoom: this.state.zoom
+      })
+    }
+  }
+
   /**
    * Sets content to the Popup and allows it to be displayed.
    * Displaying the Popup is based on if the Popup has content –– popupContent
@@ -681,6 +695,11 @@ class Mapbox extends Component {
     //#88BA17
     //#00AAD4
 
+    // Disable doubleClickZoom for us to override it – ReactMapboxGl has no support atm
+    if (this.mapbox && this.mapbox.state && this.mapbox.state.map && this.mapbox.state.doubleClickZoom) {
+      this.mapbox.state.map.doubleClickZoom.disable()
+    }
+
     return (
       <ReactMapboxGl
         ref={ref => {
@@ -698,6 +717,7 @@ class Mapbox extends Component {
         onStyleLoad={this.onStyleLoaded}
         onMouseMove={this.onMouseMove}
         onDragEnd={this.getCitiesOnZoomDrag}
+        onDblClick={this.onDblClick}
         scrollZoom={false}
         dragRotate={false}>
 
