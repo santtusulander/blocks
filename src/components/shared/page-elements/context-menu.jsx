@@ -24,7 +24,7 @@ const ContextMenu = ({ header, options, disabled }) => {
               key={index}
               onClick={e => {
                 e.stopPropagation()
-                handleClick(header)
+                handleClick()
               }}
             >
               {label}

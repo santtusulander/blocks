@@ -41,10 +41,9 @@ describe('ContextMenu', () => {
     expect(subject.find('.menu-header').length).toBe(1)
   });
 
-  it('should call deleteFile function with correct fileName', () => {
+  it('should call deleteFile function', () => {
     const subject = shallow(<ContextMenu {...props}/>)
     const DeleteItem = subject.find(MenuItem).at(2).simulate('click', { preventDefault: jest.fn(), stopPropagation: jest.fn() })
     expect(deleteFile.mock.calls.length).toBe(1)
-    expect(deleteFile.mock.calls[0][0]).toBe(fileName)
   })
 })
