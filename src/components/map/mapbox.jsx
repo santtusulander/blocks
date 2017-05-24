@@ -15,6 +15,7 @@ import {
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
   MAPBOX_CITY_LEVEL_ZOOM,
+  MAPBOX_COUNTRY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
   MAPBOX_HEAT_MAP_DEFAULT_COLOR
@@ -54,6 +55,8 @@ class Mapbox extends Component {
     this.resetZoom = this.resetZoom.bind(this)
     this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
     this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
+    this.zoomTo = this.zoomTo.bind(this)
+    this.onDblClick = this.onDblClick.bind(this)
   }
 
   componentDidMount() {
@@ -164,6 +167,23 @@ class Mapbox extends Component {
       this.setState({ zoom: this.state.zoom - 1 })
     }
   }
+
+  zoomTo(val) {
+    this.setState({ zoom: val })
+  }
+
+  onDblClick(_, e) {
+    if (this.state.zoom === MAPBOX_ZOOM_MAX) {
+      this.resetZoom()
+    } else {
+      this.onIncreaseZoom()
+      this.mapbox.state.map.flyTo({
+        center: [e.lngLat.lng, e.lngLat.lat],
+        zoom: this.state.zoom
+      })
+    }
+  }
+
   /**
    * Sets content to the Popup and allows it to be displayed.
    * Displaying the Popup is based on if the Popup has content –– popupContent
@@ -675,6 +695,11 @@ class Mapbox extends Component {
     //#88BA17
     //#00AAD4
 
+    // Disable doubleClickZoom for us to override it – ReactMapboxGl has no support atm
+    if (this.mapbox && this.mapbox.state && this.mapbox.state.map && this.mapbox.state.doubleClickZoom) {
+      this.mapbox.state.map.doubleClickZoom.disable()
+    }
+
     return (
       <ReactMapboxGl
         ref={ref => {
@@ -692,6 +717,7 @@ class Mapbox extends Component {
         onStyleLoad={this.onStyleLoaded}
         onMouseMove={this.onMouseMove}
         onDragEnd={this.getCitiesOnZoomDrag}
+        onDblClick={this.onDblClick}
         scrollZoom={false}
         dragRotate={false}>
 
@@ -778,9 +804,18 @@ class Mapbox extends Component {
               </div>
 
               <div className="map-label">
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
-                <span><FormattedMessage id="portal.analytics.map.zoomPreset.world"/></span>
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_CITY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_COUNTRY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span />
+                <span />
+                <span />
               </div>
             </div>
 

@@ -4,7 +4,8 @@ import { fromJS } from 'immutable'
 import { getAnalysisErrorCodes } from '../../util/status-codes'
 import { AVAILABLE_THEMES } from '../../constants/themes'
 
-const UI_SET_ASPERA_INSTANSE = 'UI_SET_ASPERA_INSTANSE'
+const UI_SET_HTTP_INSTANCE = 'UI_SET_HTTP_INSTANCE'
+const UI_SET_ASPERA_INSTANCE = 'UI_SET_ASPERA_INSTANCE'
 const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
@@ -48,10 +49,14 @@ export const docBody = document.body
 docBody.className += theme + '-theme'
 
 export const defaultUI = fromJS({
-  asperaUploadInstanse: {
+  asperaUploadInstance: {
     asperaInitialized: false,
     asperaShowSelectFileDialog: null,
     asperaShowSelectFolderDialog: null
+  },
+  httpUploadInstance: {
+    httpInitialized: false,
+    openFileDialog: null
   },
   accountManagementModal: null,
   asperaNotification: '',
@@ -81,8 +86,12 @@ export const getTheme = (state) => {
 }
 
 // REDUCERS
-export function configureAsperaUploadInstanse(state, action) {
-  return state.merge({ asperaUploadInstanse: action.payload })
+export function configureAsperaUploadInstance(state, action) {
+  return state.merge({ asperaUploadInstance: action.payload })
+}
+
+export function configureHTTPUploadInstance(state, action) {
+  return state.merge({ httpUploadInstance: action.payload })
 }
 
 export function accountManagementModalToggled(state, action) {
@@ -207,7 +216,8 @@ export function policyActiveRuleChanged(state, action) {
 }
 
 export default handleActions({
-  UI_SET_ASPERA_INSTANSE: configureAsperaUploadInstanse,
+  UI_SET_HTTP_INSTANCE: configureHTTPUploadInstance,
+  UI_SET_ASPERA_INSTANCE: configureAsperaUploadInstance,
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
   UI_NETWORK_MODAL_TOGGLED: networkModalToggled,
   UI_THEME_CHANGED: themeChanged,
@@ -233,7 +243,8 @@ export default handleActions({
 
 // ACTIONS
 
-export const setAsperaUploadInstanse = createAction(UI_SET_ASPERA_INSTANSE)
+export const setHttpUploadInstance = createAction(UI_SET_HTTP_INSTANCE)
+export const setAsperaUploadInstance = createAction(UI_SET_ASPERA_INSTANCE)
 export const setLoginUrl = createAction(UI_LOGIN_URL_SET)
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)

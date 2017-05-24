@@ -10,7 +10,7 @@ import * as api from '../api'
 const _accessKey = Symbol('accessKey')
 const _uploadHandlers = Symbol('uploadHandlers')
 const _gateway = Symbol('gateway')
-
+const _uploadPath = Symbol('uploadPath')
 /**
  * Represents file Uploader instance,
  * exposes public API for open file dialog,
@@ -26,20 +26,22 @@ class Uploader {
    * @param accessKey {string} - upload access key
    * @param gateway {string} - gateway host
    * @param uploadHandlers {object} - handlers wrapper
+   * @param uploadPath {string} - upload path
    * @returns {Uploader}
    */
-  static initialize(accessKey, gateway, uploadHandlers) {
+  static initialize(accessKey, gateway, uploadHandlers, uploadPath) {
     if (!arguments.length || [...arguments].includes(undefined)) {
       throw new Error(`${Uploader.displayName} initialization failed`)
     }
 
-    return new Uploader(accessKey, gateway, uploadHandlers)
+    return new Uploader(accessKey, gateway, uploadHandlers, uploadPath)
   }
 
-  constructor(accessKey, gateway, uploadHandlers) {
+  constructor(accessKey, gateway, uploadHandlers, uploadPath) {
     this[_accessKey] = accessKey
     this[_uploadHandlers] = uploadHandlers
     this[_gateway] = gateway
+    this[_uploadPath] = uploadPath
 
     this.openFileDialog = this.openFileDialog.bind(this)
     this.uploadFile = this.uploadFile.bind(this)
@@ -58,20 +60,30 @@ class Uploader {
     return this[_uploadHandlers]
   }
 
+  get uploadPath() {
+    return this[_uploadPath]
+  }
+
   /**
    * Upload file via API
    * @param file {File} - HTML File object to upload
    */
-  uploadFile(file) {
-    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers)
+  uploadFile(file, uploadPath) {
+    const uploadTo = uploadPath || this.uploadPath
+    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers, uploadTo)
   }
 
   /**
    * Read and upload files
    * @param files []
+   * @param uploadPath ""
    */
-  processFiles(files) {
-    [...files].forEach(file => Reader.readFile(file).then(this.uploadFile))
+  processFiles(files, uploadPath) {
+    [...files].forEach(file => {
+      return Reader.readFile(file).then((res) => {
+        this.uploadFile(res, uploadPath)
+      })
+    })
   }
 
   /**
