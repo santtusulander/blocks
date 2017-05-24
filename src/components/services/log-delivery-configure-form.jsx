@@ -14,8 +14,15 @@ import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 import { isValidPhoneNumber, isValidEmail, isValidTextField } from '../../util/validators'
 
-const validate = ({contact_email, contact_first_name, contact_second_name, contact_phone}) => {
+const validate = ({contact_email, contact_first_name, contact_second_name, contact_phone, log_delivery_enabled}) => {
   const errors = {}
+
+  /*
+    Disable validation when logDeliveryService is disabled
+  */
+  if (!log_delivery_enabled) {
+    return errors
+  }
 
   if (contact_email && !isValidEmail(contact_email)) {
     errors.contact_email = <FormattedMessage id="portal.common.error.invalid.email.text"/>
@@ -44,7 +51,11 @@ class LogDeliveryConfigureForm extends React.Component {
   }
 
   saveChanges(values) {
-    this.props.onSave(values)
+    /*
+      Save an empty object if logDeliveryService is disabled
+    */
+    const {ldsEnabled, onSave} = this.props
+    onSave(ldsEnabled ? values : {})
   }
 
   render() {
@@ -146,8 +157,8 @@ class LogDeliveryConfigureForm extends React.Component {
                 component={FieldFormGroupMultiOptionSelector}
                 options={logTypesOptions}
                 label={<FormattedMessage id="portal.services.logDelivery.requestedLogTypes.text" />}
-                normalize={(v) => v.map(item => item.id)}
-                format={(v) => v.map(item => ({id: item}))}
+                normalize={(v) => v && v.map(item => item.id)}
+                format={(v) => v && v.map(item => ({id: item}))}
                 required={false}
                 disabled={true}
               />
