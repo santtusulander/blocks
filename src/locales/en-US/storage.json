@@ -58,7 +58,7 @@
   "portal.storage.summaryPage.itemProperties.location.file.label": "File Location",
   "portal.storage.summaryPage.itemProperties.location.folder.label": "Folder Location",
   "portal.storage.summaryPage.itemProperties.size.label": "File Size",
-  "portal.storage.summaryPage.itemProperties.url.label": "Published URL",
+  "portal.storage.summaryPage.itemProperties.url.label": "Published URLs",
   "portal.storage.summaryPage.itemProperties.copyLink.label": "Copy Link",
   "portal.storage.summaryPage.itemProperties.copyToClipboard.successful.label": "URL Copid to the clipboard.",
   "portal.storage.summaryPage.itemProperties.copyToClipboard.failed.label": "Copying URL to clipboard failed.",

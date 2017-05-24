@@ -150,6 +150,7 @@ class StorageContentBrowser extends Component {
                       isDirectory={isDirectory}
                       created={created}
                       lastModified={lastModified}
+                      name={name}
                       size={size}
                       dateFormat={userDateFormat}
                       params={params}
