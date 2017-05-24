@@ -71,3 +71,21 @@ export const dateFormats = (timezone) => {
     }
   }
 }
+
+export const defaultFormats = (timezone) => {
+  return {
+    date: {
+      timezone: timezone,
+      day: '2-digit',
+      month: 'numeric',
+      year: 'numeric',
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    },
+    time: {
+      timezone: timezone
+    }
+  }
+}
