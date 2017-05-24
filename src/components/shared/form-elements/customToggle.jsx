@@ -3,8 +3,9 @@ import React, {PropTypes} from 'react';
 //customize default Dropdown Toggle of react-bootstrap
 const CustomToggle = ({ children, onClick }) => {
   const handleClick = (e) => {
-    e.preventDefault();
-    onClick(e);
+    e.stopPropagation()
+    e.preventDefault()
+    onClick(e)
   }
   return (
     <div className='button-toggle' onClick={handleClick}>
