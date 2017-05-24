@@ -31,7 +31,7 @@ const validate = ({contact_email, contact_first_name, contact_second_name, phone
   }
 
   if (phone_number && !isValidPhoneNumber(phone_number)) {
-    errors.full_phone_number = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
+    errors.full_phone_number = <FormattedMessage id="portal.validators.invalid" values={{field: <FormattedMessage id="portal.services.logDelivery.phone.text"/>}}/>
   }
 
   return errors
@@ -45,12 +45,7 @@ class LogDeliveryConfigureForm extends React.Component {
   }
 
   saveChanges(values) {
-    /*
-      Because we cann't use contact_phone in names for FieldTelephoneInput, we have to set contact_phone in values
-      in case API required contact_phone
-    */
-    const newValues = {...values, contact_phone: values.full_phone_number}
-    this.props.onSave(newValues)
+    this.props.onSave(values)
   }
 
   render() {
