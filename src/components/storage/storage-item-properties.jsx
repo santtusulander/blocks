@@ -22,8 +22,8 @@ class StorageItemProperties extends Component {
     this.notificationTimeout = null
   }
 
-  componentWillMount() {
-    if (!this.props.isDirectory) {
+  componentDidMount() {
+    if (!this.props.isDirectory && this.props.urls.size === 0) {
       const { params: { brand, account, group, storage, splat }, name, createUrls } = this.props
       const urlParams = {
         brand,
