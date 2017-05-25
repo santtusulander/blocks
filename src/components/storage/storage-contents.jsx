@@ -4,7 +4,6 @@ import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map, List, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import { getContentUrl } from '../../util/routes.js'
 import { getSortData } from '../../util/helpers'
 
@@ -90,15 +89,19 @@ class StorageContents extends Component {
    * This function buils base upload path for Aspera and HTTP upload
    */
   generateUploadPath() {
-    const { params } = this.props
+    // Since params.slat not always updated properly, let's use window.location
+    // baseUploadPath = params.splat
+    // For example, we have URL /content/udn/238/groups/339/storage/miketest/contents/dirdir/subdirdir/subsubsubsub
+    // To generate upload path, we need only dirdir/subdirdir/subsubsubsub
+    // For that reason split by /, slice 9 till end, and join /
+    const routerURL = window.location.pathname.split('/').slice(9).join('/')
     const asperaUpload = this.props.asperaUpload
-    const isUploadToRoot = params.splat ? false : true
+    const isUploadToRoot = routerURL ? false : true
 
-    let baseUploadPath = ''
+    let baseUploadPath = routerURL
     if (isUploadToRoot) {
       baseUploadPath = (asperaUpload ? ASPERA_DEFAULT_DESTINATION_FOLDER : HTTP_DEFAULT_DESTINATION_FOLDER)
     } else {
-      baseUploadPath = params.splat
       /* Upload path for Aspera should include './' prefix */
       if (asperaUpload && baseUploadPath.indexOf('.') !== 0) {
         baseUploadPath = `${ASPERA_DEFAULT_DESTINATION_FOLDER}${baseUploadPath}`
