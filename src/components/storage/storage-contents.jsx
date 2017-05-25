@@ -89,8 +89,7 @@ class StorageContents extends Component {
    * This function buils base upload path for Aspera and HTTP upload
    */
   generateUploadPath() {
-    // Since params.slat not always updated properly, let's use window.location
-    // baseUploadPath = params.splat
+    // Since params.splat not always updated properly, let's use window.location
     // For example, we have URL /content/udn/238/groups/339/storage/miketest/contents/dirdir/subdirdir/subsubsubsub
     // To generate upload path, we need only dirdir/subdirdir/subsubsubsub
     // For that reason split by /, slice 9 till end, and join /
