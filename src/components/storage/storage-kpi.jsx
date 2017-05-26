@@ -20,6 +20,8 @@ import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/ent
 
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
+import { startOfThisMonth } from '../../constants/date-ranges'
+
 const chartAreas = [{
   "dataKey": "bytes",
   "name": "MiniChart",
@@ -209,7 +211,7 @@ const mapDispatchToProps = (dispatch) => {
       group: group,
       ingest_point: storage,
       list_children: false,
-      startDate: moment().utc().startOf('month').format('X'),
+      startDate: startOfThisMonth().format('X'),
       endDate: moment().utc().endOf('day').format('X')
     }
 

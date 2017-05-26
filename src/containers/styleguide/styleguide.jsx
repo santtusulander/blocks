@@ -66,7 +66,7 @@ import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 
 import { formatBytes, separateUnit } from '../../util/helpers'
 
-import DateRanges from '../../constants/date-ranges'
+import DateRanges, { startOfThisMonth } from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
 
 import { cityData, filterCheckboxOptions, spDashboardData,
@@ -89,7 +89,7 @@ class Styleguide extends React.Component {
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
-      datePickerStartDate: moment().utc().startOf('month'),
+      datePickerStartDate: startOfThisMonth(),
       filterCheckboxValue: Immutable.fromJS([
         'link1',
         'link2',

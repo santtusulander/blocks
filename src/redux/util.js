@@ -1,5 +1,6 @@
 import moment from 'moment'
 
+import { startOfThisMonth } from '../constants/date-ranges'
 
 // CIS
 export const BASE_URL_CIS_SOUTH = '/cis_south'
@@ -73,7 +74,7 @@ export function qsBuilder(params) {
 
 export function getDateRange(filters) {
   const endDate = filters.getIn(['dateRange', 'endDate']) || moment().utc().endOf('day')
-  const startDate = filters.getIn(['dateRange', 'startDate']) || moment().utc().startOf('month')
+  const startDate = filters.getIn(['dateRange', 'startDate']) || startOfThisMonth()
 
   return {
     startDate,

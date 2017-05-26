@@ -9,7 +9,7 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
-import DateRanges from '../../constants/date-ranges'
+import DateRanges, { startOfThisMonth } from '../../constants/date-ranges'
 
 import {
   getAnalysisStatusCodes,
@@ -18,7 +18,7 @@ import {
 
 export const defaultFilters =  Immutable.fromJS({
   dateRange: {
-    startDate: moment().utc().startOf('month'),
+    startDate: startOfThisMonth(),
     endDate: moment().utc().endOf('day')
   },
   customDateRange: {

@@ -27,6 +27,7 @@ import ContentItems from '../../components/content/content-items'
 
 import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import { startOfThisMonth } from '../../constants/date-ranges'
 
 import { checkUserPermissions, getStoragePermissions } from '../../util/permissions'
 import { getAnalyticsUrlFromParams } from '../../util/routes'
@@ -210,7 +211,7 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     return Promise.all([
       metricsActions.fetchHostMetrics(metricsOpts),
       metricsActions.fetchDailyHostTraffic(metricsOpts),
-      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: moment().utc().startOf('month').format('X') }))
+      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: startOfThisMonth().format('X') }))
     ])
   }
 

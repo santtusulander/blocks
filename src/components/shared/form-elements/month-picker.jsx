@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import classnames from 'classnames'
-
+import { startOfThisMonth } from '../../../../src/constants/date-ranges'
 import IconArrowRight from '../icons/icon-arrow-right'
 import IconArrowLeft from '../icons/icon-arrow-left'
 
@@ -93,7 +93,7 @@ MonthPicker.propTypes = {
   onChange: React.PropTypes.func
 }
 MonthPicker.defaultProps = {
-  date: moment().utc().startOf('month').format('X')
+  date: startOfThisMonth().format('X')
 }
 
 export default MonthPicker
