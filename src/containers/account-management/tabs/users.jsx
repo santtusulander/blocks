@@ -94,7 +94,6 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   componentWillMount() {
-    document.addEventListener('click', this.cancelAdding, false)
     const {location, router, route, params: { brand, account }} = this.props
 
     const {sortBy, sortOrder, filterBy, filterValue} = location.query
@@ -126,10 +125,6 @@ export class AccountManagementAccountUsers extends Component {
          })
        )
     }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.cancelAdding, false)
   }
 
   /**
