@@ -9,12 +9,7 @@ const URL = (params, getOverView = true) => {
 
 export const fetch = (urlParams) =>
   axios.get(URL(urlParams)).then(({ data }) => {
-    return { storageMetrics: data.data }
-  })
 
-export const fetchByGroup = (groupId, urlParams) => {
-  urlParams.group = groupId
-  return axios.get(URL(urlParams)).then(({ data }) => {
-    return data.data
+    //Mimic normalizr's return pattern to use our receive entity-reducer
+    return { entities: { storageMetrics: data.data } }
   })
-}
