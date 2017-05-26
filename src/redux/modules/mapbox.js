@@ -1,14 +1,14 @@
 import { createAction, handleActions } from 'redux-actions'
 import Immutable from 'immutable'
 
-import { MAPBOX_CITY_LEVEL_ZOOM } from '../../constants/mapbox'
+import { MAPBOX_COUNTRY_LEVEL_ZOOM } from '../../constants/mapbox'
 
 const MAPBOX_SET_BOUNDS = 'MAPBOX_SET_BOUNDS'
 const MAPBOX_SET_ZOOM = 'MAPBOX_SET_ZOOM'
 
 const initialState = Immutable.fromJS({
   mapBounds: {},
-  mapZoom: MAPBOX_CITY_LEVEL_ZOOM - 1
+  mapZoom: MAPBOX_COUNTRY_LEVEL_ZOOM
 })
 
 // REDUCERS

@@ -39,7 +39,7 @@ class Mapbox extends Component {
     super(props)
     this.state = {
       minZoom: 0,
-      zoom: MAPBOX_CITY_LEVEL_ZOOM - 1,
+      zoom: MAPBOX_COUNTRY_LEVEL_ZOOM,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
