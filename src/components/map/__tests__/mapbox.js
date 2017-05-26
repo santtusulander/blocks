@@ -18,8 +18,7 @@ function mapboxActionsMaker() {
 
 import {
   MAPBOX_LIGHT_THEME,
-  MAPBOX_DARK_THEME,
-  MAPBOX_COUNTRY_LEVEL_ZOOM
+  MAPBOX_DARK_THEME
 } from '../../../constants/mapbox'
 
 describe('Mapbox', () => {
