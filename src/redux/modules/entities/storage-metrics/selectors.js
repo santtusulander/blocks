@@ -1,32 +1,40 @@
-import { getEntityMetricsById } from '../../entity/selectors'
+import { getEntityById } from '../../entity/selectors'
 import { getById, getAggregatedEstimatesByGroup, getAggregatedEstimatesByAccount } from '../CIS-ingest-points/selectors'
 import { buildReduxId } from '../../../util'
 
-export const getByStorageId = (state, storageId, comparison) => {
-  return getEntityMetricsById(state, 'storageMetrics', storageId, 'ingest_point', comparison)
+const getMetricsByEntityId = (state, entityId, entityIdKey, metricsKey = 'data') => {
+  const metricsArray = getEntityById(state, 'storageMetrics', metricsKey)
+
+  if (metricsArray) {
+    return metricsArray.find(entityMetrics => String(entityMetrics.get(entityIdKey)) === String(entityId))
+  }
 }
 
-export const getByGroupId = (state, groupId, comparison) => {
-  return getEntityMetricsById(state, 'storageMetrics', groupId, 'group', comparison)
+export const getByStorageId = (state, storageId, metricsKey) => {
+  return getMetricsByEntityId(state, storageId, 'ingest_point', metricsKey)
 }
 
-export const getByAccountId = (state, accountId, comparison) => {
-  return getEntityMetricsById(state, 'storageMetrics', accountId, 'account', comparison)
+export const getByGroupId = (state, groupId, metricsKey) => {
+  return getMetricsByEntityId(state, groupId, 'group', metricsKey)
 }
 
-export const getDataForStorageAnalysisChart = (state, { account, group, storage }, storageType, comparison) => {
+export const getByAccountId = (state, accountId, metricsKey) => {
+  return getMetricsByEntityId(state, accountId, 'account', metricsKey)
+}
+
+export const getDataForStorageAnalysisChart = (state, { account, group, storage }, storageType, metricsKey) => {
   let getStorageByParent, getAggregatedEstimates, dataForChart
 
   if (storage) {
-    getStorageByParent = getByStorageId(state, storage, comparison)
-    getAggregatedEstimates = getById(state, buildReduxId(group, storage))
+    getStorageByParent = getByStorageId(state, storage, metricsKey)
+    getAggregatedEstimates = getById(state, buildReduxId(group, storage), metricsKey)
       ? getById(state, buildReduxId(group, storage)).get('estimated_usage')
       : null
   } else if (group) {
-    getStorageByParent = getByGroupId(state, group, comparison)
+    getStorageByParent = getByGroupId(state, group, metricsKey)
     getAggregatedEstimates = getAggregatedEstimatesByGroup(state, group).get('estimated_usage')
   } else {
-    getStorageByParent = getByAccountId(state, account, comparison)
+    getStorageByParent = getByAccountId(state, account, metricsKey)
     getAggregatedEstimates = getAggregatedEstimatesByAccount(state, account).get('estimated_usage')
   }
 
@@ -37,8 +45,4 @@ export const getDataForStorageAnalysisChart = (state, { account, group, storage 
   }
 
   return dataForChart
-}
-
-export const getByGroup = (state) => {
-  return state.entities['storageMetrics'].get('groupData')
 }
