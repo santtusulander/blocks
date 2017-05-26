@@ -60,39 +60,3 @@ export const getEntityIdsByParent = (state, entityType, parentId, parentIdKey = 
   return state.entities[entityType].filter((entity) => String(entity.get(parentIdKey)) === String(parentId))
     .keySeq()
 }
-
-/**
- * get metrics for an entity by ID
- * @param  {[type]} state        [description]
- * @param  {[type]} entityType   [description]
- * @param  {[type]} id           [description]
- * @param  {String} [idKey='id'] [description]
- * @param  {[type]} metricsKey   for example 'comparisonData' or 'currentData'
- * @return {[type]}              [description]
- */
-export const getEntityMetricsById = (state, entityType, id, idKey = 'id', metricsKey) => {
-
-  // If a metricsKey, for example 'comparisonData', is provided, search in that array
-  // Otherwise, search in array specified by entityType, for example 'storageMetrics'
-  const metricsArray = metricsKey ? state.entities[entityType].get(metricsKey) : state.entities[entityType]
-
-  if (metricsArray) {
-    return metricsArray.find(entityMetrics => String(entityMetrics.get(idKey)) === String(id))
-  }
-}
-
-/**
- * get entire set of metrics for an entity type.
- * @param  {[type]} state        [description]
- * @param  {[type]} entityType   [description]
- * @param  {[type]} metricsKey   for example 'comparisonData' or 'currentData'
- * @return {[type]}              array of metrics
- */
-export const getEntityMetrics = (state, entityType, metricsKey) => {
-
-  // If a metricsKey, for example 'comparisonData', is provided, search in that array
-  // Otherwise, search in array specified by entityType, for example 'storageMetrics'
-  const metricsArray = metricsKey ? state.entities[entityType].get(metricsKey) : state.entities[entityType]
-
-  return metricsArray
-}

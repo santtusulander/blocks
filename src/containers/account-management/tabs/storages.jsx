@@ -20,7 +20,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import { fetchMetrics as fetchStorageMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
+import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -384,7 +384,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchStorageMetrics: (params) => dispatch(fetchStorageMetrics(params))
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params))
   };
 }
 

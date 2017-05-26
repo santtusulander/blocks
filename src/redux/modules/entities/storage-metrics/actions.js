@@ -9,9 +9,9 @@ import { getPayload } from '../action-creators'
  * @param  {[object]} requestParams               parameters for the request.
  * @return {[object]}                             action object
  */
-export const fetchMetrics = ({ requestTag = 'storageMetrics', ...requestParams }) => ({
+export const fetchMetrics = ({ requestTag = 'storageMetrics', metricsKey = 'data', ...requestParams }) => ({
 
   payload: getPayload(requestTag),
   types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
-  callApi: () => api.fetch(requestParams)
+  callApi: () => api.fetch(requestParams, metricsKey)
 })

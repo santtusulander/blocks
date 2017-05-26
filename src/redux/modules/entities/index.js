@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
-import {Map, List} from 'immutable'
+import {Map} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
@@ -165,7 +165,7 @@ const storageMetrics =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
     [actionTypes.FAIL]: failEntity
-  }, List())
+  }, Map())
 
 const fileErrorMetrics =
   handleActions({
@@ -197,7 +197,7 @@ export default combineReducers({
   allowedRoles,
   serviceTitles,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes }),
+  fetching: mapActionsToFetchingReducers(actionTypes),
   entityPagination,
   mapMarkers,
   publishedUrls
