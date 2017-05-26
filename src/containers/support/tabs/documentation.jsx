@@ -3,6 +3,9 @@ import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import {getById as getAccountById} from '../../../redux/modules/entities/accounts/selectors'
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
   ACCOUNT_TYPE_CONTENT_PROVIDER,
@@ -21,7 +24,7 @@ import {
 import { getCurrentUser } from '../../../redux/modules/user'
 
 
-const SupportTabDocumentation = ({ providerType: accountType, locale }) => {
+const SupportTabDocumentation = ({ providerType: accountType, locale, isFetching }) => {
 
   let apiPath = ''
   let documentPath = ''
@@ -61,6 +64,10 @@ const SupportTabDocumentation = ({ providerType: accountType, locale }) => {
       break
   }
 
+  if (isFetching) {
+    return (<LoadingSpinner/>)
+  }
+
   return (
     <div className="account-support-documentation text-center">
       <div className="section">
@@ -97,12 +104,14 @@ function mapStateToProps(state) {
   const providerType = currentAccount && currentAccount.get('provider_type')
   return {
     locale: currentUser && currentUser.get('locale'),
-    providerType
+    providerType,
+    isFetching: getFetchingByTag(state, 'account')
   }
 }
 
 SupportTabDocumentation.displayName = 'SupportTabDocumentation'
 SupportTabDocumentation.propTypes = {
+  isFetching: PropTypes.bool,
   locale: PropTypes.string,
   providerType: PropTypes.number
 }
