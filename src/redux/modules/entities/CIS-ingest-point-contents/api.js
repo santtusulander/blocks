@@ -3,8 +3,8 @@ import {normalize, schema} from 'normalizr'
 
 import { BASE_URL_CIS_NORTH, buildReduxId } from '../../../util'
 
-const baseUrl = ({ brand, account, group, id, path = '' }) => (
-  `${BASE_URL_CIS_NORTH}/ingest_points/${id}/content${path ? `/${path}` : ''}?brand_id=${brand}&account_id=${account}&group_id=${group}&page_size=1000&offset=0&sort_order=asc`
+const baseUrl = ({ brand, account, group, id, path = '' }, extraParams = '') => (
+  `${BASE_URL_CIS_NORTH}/ingest_points/${id}/content${path ? `/${path}` : ''}?brand_id=${brand}&account_id=${account}&group_id=${group}${extraParams}`
 )
 
 const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
@@ -26,8 +26,26 @@ const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
  * @return {Object} normalzed list of contents
  */
 export const fetchAll = (params) => {
-  return axios.get(baseUrl(params))
+  return axios.get(baseUrl(params, '&page_size=1000&offset=0&sort_order=asc'))
   .then(({data}) => {
     return normalize({ group: params.group, id: params.id, path: params.path , contents: data }, [ ingestPointContentSchema ])
   })
+}
+
+export const remove = (params) => {
+  const {brand, account, group, storage, splat, fileName} = params
+  const reduxID = buildReduxId(group, storage, splat || '')
+
+  const deleteParams = {
+    brand,
+    account,
+    group,
+    id: storage,
+    path: splat ? `${splat}/${fileName}` : fileName
+  }
+
+  //Because API return empty response body, we have to return {reduxID, fileName} for reducers
+  //TODO: use API response when API is ready
+  return axios.delete(baseUrl(deleteParams))
+    .then(() => ({reduxID, fileName}))
 }

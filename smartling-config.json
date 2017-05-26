@@ -45,7 +45,7 @@
          // Minimal recourse set definition. Translations won't be pushed back.
          {
             "type"      : "json",
-            "pathRegex" : "src\\/locales\\/en\\/.*\\.json",
+            "pathRegex" : "src\\/locales\\/en-US\\/.*\\.json",
             "translationPathExpression" : "src\\/locales\\/${locale}\\/${originalFile.name}",
             "translationCommitMessage"  : "Translate ${originalFile.fullName} to ${locale}",
             "authorizeContent" : "true"

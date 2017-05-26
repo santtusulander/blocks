@@ -1,5 +1,5 @@
 {
-  "portal.storage.uploadContent.uploading.text": "Uploading {number, plural, one {# item} other {# items}}",
+  "portal.storage.uploadContent.uploading.text": "Uploading {number} items(s)",
   "portal.storage.uploadContent.cancel.text": "Cancel All",
   "portal.storage.uploadContent.destination.text": "Drop files to upload them to:",
 
@@ -50,6 +50,8 @@
   "portal.storage.summaryPage.contentBrowser.name.label": "Name",
   "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
   "portal.storage.summaryPage.contentBrowser.size.label": "Size",
+  "portal.storage.summaryPage.contentBrowser.menu.download": "Download",
+  "portal.storage.summaryPage.contentBrowser.menu.delete": "Delete",
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",

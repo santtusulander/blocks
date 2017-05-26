@@ -1,53 +1,16 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
-import { paleblue } from '../../constants/colors'
 
-import AnalysisByTime from '../analysis/by-time'
+import MiniAreaChart from './mini-area-chart'
 
 class MiniChart extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      byTimeWidth: 72
-    }
-
-    this.measureContainers = this.measureContainers.bind(this)
-    this.measureContainersTimeout = null
-  }
-  componentDidMount() {
-    this.measureContainers()
-    this.measureContainersTimeout = setTimeout(() => {
-      this.measureContainers()
-    }, 500)
-    window.addEventListener('resize', this.measureContainers)
-  }
-  componentWillReceiveProps() {
-    this.measureContainers()
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
-    clearTimeout(this.measureContainersTimeout)
-  }
-  measureContainers() {
-    this.setState({
-      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth
-    })
-  }
   render() {
     const { className, data, dataKey, kpiRight, kpiUnit, kpiValue, label } = this.props
-    const dataSets = [{
-      area: true,
-      comparisonData: false,
-      data: data,
-      color: paleblue,
-      id: 'minichart',
-      label: '',
-      line: true,
-      stackedAgainst: false,
-      xAxisFormatter: false
-    }]
+
+    const area = [
+      {"dataKey": dataKey}
+    ]
     if (!data.length) {
       return (
         <div className={classNames({ 'mini-chart': true, className })}>
@@ -77,16 +40,7 @@ class MiniChart extends React.Component {
             </div>
           : null}
           <div ref="byTimeHolder" className="mini-chart-col mini-chart-graph">
-            <AnalysisByTime
-              dataKey={dataKey}
-              dataSets={dataSets}
-              className="bg-transparent"
-              height={32}
-              noHover={true}
-              noXNice={true}
-              padding={2}
-              showTooltip={false}
-              width={this.state.byTimeWidth}/>
+            <MiniAreaChart data={data} areas={area} height={32} />
           </div>
         </div>
       </div>

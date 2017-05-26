@@ -132,12 +132,15 @@ $thumb-margin: -11px;
 
       .map-label {
         display: flex;
+        height: $slider-width;
         padding-left: 5px;
+        margin-top: ($slider-height - $slider-width) / 2;
         justify-content: space-between;
         flex-direction: column;
         flex-grow: 1;
 
         span {
+          height: $slider-width / 12;
           font-size: 1.3rem;
           text-align: left;
 

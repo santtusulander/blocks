@@ -9,12 +9,14 @@ import { unixTimestampToDate } from '../../util/helpers'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
-import { MODIFY_STORAGE } from '../../constants/permissions'
+
+import { SHOW_STORAGE_CONTEXT_MENU } from '../../constants/permissions'
 import { formatBytes } from '../../util/helpers'
+
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
-import IconContextMenu from '../shared/icons/icon-context-menu'
+import ContextMenu from '../shared/page-elements/context-menu'
 
 const StorageContentBrowser = ({
   backButtonHandler,
@@ -22,8 +24,10 @@ const StorageContentBrowser = ({
   highlightedItem,
   isRootDirectory,
   openDirectoryHandler,
-  sorterProps
+  sorterProps,
+  removeStorageContents
 }) => {
+
   return (
     <Table striped={true} className='storage-contents-table'>
       <thead>
@@ -64,6 +68,20 @@ const StorageContentBrowser = ({
             {'content-browser-row-directory': isDirectory},
             {'highlight': (highlightedItem === name)}
           )
+
+          const menuOptions = [
+            {
+              label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
+              handleClick: (/*fileName*/) => {
+                //TODO: Implement download logic
+              }
+            },
+            {
+              label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
+              handleClick: () => removeStorageContents(name)
+            }
+          ];
+
           return (
             <tr
               key={index}
@@ -78,16 +96,18 @@ const StorageContentBrowser = ({
               </td>
               <td>
                 <div className='storage-contents-name'>
-                  <TruncatedTitle content={name} />
+                  <TruncatedTitle content={name}/>
                 </div>
               </td>
               <td><FormattedDate value={unixTimestampToDate(item.get('lastModified'))} /> <FormattedMessage id="portal.dash" /> <FormattedTime value={unixTimestampToDate(item.get('lastModified'))} /></td>
               <td>{isDirectory ? '-' : formatBytes(item.get('size'))}</td>
               <td>
-                <IsAllowed to={MODIFY_STORAGE}>
-                  <IconContextMenu className="storage-contents-context-menu-icon" />
+                <IsAllowed to={SHOW_STORAGE_CONTEXT_MENU}>
+                  <ContextMenu header={name} options={menuOptions}/>
                 </IsAllowed>
+
               </td>
+
             </tr>
           )
         })
@@ -104,6 +124,7 @@ StorageContentBrowser.propTypes = {
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
   openDirectoryHandler: PropTypes.func,
+  removeStorageContents: PropTypes.func,
   sorterProps: PropTypes.object
 }
 

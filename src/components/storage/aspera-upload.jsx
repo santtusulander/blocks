@@ -78,7 +78,14 @@ class AsperaUpload extends Component {
   }
 
   componentWillUnmount() {
+
     if (this.state.isAsperaInitialized) {
+
+      //Remove transferEventListener if set
+      if (this.props.handleTransferEvents) {
+        this.aspera.asperaWeb.removeEventListener('transfer', this.props.handleTransferEvents)
+      }
+
       this.aspera.asperaDeInitConnect()
     }
     clearTimeout(this.notificationTimeout)
@@ -88,6 +95,7 @@ class AsperaUpload extends Component {
       asperaShowSelectFileDialog: null,
       asperaShowSelectFolderDialog: null
     })
+
   }
 
   initAspera() {
@@ -113,7 +121,12 @@ class AsperaUpload extends Component {
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
 
+    if (this.props.handleTransferEvents) {
+      this.aspera.asperaWeb.addEventListener('transfer', this.props.handleTransferEvents);
+    }
+
     this.setState({ isAsperaInitialized: true })
+
   }
 
   showNotification(code) {
@@ -313,6 +326,7 @@ AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
   asperaGetaway: React.PropTypes.string,
   children: React.PropTypes.object,
+  handleTransferEvents: React.PropTypes.func,
   highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
   onDragEnter: React.PropTypes.func,
