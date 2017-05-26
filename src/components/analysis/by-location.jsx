@@ -66,7 +66,7 @@ AnalysisByLocation.propTypes = {
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
   getCityData: React.PropTypes.func,
-  height: React.PropTypes.number,
+  height: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
   markers: React.PropTypes.instanceOf(Immutable.List),
