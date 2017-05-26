@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl'
 import { Button } from 'react-bootstrap'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -13,7 +13,7 @@ import publishedUrlActions from '../../redux/modules/entities/published-urls/act
 import { getById as getPublishedURLsById } from '../../redux/modules/entities/published-urls/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 import { buildReduxId } from '../../redux/util'
-import { formatDate, formatBytes } from '../../util/helpers'
+import { formatBytes, unixTimestampToDate } from '../../util/helpers'
 
 class StorageItemProperties extends Component {
   constructor(props) {
@@ -74,7 +74,6 @@ class StorageItemProperties extends Component {
   render() {
     const {
       created,
-      dateFormat,
       isDirectory,
       isFetchingUrls,
       lastModified,
@@ -94,11 +93,15 @@ class StorageItemProperties extends Component {
         <div className='storage-item-properties-column left'>
           <div className='info'>
             <FormattedMessage id='portal.storage.summaryPage.itemProperties.created.label' />
-            <div className='text'>{formatDate(created, dateFormat)}</div>
+            <div className='text'>
+              <FormattedDate value={unixTimestampToDate(created)} /> <FormattedMessage id="portal.dash" /> <FormattedTime value={unixTimestampToDate(created)} />
+            </div>
           </div>
           <div className='info'>
             <FormattedMessage id='portal.storage.summaryPage.itemProperties.lastModified.label' />
-            <div className='text'>{formatDate(lastModified, dateFormat)}</div>
+            <div className='text'>
+              <FormattedDate value={unixTimestampToDate(lastModified)} /> <FormattedMessage id="portal.dash" /> <FormattedTime value={unixTimestampToDate(lastModified)} />
+            </div>
           </div>
           <div className='info'>
             {isDirectory
@@ -148,7 +151,6 @@ StorageItemProperties.displayName = "StorageItemProperties"
 StorageItemProperties.propTypes = {
   createUrls: PropTypes.func,
   created: PropTypes.number,
-  dateFormat: PropTypes.string,
   isDirectory: PropTypes.bool,
   isFetchingUrls: PropTypes.bool,
   lastModified: PropTypes.number,

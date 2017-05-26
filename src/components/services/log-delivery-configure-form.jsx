@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, Fields, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Row, Col, ControlLabel, Button } from 'react-bootstrap'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -11,11 +11,20 @@ import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 import FieldFormGroupSelect from '../shared/form-fields/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../shared/form-fields/field-form-group-multi-option-selector'
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
+import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
 
 import { isValidPhoneNumber, isValidEmail, isValidTextField } from '../../util/validators'
 
-const validate = ({contact_email, contact_first_name, contact_second_name, contact_phone}) => {
+const validate = ({contact_email, contact_first_name, contact_second_name, phone_number, log_delivery_enabled}) => {
+
   const errors = {}
+
+  /*
+    Disable validation when logDeliveryService is disabled
+  */
+  if (!log_delivery_enabled) {
+    return errors
+  }
 
   if (contact_email && !isValidEmail(contact_email)) {
     errors.contact_email = <FormattedMessage id="portal.common.error.invalid.email.text"/>
@@ -29,8 +38,8 @@ const validate = ({contact_email, contact_first_name, contact_second_name, conta
     errors.contact_second_name = <FormattedMessage id="portal.validators.invalid" values={{field: <FormattedMessage id="portal.services.logDelivery.lastName.text"/>}}/>
   }
 
-  if (contact_phone && !isValidPhoneNumber(contact_phone)) {
-    errors.contact_phone = <FormattedMessage id="portal.validators.invalid" values={{field: <FormattedMessage id="portal.services.logDelivery.phone.text"/>}}/>
+  if (phone_number && !isValidPhoneNumber(phone_number)) {
+    errors.full_phone_number = <FormattedMessage id="portal.validators.invalid"  values={{field: <FormattedMessage id="portal.services.logDelivery.phone.text"/>}}/>
   }
 
   return errors
@@ -44,7 +53,11 @@ class LogDeliveryConfigureForm extends React.Component {
   }
 
   saveChanges(values) {
-    this.props.onSave(values)
+    /*
+      Save an empty object if logDeliveryService is disabled
+    */
+    const {ldsEnabled, onSave} = this.props
+    onSave(ldsEnabled ? values : {})
   }
 
   render() {
@@ -127,9 +140,9 @@ class LogDeliveryConfigureForm extends React.Component {
 
           <Row className="form-group">
             <Col xs={12}>
-              <Field
-                name="contact_phone"
-                component={FieldFormGroup}
+              <Fields
+                names={['full_phone_number', 'phone_number', 'phone_country_code']}
+                component={FieldTelephoneInput}
                 label={<FormattedMessage id="portal.services.logDelivery.phone.text"/>}
                 required={false}
                 disabled={!ldsEnabled}
@@ -146,8 +159,8 @@ class LogDeliveryConfigureForm extends React.Component {
                 component={FieldFormGroupMultiOptionSelector}
                 options={logTypesOptions}
                 label={<FormattedMessage id="portal.services.logDelivery.requestedLogTypes.text" />}
-                normalize={(v) => v.map(item => item.id)}
-                format={(v) => v.map(item => ({id: item}))}
+                normalize={(v) => v && v.map(item => item.id)}
+                format={(v) => v && v.map(item => ({id: item}))}
                 required={false}
                 disabled={true}
               />

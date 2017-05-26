@@ -1,15 +1,19 @@
 import React, { PropTypes, Component } from 'react'
 import { Table } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedDate, FormattedTime } from 'react-intl'
 import { List } from 'immutable'
 import classNames from 'classnames'
+
+import { unixTimestampToDate } from '../../util/helpers'
 
 import StorageItemProperties from './storage-item-properties'
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
+
 import { SHOW_STORAGE_CONTEXT_MENU } from '../../constants/permissions'
-import { formatDate, formatBytes } from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
+
 import IconFolder from '../shared/icons/icon-folder'
 import IconFile from '../shared/icons/icon-file'
 import IconBack from '../shared/icons/icon-back'
@@ -38,8 +42,7 @@ class StorageContentBrowser extends Component {
       openDirectoryHandler,
       params,
       removeStorageContents,
-      sorterProps,
-      userDateFormat
+      sorterProps
     } = this.props
 
     return (
@@ -131,7 +134,7 @@ class StorageContentBrowser extends Component {
                     <TruncatedTitle content={name} />
                   </div>
                 </td>
-                <td>{formatDate(lastModified, userDateFormat)}</td>
+                <td><FormattedDate value={unixTimestampToDate(item.get('lastModified'))} /> <FormattedMessage id="portal.dash" /> <FormattedTime value={unixTimestampToDate(item.get('lastModified'))} /></td>
                 <td>{isDirectory ? '-' : formatBytes(size)}</td>
                 <td>
                   <IsAllowed to={SHOW_STORAGE_CONTEXT_MENU}>
@@ -152,7 +155,6 @@ class StorageContentBrowser extends Component {
                       lastModified={lastModified}
                       name={name}
                       size={size}
-                      dateFormat={userDateFormat}
                       params={params}
                     />
                   </td>
@@ -181,8 +183,7 @@ StorageContentBrowser.propTypes = {
   openDirectoryHandler: PropTypes.func,
   params: PropTypes.object,
   removeStorageContents: PropTypes.func,
-  sorterProps: PropTypes.object,
-  userDateFormat: PropTypes.string
+  sorterProps: PropTypes.object
 }
 
 export default StorageContentBrowser
