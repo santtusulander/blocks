@@ -69,7 +69,7 @@ class StorageContentBrowser extends Component {
             <th width="1%"/>
           </tr>
         </thead>
-        <tbody className={`${(highlightedItem === null) ? 'highlight' : ''}`}>
+        <tbody className={classNames({'highlight': (highlightedItem === null)})}>
           {contents.map((item, index) => {
             const name = item.get('name')
             const type = item.get('type')
