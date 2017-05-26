@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
-import { dateFormats as getDateFormats, defaultFormats as getDefaultFormats } from '../../src/constants/user'
+import { dateFormats as getDateFormats } from '../../src/constants/user'
 import { getCurrentUser } from '../redux/modules/user'
 
 import MESSAGES_EN from '../locales/en-US'
@@ -29,14 +29,13 @@ function mapStateToProps(state) {
   const locale = currentUser.get('locale') || 'en'
   // Merged "en" messages with selected language messages to set untranslated strings default to english
   const mergedMessages = Object.assign(MESSAGES_EN, messages[lang])
-  const timezone = currentUser.get('timezone') || 'America/New_York'
+  const timezone = currentUser.get('timezone')
 
   return {
     locale,
     defaultLocale: 'en-US',
     messages: mergedMessages,
-    formats: getDateFormats(timezone),
-    defaultFormats: getDefaultFormats(timezone)
+    formats: getDateFormats(timezone)
   }
 }
 
