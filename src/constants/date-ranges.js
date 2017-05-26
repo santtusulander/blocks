@@ -12,6 +12,7 @@ export default {
 }
 
 export const startOfThisMonth = () => moment().utc().startOf('month')
+export const startOfThisDay = () => moment().utc().startOf('day')
 export const endOfThisDay = () => moment().utc().endOf('day')
 export const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 export const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')

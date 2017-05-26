@@ -66,7 +66,7 @@ import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 
 import { formatBytes, separateUnit } from '../../util/helpers'
 
-import DateRanges, { startOfThisMonth } from '../../constants/date-ranges'
+import DateRanges, { startOfThisMonth, endOfThisDay, startOfThisDay } from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
 
 import { cityData, filterCheckboxOptions, spDashboardData,
@@ -85,9 +85,9 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       showSidePanel: false,
-      customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day'),
-      datePickerEndDate: moment().utc().endOf('day'),
+      customDatePickerEndDate: endOfThisDay(),
+      customDatePickerStartDate: startOfThisDay(),
+      datePickerEndDate: endOfThisDay(),
       datePickerLimit: false,
       datePickerStartDate: startOfThisMonth(),
       filterCheckboxValue: Immutable.fromJS([
