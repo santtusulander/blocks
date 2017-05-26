@@ -265,7 +265,7 @@ export class BrandDashboard extends React.Component {
                 cityData={this.props.cityData}
                 getCityData={this.getCityData}
                 theme={theme}
-                height={600}
+                height="50vw"
                 dataKey="bits_per_second"
                 dataKeyFormat={countriesAverageBandwidth}
                 mapBounds={this.props.mapBounds}

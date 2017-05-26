@@ -130,7 +130,7 @@ export class Property extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           onSubmit={() => {
-            deleteProperty(brand, account, group, this.props.activeHost.get('published_host_id'))
+            return deleteProperty(brand, account, group, this.props.activeHost.get('published_host_id'))
               .then(() => router.replace(getContentUrl('group', group, { brand, account })))
           }}
           invalid={true}

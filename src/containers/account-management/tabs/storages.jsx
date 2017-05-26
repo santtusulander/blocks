@@ -20,7 +20,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import { fetchGroupMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
+import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -29,7 +29,7 @@ import { getSortData, formatBytes, hasService } from '../../../util/helpers'
 import { getByGroup as getStoragesByGroup } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getByGroup as getPropetiesByGroup } from '../../../redux/modules/entities/properties/selectors'
-import { getByGroup as getMetricsByGroup } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByGroupId as getMetricsByGroup } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
@@ -79,12 +79,12 @@ class AccountManagementStorages extends Component {
   }
 
   fetchStorageData(groupId) {
-    const { params: { brand, account }, fetchStorages, fetchProperties } = this.props
+    const { params: { brand, account }, fetchStorages, fetchProperties, fetchStorageMetrics } = this.props
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
     if (brand && account && groupId) {
       fetchStorages({ brand, account, group: groupId, format: 'full'})
       fetchProperties({ brand, account, group: groupId})
-      this.props.fetchGroupMetrics(groupId, { start: metricsStartDate, account })
+      fetchStorageMetrics({ start: metricsStartDate, brand, account, group: groupId })
     }
   }
 
@@ -340,8 +340,8 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
-  fetchGroupMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
+  fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   intl: PropTypes.object,
@@ -369,7 +369,7 @@ function mapStateToProps(state, ownProps) {
     storages: getStoragesByGroup(state, ownProps.params.group),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroup(state, ownProps.params.group),
-    metrics: getMetricsByGroup(state),
+    metrics: getMetricsByGroup(state, ownProps.params.group),
     isFetching: getGlobalFetching(state)
   }
 }
@@ -384,7 +384,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchGroupMetrics: (group, params) => dispatch(fetchGroupMetrics(group, params))
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params))
   };
 }
 

@@ -121,7 +121,11 @@ class ConfigurationPolicies extends React.Component {
     const { config, activeMatch, activeSet, activateMatch, activateSet } = this.props
 
     if (activeMatch) {
-      config.getIn(activeMatch).get('_temp') && this.deleteTempItem(activeMatch)
+      const activeMatchConfig = config.getIn(activeMatch)
+      if (activeMatchConfig) {
+        activeMatchConfig.get('_temp') && this.deleteTempItem(activeMatch)
+      }
+
 
       activateMatch(null)
     }

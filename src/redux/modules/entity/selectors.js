@@ -60,15 +60,3 @@ export const getEntityIdsByParent = (state, entityType, parentId, parentIdKey = 
   return state.entities[entityType].filter((entity) => String(entity.get(parentIdKey)) === String(parentId))
     .keySeq()
 }
-
-/**
- * Get an entity's metrics from state
- * @param  {[type]} state      [description]
- * @param  {[type]} entityType [description]
- * @param  {[type]} comparison [description]
- * @return {[type]}            [description]
- */
-export const getEntityMetricsById = (state, entityType, id, idKey = 'id', comparison) => {
-  const metricsObject = comparison ? 'comparisonData' : 'data'
-  return state.entities[entityType].get(metricsObject).find(entityMetrics => String(entityMetrics.get(idKey)) === String(id))
-}
