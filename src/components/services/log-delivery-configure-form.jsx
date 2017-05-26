@@ -14,13 +14,13 @@ import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 
 import { isValidPhoneNumber, isValidEmail, isValidTextField } from '../../util/validators'
 
-const validate = ({contact_email, contact_first_name, contact_second_name, contact_phone, log_delivery_enabled}) => {
+const validate = ({contact_email, contact_first_name, contact_second_name, contact_phone, is_enabled}) => {
   const errors = {}
 
   /*
     Disable validation when logDeliveryService is disabled
   */
-  if (!log_delivery_enabled) {
+  if (!is_enabled) {
     return errors
   }
 
@@ -87,7 +87,7 @@ class LogDeliveryConfigureForm extends React.Component {
             <Col xs={8}>
               <Field
                 className="pull-right"
-                name="log_delivery_enabled"
+                name="is_enabled"
                 component={FieldFormGroupToggle}
               />
             </Col>
@@ -160,7 +160,7 @@ class LogDeliveryConfigureForm extends React.Component {
                 normalize={(v) => v && v.map(item => item.id)}
                 format={(v) => v && v.map(item => ({id: item}))}
                 required={false}
-                disabled={true}
+                disabled={!ldsEnabled}
               />
             </Col>
           </Row>
@@ -168,13 +168,13 @@ class LogDeliveryConfigureForm extends React.Component {
           <Row className="form-group">
             <Col xs={6}>
               <Field
-                name="export_file_format"
+                name="log_export_file_format"
                 className='input-select'
                 component={FieldFormGroupSelect}
                 options={fileFormatOptions}
                 label={<FormattedMessage id="portal.services.logDelivery.exportFileFormat.text" />}
                 required={false}
-                disabled={true}
+                disabled={!ldsEnabled}
                 addonAfter={
                   <HelpTooltip
                     id="tooltip-help"
@@ -190,13 +190,13 @@ class LogDeliveryConfigureForm extends React.Component {
           <Row className="form-group">
             <Col xs={6}>
               <Field
-                name="aggregation_interval"
+                name="log_aggregation_interval"
                 className='input-select'
                 component={FieldFormGroupSelect}
                 options={aggIntervalOptions}
                 label={<FormattedMessage id="portal.services.logDelivery.logAggregationInterval.text" />}
                 addonBefore={<FormattedMessage id="portal.services.logDelivery.every.text" />}
-                disabled={true}
+                disabled={!ldsEnabled}
                 required={false}
                 addonAfter={
                   <HelpTooltip
@@ -243,7 +243,7 @@ LogDeliveryConfigureForm.propTypes = {
 
 LogDeliveryConfigureForm.defaultProps = {
   initialValues: {
-    log_delivery_enabled: false,
+    is_enabled: false,
     aggregation_interval: 30,
     log_types: ['conductor'],
     export_file_format: 'zip'
@@ -255,7 +255,7 @@ const mapStateToProps = (state, { config }) => {
   const selector = formValueSelector('log-delivery-configure-form')
 
   return {
-    ldsEnabled: selector(state, 'log_delivery_enabled'),
+    ldsEnabled: selector(state, 'is_enabled'),
     initialValues: {
       ...config
     }

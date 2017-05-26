@@ -8,6 +8,8 @@ import { Map, is } from 'immutable'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getIdsByGroup as getPropertiesByGroup } from '../../../redux/modules/entities/properties/selectors'
 import propertiesActions from '../../../redux/modules/entities/properties/actions'
+import propertiesLogsActions from '../../../redux/modules/entities/properties-logs/actions'
+import { getById as getLogsByPropId } from '../../../redux/modules/entities/properties-logs/selectors'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ComparisonBars from '../../../components/shared/comparison-bars'
@@ -22,12 +24,12 @@ class LogDeliveryService extends React.Component {
 
     this.toggleModal = this.toggleModal.bind(this)
     this.editPropertyConfig = this.editPropertyConfig.bind(this)
-    this.savePropertyConfig = this.savePropertyConfig.bind(this)
+    this.savePropertyLogsConfig = this.savePropertyLogsConfig.bind(this)
     this.changeCurrentProperty = this.changeCurrentProperty.bind(this)
-    
+
     this.state = {
       currentProperty: null,
-      propertyConfig: {},
+      propertyLogsConfig: Map(),
       showModal: false
     }
   }
@@ -50,18 +52,30 @@ class LogDeliveryService extends React.Component {
 
   toggleModal() {
     this.setState({
-      showModal: !this.state.showModal,
-      propertyConfig: {}
+      showModal: !this.state.showModal
     })
   }
 
   editPropertyConfig() {
-    this.toggleModal()
-    this.setState({ propertyConfig: this.props.getPropertyConfig(this.props.currentProperty) })
+    const {brand, account, group} = this.props.params
+    this.props.getPropertyLogsConfig({brand, account, group, host: this.state.currentProperty})
+      .then(() => {
+        const config = getLogsByPropId(this.props.appState, this.state.currentProperty) || Map()
+        this.setState({propertyLogsConfig: config})
+        this.toggleModal()
+      })
   }
 
-  savePropertyConfig(config) {
-    this.props.updatePropertyConfig(config)
+  savePropertyLogsConfig(config) {
+    const {brand, account, group} = this.props.params
+    const params = {brand, account, group, host: this.state.currentProperty, payload: config}
+
+    if (this.state.propertyLogsConfig.size) {
+      this.props.updatePropertyLogsConfig(params)
+    } else {
+      this.props.createPropertyLogsConfig(params)
+    }
+
     this.toggleModal()
   }
 
@@ -90,7 +104,8 @@ class LogDeliveryService extends React.Component {
       .sort(sorterCallback)
       .map((host) => ({label: host, value: host}))
 
-    const { currentProperty } = this.state
+    const { currentProperty, showModal, propertyLogsConfig } = this.state
+
     const storage = { //TODO mock
       current: 100,
       estimate: 500,
@@ -114,6 +129,7 @@ class LogDeliveryService extends React.Component {
                 <InputGroup>
                   <Select
                     className="input-select"
+                    ref="taras"
                     value={currentProperty}
                     onSelect={this.changeCurrentProperty}
                     options={propertiesOptions}
@@ -149,15 +165,15 @@ class LogDeliveryService extends React.Component {
           </Row>
 
         <SidePanel
-          show={!!this.state.showModal}
+          show={!!showModal}
           title={<FormattedMessage id="portal.services.logDelivery.configureLogDelivery.text"/>}
           subTitle={currentProperty}
           cancel={this.toggleModal}
         >
           <LogDeliveryConfigureForm
-            config={this.state.propertyConfig}
+            config={propertyLogsConfig.toJS()}
             onCancel={this.toggleModal}
-            onSave={this.savePropertyConfig}
+            onSave={this.savePropertyLogsConfig}
           />
         </SidePanel>
       </div>
@@ -168,12 +184,14 @@ class LogDeliveryService extends React.Component {
 LogDeliveryService.displayName = 'LogDeliveryService'
 LogDeliveryService.propTypes = {
   activeGroup: PropTypes.instanceOf(Map),
+  appState: PropTypes.object,
+  createPropertyLogsConfig: PropTypes.func,
   currentProperty: PropTypes.string,
   fetchProperties: PropTypes.func,
-  getPropertyConfig: PropTypes.func,
+  getPropertyLogsConfig: PropTypes.func,
   params: PropTypes.object,
   properties: PropTypes.object,
-  updatePropertyConfig: PropTypes.func
+  updatePropertyLogsConfig: PropTypes.func
 }
 
 /* istanbul ignore next */
@@ -183,24 +201,17 @@ const mapStateToProps = (state, {params: { group }}) => {
   return {
     activeGroup: getGroupById(state, group) || Map(),
     properties,
-    currentProperty: properties.first()
+    currentProperty: properties.first(),
+    appState: state
   }
 }
 
 const dispatchToProps = (dispatch) => {
   return {
     fetchProperties: (params) => dispatch(propertiesActions.fetchAll(params)),
-    getPropertyConfig: () => ({ //TODO mock
-      contact_first_name: "John",
-      contact_second_name: "John",
-      log_delivery_enabled: true,
-      aggregation_interval: 30,
-      log_types: ['conductor'],
-      export_file_format: 'zip'
-    }),
-    updatePropertyConfig: () => {
-      return () => ({success: true}) //TODO mock
-    }
+    getPropertyLogsConfig: (params) => dispatch(propertiesLogsActions.fetchOne(params)),
+    updatePropertyLogsConfig: (params) => dispatch(propertiesLogsActions.update(params)),
+    createPropertyLogsConfig: (params) => dispatch(propertiesLogsActions.create(params))
   }
 }
 

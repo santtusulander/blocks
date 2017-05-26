@@ -62,6 +62,13 @@ const properties =
     [actionTypes.FAIL]: failEntity
   }, Map())
 
+const propertiesLogsConfig =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'propertiesLogsConfig' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 const pops =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'pops' }),
@@ -186,6 +193,7 @@ export default combineReducers({
   CISClusters,
   CISWorkflowProfiles,
   properties,
+  propertiesLogsConfig,
   propertyMetadata,
   pops,
   networks,
