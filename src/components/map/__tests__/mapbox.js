@@ -322,4 +322,33 @@ describe('Mapbox', () => {
 
     expect(defaultMap.queryRenderedFeatures.mock.calls).toHaveLength(0)
   })
+
+  it('should increase zoom on double click', () => {
+    defaultMap.style._loaded = true
+    const mapbox = subject()
+    mapbox.state().zoom = 2
+    mapbox.state().map.flyTo = jest.fn(() => null)
+    mapbox.simulate('dblClick', defaultMap, {
+      lngLat: {
+        lat: 71.5905911905219,
+        lng:54.95363100001185
+      }
+    })
+    expect(mapbox.state().zoom).toBe(3)
+  })
+
+  it('should reset zoom on double click when on maximum zoom', () => {
+    defaultMap.style._loaded = true
+    const mapbox = subject()
+    mapbox.state().zoom = 13
+    mapbox.state().map.flyTo = jest.fn(() => null)
+    mapbox.simulate('dblClick', defaultMap, {
+      lngLat: {
+        lat: 71.5905911905219,
+        lng:54.95363100001185
+      }
+    })
+    expect(mapbox.state().zoom).toBe(1)
+  })
+
 })

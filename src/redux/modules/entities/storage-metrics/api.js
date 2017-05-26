@@ -7,14 +7,9 @@ const URL = (params, getOverView = true) => {
   return `${analyticsBase({ legacy: false })}/storage/${getOverView ? 'get-overview/' : 'get-by-region/'}${qsBuilder(params)}`
 }
 
-export const fetch = (urlParams) =>
+export const fetch = (urlParams, metricsKey) =>
   axios.get(URL(urlParams)).then(({ data }) => {
-    return { storageMetrics: data.data }
-  })
 
-export const fetchByGroup = (groupId, urlParams) => {
-  urlParams.group = groupId
-  return axios.get(URL(urlParams)).then(({ data }) => {
-    return data.data
+    //Mimic normalizr's return pattern to use our receive entity-reducer
+    return { entities: { storageMetrics: { [metricsKey]: data.data } } }
   })
-}
