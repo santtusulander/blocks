@@ -25,37 +25,6 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
 }
 
 /**
- * Reducer for receiving metrics data for entities
- * @param  {[type]} key
- * @param  {[type]} comparison    if true, insert data into array for comparison data
- * @return {[Immutable Map]}      state fragment
- */
-export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
-
-  const metricsObject = comparison ? 'comparisonData' : 'data'
-
-  if (response && response[key]) {
-    return state.merge(fromJS({ [metricsObject]: response[key] }))
-  }
-
-  return state
-}
-
-/**
- * Reducer for receiving metrics data for a single group
- * @return {[Immutable Map]}      state fragment
- */
-export const receiveGroupMetrics = () => (state, { response }) => {
-  const metricsObject = 'groupData'
-
-  if (response) {
-    return state.merge(fromJS({ [metricsObject]: response }))
-  }
-
-  return state
-}
-
-/**
  * Reducer for failed async actions
  * @param  {[type]} state [description]
  * @return {[type]}       [description]
@@ -73,6 +42,20 @@ export const failEntity = (state/*, action*/) => {
 export const removeEntity = (state, action) => {
   const id = String(action.response.id)
   return state.delete(id)
+}
+
+/**
+ * reducer for removing an CIS_file/folder
+ * @param  {[type]} state  [description]
+ * @param  {[type]} action [description]
+ * @return {[type]}        [description]
+ */
+export const removeCISContents = (state, action) => {
+  const {reduxID, fileName} = action.response
+  if (!reduxID || !fileName) {
+    return state
+  }
+  return state.update(reduxID, files => files && files.filter(file => file.get('name') !== fileName))
 }
 
 /**

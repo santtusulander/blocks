@@ -4,7 +4,6 @@ import { Col, FormGroup, FormControl } from 'react-bootstrap'
 import { Map, List, is } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import { getContentUrl } from '../../util/routes.js'
 import { getSortData } from '../../util/helpers'
 
@@ -17,8 +16,8 @@ import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
 import Button from '../shared/form-elements/button'
 import IconAdd from '../shared/icons/icon-add'
-import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
 import Toggle from '../shared/form-elements/toggle'
 
@@ -90,15 +89,18 @@ class StorageContents extends Component {
    * This function buils base upload path for Aspera and HTTP upload
    */
   generateUploadPath() {
-    const { params } = this.props
+    // Since params.splat not always updated properly, let's use window.location
+    // For example, we have URL /content/udn/238/groups/339/storage/miketest/contents/dirdir/subdirdir/subsubsubsub
+    // To generate upload path, we need only dirdir/subdirdir/subsubsubsub
+    // For that reason split by /, slice 9 till end, and join /
+    const routerURL = window.location.pathname.split('/').slice(9).join('/')
     const asperaUpload = this.props.asperaUpload
-    const isUploadToRoot = params.splat ? false : true
+    const isUploadToRoot = routerURL ? false : true
 
-    let baseUploadPath = ''
+    let baseUploadPath = routerURL
     if (isUploadToRoot) {
       baseUploadPath = (asperaUpload ? ASPERA_DEFAULT_DESTINATION_FOLDER : HTTP_DEFAULT_DESTINATION_FOLDER)
     } else {
-      baseUploadPath = params.splat
       /* Upload path for Aspera should include './' prefix */
       if (asperaUpload && baseUploadPath.indexOf('.') !== 0) {
         baseUploadPath = `${ASPERA_DEFAULT_DESTINATION_FOLDER}${baseUploadPath}`
@@ -314,6 +316,10 @@ class StorageContents extends Component {
       userDateFormat
     } = this.props
 
+    const removeStorageContents = (fileName) => {
+      return  this.props.removeStorageContents({...params, fileName})
+    }
+
     const { storage: storageId} = params
     const isRootDirectory = params.splat ? false : true
     const hasContents = contents && contents.size > 0
@@ -340,7 +346,7 @@ class StorageContents extends Component {
         (this.state.isDragging) ? this.state.draggingOver : undefined
       :
         (this.state.isDragging && this.state.draggingOver) ? this.state.draggingOver : undefined
-    const renderDropZone = !hasContents || !hasFiles
+    const renderDropZone = !isFetchingContents && (!hasContents || !hasFiles)
     const highlightZoneOnDrag = this.state.isDragging && this.state.draggingOver === null
     const uploadDestinationFolder = this.state.draggingOver ? this.state.draggingOver : (isRootDirectory ? storageId : params.splat.split('/').slice(-1).shift())
 
@@ -403,64 +409,72 @@ class StorageContents extends Component {
         </SectionHeader>
 
         {isFetchingContents
-          && <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-        }
-
-        { asperaUpload
-          ? <AsperaUpload
-              params={params}
-              multiple={true}
-              asperaGetaway={gatewayHostname}
-              renderDropZone={renderDropZone}
-              highlightZoneOnDrag={highlightZoneOnDrag}
-              onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave}
-              onDragOver={this.onDragOver}
-              onDrop={this.onDrop}
-              uploadPath={uploadPath}
-              handleTransferEvents={this.handleAsperaEvents}
-            >
-
-            {hasContents
-                &&
-                  <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                  />
-              }
-            </AsperaUpload>
-
-          : <HttpUpload
-              params={params}
-              uploadHandlers={uploadHandlers}
-              gatewayHostname={gatewayHostname}
-              openFileDialog={openFileDialog}
-              renderDropZone={renderDropZone}
-              highlightZoneOnDrag={highlightZoneOnDrag}
-              onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave}
-              onDragOver={this.onDragOver}
-              onDrop={this.onDrop}
-              uploadPath={uploadPath}
-            >
-
-            {hasContents
-              && <StorageContentBrowser
-                    contents={sortedContents}
-                    openDirectoryHandler={this.openDirectoryHandler}
-                    backButtonHandler={this.backButtonHandler}
-                    isRootDirectory={isRootDirectory}
-                    sorterProps={sorterProps}
-                    highlightedItem={highlightedItem}
-                    userDateFormat={userDateFormat}
-                />
-            }
-            </HttpUpload>
+          ?
+            <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+          :
+            asperaUpload
+              ?
+                <AsperaUpload
+                  params={params}
+                  multiple={true}
+                  asperaGetaway={gatewayHostname}
+                  renderDropZone={renderDropZone}
+                  highlightZoneOnDrag={highlightZoneOnDrag}
+                  onDragEnter={this.onDragEnter}
+                  onDragLeave={this.onDragLeave}
+                  onDragOver={this.onDragOver}
+                  onDrop={this.onDrop}
+                  uploadPath={uploadPath}
+                  handleTransferEvents={this.handleAsperaEvents}
+                >
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                        userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
+                        params={params}
+                      />
+                    :
+                      null
+                  }
+                </AsperaUpload>
+              :
+                <HttpUpload
+                  params={params}
+                  uploadHandlers={uploadHandlers}
+                  gatewayHostname={gatewayHostname}
+                  openFileDialog={openFileDialog}
+                  renderDropZone={renderDropZone}
+                  highlightZoneOnDrag={highlightZoneOnDrag}
+                  onDragEnter={this.onDragEnter}
+                  onDragLeave={this.onDragLeave}
+                  onDragOver={this.onDragOver}
+                  onDrop={this.onDrop}
+                  uploadPath={uploadPath}
+                >
+                  {hasContents
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                        userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
+                        params={params}
+                      />
+                    :
+                      null
+                  }
+                </HttpUpload>
         }
 
         { this.state.isDragging &&
@@ -484,6 +498,7 @@ StorageContents.propTypes = {
   isFetchingContents: PropTypes.bool,
   onMethodToggle: PropTypes.func,
   params: PropTypes.object,
+  removeStorageContents: PropTypes.func,
   router: PropTypes.object,
   uploadHandlers: PropTypes.object,
   uploadsInProgress: PropTypes.object,
@@ -511,6 +526,7 @@ const mapStateToProps = (state, ownProps) => {
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => ({
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
+  removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
   uploadHandlers: bindActionCreators(uploadActions, dispatch)
 })
 

@@ -31,42 +31,6 @@ describe('Reports Module', () => {
     expect(newState.get('fetching')).toBeFalsy();
   });
 
-  it('should handle fetch file error metrics success', () => {
-    const state = Immutable.fromJS({
-      fileErrorSummary: {fake: false},
-      fileErrorURLs: [1]
-    });
-    const newState = fetchFileErrorMetricsSuccess(state, {
-      payload: {
-        data: {
-          num_errors: {fake: true},
-          url_details: [2]
-        }
-      }
-    });
-    expect(newState.get('fileErrorSummary').get('fake')).toBeTruthy();
-    expect(newState.get('fileErrorURLs').get(0)).toBe(2);
-    expect(newState.get('fetching')).toBeFalsy();
-  });
-
-  it('should handle fetch file error metrics failure', () => {
-    const state = Immutable.fromJS({
-      fileErrorSummary: {fake: false},
-      fileErrorURLs: [1]
-    });
-    const newState = fetchFileErrorMetricsFailure(state, {
-      payload: {
-        data: {
-          num_errors: {fake: true},
-          url_details: [2]
-        }
-      }
-    });
-    expect(newState.get('fileErrorSummary').size).toBe(0);
-    expect(newState.get('fileErrorURLs').size).toBe(0);
-    expect(newState.get('fetching')).toBeFalsy();
-  });
-
   it('should handle starting to fetch', () => {
     const state = Immutable.fromJS({
       fetching: false

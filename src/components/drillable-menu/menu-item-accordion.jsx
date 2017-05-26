@@ -31,13 +31,12 @@ class Accordion extends Component {
         <a onClick={() => this.toggle()} className="accordion-header">
 
           <h4 className="name-container">
-            <FormattedMessage id={headerTitle} /><CaretDown />
+            <FormattedMessage id={headerTitle} />
           </h4>
-          <h4 className="entity-count-number">({items.length})</h4>
-          
+            <h4 className="entity-count-number">({items.length})<CaretDown /></h4>
         </a>
           {this.state.open &&
-            <ul className='scrollable-menu'>
+            <ul className='accordion-menu'>
               {items}
             </ul>}
       </li>

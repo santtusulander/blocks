@@ -101,7 +101,7 @@
   "portal.common.account.multiple": "{numAccounts, number} Account(s)",
   "portal.common.storage.multiple": "{numStorages, number} Storage",
   "portal.common.group.multiple": "{numGroups, number} Group(s)",
-  "portal.common.property.multiple": "{numProperties, number} Property(s)",
+  "portal.common.property.multiple": "{numProperties, number} Property(ies)",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",

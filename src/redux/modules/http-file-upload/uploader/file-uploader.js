@@ -68,16 +68,22 @@ class Uploader {
    * Upload file via API
    * @param file {File} - HTML File object to upload
    */
-  uploadFile(file) {
-    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers, this.uploadPath)
+  uploadFile(file, uploadPath) {
+    const uploadTo = uploadPath || this.uploadPath
+    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers, uploadTo)
   }
 
   /**
    * Read and upload files
    * @param files []
+   * @param uploadPath ""
    */
-  processFiles(files) {
-    [...files].forEach(file => Reader.readFile(file).then(this.uploadFile))
+  processFiles(files, uploadPath) {
+    [...files].forEach(file => {
+      return Reader.readFile(file).then((res) => {
+        this.uploadFile(res, uploadPath)
+      })
+    })
   }
 
   /**

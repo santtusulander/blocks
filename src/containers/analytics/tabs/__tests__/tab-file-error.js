@@ -2,6 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../tab-file-error')
+jest.unmock('../../../../redux/modules/fetching/actions')
 import AnalyticsTabFileError from '../tab-file-error'
 
 jest.mock('../../../../util/status-codes', () => {
