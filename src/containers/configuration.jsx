@@ -24,7 +24,7 @@ import { getCurrentUser } from '../redux/modules/user'
 import { parseResponseError } from '../redux/util'
 import { getContentUrl } from '../util/routes'
 import { checkUserPermissions, getStoragePermissions } from '../util/permissions'
-import { hasService, formatMoment, hasOption } from '../util/helpers'
+import { hasService, hasOption } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
 
@@ -290,12 +290,12 @@ export class Configuration extends React.Component {
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
-            formatMoment(updateMoment, 'MMM, D YYYY'),
-            formatMoment(updateMoment, 'h:mm a')
+            updateMoment.format('MMM, D YYYY'),
+            updateMoment.format('h:mm a')
           ]}
           pageHeaderDetailsDeployed={[
-            formatMoment(deployMoment, 'MMM, D YYYY'),
-            formatMoment(deployMoment, 'h:mm a'),
+            deployMoment.format('MMM, D YYYY'),
+            deployMoment.format('h:mm a'),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector

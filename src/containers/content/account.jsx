@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react'
 import { Map, List} from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import {
   getAnalyticsUrlFromParams,
@@ -43,7 +44,6 @@ import { checkUserPermissions, getLocationPermissions } from '../../util/permiss
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
-import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
 
 export class Account extends React.Component {
   constructor(props) {
@@ -312,8 +312,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   const metricsOpts = {
     account: account,
-    startDate: startOfLast28().format('X'),
-    endDate: endOfThisDay().format('X')
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
   }
   const fetchData = () => {
     return Promise.all([

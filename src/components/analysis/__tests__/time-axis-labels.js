@@ -14,8 +14,8 @@ describe('TimeAxisLabels', () => {
       props = {
         height: 10,
         padding: 10,
-        xScale: d3.time.scale()
-          .domain([moment().subtract(4, 'months'), moment()])
+        xScale: d3.time.scale.utc()
+          .domain([moment.utc().subtract(4, 'months'), moment.utc()])
           .range([
             0,
             10
