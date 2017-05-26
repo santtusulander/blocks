@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 import PROVIDER_TYPES from '../../../constants/provider-types.js'
+import { startOfThisDay } from '../../../constants/date-ranges'
 
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
@@ -48,7 +49,7 @@ class AnalyticsTabOnOffNet extends React.Component {
     onOffOpts.granularity = 'day'
 
     const onOffTodayOpts = Object.assign({}, onOffOpts)
-    onOffTodayOpts.startDate = moment().utc().startOf('day').format('X'),
+    onOffTodayOpts.startDate = startOfThisDay().format('X'),
     onOffTodayOpts.endDate = moment().utc().format('X')
 
     this.props.trafficActions.fetchOnOffNet(onOffOpts)

@@ -1,6 +1,4 @@
-import moment from 'moment'
-
-import { startOfThisMonth, endOfThisDay } from '../constants/date-ranges'
+import { startOfThisMonth, endOfThisDay, startOfThisDay } from '../constants/date-ranges'
 
 // CIS
 export const BASE_URL_CIS_SOUTH = '/cis_south'
@@ -83,8 +81,8 @@ export function getDateRange(filters) {
 }
 
 export function getCustomDateRange(filters) {
-  const endDate = filters.getIn(['customDateRange', 'endDate']) || moment().utc().endOf('day')
-  const startDate = filters.getIn(['customDateRange', 'startDate']) || moment().utc().startOf('day')
+  const endDate = filters.getIn(['customDateRange', 'endDate']) || endOfThisDay()
+  const startDate = filters.getIn(['customDateRange', 'startDate']) || startOfThisDay()
 
   return {
     startDate,
