@@ -257,7 +257,7 @@ class AnalysisTraffic extends React.Component {
                 const primaryData = country.get('detail').map(datapoint => {
                   return datapoint.set(
                     'timestamp',
-                    moment.unix(datapoint.get('timestamp')).toDate()
+                    moment(datapoint.get('timestamp'), 'X').toDate()
                   )
                 })
                 const datasets = []
