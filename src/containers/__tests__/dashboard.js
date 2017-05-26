@@ -20,6 +20,7 @@ jest.mock('../../util/helpers', () => {
     formatBitsPerSecond: val => val,
     formatBytes: val => val,
     formatTime: val => val,
+    isWebGLEnabled: () => true,
     separateUnit: val => ({ value: val }),
     buildFetchOpts: val => ({ dashboardOpts: val }),
     buildAnalyticsOptsForContribution: val => val
