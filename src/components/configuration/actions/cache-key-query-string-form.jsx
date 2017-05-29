@@ -221,7 +221,8 @@ CacheKeyQueryStringForm.propTypes = {
 
 CacheKeyQueryStringForm.defaultProps = {
   allQueryArgs: [],
-  containsQueryArgs: false
+  containsQueryArgs: false,
+  set: Map()
 }
 
 const form = reduxForm({
