@@ -1,10 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 
 import { List, Map } from 'immutable'
-import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -30,12 +29,15 @@ import { buildReduxId, parseResponseError } from '../../../redux/util'
 
 import {checkUserPermissions} from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
+import { DATE_FORMATS } from '../../../constants/date-formats'
+
+import { unixTimestampToDate } from '../../../util/helpers'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
+import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -168,7 +170,7 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const { initialValues, iata, onCancel, group, network, popId, allowModify } = this.props
+    const { initialValues, iata, onCancel, group, network, popId, allowModify, intl } = this.props
 
     const { showDeleteModal } = this.state
 
@@ -181,8 +183,8 @@ class PopFormContainer extends Component {
 
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
-                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
+                                                    createdDate: intl.formatDate(unixTimestampToDate(initialValues.createdDate), DATE_FORMATS.FULL_DATE),
+                                                    updatedDate: intl.formatDate(unixTimestampToDate(initialValues.updatedDate), DATE_FORMATS.FULL_DATE)
                                                   }} />) : ''
 
     return (
@@ -242,6 +244,7 @@ PopFormContainer.propTypes = {
   handleSelectedEntity: PropTypes.func,
   iata: PropTypes.string,
   initialValues: PropTypes.object,
+  intl: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
@@ -321,4 +324,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PopFormContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PopFormContainer))

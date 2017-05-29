@@ -28,6 +28,14 @@ export const getDateFormats = (timezone) => {
         day: 'numeric',
         month: 'long'
       },
+      [DATE_FORMATS.DAY_MONTH_SHORT_HOUR]: { // 3 Nov, 1:11
+        timeZone: timezone,
+        day: 'numeric',
+        month: 'short',
+        hour12: false,
+        hour: 'numeric',
+        minute: '2-digit'
+      },
       [DATE_FORMATS.FULL_DATE_SHORT]: {           // 1 Nov 2011
         timeZone: timezone,
         day: 'numeric',
@@ -97,6 +105,18 @@ export const getDateFormats = (timezone) => {
       },
       [TIME_FORMATS.TIME_12_UTC]: {                    // 11:11 PM
         timeZone: 'UTC',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      },
+      [TIME_FORMATS.TIME_24]: {                    // 23:11
+        timeZone: timezone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      },
+      [TIME_FORMATS.TIME_12]: {                    // 11:11 PM
+        timeZone: timezone,
         hour: '2-digit',
         minute: '2-digit',
         hour12: true

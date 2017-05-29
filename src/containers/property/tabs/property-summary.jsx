@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Col, Row } from 'react-bootstrap';
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, FormattedDate } from 'react-intl'
 import moment from 'moment'
 import numeral from 'numeral'
 
@@ -30,6 +30,7 @@ import {
 
 import DateRanges from '../../../constants/date-ranges'
 import { paleblue } from "../../../constants/colors";
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1, 'second').subtract(28, 'days')
@@ -268,6 +269,7 @@ class PropertySummary extends React.Component {
   }
 
   render() {
+    const { intl } = this.props
 
     if (this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <LoadingSpinner />
@@ -307,9 +309,8 @@ class PropertySummary extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
-      const formattedDate = moment.utc(date)
-        .subtract(dateRange.asDays(), 'days')
-        .format('MMM D H:mm')
+      const formattedDate = intl.formatDate(moment.utc(date)
+        .subtract(dateRange.asDays(), 'days'), DATE_FORMATS.DAY_MONTH_SHORT_HOUR)
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
     }
@@ -370,9 +371,9 @@ class PropertySummary extends React.Component {
           <Col xs={4} className="kpi">
             <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
-              {moment(
+              <FormattedDate value={moment(
                 activeConfig.get('configuration_status').get('deployment_date'), 'X'
-              ).format('M/D/YYYY, h:mma')}
+              )} format={DATE_FORMATS.DATE_HOUR_12} />
             </h3>
           </Col>
         </Row>
@@ -441,7 +442,12 @@ class PropertySummary extends React.Component {
             y={-30}
             hidden={false}>
             <div className="tooltip-header">
-              <b>{moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
+              <b><FormattedDate
+                    value={moment.utc(this.state.activeSlice.get('timestamp'), 'X')}
+                    month='short'
+                    day='numeric'
+                    weekday='long'
+              /></b>
             </div>
             <div>
               <FormattedMessage id="portal.content.property.summary.peak.label"/>
@@ -485,6 +491,7 @@ PropertySummary.propTypes = {
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
+  intl: React.PropTypes.object,
   location: React.PropTypes.object,
   metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
