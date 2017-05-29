@@ -155,6 +155,12 @@ class PurgeModal extends React.Component {
     hasErrors = this.validateEmail() ? true : hasErrors
     if (!hasErrors) {
       this.props.savePurge()
+        .then(() => {
+          this.setState({submitting: false})
+        })
+        .catch(() => {
+          this.setState({submitting: false})
+        })
     } else {
       this.setState({submitting: false})
     }
