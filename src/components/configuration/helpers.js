@@ -173,69 +173,73 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       // <ConfigurationMatchIpAddress {...matcherProps}/>
     }
   }
+
   if (setPath) {
     const activeSet = config.getIn(setPath)
-    const setKey = activeSet.keySeq().first()
 
-    const setterProps = {
-      changeValue: changeValue,
-      close: cancelActiveEditForm,
-      path: setPath,
-      saveAction,
-      set: activeSet.get(setKey),
-      setKey
-    }
+    if (activeSet) {
+      const setKey = activeSet.keySeq().first()
 
-    switch (setKey) {
-      case 'cache_name':
-        activeEditForm = (
-          <ConfigurationActionCacheKeyQueryStringForm {...setterProps}/>
-        )
-        break
-      case 'cache_control':
-        activeEditForm = (
-          <ConfigurationActionCache {...setterProps}/>
-        )
-        break
-      case 'header':
-        activeEditForm = (
-          <ConfigurationActionHeader {...setterProps}/>
-        )
-        break
-      case 'tokenauth':
-        activeEditForm = (
-          <ConfigurationTokenAuth {...setterProps}/>
-        )
-        break
-      case 'reply':
-        activeEditForm = (
-          <ConfigurationContentTargetingAction {...setterProps}/>
-        )
-        break
-      case 'negative_cache':
-        activeEditForm = (
-          <ConfigurationActionNegativeCache {...setterProps}/>
-        )
-        break
-      default:
-        activeEditForm = (
-          <ActionsSelection
-            activateSet={activateSet}
-            config={config}
-            path={setPath}
-            rule={activeRule}
-            changeValue={changeValue}/>
-        )
-        break
-      // <ConfigurationActionRedirection {...setterProps}/>
-      // <ConfigurationActionOriginHostname {...setterProps}/>
-      // <ConfigurationActionCompression {...setterProps}/>
-      // <ConfigurationActionPath {...setterProps}/>
-      // <ConfigurationActionQueryString {...setterProps}/>
-      // <ConfigurationActionRemoveVary {...setterProps}/>
-      // <ConfigurationActionAllowBlock {...setterProps}/>
-      // <ConfigurationActionPostSupport {...setterProps}/>
-      // <ConfigurationActionCors {...setterProps}/>
+      const setterProps = {
+        changeValue: changeValue,
+        close: cancelActiveEditForm,
+        path: setPath,
+        saveAction,
+        set: activeSet.get(setKey),
+        setKey
+      }
+
+      switch (setKey) {
+        case 'cache_name':
+          activeEditForm = (
+            <ConfigurationActionCacheKeyQueryStringForm {...setterProps}/>
+          )
+          break
+        case 'cache_control':
+          activeEditForm = (
+            <ConfigurationActionCache {...setterProps}/>
+          )
+          break
+        case 'header':
+          activeEditForm = (
+            <ConfigurationActionHeader {...setterProps}/>
+          )
+          break
+        case 'tokenauth':
+          activeEditForm = (
+            <ConfigurationTokenAuth {...setterProps}/>
+          )
+          break
+        case 'reply':
+          activeEditForm = (
+            <ConfigurationContentTargetingAction {...setterProps}/>
+          )
+          break
+        case 'negative_cache':
+          activeEditForm = (
+            <ConfigurationActionNegativeCache {...setterProps}/>
+          )
+          break
+        default:
+          activeEditForm = (
+            <ActionsSelection
+              activateSet={activateSet}
+              config={config}
+              path={setPath}
+              rule={activeRule}
+              changeValue={changeValue}/>
+          )
+          break
+        // <ConfigurationActionRedirection {...setterProps}/>
+        // <ConfigurationActionOriginHostname {...setterProps}/>
+        // <ConfigurationActionCompression {...setterProps}/>
+        // <ConfigurationActionPath {...setterProps}/>
+        // <ConfigurationActionQueryString {...setterProps}/>
+        // <ConfigurationActionRemoveVary {...setterProps}/>
+        // <ConfigurationActionAllowBlock {...setterProps}/>
+        // <ConfigurationActionPostSupport {...setterProps}/>
+        // <ConfigurationActionCors {...setterProps}/>
+      }
     }
   }
   return activeEditForm
