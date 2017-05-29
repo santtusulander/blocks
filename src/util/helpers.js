@@ -817,3 +817,7 @@ export const isWebGLEnabled = () => {
   /* WebGL not supported. */
   return false
 }
+
+export const getServiceType = (property) => {
+  return property && property.getIn(['services', 0, 'service_type'])
+}
