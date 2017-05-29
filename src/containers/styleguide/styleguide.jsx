@@ -609,15 +609,15 @@ class Styleguide extends React.Component {
           <Row>
             <Col xs={4}>
               <p>Current Date</p>
-              <p><FormattedDate value={new Date()} format="fullDate" /></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.FULL_DATE} /></p>
             </Col>
             <Col xs={4}>
               <p>Date in your timezone </p>
-              <p><FormattedDate value={new Date()} format="dateHourTimezone"/></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.DATE_HOUR}/></p>
             </Col>
             <Col xs={4}>
               <p>UTC Date</p>
-              <p><FormattedDate value={new Date()} format="dateHourInUTC"/></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.DATE_HOUR_UTC}/></p>
             </Col>
           </Row>
 
