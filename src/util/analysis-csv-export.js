@@ -4,7 +4,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
 
-import { formatBytes, formatMoment } from './helpers'
+import { formatBytes } from './helpers'
 
 function filterByServiceType(serviceTypes) {
   return item => serviceTypes.includes(
@@ -72,7 +72,7 @@ export function createCSVExporters(filenamePart) {
     },
     'cache-hit-rate': cacheHitRate => {
       const data = cacheHitRate.map(item => ({
-        timestamp: formatMoment(moment(item.get('timestamp'))),
+        timestamp: moment(item.get('timestamp')).format(),
         cache_hit_ratio: item.get('chit_ratio') || 0
       }))
       generate('Cache Hit Rate', data)
@@ -83,8 +83,8 @@ export function createCSVExporters(filenamePart) {
     'storage': storageStats => {
       const data = storageStats.map(item => {
         return item
-          .set('historical_timestamp', formatMoment(moment.unix(item.get('historical_timestamp'))))
-          .set('timestamp', formatMoment(moment.unix(item.get('timestamp'))))
+          .set('historical_timestamp', moment.utc(item.get('historical_timestamp'), 'X').format())
+          .set('timestamp', moment.utc(item.get('timestamp'), 'X').format())
       })
       generate('Storage Usage', data)
     }

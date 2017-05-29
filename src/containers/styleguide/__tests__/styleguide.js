@@ -7,8 +7,7 @@ jest.unmock('../../../decorators/select-auto-close')
 
 jest.mock('../../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
-  separateUnit: bytes => bytes,
-  formatMoment: jest.fn()
+  separateUnit: bytes => bytes
 }})
 
 import Styleguide from '../styleguide.jsx'

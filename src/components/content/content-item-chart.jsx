@@ -16,8 +16,7 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import DifferenceTooltip from './difference-tooltip'
 import ContentItemTag from './content-item-tag'
 import TrafficTooltip from './traffic-tooltip'
-import { formatBitsPerSecond, formatMoment } from '../../util/helpers'
-import { startOfLast28 } from '../../constants/date-ranges'
+import { formatBitsPerSecond } from '../../util/helpers'
 import LinkWrapper from './link-wrapper'
 
 const dayHours = 24
@@ -153,8 +152,8 @@ class ContentItemChart extends React.Component {
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
     let { avgTransfer, maxTransfer, minTransfer } = this.props
     const { tagText } = this.props
-    const endDate = formatMoment(moment(), 'MMM D')
-    const startDate = formatMoment(startOfLast28(), 'MMM D')
+    const endDate = moment.utc().format('MMM D')
+    const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
     const activeSlice = this.state.activeSlice
@@ -162,10 +161,10 @@ class ContentItemChart extends React.Component {
       avgTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('average'), true)
       maxTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('peak'), true)
       minTransfer = formatBitsPerSecond(activeSlice.get('transfer_rates').get('low'), true)
-      const sliceStart = moment.unix(activeSlice.get('timestamp'))
-      tooltipDate = formatMoment(sliceStart, 'MMM D')
+      const sliceStart = moment.utc(activeSlice.get('timestamp'), 'X')
+      tooltipDate = sliceStart.format('MMM D')
       if (this.props.showSlices) {
-        link = `${this.props.linkTo}?startDate=${activeSlice.get('timestamp')}&endDate=${formatMoment(sliceStart.endOf('day'), 'X')}`
+        link = `${this.props.linkTo}?startDate=${activeSlice.get('timestamp')}&endDate=${sliceStart.endOf('day').format('X')}`
       }
     }
     const tooltip = (<Tooltip className="content-item-chart-tooltip"

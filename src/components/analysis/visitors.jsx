@@ -217,7 +217,7 @@ class AnalysisVisitors extends React.Component {
                     const countryData = country.get('detail').map(datapoint => {
                       return datapoint.set(
                         'timestamp',
-                        moment.unix(datapoint.get('timestamp')).toDate()
+                        moment(datapoint.get('timestamp'), 'X').toDate()
                       )
                     })
                     const datasets = []
@@ -294,7 +294,7 @@ class AnalysisVisitors extends React.Component {
                     const browserData = browser.get('detail').map(datapoint => {
                       return datapoint.set(
                         'timestamp',
-                        moment.unix(datapoint.get('timestamp')).toDate()
+                        moment(datapoint.get('timestamp'), 'X').toDate()
                       )
                     })
                     const datasets = []
@@ -371,7 +371,7 @@ class AnalysisVisitors extends React.Component {
                     const osData = os.get('detail').map(datapoint => {
                       return datapoint.set(
                         'timestamp',
-                        moment.unix(datapoint.get('timestamp')).toDate()
+                        moment(datapoint.get('timestamp'), 'X').toDate()
                       )
                     })
                     const datasets = []

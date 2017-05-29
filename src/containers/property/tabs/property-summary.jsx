@@ -22,9 +22,6 @@ import AnalysisByTime from '../../../components/analysis/by-time'
 import DateRangeSelect from '../../../components/shared/form-elements/date-range-select'
 import Tooltip from '../../../components/shared/tooltips/tooltip'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
-import { endOfThisDay, startOfLast28 } from '../../../constants/date-ranges'
-
-import { formatMoment } from '../../../util/helpers'
 
 import {
   formatBitsPerSecond,
@@ -34,13 +31,16 @@ import {
 import DateRanges from '../../../constants/date-ranges'
 import { paleblue } from "../../../constants/colors";
 
+const endOfThisDay = () => moment().utc().endOf('day')
+const startOfLast28 = () => endOfThisDay().endOf('day').add(1, 'second').subtract(28, 'days')
+
 // default dates to last 28 days
 function safeMomentStartDate(date) {
-  return date ? moment.unix(date) : startOfLast28()
+  return date ? moment.utc(date, 'X') : startOfLast28()
 }
 
 function safeMomentEndDate(date) {
-  return date ? moment.unix(date) : endOfThisDay()
+  return date ? moment.utc(date, 'X') : endOfThisDay()
 }
 
 function safeFormattedStartDate(date) {
@@ -130,7 +130,7 @@ class PropertySummary extends React.Component {
     for (let t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
       hourlyTraffic.push({
         bits_per_second: 0,
-        timestamp: moment.unix(t).toDate()
+        timestamp: moment(t, 'X').toDate()
       })
     }
     return hourlyTraffic
@@ -251,8 +251,8 @@ class PropertySummary extends React.Component {
   hoverSlice(date, x1, x2) {
     if (date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
-        .find(day => moment.unix(day.get('timestamp'))
-          .isSame(moment(date), 'day'))
+        .find(day => moment.utc(day.get('timestamp'), 'X')
+          .isSame(moment.utc(date), 'day'))
       const xPos = (((x1 + x2) / 2) - 100)
       this.setState({
         activeSlice: activeSlice,
@@ -264,7 +264,7 @@ class PropertySummary extends React.Component {
   }
 
   selectSlice(date) {
-    this.changeDateRange(moment(date), moment(date).endOf('day'))
+    this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
   }
 
   render() {
@@ -290,7 +290,7 @@ class PropertySummary extends React.Component {
       [] :
       this.props.hourlyTraffic.getIn(['history', 0, 'detail']).map(hour => {
         return {
-          timestamp: moment.unix(hour.get('timestamp')).add(dateRange.asDays(), 'days').toDate(),
+          timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
           bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
@@ -298,7 +298,7 @@ class PropertySummary extends React.Component {
       !historical_traffic.length ? [] : this.getEmptyHourlyTraffic(startDate, endDate) :
       this.props.hourlyTraffic.getIn(['now', 0, 'detail']).map(hour => {
         return {
-          timestamp: moment.unix(hour.get('timestamp')).toDate(),
+          timestamp: moment(hour.get('timestamp'), 'X').toDate(),
           bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
@@ -307,8 +307,9 @@ class PropertySummary extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
-      const formattedDate = formatMoment(moment(date)
-        .subtract(dateRange.asDays(), 'days'), 'MMM D H:mm')
+      const formattedDate = moment.utc(date)
+        .subtract(dateRange.asDays(), 'days')
+        .format('MMM D H:mm')
       const formattedValue = formatBitsPerSecond(value)
       return `${formattedDate} ${formattedValue}`
     }
@@ -340,7 +341,7 @@ class PropertySummary extends React.Component {
         label: <FormattedMessage id="portal.content.property.summary.comparisonPeriod.label"/>,
         line: false,
         stackedAgainst: false,
-        xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
+        xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
       })
     }
 
@@ -369,9 +370,9 @@ class PropertySummary extends React.Component {
           <Col xs={4} className="kpi">
             <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
-              {formatMoment(moment.unix(
-                activeConfig.get('configuration_status').get('deployment_date')
-              ), 'M/D/YYYY, h:mma')}
+              {moment(
+                activeConfig.get('configuration_status').get('deployment_date'), 'X'
+              ).format('M/D/YYYY, h:mma')}
             </h3>
           </Col>
         </Row>
@@ -440,7 +441,7 @@ class PropertySummary extends React.Component {
             y={-30}
             hidden={false}>
             <div className="tooltip-header">
-              <b>{formatMoment(moment.unix(this.state.activeSlice.get('timestamp')), 'MMM D, ddd')}</b>
+              <b>{moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
             </div>
             <div>
               <FormattedMessage id="portal.content.property.summary.peak.label"/>

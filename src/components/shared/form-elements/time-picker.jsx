@@ -1,7 +1,6 @@
 import React from 'react'
 import Datetime from 'react-datetime'
 import moment from 'moment'
-import { formatMoment } from '../../../util/helpers'
 
 import { Dropdown } from 'react-bootstrap'
 
@@ -9,7 +8,7 @@ import IconSelectCaret from '../icons/icon-select-caret'
 import IconClock from '../icons/icon-clock'
 
 const TimePicker = ({ time, onChange, isUTC }) => {
-  const value = `${formatMoment(time)} ${isUTC ? 'UTC' : ''}`
+  const value = `${time.format('hh:mma')} ${isUTC ? 'UTC' : ''}`
 
   return (
     <Dropdown id="" className="dropdown-select">
@@ -46,7 +45,7 @@ TimePicker.propTypes = {
 }
 TimePicker.defaultProps = {
   isUTC: true,
-  time: moment()
+  time: moment().utc()
 }
 
 export default TimePicker

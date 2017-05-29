@@ -1,10 +1,10 @@
 import React from 'react'
 import d3 from 'd3'
+import moment from 'moment'
 import numeral from 'numeral'
 
 import Tooltip from '../shared/tooltips/tooltip'
 import {FormattedMessage} from 'react-intl'
-import { formatDate } from '../../util/helpers'
 
 class AnalysisByKey extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class AnalysisByKey extends React.Component {
       }
       if (d) {
         this.setState({
-          tooltipText: `${formatDate(d[this.props.xKey], 'MMM D')} ${numeral(d[this.props.yKey]).format('0,0')}`,
+          tooltipText: `${moment(d[this.props.xKey]).format('MMM D')} ${numeral(d[this.props.yKey]).format('0,0')}`,
           tooltipX: xScale(d[this.props.xKey]),
           tooltipY: yScale(d[this.props.yKey]),
           tooltipOffsetTop: yScale(d[this.props.yKey]) + 50 > this.props.height
@@ -176,7 +176,7 @@ class AnalysisByKey extends React.Component {
               return (
                 <g key={i}>
                   <text x={xScale(tick)} y={this.props.height - this.props.padding}>
-                    {formatDate(tick, 'D')}
+                    {moment(tick).format('D')}
                   </text>
                 </g>
               )
