@@ -29,7 +29,7 @@ import {
   Row,
   Table
 } from 'react-bootstrap';
-
+import { FormattedDate } from 'react-intl'
 import StyleguideIcons from './styleguide-icons'
 import StyleguideCharts from './styleguide-charts'
 
@@ -599,6 +599,22 @@ class Styleguide extends React.Component {
               <MiniChart
                 dataKey="bytes"
                 data={miniChartKPIData} />
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Date Format</h1>
+          <Row>
+            <Col xs={4}>
+              <p>Current Date</p>
+              <p><FormattedDate value={new Date()} format="datenum" /></p>
+            </Col>
+            <Col xs={4}>
+              <p>Date in your timezone </p>
+              <p><FormattedDate value={new Date()} format="datehourTimezone"/></p>
+            </Col>
+            <Col xs={4}>
+              <p>UTC Date</p>
+              <p><FormattedDate value={new Date()} format="datehourInUTC"/></p>
             </Col>
           </Row>
 
