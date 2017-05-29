@@ -20,8 +20,7 @@ import { BASE_URL_AAA, parseResponseError } from '../../redux/util'
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
          TWO_FA_DEFAULT_AUTH_METHOD,
-         LANGUAGE_OPTIONS,
-         DATE_FORMAT_OPTIONS
+         LANGUAGE_OPTIONS
         } from '../../constants/user'
 import { TIME_ZONES } from '../../constants/time-zones'
 
@@ -475,12 +474,11 @@ class UserEditForm extends React.Component {
               <FormattedMessage id="portal.user.edit.dateFormat.text"/>
             </p>
           </Col>
-          <Col xs={1}>
-            <Field
-              name="date_format"
-              component={FieldFormGroupSelect}
-              options={DATE_FORMAT_OPTIONS}
-            />
+          <Col xs={3}>
+            <p className="form-control-static">
+              { /* Cannot use FormattedDate as it depends on intProvider -locale and it does not get set here (before save)} */}
+              { new Date().toLocaleString(this.props.formValues.language) }
+            </p>
           </Col>
         </Row>
 
@@ -540,7 +538,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),
     tfa_toggle: formValueSelector('user-edit-form')(state, 'tfa_toggle'),
-    tfa: formValueSelector('user-edit-form')(state, 'tfa'),
+    selectedLocale: formValueSelector('user-edit-form')(state, 'language'),
     formValues: formValueSelector('user-edit-form')(state, ...Object.keys(ownProps.initialValues))
   }
 }

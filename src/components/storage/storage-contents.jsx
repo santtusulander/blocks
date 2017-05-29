@@ -77,7 +77,7 @@ class StorageContents extends Component {
       this.fetchStorageContents({forceReload: true, ...nextProps.params})
     }
 
-    if (nextProps.params.splat !== this.props.params.splat) {
+    if (JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
       this.fetchStorageContents(nextProps.params)
     }
 
