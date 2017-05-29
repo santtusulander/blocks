@@ -148,7 +148,7 @@ class CsvUploadArea extends Component {
                 <span className="file-name">{file.name}</span>
                 <br />
                 <span className="file-detail">
-                  <span><FormattedDate value={new Date(file.lastModified)} format="datenum"/></span>
+                  <span><FormattedDate value={new Date(file.lastModified)} format="fullDate"/></span>
                   <span><FormattedMessage id="portal.fileInput.bytes.text" values={{size: file.size}}/></span>
                 </span>
               </div>

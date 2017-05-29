@@ -9,7 +9,7 @@ import IconSelectCaret from '../icons/icon-select-caret'
 import IconClock from '../icons/icon-clock'
 
 const TimePicker = ({ time, onChange, isUTC, intl }) => {
-  const value = `${intl.formatTime(time, { hour: '2-digit', 'minute': '2-digit', hour12: true})} ${isUTC ? 'UTC' : ''}`
+  const value = `${intl.formatTime(time, 'time12UTC')} ${isUTC ? 'UTC' : ''}`
 
   return (
     <Dropdown id="" className="dropdown-select">

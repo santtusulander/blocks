@@ -67,7 +67,6 @@ import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 import DateRanges from '../../constants/date-ranges'
-import { dateFormats } from '../../constants/date-formats'
 
 import country_list from '../../constants/country-list'
 
@@ -609,15 +608,15 @@ class Styleguide extends React.Component {
           <Row>
             <Col xs={4}>
               <p>Current Date</p>
-              <p><FormattedDate value={new Date()} format="datenum" /></p>
+              <p><FormattedDate value={new Date()} format="fullDate" /></p>
             </Col>
             <Col xs={4}>
               <p>Date in your timezone </p>
-              <p><FormattedDate value={new Date()} format="datehourTimezone"/></p>
+              <p><FormattedDate value={new Date()} format="dateHourTimezone"/></p>
             </Col>
             <Col xs={4}>
               <p>UTC Date</p>
-              <p><FormattedDate value={new Date()} format="datehourInUTC"/></p>
+              <p><FormattedDate value={new Date()} format="dateHourInUTC"/></p>
             </Col>
           </Row>
 
@@ -653,8 +652,8 @@ class Styleguide extends React.Component {
                 }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.datePickerStartDate} (${intl.formatDate(this.state.datePickerStartDate, dateFormats().date.datehour24)})`}</p>
-              <p>{`endDate: ${this.state.datePickerEndDate} (${intl.formatDate(this.state.datePickerEndDate, dateFormats().date.datehour24)})`}</p>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${intl.formatDate(this.state.datePickerStartDate, 'dateHour24')})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${intl.formatDate(this.state.datePickerEndDate, 'dateHour24')})`}</p>
             </Col>
           </Row>
 
@@ -667,10 +666,10 @@ class Styleguide extends React.Component {
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.customDatePickerStartDate} (${intl.formatDate(this.state.customDatePickerStartDate, dateFormats().date.datehour24)})`}</p>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${intl.formatDate(this.state.customDatePickerStartDate, 'dateHour24')})`}</p>
             </Col>
             <Col xs={4}>
-              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.datePickerEndDate} (${intl.formatDate(this.state.customDatePickerEndDate, dateFormats().date.datehour24)})`}</p>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.datePickerEndDate} (${intl.formatDate(this.state.customDatePickerEndDate, 'dateHour24')})`}</p>
             </Col>
           </Row>
 
@@ -683,7 +682,7 @@ class Styleguide extends React.Component {
                 onChange={(time) => this.setState({ timePickerTime: time })} />
             </Col>
             <Col xs={8}>
-              <p>{`time: ${this.state.timePickerTime} (${intl.formatTime(this.state.timePickerTime, { hour: '2-digit', 'minute': '2-digit', hour12: false})})`}</p>
+              <p>{`time: ${this.state.timePickerTime} (${intl.formatTime(this.state.timePickerTime, 'time24UTC')})`}</p>
             </Col>
           </Row>
 

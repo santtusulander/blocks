@@ -70,7 +70,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
                 <td>{title}</td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td><FormattedDate value={moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ')} format="datenum"/></td>
+                <td><FormattedDate value={moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ')} format="fullDate"/></td>
                 <IsAllowed to={MODIFY_CERTIFICATE || DELETE_CERTIFICATE}>
                   <td className="nowrap-column">
                     <ActionButtons
