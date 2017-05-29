@@ -24,15 +24,17 @@ const messages= {
 
 function mapStateToProps(state) {
   const currentUser = getCurrentUser(state)
-  const locale = currentUser.get('locale') ? currentUser.get('locale').split('-')[0] : 'en'
+  const lang = currentUser.get('locale') ? currentUser.get('locale').split('-')[0] : 'en'
+  const locale = currentUser.get('locale') || 'en'
 
   // Merged "en" messages with selected language messages to set untranslated strings default to english
-  const mergedMessages = Object.assign(MESSAGES_EN, messages[locale])
+  const mergedMessages = Object.assign(MESSAGES_EN, messages[lang])
 
   return {
-    defaultLocale: 'en',
-    locale: locale,
+    locale,
+    defaultLocale: 'en-US',
     messages: mergedMessages
+
   }
 }
 
