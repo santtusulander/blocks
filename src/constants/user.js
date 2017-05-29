@@ -35,11 +35,6 @@ export const LANGUAGE_OPTIONS = [
   {value: LANGUAGE_CODE_FRENCH, label: 'Françias', secondLabel: 'FR'}
 ]
 
-export const DATE_FORMAT_OPTIONS = [
-  {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
-  {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
-]
-
 export const dateFormats = (timezone) => {
   return {
     date: {
