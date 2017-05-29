@@ -52,7 +52,7 @@ export const remove = ({ brand, account, group, property, service }) =>
     .then(() => ({ id: `${property}-GTM` }))
 
 const fetchAsns = (value) => {
-  const queryParams = qsBuilder({ filter_by: 'asn', filter_value: value, page_size: 1 })
+  const queryParams = qsBuilder({ filter_by: 'asn', sort_by: 'asn', filter_value: value, page_size: 1 })
 
   return axios.get(`${BASE_URL_NORTH}/asns${queryParams}`)
     .then(({ data }) => {
