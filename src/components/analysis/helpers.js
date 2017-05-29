@@ -1,4 +1,5 @@
-import { formatDate } from '../../util/helpers'
+import moment from 'moment'
+
 /**
  * Get label for traffic (returns label or MM/DD/YYY - MM/DD/YYY if custom range)
  * @param  {Map} dateRange      dateRange Map({startDate: xxx, endDate: yyy})
@@ -9,8 +10,8 @@ import { formatDate } from '../../util/helpers'
 export const getTrafficByDateRangeLabel = (dateRange, dateRangeLabel, formatMessage) => {
   let label = ''
   if (dateRangeLabel === 'portal.constants.date-ranges.custom_timerange' || !dateRangeLabel) {
-    const startDate = formatDate(dateRange.get('startDate', 'MM/DD/YYYY'))
-    const endDate = formatDate(dateRange.get('endDate'), 'MM/DD/YYYY')
+    const startDate = moment(dateRange.get('startDate')).format('MM/DD/YYYY')
+    const endDate = moment(dateRange.get('endDate')).format('MM/DD/YYYY')
     label = startDate + (startDate !== endDate ? ` - ${endDate}` : '')
   } else {
     label = `${formatMessage({ id: dateRangeLabel })}`

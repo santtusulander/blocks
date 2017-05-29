@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 
 import { List, Map } from 'immutable'
+import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -36,7 +37,6 @@ import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
-import { formatUnixTimestamp } from '../../../util/helpers'
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -181,8 +181,8 @@ class PopFormContainer extends Component {
 
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: formatUnixTimestamp(initialValues.createdDate, NETWORK_DATE_FORMAT),
-                                                    updatedDate: formatUnixTimestamp(initialValues.updatedDate, NETWORK_DATE_FORMAT)
+                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
+                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
                                                   }} />) : ''
 
     return (

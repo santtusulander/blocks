@@ -32,7 +32,7 @@ export function fetchedByTimeSuccess(state, action) {
   const average = action.payload.data.length ? total / action.payload.data.length : 0;
   return state.merge({
     byTime: fromJS(action.payload.data.map(datapoint => {
-      datapoint.timestamp = moment.unix(datapoint.timestamp).toDate()
+      datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
       return datapoint
     })),
     byTimeAverage: average

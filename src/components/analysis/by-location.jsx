@@ -7,6 +7,8 @@ import { isWebGLEnabled } from '../../util/helpers'
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 
+const hasWebGLEnabled = isWebGLEnabled()
+
 const AnalysisByLocation = (props) => {
   const {
     countryData,
@@ -25,7 +27,7 @@ const AnalysisByLocation = (props) => {
     return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
   }
 
-  if (!isWebGLEnabled()) {
+  if (!hasWebGLEnabled) {
     return <h4 className="no-webgl-support"><FormattedMessage id="portal.common.no-webgl-support.text" /></h4>
   }
 
@@ -64,7 +66,7 @@ AnalysisByLocation.propTypes = {
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
   getCityData: React.PropTypes.func,
-  height: React.PropTypes.number,
+  height: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
   markers: React.PropTypes.instanceOf(Immutable.List),

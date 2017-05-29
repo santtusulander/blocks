@@ -15,6 +15,7 @@ const ingestPointContentSchema = new schema.Entity('ingestPointContents', {},{
         name: item.name,
         size: item.stat.size,
         type: item.stat.type,
+        created: item.stat.atime,
         lastModified: item.stat.mtime
       }
     ))

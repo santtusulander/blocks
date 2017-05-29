@@ -25,37 +25,6 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
 }
 
 /**
- * Reducer for receiving metrics data for entities
- * @param  {[type]} key
- * @param  {[type]} comparison    if true, insert data into array for comparison data
- * @return {[Immutable Map]}      state fragment
- */
-export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
-
-  const metricsObject = comparison ? 'comparisonData' : 'data'
-
-  if (response && response[key]) {
-    return state.merge(fromJS({ [metricsObject]: response[key] }))
-  }
-
-  return state
-}
-
-/**
- * Reducer for receiving metrics data for a single group
- * @return {[Immutable Map]}      state fragment
- */
-export const receiveGroupMetrics = () => (state, { response }) => {
-  const metricsObject = 'groupData'
-
-  if (response) {
-    return state.merge(fromJS({ [metricsObject]: response }))
-  }
-
-  return state
-}
-
-/**
  * Reducer for failed async actions
  * @param  {[type]} state [description]
  * @return {[type]}       [description]

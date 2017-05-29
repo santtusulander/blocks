@@ -4,15 +4,13 @@ import classnames from 'classnames'
 
 import IconArrowRight from '../icons/icon-arrow-right'
 import IconArrowLeft from '../icons/icon-arrow-left'
-import { startOfThisMonth } from '../../../constants/date-ranges'
-import { formatMoment } from '../../../util/helpers'
 
 export class MonthPicker extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      selectedMonth: props.date ? formatMoment(moment().month(props.date.get('month')), 'MMMM') : null,
+      selectedMonth: props.date ? moment().month(props.date.get('month')).format('MMMM') : null,
       selectedYear: props.date ? props.date.get('year') : moment().year(),
       shownYear: props.date ? props.date.get('year') : moment().year()
     }
@@ -30,7 +28,7 @@ export class MonthPicker extends React.Component {
   }
 
   selectMonth(month) {
-    const currentMonth = formatMoment(moment().month(month), 'MMMM')
+    const currentMonth = moment().month(month).format('MMMM')
     this.setState({
       selectedMonth: currentMonth,
       selectedYear: this.state.shownYear
@@ -40,10 +38,10 @@ export class MonthPicker extends React.Component {
   }
 
   setDates(year, month) {
-    const startDate = moment().year(year).month(month).startOf('month')
-    const currentMonth = formatMoment(moment(), 'MMMM')
+    const startDate = moment().year(year).month(month).utc().startOf('month')
+    const currentMonth = moment().format('MMMM')
     const endOfDateRange = month === currentMonth ? 'day' : 'month'
-    const endDate = moment().year(year).month(month).endOf(endOfDateRange)
+    const endDate = moment().year(year).month(month).utc().endOf(endOfDateRange)
 
     this.props.onChange(startDate, endDate)
   }
@@ -53,7 +51,7 @@ export class MonthPicker extends React.Component {
     const months = []
     let monthIndex = 0
     while (monthIndex < 12) {
-      months.push(formatMoment(moment().month(monthIndex++), 'MMM'))
+      months.push(moment().month(monthIndex++).format('MMM'))
     }
 
     return (
@@ -70,7 +68,7 @@ export class MonthPicker extends React.Component {
 
         <ul className="months">
           {months.map((month, i) => {
-            const monthName = formatMoment(moment().month(i), 'MMMM')
+            const monthName = moment().month(i).format('MMMM')
             return (
               <li key={i}>
                 <a className={classnames(
@@ -95,7 +93,7 @@ MonthPicker.propTypes = {
   onChange: React.PropTypes.func
 }
 MonthPicker.defaultProps = {
-  date: startOfThisMonth().format('X')
+  date: moment().utc().startOf('month').format('X')
 }
 
 export default MonthPicker

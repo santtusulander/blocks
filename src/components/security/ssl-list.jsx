@@ -7,7 +7,7 @@ import ActionButtons from '../shared/action-buttons'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
 import Paginator from '../shared/paginator/paginator'
 import { AccountManagementHeader } from '../account-management/account-management-header'
-import { formatMoment, getPage } from '../../util/helpers'
+import { getPage } from '../../util/helpers'
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
 import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../constants/content-item-sort-options'
@@ -64,7 +64,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
             const commonName = cert.get('cn')
             const groupID = cert.get('group')
             const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
-            const expirationDate = formatMoment(moment(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ'), 'L')
+            const expirationDate = moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ').format('L')
             const account = cert.get('account')
             return (
               <tr key={index}>

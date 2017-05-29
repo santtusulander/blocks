@@ -157,7 +157,7 @@ class AnalysisTraffic extends React.Component {
           label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text'}),
           line: true,
           stackedAgainst: false,
-          xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
         })
       }
       if (this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
@@ -170,7 +170,7 @@ class AnalysisTraffic extends React.Component {
           label: this.props.intl.formatMessage({id: 'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text'}),
           line: true,
           stackedAgainst: 'httpComparison',
-          xAxisFormatter: (date) => moment(timespanAdjust(-1)(date).get('timestamp'))
+          xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
         })
       }
     }
@@ -226,7 +226,7 @@ class AnalysisTraffic extends React.Component {
                 cityData={this.props.byCity}
                 getCityData={this.props.getCityData}
                 theme={this.props.theme}
-                height={this.state.byTimeWidth / 2}
+                height="50vw"
                 mapBounds={this.props.mapBounds}
                 mapboxActions={this.props.mapboxActions}
                 dataKey={byCountryDataKey}
@@ -257,7 +257,7 @@ class AnalysisTraffic extends React.Component {
                 const primaryData = country.get('detail').map(datapoint => {
                   return datapoint.set(
                     'timestamp',
-                    moment.unix(datapoint.get('timestamp')).toDate()
+                    moment(datapoint.get('timestamp'), 'X').toDate()
                   )
                 })
                 const datasets = []
