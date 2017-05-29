@@ -4,6 +4,7 @@ import { injectIntl, intlShape } from 'react-intl'
 import { MultiMonthView } from 'react-date-picker'
 import { Dropdown } from 'react-bootstrap'
 import DateRanges from '../../../constants/date-ranges'
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 import IconCalendar from '../icons/icon-calendar'
 import IconSelectCaret from '../icons/icon-select-caret'
@@ -183,8 +184,8 @@ class DateRangeSelect extends React.Component {
       startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
       dateRange = this.constructActiveDateRange(DateRanges.LAST_28)
     } else {
-      const startDate = this.props.intl.formatDate(start, 'dateInUTC')
-      const endDate = this.props.intl.formatDate(end, 'dateInUTC')
+      const startDate = this.props.intl.formatDate(start, DATE_FORMATS.FULL_DATE_UTC)
+      const endDate = this.props.intl.formatDate(end, DATE_FORMATS.FULL_DATE_UTC)
       dateRange = this.constructActiveDateRange(DateRanges.CUSTOM_TIMERANGE, startDate + (startDate !== endDate ? ` - ${endDate}` : ''))
     }
     return dateRange

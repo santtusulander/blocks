@@ -7,6 +7,7 @@ import { Dropdown, Nav, NavItem } from 'react-bootstrap'
 import MonthPicker from './month-picker'
 import IconCalendar from '../icons/icon-calendar'
 import IconSelectCaret from '../icons/icon-select-caret'
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 const DATE_FORMAT = 'MM/DD/YYYY';
 
@@ -19,7 +20,7 @@ export class CustomDatePicker extends React.Component {
       dateRangeType: 'day',
       forceOpen: false,
       open: false,
-      value: this.props.intl.formatDate(props.startDate, 'dateInUTC')
+      value: this.props.intl.formatDate(props.startDate, DATE_FORMATS.FULL_DATE_UTC)
     }
 
     this.isForceOpen = false
@@ -53,7 +54,7 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleMonthChange(startDate, endDate) {
-    const monthValue = this.props.intl.formatDate(startDate, 'monthLongYearUTC')
+    const monthValue = this.props.intl.formatDate(startDate, DATE_FORMATS.MONTH_LONG_YEAR_UTC)
 
     this.props.changeDateRange(startDate, endDate)
     this.setState({

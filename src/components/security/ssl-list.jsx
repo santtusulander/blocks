@@ -11,6 +11,7 @@ import { getPage } from '../../util/helpers'
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
 import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../constants/content-item-sort-options'
+import { DATE_FORMATS } from '../../constants/date-formats'
 
 const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, uploadCertificate, context, router }) => {
   /**
@@ -70,7 +71,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
                 <td>{title}</td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td><FormattedDate value={moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ')} format="fullDate"/></td>
+                <td><FormattedDate value={moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ')} format={DATE_FORMATS.FULL_DATE}/></td>
                 <IsAllowed to={MODIFY_CERTIFICATE || DELETE_CERTIFICATE}>
                   <td className="nowrap-column">
                     <ActionButtons

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
-import { dateFormats as getDateFormats } from '../../src/constants/date-formats'
+import { getDateFormats } from '../../src/constants/date-formats'
 import { getCurrentUser } from '../redux/modules/user'
 
 import MESSAGES_EN from '../locales/en-US'

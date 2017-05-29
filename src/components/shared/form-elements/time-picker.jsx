@@ -8,8 +8,10 @@ import { Dropdown } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret'
 import IconClock from '../icons/icon-clock'
 
+import { TIME_FORMATS } from '../../../constants/date-formats'
+
 const TimePicker = ({ time, onChange, isUTC, intl }) => {
-  const value = `${intl.formatTime(time, 'time12UTC')} ${isUTC ? 'UTC' : ''}`
+  const value = `${intl.formatTime(time, TIME_FORMATS.TIME_12_UTC)} ${isUTC ? 'UTC' : ''}`
 
   return (
     <Dropdown id="" className="dropdown-select">
