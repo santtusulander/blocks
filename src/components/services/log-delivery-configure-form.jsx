@@ -28,7 +28,11 @@ const validate = ({contact_email, contact_first_name, contact_second_name, phone
     return errors
   }
 
-  if (contact_email && !isValidEmail(contact_email)) {
+  if (!contact_email) {
+    errors.contact_email = <FormattedMessage id="portal.account.editUser.emailNameRequired.text"/>
+  }
+
+  if (contact_email  && !isValidEmail(contact_email)) {
     errors.contact_email = <FormattedMessage id="portal.common.error.invalid.email.text"/>
   }
 
@@ -60,15 +64,11 @@ class LogDeliveryConfigureForm extends React.Component {
     delete values.phone_number
     delete values.full_phone_number
 
-    /*
-      Save an empty object if logDeliveryService is disabled
-    */
-    const {ldsEnabled, onSave} = this.props
-    onSave(ldsEnabled ? values : {})
+    this.props.onSave(values)
   }
 
   render() {
-    const { onCancel, handleSubmit, invalid, ldsEnabled } = this.props
+    const { onCancel, handleSubmit, submitting, invalid, ldsEnabled } = this.props
 
     return (
       <div>
@@ -154,11 +154,11 @@ class LogDeliveryConfigureForm extends React.Component {
                 normalize={(v) => v && v.map(item => item.id)}
                 format={(v) => v && v.map(item => ({id: item}))}
                 required={false}
-                disabled={!ldsEnabled}
+                disabled={true}
               />
             </Col>
           </Row>
-
+          {/* Hide addonAfter until Log Delivery Phase 2 */}
           <Row className="form-group">
             <Col xs={6}>
               <Field
@@ -203,7 +203,7 @@ class LogDeliveryConfigureForm extends React.Component {
               <FormattedMessage id="portal.services.logDelivery.cancel.text"/>
             </Button>
 
-            <Button type="submit" bsStyle="primary" disabled={invalid}>
+            <Button type="submit" bsStyle="primary" disabled={submitting || invalid}>
               <FormattedMessage id="portal.services.logDelivery.save.text"/>
             </Button>
           </FormFooterButtons>
@@ -233,8 +233,10 @@ LogDeliveryConfigureForm.defaultProps = {
 /* istanbul ignore next */
 const mapStateToProps = (state, { config }) => {
   const selector = formValueSelector('log-delivery-configure-form')
+  // Set default value for few disabled fields until Phase 2
   config.log_export_file_format = FILE_FORMAT_OPTIONS[0].value
   config.log_aggregation_interval = AGGREGATION_INTERVAL_OPTIONS[0].value
+  config.log_types = [LOG_TYPES_OPTIONS[0].value]
   config.full_phone_number = config.contact_phone
 
   return {

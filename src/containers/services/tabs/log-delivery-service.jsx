@@ -10,6 +10,7 @@ import { getIdsByGroup as getPropertiesByGroup } from '../../../redux/modules/en
 import propertiesActions from '../../../redux/modules/entities/properties/actions'
 import propertiesLogsActions from '../../../redux/modules/entities/properties-logs/actions'
 import { getById as getLogsByPropId } from '../../../redux/modules/entities/properties-logs/selectors'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import SidePanel from '../../../components/shared/side-panel'
 import ComparisonBars from '../../../components/shared/comparison-bars'
@@ -26,6 +27,7 @@ class LogDeliveryService extends React.Component {
     this.editPropertyConfig = this.editPropertyConfig.bind(this)
     this.savePropertyLogsConfig = this.savePropertyLogsConfig.bind(this)
     this.changeCurrentProperty = this.changeCurrentProperty.bind(this)
+    this.showNotification = this.showNotification.bind(this)
 
     this.state = {
       currentProperty: null,
@@ -72,8 +74,20 @@ class LogDeliveryService extends React.Component {
 
     if (this.state.propertyLogsConfig.size) {
       this.props.updatePropertyLogsConfig(params)
+        .then(() => {
+          this.showNotification(<FormattedMessage id="portal.services.logDelivery.updateConfig.success.text" />)
+        })
+        .catch (() => {
+          this.showNotification(<FormattedMessage id="portal.services.logDelivery.updateConfig.fail.text"/>)
+        })
     } else {
       this.props.createPropertyLogsConfig(params)
+        .then(() => {
+          this.showNotification(<FormattedMessage id="portal.services.logDelivery.createConfig.success.text" />)
+        })
+        .catch (() => {
+          this.showNotification(<FormattedMessage id="portal.services.logDelivery.createConfig.fail.text"/>)
+        })
     }
 
     this.toggleModal()
@@ -83,6 +97,12 @@ class LogDeliveryService extends React.Component {
     this.setState({
       currentProperty: value
     })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 5000)
   }
 
   render() {
@@ -185,6 +205,7 @@ LogDeliveryService.displayName = 'LogDeliveryService'
 LogDeliveryService.propTypes = {
   activeGroup: PropTypes.instanceOf(Map),
   appState: PropTypes.object,
+  changeNotification: React.PropTypes.func,
   createPropertyLogsConfig: PropTypes.func,
   currentProperty: PropTypes.string,
   fetchProperties: PropTypes.func,
@@ -211,7 +232,8 @@ const dispatchToProps = (dispatch) => {
     fetchProperties: (params) => dispatch(propertiesActions.fetchAll(params)),
     getPropertyLogsConfig: (params) => dispatch(propertiesLogsActions.fetchOne(params)),
     updatePropertyLogsConfig: (params) => dispatch(propertiesLogsActions.update(params)),
-    createPropertyLogsConfig: (params) => dispatch(propertiesLogsActions.create(params))
+    createPropertyLogsConfig: (params) => dispatch(propertiesLogsActions.create(params)),
+    changeNotification: (message) => dispatch(changeNotification(message))
   }
 }
 

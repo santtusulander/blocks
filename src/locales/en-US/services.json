@@ -23,5 +23,9 @@
   "portal.services.logDelivery.currentLogStorage.text": "Current Log Storage",
   "portal.services.logDelivery.logTypes.conductor.text": "Conductor",
   "portal.services.logDelivery.fileFormat.zip.text": ".zip",
-  "portal.services.logDelivery.aggregationInterval.30min.text": "30 min"
+  "portal.services.logDelivery.aggregationInterval.30min.text": "30 min",
+  "portal.services.logDelivery.createConfig.success.text": "Log Delivery configuration was successfully created.",
+  "portal.services.logDelivery.updateConfig.success.text": "Log Delivery configuration was successfully updated.",
+  "portal.services.logDelivery.createConfig.fail.text": "Failed to create Log Delivery configuration.",
+  "portal.services.logDelivery.updateConfig.fail.text": "Failed to update Log Delivery configuration."
 }
