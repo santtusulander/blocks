@@ -18,7 +18,8 @@ describe('Select', () => {
           {value: '2', label: 'Second Option'},
           {value: '3', label: 'Third Option'},
         ],
-        autoselectFirst
+        autoselectFirst,
+        onSelect: jest.fn()
       }
 
       return shallow(

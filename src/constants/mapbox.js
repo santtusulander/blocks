@@ -1,5 +1,5 @@
-export const MAPBOX_DARK_THEME = 'mapbox://styles/ericssonudn/cixtc24am001h2qqpz566a3td'
-export const MAPBOX_LIGHT_THEME = 'mapbox://styles/ericssonudn/cixtceqrk001k2sqwck38fico'
+export const MAPBOX_DARK_THEME = 'mapbox://styles/ericssonudn/cj35u44ju00002rpdvf0bkzwt'
+export const MAPBOX_LIGHT_THEME = 'mapbox://styles/ericssonudn/cj35u2jiw00002ro2rzjd5837'
 export const MAPBOX_ZOOM_MIN = 1
 export const MAPBOX_ZOOM_MAX = 13
 export const MAPBOX_SCROLL_TIMEOUT = 500

@@ -360,7 +360,7 @@ class AccountManagementProperties extends React.Component {
                 deleteButton={true}
                 cancel={() => this.closeDeleteModal()}
                 onSubmit={() => {
-                  deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
+                  return deleteProperty(brand, account, this.state.propertyToDelete.groupId, this.state.propertyToDelete.propertyId)
                     .then((result) => {
                       this.closeDeleteModal()
                       if (!result.error) {

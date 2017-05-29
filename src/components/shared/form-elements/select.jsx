@@ -18,6 +18,25 @@ class Select extends Component {
     this.getSelectedItem = this.getSelectedItem.bind(this)
   }
 
+  componentWillMount() {
+    if (this.props.autoselectFirst) {
+      this.autoSelectFirstItem(this.props)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.autoselectFirst) {
+      this.autoSelectFirstItem(nextProps)
+    }
+  }
+
+  autoSelectFirstItem(props) {
+    const selectedValue = this.getOptionValue(this.getSelected(props))
+    if (selectedValue !== this.props.value) {
+      this.selectOption(selectedValue)
+    }
+  }
+
   selectOption(eventKey) {
     this.props.onSelect(this.props.numericValues ? Number(eventKey) : eventKey)
   }
@@ -57,14 +76,14 @@ class Select extends Component {
     return Array.isArray(option) ? option[0] : option.value
   }
 
-  getSelected() {
-    const selected = this.props.options.find((option) => {
-      return this.getOptionValue(option) === this.props.value
+  getSelected(props = this.props) {
+    const selected = props.options.find((option) => {
+      return this.getOptionValue(option) === props.value
     })
 
     // Autoselect first option item
-    if (this.props.autoselectFirst && !selected) {
-      return this.props.options[0]
+    if (props.autoselectFirst && !selected) {
+      return props.options[0]
     } else {
       return selected
     }
