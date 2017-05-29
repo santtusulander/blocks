@@ -23,18 +23,18 @@ const expectedDataPoint = {
   historical_traffic:[
     {
       bytes: null,
-      timestamp: moment.unix(1458136800).toDate()
+      timestamp: moment(1458136800, 'X').toDate()
     },
     {
       bytes: null,
-      timestamp: moment.unix(1458133200).toDate()
+      timestamp: moment(1458133200, 'X').toDate()
     }
   ],
   traffic:[
     {
       bits_per_second: null,
       bytes: null,
-      timestamp: moment.unix(1465858800).toDate()
+      timestamp: moment(1465858800, 'X').toDate()
     }
   ],
   totalTraffic: 0

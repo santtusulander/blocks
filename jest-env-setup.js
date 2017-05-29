@@ -39,10 +39,20 @@ if (console) {
   }
 
   if (console.error) {
-    var old = console.error
+    const old = console.error
+
     console.error = function() {
       old.apply(console, arguments)
-      throw new Error(consoleErrorMessage(arguments))
+
+      /*
+        TODO: UDNP-3722
+        Remove check for 'Warning:' when React 15.5 deprecation warnings have been fixed
+      */
+      const args = Array.prototype.slice.call(arguments).join('')
+
+      if (args.indexOf('Warning:') === -1) {
+        throw new Error(consoleErrorMessage(arguments))
+      }
     }
   }
 }

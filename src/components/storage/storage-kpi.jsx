@@ -2,9 +2,10 @@ import React, { PropTypes, Component } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import moment from 'moment'
 
 import SectionContainer from '../shared/layout/section-container'
-import MiniChart from '../charts/mini-chart'
+import MiniAreaChart from '../charts/mini-area-chart'
 import ComparisonBars from '../shared/comparison-bars'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 
@@ -18,8 +19,13 @@ import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actio
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
-import { endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
 
+const chartAreas = [{
+  "dataKey": "bytes",
+  "name": "MiniChart",
+  "className": "mini-chart-bytes",
+  "stackId": 1
+}]
 const FORMAT = '0,0.0'
 
 /* eslint-disable react/no-multi-comp */
@@ -51,8 +57,7 @@ export class StorageKPI extends Component {
 
   render() {
     const {
-      chartData = [],
-      chartDataKey,
+      chartData,
       currentValue = 0,
       gainPercentage = 0,
       workflowProfile = Map(),
@@ -60,7 +65,6 @@ export class StorageKPI extends Component {
       peakValue = 0,
       referenceValue,
       valuesUnit = '' } = this.props
-
     return (
       <SectionContainer>
         <div className='storage-kpi-item'>
@@ -98,10 +102,15 @@ export class StorageKPI extends Component {
               </span>
             </div>
             <div className='storage-kpi-chart'>
-              <MiniChart
-                dataKey={chartDataKey}
-                data={chartData}
-                />
+                {chartData
+                  ? <MiniAreaChart
+                      areas={chartAreas}
+                      height="100%"
+                      data={chartData} />
+                  : <div className="mini-chart-container no-data">
+                    <FormattedMessage id='portal.common.no-data.text'/>
+                  </div>
+                }
             </div>
           </div>
           <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
@@ -129,7 +138,6 @@ export class StorageKPI extends Component {
 StorageKPI.displayName = "StorageKPI"
 StorageKPI.propTypes = {
   chartData: PropTypes.array,
-  chartDataKey: PropTypes.string,
   currentValue: PropTypes.number,
   fetchData: PropTypes.func,
   gainPercentage: PropTypes.number,
@@ -143,9 +151,7 @@ StorageKPI.propTypes = {
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   if (!storage) {
-    return {
-      chartDataKey: 'bytes'
-    }
+    return {}
   }
 
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
@@ -160,11 +166,10 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     return clusterData ? clusterData.get('description').split(',')[0] : ''
   }).toJS()
 
-  const lineChartData = storageMetrics ? storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data})) : []
+  const lineChartData = storageMetrics && storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
 
   return {
     chartData: lineChartData,
-    chartDataKey: 'bytes',
     currentValue,
     referenceValue: parseFloat(estimated),
     peakValue,
@@ -204,8 +209,8 @@ const mapDispatchToProps = (dispatch) => {
       group: group,
       ingest_point: storage,
       list_children: false,
-      startDate: startOfThisMonth().format('X'),
-      endDate: endOfThisDay().format('X')
+      startDate: moment().utc().startOf('month').format('X'),
+      endDate: moment().utc().endOf('day').format('X')
     }
 
     return Promise.all([

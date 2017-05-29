@@ -70,6 +70,7 @@ describe('Mapbox', () => {
       getCanvas: jest.fn(() => { return { style: {} } }),
       getStyle: jest.fn(() => { return { layers: [] } }),
       layers: [],
+      _canvas: { clientWidth: 400 },
       scrollZoom: {
         disable: jest.fn()
       },
@@ -103,6 +104,7 @@ describe('Mapbox', () => {
 
     expect(mapbox.state().layers.length).toBe(0)
     defaultMap.style._loaded = true
+
     mapbox.instance().onStyleLoaded(defaultMap)
     expect(mapbox.state().layers.length).toBe(4)
     expect(defaultMap.addSource.mock.calls.length).toBe(4)
@@ -115,6 +117,8 @@ describe('Mapbox', () => {
 
     const mapbox = subject({ countryData: defaultCountryData })
     defaultMap.style._loaded = true
+
+
     mapbox.instance().onStyleLoaded(defaultMap)
 
     expect(defaultMap.addSource.mock.calls).toHaveLength(0)
@@ -123,7 +127,9 @@ describe('Mapbox', () => {
 
   it('should load cities when zoomed in', () => {
     defaultMap.style._loaded = true
+
     const mapbox = subject({ cityData: defaultCityData })
+    mapbox.instance().onStyleLoaded(defaultMap)
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -133,6 +139,7 @@ describe('Mapbox', () => {
 
   it('should NOT load city layers if the map style isn\'t loaded', () => {
     const mapbox = subject({ cityData: defaultCityData })
+
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -144,7 +151,9 @@ describe('Mapbox', () => {
     defaultMap.getSource = jest.fn(() => true)
     defaultMap.getLayer = jest.fn(() => true)
     defaultMap.style._loaded = true
+
     const mapbox = subject({ cityData: defaultCityData })
+    mapbox.instance().onStyleLoaded(defaultMap)
     mapbox.state().zoom = 7
     mapbox.instance().onStyleLoaded(defaultMap)
 
@@ -154,19 +163,11 @@ describe('Mapbox', () => {
 
   it('should remove the hover layer when data changes', () => {
     const mapbox = subject()
+
     mapbox.setState({ hoveredLayer: 'abc' })
     mapbox.instance().onStyleLoaded(defaultMap)
 
     expect(mapbox.state().hoveredLayer).toBe(null)
-  })
-
-  it('should handle scroll events', () => {
-    const mapbox = subject()
-    mapbox.instance().disableAndEnableZoom = jest.fn()
-    mapbox.instance().componentDidMount()
-    mapbox.instance().onPageScroll()
-
-    expect(mapbox.instance().disableAndEnableZoom.mock.calls).toHaveLength(1)
   })
 
   it('should ignore scroll events if the map hasn\'t mounted yet', () => {
@@ -181,16 +182,7 @@ describe('Mapbox', () => {
   })
 
   it('should prevent zoom events on page scroll', () => {
-    const mapbox = subject()
-    mapbox.instance().disableAndEnableZoom(defaultMap)
-
-    expect(setTimeout.mock.calls).toHaveLength(1)
-    expect(defaultMap.scrollZoom.disable.mock.calls).toHaveLength(1)
-
-    mapbox.instance().timeout = 1
-    mapbox.instance().disableAndEnableZoom(defaultMap)
-    expect(mapbox.instance().timeout).not.toBe(1)
-    expect(clearTimeout.mock.calls).toHaveLength(1)
+    expect(defaultMap.scrollZoom.disable.mock.calls).toHaveLength(0)
   })
 
   it('should perform cleanup on unmount', () => {
@@ -278,17 +270,6 @@ describe('Mapbox', () => {
     expect(mapbox.instance().updateLayers.mock.calls).toHaveLength(0)
   })
 
-  it('should store the map\'s zoom level and scale in state', () => {
-    defaultMap.transform = {
-      scale: 123,
-      _zoom: 456
-    }
-
-    const mapbox = subject()
-    mapbox.find('ReactMapboxGl').simulate('zoom', defaultMap)
-    expect(mapbox.state().scale).toBe(123)
-    expect(mapbox.state().zoom).toBe(456)
-  })
 
   it('should handle mouse movements', () => {
     defaultMap.style._loaded = true
@@ -341,4 +322,33 @@ describe('Mapbox', () => {
 
     expect(defaultMap.queryRenderedFeatures.mock.calls).toHaveLength(0)
   })
+
+  it('should increase zoom on double click', () => {
+    defaultMap.style._loaded = true
+    const mapbox = subject()
+    mapbox.state().zoom = 2
+    mapbox.state().map.flyTo = jest.fn(() => null)
+    mapbox.simulate('dblClick', defaultMap, {
+      lngLat: {
+        lat: 71.5905911905219,
+        lng:54.95363100001185
+      }
+    })
+    expect(mapbox.state().zoom).toBe(3)
+  })
+
+  it('should reset zoom on double click when on maximum zoom', () => {
+    defaultMap.style._loaded = true
+    const mapbox = subject()
+    mapbox.state().zoom = 13
+    mapbox.state().map.flyTo = jest.fn(() => null)
+    mapbox.simulate('dblClick', defaultMap, {
+      lngLat: {
+        lat: 71.5905911905219,
+        lng:54.95363100001185
+      }
+    })
+    expect(mapbox.state().zoom).toBe(0)
+  })
+
 })

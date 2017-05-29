@@ -66,9 +66,9 @@ import IconAdd from '../../components/shared/icons/icon-add'
 import IconCaretDown from '../../components/shared/icons/icon-caret-down'
 import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 
-import { formatBytes, separateUnit, formatMoment } from '../../util/helpers'
+import { formatBytes, separateUnit } from '../../util/helpers'
 
-import DateRanges, { startOfThisDay, endOfThisDay, startOfThisMonth } from '../../constants/date-ranges'
+import DateRanges from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
 import { HOST_SERVICE_TYPES } from '../../constants/configuration'
 import { cityData, filterCheckboxOptions, spDashboardData,
@@ -87,11 +87,11 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       showSidePanel: false,
-      customDatePickerEndDate: endOfThisDay(),
-      customDatePickerStartDate: startOfThisDay(),
-      datePickerEndDate: endOfThisDay(),
+      customDatePickerEndDate: moment().endOf('day'),
+      customDatePickerStartDate: moment().startOf('day'),
+      datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
-      datePickerStartDate: startOfThisMonth(),
+      datePickerStartDate: moment().utc().startOf('month'),
       filterCheckboxValue: Immutable.fromJS([
         'link1',
         'link2',
@@ -106,7 +106,7 @@ class Styleguide extends React.Component {
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
       numberInputValue: 100,
       sortableMultiSelectorItems: Immutable.List([1, 2]),
-      timePickerTime: moment()
+      timePickerTime: moment().utc()
     }
   }
 
@@ -636,8 +636,8 @@ class Styleguide extends React.Component {
                 }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.datePickerStartDate} (${ formatMoment(this.state.datePickerStartDate, 'MM/DD/YYYY HH:mm')})`}</p>
-              <p>{`endDate: ${this.state.datePickerEndDate} (${ formatMoment(this.state.datePickerEndDate, 'MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
 
@@ -650,10 +650,10 @@ class Styleguide extends React.Component {
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.customDatePickerStartDate} (${ formatMoment(this.state.customDatePickerStartDate,'MM/DD/YYYY HH:mm')})` }</p>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
             <Col xs={4}>
-              <p>{`endDate: ${this.state.customDatePickerEndDate} (${ formatMoment(this.state.customDatePickerEndDate, 'MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
 
@@ -666,7 +666,7 @@ class Styleguide extends React.Component {
                 onChange={(time) => this.setState({ timePickerTime: time })} />
             </Col>
             <Col xs={8}>
-              <p>{`time: ${this.state.timePickerTime} (${ formatMoment(this.state.timePickerTime, 'HH:mm')})`}</p>
+              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
             </Col>
           </Row>
 

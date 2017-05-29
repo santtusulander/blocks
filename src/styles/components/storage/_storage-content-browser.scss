@@ -1,0 +1,254 @@
+.content-browser-row-directory {
+  cursor: pointer;
+}
+
+.storage-contents-cell {
+  &.no-border {
+    border-right-color: rgba($black, 0) !important;
+  }
+}
+
+.storage-contents-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.storage-contents-name {
+  display: inline-block;
+  vertical-align: inherit;
+
+  &.strong-text {
+    font-weight: bold;
+    color: $white;
+  }
+}
+
+.storage-contents-icon {
+  display: inline-block;
+  fill: $pale-blue !important;
+
+  &.back {
+    position: relative;
+    left: rem(5px);
+    cursor: pointer;
+
+    .light-theme & {
+      fill: $white !important;
+    }
+  }
+}
+
+.storage-contents-context-menu-icon {
+  .dark-theme & {
+    fill: $silver-60 !important;
+  }
+
+  .light-theme & {
+    fill: $grey-80 !important;
+  }
+}
+
+.storage-contents-breadcrumb {
+  li {
+    &:first-child {
+      a,
+      span {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+
+    .truncated-title {
+      .dark-theme & {
+        color: $silver-60;
+      }
+
+      .light-theme & {
+        color: $grey-60;
+      }
+    }
+
+    &.active {
+      .truncated-title {
+        .dark-theme & {
+          color: $white;
+        }
+
+        .light-theme & {
+          color: $grey-80;
+        }
+      }
+    }
+  }
+}
+
+.storage-contents-upload-destination {
+  position: fixed;
+  right: rem(30px);
+  bottom: rem(30px);
+  width: rem(300px);
+  padding: rem(20px);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.25);
+
+  .dark-theme & {
+    background: $black;
+  }
+
+  .light-theme & {
+    background: $white;
+  }
+
+  .storage-contents-upload-destination-text {
+    .dark-theme & {
+      color: $silver-60;
+    }
+
+    .light-theme & {
+      color: $grey-60;
+    }
+  }
+
+  .storage-contents-upload-destination-folder {
+    .truncated-title {
+      display: inline-block;
+      font-weight: bold;
+      vertical-align: middle;
+
+      .dark-theme & {
+        color: $white;
+      }
+
+      .light-theme & {
+        color: $grey-80;
+      }
+    }
+
+    .icon {
+      display: inline-block;
+      margin-right: rem(10px);
+      fill: $pale-blue !important;
+    }
+  }
+}
+
+.storage-item-properties-icon {
+  cursor: pointer;
+
+  &.selected {
+    transform: rotateZ(180deg);
+
+    polygon {
+      fill: $pale-blue !important;
+    }
+  }
+}
+
+.storage-item-properties-row {
+  background: rgba($deep-blue-20, 0.7) !important;
+}
+
+.storage-item-properties-container {
+  padding: 25px 0;
+}
+
+.storage-item-properties-column {
+  display: inline-block;
+
+  &.left {
+    width: 390px;
+  }
+
+  &.right {
+    width: calc(100% - 390px);
+  }
+
+  >.info {
+    margin-bottom: 30px;
+    font-size: 12px;
+
+    > span {
+      font-weight: bold;
+      color: $white;
+    }
+
+    >.text {
+      color: $silver-60;
+    }
+
+    .url {
+      .url-text {
+        display: inline-block;
+        max-width: calc(100% - 90px);
+      }
+
+      .url-copy-button {
+        display: inline-block;
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 12px !important;
+        vertical-align: top;
+        visibility: hidden;
+      }
+
+      &:hover {
+        .url-copy-button {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+
+.storage-contents-table {
+  margin-bottom: rem(25px);
+
+  .highlight {
+    box-shadow: inset 0 0 0 2px $pale-blue;
+
+    &.content-browser-row-directory,
+    .content-browser-row-directory {
+      .storage-contents-icon {
+        .dark-theme & {
+          fill: $white !important;
+        }
+
+        .light-theme & {
+          fill: $black !important;
+        }
+      }
+
+      .storage-contents-name {
+        font-weight: bold;
+
+        .dark-theme & {
+          color: $white;
+        }
+
+        .light-theme & {
+          color: $black;
+        }
+      }
+    }
+
+    td:before {
+      position: absolute;
+      top: 0;
+      right: -1px;
+      bottom: 0;
+      left: 0;
+      display: block;
+      content: '';
+
+      .dark-theme & {
+        background-color: rgba($white, 0.2);
+      }
+
+      .light-theme & {
+        background-color: rgba($grey-60, 0.2);
+      }
+
+    }
+  }
+}

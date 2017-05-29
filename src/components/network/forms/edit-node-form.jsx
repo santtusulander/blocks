@@ -249,8 +249,7 @@ class NetworkEditNodeForm extends React.Component {
       let isExpanded = true
       const fieldClassNames = classNames({
         'show': isExpanded,
-        'hidden': !isExpanded,
-        'can-copy-to-clipboard': (fieldData.name === "custom_grains")
+        'hidden': !isExpanded
       })
 
       const fieldLabelText = <FormattedMessage id={fieldData.labelId} />

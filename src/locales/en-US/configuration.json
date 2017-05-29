@@ -247,7 +247,7 @@
 
   "portal.configuration.certificates.text": "Certificates",
   "portal.configuration.changeLog.text": "Change Log",
-  "portal.configuration.changes.text": "{numChanges, plural, one {change} other{changes}}",
+  "portal.configuration.changes.text": "{numChanges} change(s)",
   "portal.configuration.updated.text": "UPDATED",
   "portal.configuration.deployed.text": "DEPLOYED",
   "portal.configuration.sidebar.pubVer.text": "Publish Version",

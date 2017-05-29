@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
-import {Map,List} from 'immutable'
+import {Map} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupMetrics, receiveEntityPagination} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveEntityPagination, removeCISContents} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -13,12 +13,6 @@ export const actionTypes = {
   RECEIVE: 'entities/RECEIVE',
   REMOVE: 'entities/REMOVE',
   FAIL: 'entities/FAIL'
-}
-
-export const metricsActionTypes = {
-  RECEIVE_METRICS: 'metrics/RECEIVE',
-  RECEIVE_GROUP_METRICS: 'metrics/RECEIVE_GROUP',
-  RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
 const locations =
@@ -86,7 +80,13 @@ const networks =
 const CISIngestPoints =
   handleActions({
     [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPoints' }),
-    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
+const CISIngestPointContents =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPointContents' }),
+    [actionTypes.REMOVE]: removeCISContents,
     [actionTypes.FAIL]: failEntity
   }, Map())
 
@@ -101,14 +101,6 @@ const CISWorkflowProfiles =
     [actionTypes.RECEIVE]: receiveEntity({ key: 'workflowProfiles' }),
     [actionTypes.FAIL]: failEntity
   }, Map())
-
-const storageMetrics =
-  handleActions({
-    [metricsActionTypes.RECEIVE_METRICS]: receiveMetrics({ key: 'storageMetrics' }),
-    [metricsActionTypes.RECEIVE_GROUP_METRICS]: receiveGroupMetrics(),
-    [metricsActionTypes.RECEIVE_COMPARISON_METRICS]: receiveMetrics({ key: 'storageMetrics', comparison: true }),
-    [actionTypes.FAIL]: failEntity
-  }, Map({ comparisonData: Map(), data: Map(), groupData: List() }))
 
 const roles =
   handleActions({
@@ -164,15 +156,34 @@ const mapMarkers =
     [actionTypes.RECEIVE]: receiveEntity({ key: 'mapMarkers' })
   }, Map())
 
+const publishedUrls =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'publishedUrls' })
+  }, Map())
+
+const storageMetrics =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
+const fileErrorMetrics =
+  handleActions({
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'fileErrorMetrics', useMergeDeep: false }),
+    [actionTypes.FAIL]: failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
   groups,
   iataCodes,
   CISIngestPoints,
+  CISIngestPointContents,
   gtm,
   CISClusters,
   CISWorkflowProfiles,
+  fileErrorMetrics,
   properties,
   propertyMetadata,
   pops,
@@ -186,7 +197,8 @@ export default combineReducers({
   allowedRoles,
   serviceTitles,
   users,
-  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes }),
+  fetching: mapActionsToFetchingReducers(actionTypes),
   entityPagination,
-  mapMarkers
+  mapMarkers,
+  publishedUrls
 })

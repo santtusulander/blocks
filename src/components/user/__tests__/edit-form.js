@@ -72,6 +72,7 @@ describe('UserEditForm', () => {
          fields,
          initialValues,
          intl,
+         formValues: {language: 'en-US'},
          invalid,
          onSave,
          onSavePassword,
@@ -89,9 +90,9 @@ describe('UserEditForm', () => {
      expect(subject().find('form').length).toBe(1)
    })
 
-   it('should have 10 Fields inside the form', () => {
+   it('should have 9 Fields inside the form', () => {
      expect(subject().find('Fields').length).toBe(1)
-     expect(subject().find('Field').length).toBe(9)
+     expect(subject().find('Field').length).toBe(8)
    })
 
 })

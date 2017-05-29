@@ -103,10 +103,3 @@
     }
   }
 }
-
-.can-copy-to-clipboard {
-  input[disabled],
-  textarea[disabled] {
-    user-select: text;
-  }
-}

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
-         ASPERA_DEFAULT_PATH, ASPERA_DEFAULT_DESTINATION_ROOT
+         ASPERA_DEFAULT_PATH
        } from '../../constants/storage'
 
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -57,10 +57,10 @@ class AsperaUpload extends Component {
     this.showNotification = this.showNotification.bind(this)
   }
 
-  componentWillMount() {
-    const { brandId, accountId, groupId, storageId } = this.props
+  componentDidMount() {
+    const { brand, account, group, storage } = this.props.params
 
-    this.props.userActions.getStorageAccessKey(brandId, accountId, groupId, storageId).then((res) => {
+    this.props.userActions.getStorageAccessKey(brand, account, group, storage).then((res) => {
       if (res.error) {
         this.setState({
           asperaError: parseResponseError(res.payload),
@@ -78,16 +78,24 @@ class AsperaUpload extends Component {
   }
 
   componentWillUnmount() {
+
     if (this.state.isAsperaInitialized) {
+
+      //Remove transferEventListener if set
+      if (this.props.handleTransferEvents) {
+        this.aspera.asperaWeb.removeEventListener('transfer', this.props.handleTransferEvents)
+      }
+
       this.aspera.asperaDeInitConnect()
     }
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeAsperaNotification('')
-    this.props.uiActions.setAsperaUploadInstanse({
+    this.props.uiActions.setAsperaUploadInstance({
       asperaInitialized: false,
       asperaShowSelectFileDialog: null,
       asperaShowSelectFolderDialog: null
     })
+
   }
 
   initAspera() {
@@ -113,7 +121,12 @@ class AsperaUpload extends Component {
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
 
+    if (this.props.handleTransferEvents) {
+      this.aspera.asperaWeb.addEventListener('transfer', this.props.handleTransferEvents);
+    }
+
     this.setState({ isAsperaInitialized: true })
+
   }
 
   showNotification(code) {
@@ -124,7 +137,7 @@ class AsperaUpload extends Component {
     if ((this.state.isAsperaInitialized) && (code === AW4.Connect.STATUS.RUNNING)) {
       this.notificationTimeout = setTimeout(this.props.uiActions.changeAsperaNotification, 10000)
 
-      this.props.uiActions.setAsperaUploadInstanse({
+      this.props.uiActions.setAsperaUploadInstance({
         asperaInitialized: true,
         asperaShowSelectFileDialog: this.onFileUploadClick,
         asperaShowSelectFolderDialog: this.onDirectoryUploadClick
@@ -140,7 +153,7 @@ class AsperaUpload extends Component {
       "remote_user": this.state.accessKey,
       "remote_password": this.state.accessKey,
       "direction": ASPERA_DEFAULT_PATH,
-      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
+      "destination_root": this.props.uploadPath,
       "ssh_port": ASPERA_DEFAULT_PORT
     }
 
@@ -214,25 +227,29 @@ class AsperaUpload extends Component {
     })
   }
 
-  onDragEnter() {
+  onDragEnter(event) {
+    this.props.onDragEnter(event)
     this.setState({
       isDragActive: true
     })
   }
 
-  onDragLeave() {
+  onDragLeave(event) {
+    this.props.onDragLeave(event)
     this.setState({
       isDragActive: false
     })
   }
 
-  onDragOver() {
+  onDragOver(event) {
+    this.props.onDragOver(event)
     this.setState({
       isDragActive: true
     })
   }
 
   onDrop(event, data) {
+    this.props.onDrop(event)
     this.setState({
       isDragActive: false
     })
@@ -243,15 +260,15 @@ class AsperaUpload extends Component {
   asperaListener({event, files}) {
     switch (event.type) {
       case DRAG_ENTER_EVENT_NAME:
-        this.onDragEnter()
+        this.onDragEnter(event)
         break;
 
       case DRAG_LEAVE_EVENT_NAME:
-        this.onDragLeave()
+        this.onDragLeave(event)
         break;
 
       case DRAG_OVER_EVENT_NAME:
-        this.onDragOver()
+        this.onDragOver(event)
         break;
 
       case DROP_EVENT_NAME:
@@ -276,25 +293,29 @@ class AsperaUpload extends Component {
   }
 
   render() {
-    const { openUploadModalOnClick } = this.props
+    const { openUploadModalOnClick, highlightZoneOnDrag } = this.props
     const classNames = classnames(
       "filedrop-area",
-      { "drag-active": this.state.isDragActive },
+      { "drag-active": this.state.isDragActive && highlightZoneOnDrag },
       { "error": this.state.asperaError },
     )
 
     return (
       <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
-             className="filedrop-container"
-             onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
-
-          <div className={classNames}>
-            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
-              { this.displayInsideDropZone() }
-            </div>
+             className="filedrop-container">
+          <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+            {this.props.children}
+            {this.props.renderDropZone &&
+              <div className={classNames} data-drop-zone={true}>
+                <div
+                  className="welcome-text"
+                  onClick={openUploadModalOnClick ? this.onFileUploadClick : null}>
+                  { this.displayInsideDropZone() }
+                </div>
+              </div>
+            }
           </div>
-
         </div>
       </div>
     )
@@ -303,14 +324,20 @@ class AsperaUpload extends Component {
 
 AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
-  accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
-  brandId: React.PropTypes.string,
-  groupId: React.PropTypes.string,
+  children: React.PropTypes.object,
+  handleTransferEvents: React.PropTypes.func,
+  highlightZoneOnDrag: React.PropTypes.bool,
   multiple: React.PropTypes.bool,
+  onDragEnter: React.PropTypes.func,
+  onDragLeave: React.PropTypes.func,
+  onDragOver: React.PropTypes.func,
+  onDrop: React.PropTypes.func,
   openUploadModalOnClick: React.PropTypes.bool,
-  storageId: React.PropTypes.string,
+  params: React.PropTypes.object,
+  renderDropZone: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
+  uploadPath: React.PropTypes.string,
   userActions: React.PropTypes.object
 }
 

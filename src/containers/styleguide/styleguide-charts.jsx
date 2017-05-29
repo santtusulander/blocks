@@ -1,6 +1,7 @@
 import React from 'react'
-import { Row } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
+import MiniAreaChart from '../../components/charts/mini-area-chart'
 import BarChart from '../../components/charts/bar-chart'
 import LineChart from '../../components/charts/line-chart'
 import SectionContainer from '../../components/shared/layout/section-container'
@@ -8,6 +9,7 @@ import StackedAreaChart from '../../components/charts/stacked-area-chart'
 import LineAreaComposedChart from '../../components/charts/line-area-composed-chart'
 
 import { formatBitsPerSecond } from '../../util/helpers'
+import { miniChartKPIData } from '../__mocks__/styleguide-data.js'
 import { stackedBarChartData,
          singleBarChartData,
          lineChartData,
@@ -16,7 +18,8 @@ import { stackedBarChartData,
          stackedAreaDataset,
          comparisonAreaDataset,
          twoStackedAreaDataset,
-         composedChartData
+         composedChartData,
+         miniAreaChartDataset
   } from '../__mocks__/chart-data'
 
 /* eslint-disable react-intl/string-is-marked-for-translation */
@@ -25,23 +28,40 @@ const StyleguideCharts = () => {
   return (
     <div>
       <Row>
-        <label>Stacked barchart</label>
-        <SectionContainer className="analysis-chart-container">
-          {<BarChart
-            chartLabel="Month to Date"
-            chartData={stackedBarChartData}
-            barModels={[
-              { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
-              { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-              { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
-              { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
-            ]}/>}
-        </SectionContainer>
-        </Row>
+        <Col xs={3}>
+          <label>Mini Area Chart</label>
+          <SectionContainer className="mini-chart-container">
+            <MiniAreaChart
+              areas={miniAreaChartDataset}
+              data={miniChartKPIData}
+            />
+          </SectionContainer>
+        </Col>
+      </Row>
 
-        <hr />
+      <hr />
 
-        <Row>
+      <Row>
+        <Col xs={12}>
+          <label>Stacked barchart</label>
+          <SectionContainer className="analysis-chart-container">
+            {<BarChart
+              chartLabel="Month to Date"
+              chartData={stackedBarChartData}
+              barModels={[
+                { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
+                { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
+              ]}/>}
+          </SectionContainer>
+        </Col>
+      </Row>
+
+      <hr />
+
+      <Row>
+        <Col xs={12}>
           <label>Normal barchart</label>
           <SectionContainer className="analysis-chart-container">
             <BarChart
@@ -49,11 +69,13 @@ const StyleguideCharts = () => {
               chartData={singleBarChartData}
               barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
+      <hr/>
 
-        <Row>
+      <Row>
+        <Col xs={12}>
           <label>Line chart</label>
           <SectionContainer className="analysis-by-time">
             <LineChart
@@ -61,11 +83,13 @@ const StyleguideCharts = () => {
               dataKey="bits_per_second"
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
+      <hr/>
 
-        <Row>
+      <Row>
+        <Col xs={12}>
           <label>Area chart</label>
           <SectionContainer className="analysis-by-time">
             <StackedAreaChart
@@ -75,11 +99,13 @@ const StyleguideCharts = () => {
               valueFormatter={formatBitsPerSecond}
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
+      <hr/>
 
-        <Row>
+      <Row>
+        <Col xs={12}>
           <label>Stacked area chart</label>
           <SectionContainer className="analysis-by-time">
             <StackedAreaChart
@@ -89,10 +115,12 @@ const StyleguideCharts = () => {
               valueFormatter={formatBitsPerSecond}
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
-        <Row>
+      <hr/>
+      <Row>
+        <Col xs={12}>
           <label>Comparison area chart</label>
           <SectionContainer className="analysis-by-time">
             <StackedAreaChart
@@ -102,10 +130,12 @@ const StyleguideCharts = () => {
               valueFormatter={formatBitsPerSecond}
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
-        <Row>
+      <hr/>
+      <Row>
+        <Col xs={12}>
           <label>Comparison chart for two stacked area</label>
           <SectionContainer className="analysis-by-time">
             <StackedAreaChart
@@ -115,11 +145,13 @@ const StyleguideCharts = () => {
               valueFormatter={formatBitsPerSecond}
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
 
-        <hr/>
+      <hr/>
 
-        <Row>
+      <Row>
+        <Col xs={12}>
           <label>Comparison chart composed with line chart </label>
           <SectionContainer className="analysis-by-time">
             <LineAreaComposedChart
@@ -131,7 +163,8 @@ const StyleguideCharts = () => {
               isComparison={true}
             />
           </SectionContainer>
-        </Row>
+        </Col>
+      </Row>
     </div>
   )
 }

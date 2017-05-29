@@ -98,10 +98,10 @@
   "portal.common.of.value.text": "of {value}",
   "portal.common.selectFileType.label": "Select file type",
 
-  "portal.common.account.multiple": "{numAccounts, number} {numAccounts, plural, one {Account} other {Accounts}}",
-  "portal.common.storage.multiple": "{numStorages, number} {numStorages, plural, one {Storage} other {Storages}}",
-  "portal.common.group.multiple": "{numGroups, number} {numGroups, plural, one {Group} other {Groups}}",
-  "portal.common.property.multiple": "{numProperties, number} {numProperties, plural, one {Property} other {Properties}}",
+  "portal.common.account.multiple": "{numAccounts, number} Account(s)",
+  "portal.common.storage.multiple": "{numStorages, number} Storage",
+  "portal.common.group.multiple": "{numGroups, number} Group(s)",
+  "portal.common.property.multiple": "{numProperties, number} Property(ies)",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",

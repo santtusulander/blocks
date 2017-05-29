@@ -8,7 +8,7 @@ export const generateStaticTokenTableData = (schema, values = STATIC_TOKEN_SAMPL
   schema.map(item => {
     let value = values[item]
     if (item === 'EXPIRES') {
-      value = moment(value)
+      value = moment(value).utc()
     }
     return {
       labelID: SCHEMA_LABEL_MAP[item],

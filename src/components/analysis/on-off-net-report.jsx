@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import numeral from 'numeral'
+import moment from 'moment'
 import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
@@ -13,7 +14,6 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
 import {getTrafficByDateRangeLabel} from './helpers'
-import { formatDate } from '../../util/helpers'
 
 import {injectIntl} from 'react-intl'
 
@@ -296,7 +296,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 {sortedStats && sortedStats.map((day, i) => {
                   return (
                     <tr key={i}>
-                      <td>{formatDate(day.get('timestamp'), 'MM/DD/YYYY')}</td>
+                      <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
                       <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
                       <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
                       <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>

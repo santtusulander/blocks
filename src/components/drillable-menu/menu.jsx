@@ -34,7 +34,7 @@ export class DrillableMenu extends Component {
     if (activeNode !== this.props.activeNode) {
 
       this.changeActiveNode(activeNode)
-      fetchData(this.context.currentUser, this.context.roles)
+      fetchData(this.context.currentUser)
     }
   }
 
@@ -136,10 +136,8 @@ export class DrillableMenu extends Component {
 }
 
 DrillableMenu.displayName = 'DrillableMenu'
-DrillableMenu.contextTypes = {
-  currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(Map)
-}
+
+DrillableMenu.contextTypes = { currentUser: PropTypes.instanceOf(Map) }
 DrillableMenu.propTypes = {
   activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   alwaysActiveTitle: PropTypes.bool,

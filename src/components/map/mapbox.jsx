@@ -1,7 +1,10 @@
-import React, {Component, PropTypes} from 'react'
-import ReactMapboxGl, { Popup, ZoomControl, Layer, Feature } from 'react-mapbox-gl'
-import {Map, List, is} from 'immutable'
+import React, { Component, PropTypes } from 'react'
+import ReactMapboxGl, { Popup, Layer, Feature } from 'react-mapbox-gl'
+import { Map, List, is } from 'immutable'
 import { FormattedMessage } from 'react-intl'
+
+import IconAdd from '../shared/icons/icon-add.jsx'
+import IconDelete from '../shared/icons/icon-delete.jsx'
 
 // import Typeahead from '../shared/form-elements/typeahead'
 
@@ -9,13 +12,14 @@ import { FormattedMessage } from 'react-intl'
 import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME,
-  MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
-  MAPBOX_SCROLL_TIMEOUT,
+  MAPBOX_CENTER,
   MAPBOX_CITY_LEVEL_ZOOM,
+  MAPBOX_COUNTRY_LEVEL_ZOOM,
   MAPBOX_CITY_RADIUS_DIVIDER,
   MAPBOX_HEAT_MAP_COLORS,
-  MAPBOX_HEAT_MAP_DEFAULT_COLOR
+  MAPBOX_HEAT_MAP_DEFAULT_COLOR,
+  MAPBOX_MAXBOUNDS
 } from '../../constants/mapbox'
 import {
   calculateMedian,
@@ -34,7 +38,8 @@ class Mapbox extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      zoom: MAPBOX_ZOOM_MIN,
+      minZoom: 0,
+      zoom: MAPBOX_COUNTRY_LEVEL_ZOOM,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
@@ -45,6 +50,15 @@ class Mapbox extends Component {
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
+    this.onZoom = this.onZoom.bind(this)
+    this.onStyleLoaded = this.onStyleLoaded.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.getCitiesOnZoomDrag = this.getCitiesOnZoomDrag.bind(this)
+    this.resetZoom = this.resetZoom.bind(this)
+    this.onIncreaseZoom = this.onIncreaseZoom.bind(this)
+    this.onDecreaseZoom = this.onDecreaseZoom.bind(this)
+    this.zoomTo = this.zoomTo.bind(this)
+    this.onDblClick = this.onDblClick.bind(this)
   }
 
   componentDidMount() {
@@ -101,25 +115,8 @@ class Mapbox extends Component {
     // We might not have the map instance saved in this.state yet, so we need to
     // get it from the the ReactMapboxGl components state instead.
     if (this.mapbox && this.mapbox.state && this.mapbox.state.map) {
-      this.disableAndEnableZoom(this.mapbox.state.map)
+      this.mapbox.state.map.scrollZoom.disable()
     }
-  }
-
-  /**
-   * Disables and enables zoom handlers on the map with a slight delay.
-   *
-   * @method disableAndEnableZoom
-   * @param  {object}             map Instance of Mapbox map
-   */
-  disableAndEnableZoom(map) {
-    map.scrollZoom.disable()
-
-    if (this.timeout) {
-      window.clearTimeout(this.timeout)
-      this.timeout = null
-    }
-
-    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
   /**
@@ -132,7 +129,11 @@ class Mapbox extends Component {
    * @param  {object}      map Instance of Mapbox map
    */
   onStyleLoaded(map) {
+    //minimumZoom is calculated based on an equation that describe the correlation between minimum zoom level and the container's size
+    const minimumZoom = - 7.95 + (1.44 * Math.log(map._canvas.clientWidth / 2))
+
     // Fix to draw map correctly on reload
+    this.state.minZoom !== minimumZoom && this.setState({ zoom: minimumZoom, minZoom: minimumZoom })
     map.resize()
 
     this.addCountryLayers(map, this.props.countryData.toJS())
@@ -157,8 +158,36 @@ class Mapbox extends Component {
    * @method onZoom
    * @param  {object} map Instance of Mapbox map
    */
-  onZoom(map) {
-    this.setState({ scale: map.transform.scale, zoom: map.transform._zoom })
+  onZoom(e) {
+    this.setState({ zoom: parseInt(e.target.value) })
+  }
+
+  onIncreaseZoom() {
+    if (this.state.zoom < MAPBOX_ZOOM_MAX) {
+      this.setState({ zoom: this.state.zoom + 1 })
+    }
+  }
+
+  onDecreaseZoom() {
+    if (this.state.zoom > this.state.minZoom) {
+      this.setState({ zoom: this.state.zoom - 1 })
+    }
+  }
+
+  zoomTo(val) {
+    this.setState({ zoom: val })
+  }
+
+  onDblClick(_, e) {
+    if (this.state.zoom === MAPBOX_ZOOM_MAX) {
+      this.resetZoom()
+    } else {
+      this.onIncreaseZoom()
+      this.mapbox.state.map.flyTo({
+        center: [e.lngLat.lng, e.lngLat.lat],
+        zoom: this.state.zoom
+      })
+    }
   }
 
   /**
@@ -659,7 +688,7 @@ class Mapbox extends Component {
    * @method resetZoom
    */
   resetZoom() {
-    this.setState({ zoom: MAPBOX_ZOOM_MIN })
+    this.setState({ zoom: this.state.minZoom })
   }
 
 
@@ -672,8 +701,15 @@ class Mapbox extends Component {
     //#88BA17
     //#00AAD4
 
+    // Disable doubleClickZoom for us to override it – ReactMapboxGl has no support atm
+    if (this.mapbox && this.mapbox.state && this.mapbox.state.map && this.mapbox.state.doubleClickZoom) {
+      this.mapbox.state.map.doubleClickZoom.disable()
+    }
+
     return (
       <ReactMapboxGl
+        renderWorldCopies={false}
+        center={MAPBOX_CENTER}
         ref={ref => {
           this.mapbox = ref
           return this.mapbox
@@ -684,13 +720,14 @@ class Mapbox extends Component {
           height: this.props.height
         }}
         zoom={[this.state.zoom]}
-        minZoom={MAPBOX_ZOOM_MIN}
+        minZoom={this.state.minZoom}
         maxZoom={MAPBOX_ZOOM_MAX}
-        onZoom={this.onZoom.bind(this)}
-        onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
-        onStyleLoad={this.onStyleLoaded.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}
-        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
+        onStyleLoad={this.onStyleLoaded}
+        onMouseMove={this.onMouseMove}
+        onDragEnd={this.getCitiesOnZoomDrag}
+        onDblClick={this.onDblClick}
+        scrollZoom={false}
+        maxBounds={MAPBOX_MAXBOUNDS}
         dragRotate={false}>
 
         { (this.props.markers && !this.props.markers.isEmpty()) &&
@@ -758,20 +795,45 @@ class Mapbox extends Component {
             </div>
           */}
           <div className="control map-zoom">
-            <ZoomControl
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                boxShadow: 'none',
-                border: 0,
-                position: 'relative',
-                top: 'auto',
-                right: 'auto',
-                zIndex: 1
-              }}/>
+
+          <div className="map-zoom-btn" onClick={this.onIncreaseZoom}>
+            <IconAdd width={16} height={16}/>
+          </div>
+            <div className="map-slider">
+              <div className="map-slider__wrapper">
+                <input type="range"
+                  min={this.state.minZoom}
+                  max={MAPBOX_ZOOM_MAX}
+                  step={1}
+                  defaultValue={this.state.minZoom}
+                  onMouseUp={this.onZoom}
+                  value={this.state.zoom}
+                  onChange={this.onZoom}
+                  />
+              </div>
+
+              <div className="map-label">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_CITY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.city"/></span>
+                <span />
+                <span />
+                <span onClick={() => this.zoomTo(MAPBOX_COUNTRY_LEVEL_ZOOM)}><FormattedMessage id="portal.analytics.map.zoomPreset.country"/></span>
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+
+            <div className="map-zoom-btn" onClick={this.onDecreaseZoom}>
+              <IconDelete width={16} height={16}/>
+            </div>
             <div
               className="map-zoom-reset"
-              onClick={this.resetZoom.bind(this)}>
+              onClick={this.resetZoom}>
               <IconGlobe width={32} height={32} />
             </div>
             {isFetchingCityData && <LoadingSpinnerSmall />}
@@ -814,7 +876,7 @@ Mapbox.propTypes = {
   dataKeyFormat: PropTypes.func,
   geoData: PropTypes.object.isRequired,
   getCitiesWithinBounds: PropTypes.func,
-  height: PropTypes.number,
+  height: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   mapBounds: PropTypes.object,
   mapboxActions: PropTypes.object,
   markers: PropTypes.instanceOf(List),
