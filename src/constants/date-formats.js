@@ -17,12 +17,21 @@ export const dateFormats = (timezone) => {
         month: 'numeric',
         year: 'numeric'
       },
-      'datehour': {         // 11/11/2011, 23:11
+      'datehour24': {         // 11/11/2011, 23:11
         timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
         year: 'numeric',
         hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      },
+      'datehour12': {         // 11/11/2011, 23:11
+        timeZone: timezone,
+        day: '2-digit',
+        month: 'numeric',
+        year: 'numeric',
+        hour12: true,
         hour: '2-digit',
         minute: '2-digit'
       },
@@ -50,6 +59,18 @@ export const dateFormats = (timezone) => {
         hour: '2-digit',
         minute: '2-digit',
         timeZoneName: 'short'
+      }
+    },
+    time: {
+      time24: {                    // 23:11
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      },
+      time12: {                    // 11:11 PM
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
       }
     }
   }

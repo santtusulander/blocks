@@ -1,12 +1,13 @@
 import React from 'react'
 import moment from 'moment'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'
 
 import MonthPicker from './month-picker'
 import IconCalendar from '../icons/icon-calendar'
 import IconSelectCaret from '../icons/icon-select-caret'
+import { dateFormats } from '../../../constants/date-formats'
 
 const DATE_FORMAT = 'MM/DD/YYYY';
 
@@ -19,7 +20,7 @@ export class CustomDatePicker extends React.Component {
       dateRangeType: 'day',
       forceOpen: false,
       open: false,
-      value: props.startDate.format('MM/DD/YYYY')
+      value: this.props.intl.formatDate(props.startDate, dateFormats().date.dateInUTC)
     }
 
     this.isForceOpen = false
@@ -53,7 +54,10 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleMonthChange(startDate, endDate) {
-    const monthValue = `${moment().month(startDate.get('month')).format("MMMM")} ${startDate.get('year')}`
+    const monthValue = this.props.intl.formatDate(startDate, {
+      month: 'long',
+      year: 'numeric'
+    })
 
     this.props.changeDateRange(startDate, endDate)
     this.setState({
@@ -137,7 +141,8 @@ export class CustomDatePicker extends React.Component {
 CustomDatePicker.displayName = 'CustomDatePicker'
 CustomDatePicker.propTypes = {
   changeDateRange: React.PropTypes.func,
+  intl: React.PropTypes.object,
   startDate: React.PropTypes.instanceOf(moment)
 }
 
-export default CustomDatePicker
+export default injectIntl(CustomDatePicker)

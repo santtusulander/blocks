@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import moment from 'moment'
 
 import ActionButtons from '../shared/action-buttons'
@@ -64,14 +64,13 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
             const commonName = cert.get('cn')
             const groupID = cert.get('group')
             const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
-            const expirationDate = moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ').format('L')
             const account = cert.get('account')
             return (
               <tr key={index}>
                 <td>{title}</td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
-                <td>{expirationDate}</td>
+                <td><FormattedDate value={moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ')} format="datenum"/></td>
                 <IsAllowed to={MODIFY_CERTIFICATE || DELETE_CERTIFICATE}>
                   <td className="nowrap-column">
                     <ActionButtons

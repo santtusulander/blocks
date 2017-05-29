@@ -29,7 +29,7 @@ import {
   Row,
   Table
 } from 'react-bootstrap';
-import { FormattedDate } from 'react-intl'
+import { FormattedDate, injectIntl } from 'react-intl'
 import StyleguideIcons from './styleguide-icons'
 import StyleguideCharts from './styleguide-charts'
 
@@ -67,6 +67,8 @@ import IconQuestionMark from '../../components/shared/icons/icon-question-mark'
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 import DateRanges from '../../constants/date-ranges'
+import { dateFormats } from '../../constants/date-formats'
+
 import country_list from '../../constants/country-list'
 
 import { cityData, filterCheckboxOptions, spDashboardData,
@@ -109,6 +111,7 @@ class Styleguide extends React.Component {
   }
 
   render() {
+    const { intl } = this.props
 
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
@@ -650,8 +653,8 @@ class Styleguide extends React.Component {
                 }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
-              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${intl.formatDate(this.state.datePickerStartDate, dateFormats().date.datehour24)})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${intl.formatDate(this.state.datePickerEndDate, dateFormats().date.datehour24)})`}</p>
             </Col>
           </Row>
 
@@ -664,10 +667,10 @@ class Styleguide extends React.Component {
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${intl.formatDate(this.state.customDatePickerStartDate, dateFormats().date.datehour24)})`}</p>
             </Col>
             <Col xs={4}>
-              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.datePickerEndDate} (${intl.formatDate(this.state.customDatePickerEndDate, dateFormats().date.datehour24)})`}</p>
             </Col>
           </Row>
 
@@ -680,7 +683,7 @@ class Styleguide extends React.Component {
                 onChange={(time) => this.setState({ timePickerTime: time })} />
             </Col>
             <Col xs={8}>
-              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
+              <p>{`time: ${this.state.timePickerTime} (${intl.formatTime(this.state.timePickerTime, { hour: '2-digit', 'minute': '2-digit', hour12: false})})`}</p>
             </Col>
           </Row>
 
@@ -902,6 +905,7 @@ class Styleguide extends React.Component {
 
 Styleguide.displayName = 'Styleguide'
 Styleguide.propTypes = {
+  intl: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
@@ -912,4 +916,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Styleguide)
+export default connect(mapStateToProps)(injectIntl(Styleguide))

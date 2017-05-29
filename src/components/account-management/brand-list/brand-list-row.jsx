@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import { FormattedDate } from 'react-intl'
 
 import ActionButtons from '../../shared/action-buttons.jsx'
 import BrandlistUsedBy from './brand-list-used-by'
@@ -19,7 +20,7 @@ const BrandListRow = (props) => {
         {props.availability}
       </td>
       <td>
-        {moment(props.lastEdited).format('MM/DD/YYYY, h:mm a')}
+        <FormattedDate value={props.lastEdited} format="datehour12" />
       </td>
       <td>
         <BrandlistUsedBy fieldVal={props.usedBy} />
