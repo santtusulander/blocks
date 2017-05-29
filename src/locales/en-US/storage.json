@@ -45,13 +45,15 @@
 
   "portal.storage.summaryPage.title": "SUMMARY",
   "portal.storage.summaryPage.contents.asperaToggle.title": "Aspera Upload",
-  "portal.storage.summaryPage.contents.newFile.label": "New File Upload",
+  "portal.storage.summaryPage.contents.fileUpload.label": "File Upload",
+  "portal.storage.summaryPage.contents.folderUpload.label": "Folder Upload",
   "portal.storage.summaryPage.contents.newFolder.label": "New Folder",
   "portal.storage.summaryPage.contentBrowser.name.label": "Name",
   "portal.storage.summaryPage.contentBrowser.lastModified.label": "Last Modified",
   "portal.storage.summaryPage.contentBrowser.size.label": "Size",
   "portal.storage.summaryPage.contentBrowser.menu.download": "Download",
   "portal.storage.summaryPage.contentBrowser.menu.delete": "Delete",
+  "portal.storage.summaryPage.contentBrowser.newFolder.text": "New Folder",
 
   "portal.storage.summaryPage.itemProperties.created.label": "Created",
   "portal.storage.summaryPage.itemProperties.lastModified.label": "Last Modified",
