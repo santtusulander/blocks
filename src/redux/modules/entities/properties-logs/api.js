@@ -30,13 +30,13 @@ export const fetch = ({ brand, account, group, host }) => {
 export const create = ({ brand, account, group, host, payload }) =>
   axios.post(`${baseURL(brand, account, group, host)}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data.data[0], propLogsConfigSchema)
+      return normalize(data, propLogsConfigSchema)
     })
 
 export const update = ({ brand, account, group, host, payload }) =>
   axios.put(`${baseURL(brand, account, group, host)}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data.data[0], propLogsConfigSchema)
+      return normalize(data, propLogsConfigSchema)
     })
 
 export const remove = ({ brand, account, group, host }) =>

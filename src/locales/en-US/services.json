@@ -20,5 +20,8 @@
   "portal.services.logDelivery.selectGroup.text": "Please select a group from top left to see Logs",
   "portal.services.logDelivery.exportFileFormat.tooltip.message": "Export File Format",
   "portal.services.logDelivery.logAggregationInterval.tooltip.message": "Log Aggregation Interval",
-  "portal.services.logDelivery.currentLogStorage.text": "Current Log Storage"
+  "portal.services.logDelivery.currentLogStorage.text": "Current Log Storage",
+  "portal.services.logDelivery.logTypes.conductor.text": "Conductor",
+  "portal.services.logDelivery.fileFormat.zip.text": ".zip",
+  "portal.services.logDelivery.aggregationInterval.30min.text": "30 min"
 }
