@@ -3,6 +3,7 @@ export const DATE_FORMATS = {
   DAY_MONTH_LONG: 'dayMonthLong',
   DATE_HOUR: 'dateHour',
   DATE_HOUR_12: 'dateHour12',
+  DATE_HOUR_12_SHORT: 'dateHour12Short',
   DATE_HOUR_24: 'dateHour24',
   DATE_HOUR_UTC: 'dateHourUTC',
   MONTH_LONG_YEAR_UTC: 'monthLongYearUTC',
@@ -61,6 +62,15 @@ export const getDateFormats = (timezone) => {
         timeZone: timezone,
         day: '2-digit',
         month: 'numeric',
+        year: 'numeric',
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit'
+      },
+      [DATE_FORMATS.DATE_HOUR_12_SHORT]: {         // 11/11/2011, 11:11 PM
+        timeZone: timezone,
+        day: 'numeric',
+        month: 'short',
         year: 'numeric',
         hour12: true,
         hour: '2-digit',

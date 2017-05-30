@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -27,11 +27,12 @@ import ModalWindow from '../../../components/shared/modal'
 import SidePanel from '../../../components/shared/side-panel'
 import AddHost from '../../../components/content/add-host'
 
-import { getSortData, formatUnixTimestamp, getCISname, hasAnyServices} from '../../../util/helpers'
+import { getSortData, unixTimestampToDate, getCISname, hasAnyServices} from '../../../util/helpers'
 import { getContentUrl } from '../../../util/routes'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
 import { MEDIA_DELIVERY_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../../../constants/service-permissions'
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 const IS_FETCHING = 'PropertiesTabFetching'
 
@@ -302,7 +303,7 @@ class AccountManagementProperties extends React.Component {
                       <td>{groupName}</td>
                       <td>{this.getFormattedPropertyDeploymentMode(property.get('deploymentMode'))}</td>
                       <td>{originHostname}</td>
-                      <td>{formatUnixTimestamp(property.get('created'))}</td>
+                      <td><FormattedDate value={unixTimestampToDate(property.get('created'))} format={DATE_FORMATS.FULL_DATE}/></td>
                       {!propertyIsDisabled &&
                         <IsAllowed to={MODIFY_PROPERTY}>
                           <td className="nowrap-column">

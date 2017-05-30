@@ -6,7 +6,6 @@ jest.unmock('../purge-status.jsx')
 import PurgeHistoryReport from '../purge-status'
 
 jest.mock('../../../../util/helpers', () => ({
-  formatUnixTimestamp: val => val,
   getSortData: val => val
 }))
 
