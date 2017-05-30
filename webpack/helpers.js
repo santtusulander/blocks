@@ -38,6 +38,8 @@ module.exports = {
     new CopyWebpackPlugin([
       {from: 'src/assets/iata-codes.json', to: 'assets/iata-codes'},
       {from: 'src/assets/img/logo-udn-dark.png', to: 'assets/img'},
+      {from: 'src/assets/img/dashboard-content.png', to: 'assets/img'},
+      {from: 'src/assets/img/dashboard-content-with-tooltip.png', to: 'assets/img'},
       {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'},
       {from: 'src/assets/js/asperaweb-4.min.js', to: 'assets/js'},
       {from: 'src/assets/js/connectinstaller-4.min.js', to: 'assets/js'},
