@@ -109,9 +109,14 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.account.get('id') !== this.props.account.get('id')) {
+
+    const toAccount = nextProps.account ? nextProps.account.get('id') : -1
+    const fromAccount = this.props.account ? this.props.account.get('id') : -1
+    // Reset search on account changed
+    if (toAccount !== fromAccount) {
       this.setState({search: ''})
     }
+
     const {brand, account} = nextProps.params
     const { sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
     const page = nextProps.location.query.page ? nextProps.location.query.page : 1
