@@ -386,3 +386,27 @@ export function isValidCName(cName) {
   }
   return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)+[.]?$/)
 }
+
+/**
+ * Check is valid Regex
+ * @param string
+ * @returns {boolean}
+ */
+export function isValidRegex(value) {
+  try {
+    new RegExp(value)
+  } catch (e) {
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Check is valid ASCII string
+ * @param string
+ * @returns {boolean}
+ */
+export function isValidASCII(value) {
+  return /^[\x00-\x7F]*$/.test(value)
+}
