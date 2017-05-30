@@ -167,6 +167,7 @@ class ContentItemChart extends React.Component {
     const { tagText } = this.props
     const endDate = moment.utc().format('MMM D')
     const startDate = startOfLast28().format('MMM D')
+    // TODO: UDNP-3770: Replace all date and time with FormattedDate and FormattedTime from React-intl
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
     const activeSlice = this.state.activeSlice

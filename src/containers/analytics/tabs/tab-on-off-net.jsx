@@ -2,10 +2,9 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
 import PROVIDER_TYPES from '../../../constants/provider-types.js'
-import { startOfThisDay } from '../../../constants/date-ranges'
+import { startOfThisDay, endOfThisDay } from '../../../constants/date-ranges'
 
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
@@ -50,7 +49,7 @@ class AnalyticsTabOnOffNet extends React.Component {
 
     const onOffTodayOpts = Object.assign({}, onOffOpts)
     onOffTodayOpts.startDate = startOfThisDay().format('X'),
-    onOffTodayOpts.endDate = moment().utc().format('X')
+    onOffTodayOpts.endDate = endOfThisDay().format('X')
 
     this.props.trafficActions.fetchOnOffNet(onOffOpts)
     this.props.trafficActions.fetchOnOffNetToday(onOffTodayOpts)
