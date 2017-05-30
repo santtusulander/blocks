@@ -53,7 +53,7 @@ export class Property extends React.Component {
     const { account, brand, group } = this.props.params
     const { activeHostConfiguredName, activePurge, purgeActions } = this.props
 
-    purgeActions.createPurge(
+    return purgeActions.createPurge(
       brand,
       account,
       group,
