@@ -22,8 +22,8 @@ import {
   deleteUserName
 } from '../../util/local-storage'
 
-const USER_LOGGED_IN = 'USER_LOGGED_IN'
-const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
+export const USER_LOGGED_IN = 'USER_LOGGED_IN'
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
 const USER_FINISH_FETCH = 'USER_FINISH_FETCH'
 const USER_TOKEN_CHECKED = 'USER_TOKEN_CHECKED'
@@ -400,9 +400,10 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = getUserToken()
 
   if (token) {
-    return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
-      {headers: {'X-Auth-Token': token}}
-    ).then(() => deleteUserNameFromStorage())
+    const headers = {'X-Auth-Token': token}
+
+    return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`, { headers })
+      .then(() => deleteUserNameFromStorage())
   }
   return Promise.resolve({ message: 'Token not found' })
 })

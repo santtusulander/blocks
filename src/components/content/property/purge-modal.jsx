@@ -26,7 +26,8 @@ class PurgeModal extends React.Component {
       purgeObjectsWarning: '',
       purgeEmailError: '',
       type: '',
-      invalid: true
+      invalid: true,
+      submitting: false
     }
 
     this.emailValidationTimeout = null
@@ -149,10 +150,19 @@ class PurgeModal extends React.Component {
 
   submitForm(e) {
     e.preventDefault()
+    this.setState({submitting: true})
     let hasErrors = false;
     hasErrors = this.validateEmail() ? true : hasErrors
     if (!hasErrors) {
       this.props.savePurge()
+        .then(() => {
+          this.setState({submitting: false})
+        })
+        .catch(() => {
+          this.setState({submitting: false})
+        })
+    } else {
+      this.setState({submitting: false})
     }
   }
 
@@ -328,7 +338,7 @@ class PurgeModal extends React.Component {
               <Button
                 type="submit"
                 bsStyle="primary"
-                disabled={this.state.invalid || this.state.purgeObjectsError || this.state.purgeEmailError ? true : false}>
+                disabled={this.state.submitting || this.state.invalid || this.state.purgeObjectsError || this.state.purgeEmailError ? true : false}>
                 <FormattedMessage id="portal.analytics.purgeModal.button.purge.text"/>
               </Button>
             </FormFooterButtons>

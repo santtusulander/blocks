@@ -30,7 +30,7 @@ export const locationReverseGeoCodingLookup = (lon, lat, limit = 1, mode = 'mapb
  * @param asn
  */
 export const fetchASOverview = (asn) => {
-  return axios.get(`${BASE_URL_NORTH}/asns?filter_by=asn&filter_value=${asn}&page_size=1`)
+  return axios.get(`${BASE_URL_NORTH}/asns?filter_by=asn&sort_by=asn&filter_value=${asn}&page_size=1`)
   .then((res) => {
     if (res) {
       return res.data.data;

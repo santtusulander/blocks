@@ -121,7 +121,7 @@ export class Configuration extends React.Component {
     for (const obj of values) {
       const path = obj[0]
       const value = obj[1]
-      activeConfig = activeConfig && value && activeConfig.setIn(path, value)
+      activeConfig = activeConfig && activeConfig.setIn(path, value)
     }
 
     this.props.hostActions.changeActiveHost(

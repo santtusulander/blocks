@@ -18,11 +18,12 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService, hasAnyServices, getPage } from '../../util/helpers'
+import { userIsCloudProvider, hasService, hasAnyServices, getPage, getServiceType } from '../../util/helpers'
 
 import { parseResponseError } from '../../redux/util'
 
 import AddHost from './add-host'
+import ColorLegend from './color-legend'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../shared/form-elements/button'
 import NoContentItems from './no-content-items'
@@ -478,10 +479,10 @@ class ContentItems extends Component {
             this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
-
             <div
               key={viewingChart}
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+              {this.props.showColorLegend ? <ColorLegend serviceTypes={[...new Set(properties.map(property => getServiceType(property)))]} /> : null}
 
                 { /* STORAGES -header on List view */
                   this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
@@ -531,6 +532,7 @@ class ContentItems extends Component {
                 { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
+                      serviceType={getServiceType(property)}
                       key={i}
                       propertyId={property.get('published_host_id')}
                       params={params}
@@ -688,6 +690,7 @@ ContentItems.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   selectionStartTier: PropTypes.string, // this is used in a helper render method
   showAnalyticsLink: PropTypes.bool,
+  showColorLegend: PropTypes.bool,
   showInfoDialog: PropTypes.func,
   showSlices: PropTypes.bool,
   sortDirection: PropTypes.number,

@@ -18,6 +18,7 @@ import ContentItemTag from './content-item-tag'
 import TrafficTooltip from './traffic-tooltip'
 import { formatBitsPerSecond } from '../../util/helpers'
 import LinkWrapper from './link-wrapper'
+import { HOST_SERVICE_TYPES } from '../../constants/configuration'
 
 const dayHours = 24
 const rayHours = 3
@@ -42,6 +43,15 @@ function groupData(rawData, groupSize, key) {
     return points
 
   }, [])
+}
+
+const determineLineColor = (serviceType) => {
+  switch (serviceType) {
+    case HOST_SERVICE_TYPES.MEDIA_DELIVERY: return 'media-delivery-line'
+    case HOST_SERVICE_TYPES.VOD_STREAMING: return 'vod-streaming-line'
+    case HOST_SERVICE_TYPES.LIVE_STREAMING: return 'live-streaming-line'
+    default: return 'content-item-chart-line'
+  }
 }
 
 class ContentItemChart extends React.Component {
@@ -180,6 +190,7 @@ class ContentItemChart extends React.Component {
             minTransfer={minTransfer}/>
         }
       </Tooltip>)
+    const { serviceType } = this.props
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
         <div
@@ -202,7 +213,7 @@ class ContentItemChart extends React.Component {
               {!this.props.fetchingMetrics && this.props.secondaryData.size ?
                 <svg className="content-item-chart-svg secondary-data">
                   {/* Add center point as last coordinate to close the path */}
-                  <path className="content-item-chart-line"
+                  <path className={determineLineColor(serviceType)}
                     d={secondaryLine(secondaryData)
                       + 'L' + outerRadius + ' ' + outerRadius} />
                 </svg>
@@ -220,7 +231,7 @@ class ContentItemChart extends React.Component {
                   to add extra points to the array so that the path draws the lines outwards
                   from the center of the graph. Every other value on the array is set to
                   'center', which is translated in the d3 function in to coordinates */}
-                  <path className="content-item-chart-line"
+                  <path className={determineLineColor(serviceType)}
                     d={primaryLine(primaryData.reduce(
                       (points, data) => {
                         points.push('center')
@@ -364,6 +375,7 @@ ContentItemChart.propTypes = {
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
+  serviceType: React.PropTypes.string,
   showSlices: React.PropTypes.bool,
   tagText: React.PropTypes.string,
   timeToFirstByte: React.PropTypes.string

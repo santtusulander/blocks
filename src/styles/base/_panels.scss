@@ -124,8 +124,17 @@ $bg-permission-panel: #1e6a86;
     a {
       display: block;
       padding: 10px 15px;
-      color: $white;
+      text-decoration: none;
       cursor: pointer;
+
+      .dark-theme & {
+        color: $white;
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+      }
+
 
       &:hover {
         background-color: $pale-blue-opacity-30;
@@ -142,9 +151,20 @@ $bg-permission-panel: #1e6a86;
     }
   }
 
+  .panel-heading + .panel-collapse > .panel-body {
+    border: 0;
+  }
+
   .resource-header {
     th {
-      background-color: $pale-blue-opacity-30;
+      .light-theme & {
+        color: $white;
+        background-color: $pale-blue;
+      }
+
+      .dark-theme & {
+        background-color: $pale-blue-opacity-30;
+      }
     }
   }
 }
