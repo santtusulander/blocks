@@ -1,39 +1,61 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import TruncatedTitle from './truncated-title'
 import CustomToggle from '../form-elements/customToggle'
 
 import IconContextMenu from '../icons/icon-context-menu'
+import MenuItemDownload from './menu-item-download'
 
-const ContextMenu = ({ header, options, disabled }) => {
-  return (
-    <Dropdown className="menu" id="context-menu" pullRight={true} disabled={disabled}>
-      <CustomToggle bsRole="toggle">
-        <IconContextMenu className="storage-contents-context-menu-icon"/>
-      </CustomToggle>
-      <Dropdown.Menu className="context-menu">
+class ContextMenu extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showMenu: false
+    }
+    this.showMenu = this.showMenu.bind(this)
+  }
+  showMenu() {
+    this.setState({showMenu: true})
+  }
+
+  render() {
+    const { header, options, disabled, params } = this.props
+    const { showMenu } = this.state
+    return (
+      <Dropdown className="menu" id="context-menu" pullRight={true} disabled={disabled}>
+        <CustomToggle bsRole="toggle" onClick={this.showMenu}>
+          <IconContextMenu className="storage-contents-context-menu-icon" />
+        </CustomToggle>
+        <Dropdown.Menu className="context-menu">
         <MenuItem className="menu-header">
           <div className="header-title">
             <TruncatedTitle content={header}/>
           </div>
           <IconContextMenu/>
         </MenuItem>
-        {options.map(({label, handleClick}, index) => (
-            <MenuItem
-              key={index}
-              onClick={e => {
-                e.stopPropagation()
-                handleClick()
-              }}
-            >
-              {label}
-            </MenuItem>
-          )
-        )}
-      </Dropdown.Menu>
-    </Dropdown>
-  )
+          {/*Only fetch download url when the menu is opened. Without this check, it will
+            fetch every published url of every file*/}
+          {showMenu && options.map(({label, handleClick, isDownloadButton}, index) => {
+            if (isDownloadButton) {
+              return (<MenuItemDownload key={index} label={label} name={header} params={params}/>)
+            }
+            return (
+                  <MenuItem
+                    key={index}
+                    onClick={e => {
+                      e.stopPropagation()
+                      handleClick()
+                    }}
+                  >
+                    {label}
+                  </MenuItem>
+            )
+          })}
+        </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
 }
 
 
@@ -49,8 +71,9 @@ ContextMenu.propTypes = {
   options: PropTypes.arrayOf(
     React.PropTypes.shape({
       label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.node ]).isRequired,
-      handleClick: React.PropTypes.func.isRequired
+      handleClick: React.PropTypes.func
     })
-  ).isRequired
+  ).isRequired,
+  params: PropTypes.object
 }
 export default ContextMenu

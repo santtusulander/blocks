@@ -31,19 +31,13 @@ describe('ContextMenu', () => {
     expect(shallow(<ContextMenu {...props}/>)).toBeTruthy()
   })
 
-  it('should have 3 menu items', () => {
+  it('should have menu item', () => {
     const subject = shallow(<ContextMenu {...props}/>)
-    expect(subject.find(MenuItem).length).toBe(3)
+    expect(subject.find(MenuItem).length).toBeTruthy()
   })
 
   it('should have 1 menu-header', () => {
     const subject = shallow(<ContextMenu {...props}/>)
     expect(subject.find('.menu-header').length).toBe(1)
   });
-
-  it('should call deleteFile function', () => {
-    const subject = shallow(<ContextMenu {...props}/>)
-    const DeleteItem = subject.find(MenuItem).at(2).simulate('click', { preventDefault: jest.fn(), stopPropagation: jest.fn() })
-    expect(deleteFile.mock.calls.length).toBe(1)
-  })
 })
