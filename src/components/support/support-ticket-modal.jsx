@@ -152,7 +152,7 @@ class SupportTicketModal extends React.Component {
               </tr>
               <tr>
                 <th>Creation Date:</th>
-                <td><FormattedDate value={ticket.get('created_at')} format={DATE_FORMATS.DATE_HOUR_12}/></td>
+                <td><FormattedDate value={ticket.get('created_at')} format={DATE_FORMATS.FULL_DATE}/></td>
               </tr>
               </tbody>
             </table>

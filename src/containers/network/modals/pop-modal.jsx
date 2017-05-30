@@ -183,8 +183,8 @@ class PopFormContainer extends Component {
 
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: intl.formatDate(unixTimestampToDate(initialValues.createdDate), DATE_FORMATS.FULL_DATE),
-                                                    updatedDate: intl.formatDate(unixTimestampToDate(initialValues.updatedDate), DATE_FORMATS.FULL_DATE)
+                                                    createdDate: intl.formatDate(unixTimestampToDate(initialValues.createdDate), DATE_FORMATS.DATE_HOUR_12_SHORT),
+                                                    updatedDate: intl.formatDate(unixTimestampToDate(initialValues.updatedDate), DATE_FORMATS.DATE_HOUR_12_SHORT)
                                                   }} />) : ''
 
     return (

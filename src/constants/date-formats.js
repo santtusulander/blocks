@@ -67,7 +67,7 @@ export const getDateFormats = (timezone) => {
         hour: '2-digit',
         minute: '2-digit'
       },
-      [DATE_FORMATS.DATE_HOUR_12_SHORT]: {         // 11/11/2011, 11:11 PM
+      [DATE_FORMATS.DATE_HOUR_12_SHORT]: {         // 1 Nov 2011, 11:11 PM
         timeZone: timezone,
         day: 'numeric',
         month: 'short',

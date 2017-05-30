@@ -373,7 +373,7 @@ class PropertySummary extends React.Component {
             <h3>
               <FormattedDate value={moment(
                 activeConfig.get('configuration_status').get('deployment_date'), 'X'
-              )} format={DATE_FORMATS.DATE_HOUR_12} />
+              )} format={DATE_FORMATS.DATE_HOUR_12_SHORT} />
             </h3>
           </Col>
         </Row>
