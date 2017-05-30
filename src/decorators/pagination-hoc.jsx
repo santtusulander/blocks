@@ -50,7 +50,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
     static get propTypes() {
       return {
         activePage: PropTypes.number,
-        fields: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), null]),
+        fields: PropTypes.arrayOf(PropTypes.string),
         filter_by: PropTypes.string,
         filter_value: PropTypes.string,
         isPristine: PropTypes.bool,
@@ -366,7 +366,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
       const {
         offset, page_size, sort_by, sort_order, filter_by, filter_value, activePage, total,
         ...passThroughProps
-      } = this.props;
+      } = this.props
 
       /* compose paging props */
       const paging = {
