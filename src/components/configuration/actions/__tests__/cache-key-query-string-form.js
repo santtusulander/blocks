@@ -24,7 +24,6 @@ describe('CacheKeyQueryStringForm', () => {
       saveAction,
       close,
       invalid: false,
-      set: Map(),
       intl: intlMaker()
     }
     component = shallow(<CacheKeyQueryStringForm {...props}/>)

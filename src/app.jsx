@@ -9,6 +9,7 @@ import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 import Raven from 'raven-js'
 import apiMiddleware from './redux/middleware/api'
+import xhrCancelerMiddleware from './redux/middleware/xhr-canceler'
 import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven'
 import { FormattedMessage } from 'react-intl';
 
@@ -36,10 +37,12 @@ const createStoreWithMiddleware =
 
       promiseMiddleware,
       apiMiddleware,
+      xhrCancelerMiddleware
     )(createStore)
   : applyMiddleware(
       promiseMiddleware,
-      apiMiddleware
+      apiMiddleware,
+      xhrCancelerMiddleware
     )(createStore)
 
 const appReducer = combineReducers(reducers)

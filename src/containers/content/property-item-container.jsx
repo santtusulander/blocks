@@ -20,7 +20,7 @@ import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 const PropertyItemContainer = props => {
 
   const { published_host_id } = props.entity ? props.entity.toJS() : {}
-  const { entityMetrics, dailyTraffic, totalTraffics, params, currentUser } = props
+  const { entityMetrics, dailyTraffic, totalTraffics, params, currentUser, serviceType } = props
 
   const analyticsURLBuilder = (property) => {
     return getAnalyticsUrlFromParams(
@@ -86,6 +86,7 @@ const PropertyItemContainer = props => {
         name={published_host_id}
         tagText={isTrial ? 'portal.configuration.details.deploymentMode.trial' : undefined}
         brightMode={isTrial}
+        serviceType={serviceType}
 
         linkTo={getContentUrl('propertySummary', published_host_id, params)}
         analyticsLink={analyticsURLBuilder(published_host_id)}
@@ -118,6 +119,7 @@ PropertyItemContainer.propTypes = {
   entity: PropTypes.object,
   entityMetrics: PropTypes.object,
   params: PropTypes.object,
+  serviceType: PropTypes.string,
   totalTraffics: PropTypes.instanceOf(List),
   viewingChart: PropTypes.bool
 }

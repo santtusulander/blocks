@@ -133,6 +133,7 @@ export class Group extends React.Component {
         hideInfoDialog={this.props.uiActions.hideInfoDialog}
 
         showAnalyticsLink={true}
+        showColorLegend={true}
         analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, currentUser)}
       />
     )

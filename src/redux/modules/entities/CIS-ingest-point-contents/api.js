@@ -50,3 +50,21 @@ export const remove = (params) => {
   return axios.delete(baseUrl(deleteParams))
     .then(() => ({reduxID, fileName}))
 }
+
+/**
+ * Create a new folder
+ * @param {Object} params
+ */
+export const create = (params) => {
+  const {brand, account, group, storage, splat, folderName} = params
+
+  const newFolderParams = {
+    brand,
+    account,
+    group,
+    id: storage,
+    path: splat ? `${splat}/${folderName}` : folderName
+  }
+
+  return axios.post(baseUrl(newFolderParams), {},  { headers: { 'Content-Type': 'application/json' }})
+}

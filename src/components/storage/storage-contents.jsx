@@ -14,8 +14,6 @@ import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import UploadDestinationStatus from './upload-destination-status'
 import ButtonDropdown from '../shared/form-elements/button-dropdown'
-import Button from '../shared/form-elements/button'
-import IconAdd from '../shared/icons/icon-add'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
@@ -44,12 +42,15 @@ class StorageContents extends Component {
       sortBy: 'name',
       sortDir: 1,
       uploadPath: '',
-      baseUploadPath: ''
+      baseUploadPath: '',
+      showNewFolderForm: false
     }
 
     this.changeSort = this.changeSort.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
     this.backButtonHandler = this.backButtonHandler.bind(this)
+    this.onCloseNewFolder = this.onCloseNewFolder.bind(this)
+    this.onSaveNewFolder = this.onSaveNewFolder.bind(this)
     this.openDirectoryHandler = this.openDirectoryHandler.bind(this)
     this.generateUploadPath = this.generateUploadPath.bind(this)
     this.appendTargetDirNameToPath = this.appendTargetDirNameToPath.bind(this)
@@ -60,6 +61,7 @@ class StorageContents extends Component {
     this.onDragLeave = this.onDragLeave.bind(this)
     this.onDragOver = this.onDragOver.bind(this)
     this.onDrop = this.onDrop.bind(this)
+    this.openNewFolderForm = this.openNewFolderForm.bind(this)
   }
 
   componentWillMount() {
@@ -177,6 +179,18 @@ class StorageContents extends Component {
     this.setState({ sortBy, sortDir })
   }
 
+  onCloseNewFolder() {
+    this.setState({ showNewFolderForm: false })
+  }
+
+  onSaveNewFolder({ folderName }) {
+    this.props.createNewFolder({ folderName: folderName, ...this.props.params })
+    .then(() => {
+      this.setState({ showNewFolderForm: false })
+      this.fetchStorageContents({forceReload: true, ...this.props.params})
+    })
+  }
+
   getFilteredItems(items, searchTerm) {
     if (!searchTerm) {
       return items
@@ -288,6 +302,10 @@ class StorageContents extends Component {
     this.clearDragState()
   }
 
+  openNewFolderForm() {
+    this.setState({ showNewFolderForm: true })
+  }
+
   /**
    * This is an Event Handler for Aspera Events
    * Handles 'transfer' -type events and reloads contents when transfer.status === 'completed'
@@ -379,33 +397,37 @@ class StorageContents extends Component {
             </Col>
           </FormGroup>
 
-          { asperaUpload &&
-            <ButtonDropdown
-              bsStyle="success"
-              pullRight={true}
-              disabled={uploadButtonIsDisabled}
-              options={[
+          <ButtonDropdown
+            bsStyle="success"
+            pullRight={true}
+            disabled={uploadButtonIsDisabled}
+            options={asperaUpload
+              ? [
                 {
-                  label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
+                  label: <FormattedMessage id='portal.storage.summaryPage.contents.fileUpload.label' />,
                   handleClick: openFileDialog
                 },
                 {
-                  label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                  label: <FormattedMessage id='portal.storage.summaryPage.contents.folderUpload.label' />,
                   handleClick: openFolderDialog
+                },
+                {
+                  label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                  handleClick: this.openNewFolderForm
                 }
-              ]}
-            />
+              ]
+            : [
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.fileUpload.label' />,
+                handleClick: openFileDialog
+              },
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                handleClick: this.openNewFolderForm
+              }
+            ]
           }
-          { !asperaUpload &&
-            <Button
-              bsStyle="success"
-              icon={true}
-              onClick={openFileDialog}
-              disabled={uploadButtonIsDisabled}
-            >
-              <IconAdd/>
-            </Button>
-          }
+          />
         </SectionHeader>
 
         {isFetchingContents
@@ -427,13 +449,16 @@ class StorageContents extends Component {
                   uploadPath={uploadPath}
                   handleTransferEvents={this.handleAsperaEvents}
                 >
-                  {hasContents
+                  {hasContents || this.state.showNewFolderForm
                     ?
                       <StorageContentBrowser
                         contents={sortedContents}
                         openDirectoryHandler={this.openDirectoryHandler}
                         backButtonHandler={this.backButtonHandler}
                         isRootDirectory={isRootDirectory}
+                        onSaveNewFolder={this.onSaveNewFolder}
+                        onCloseNewFolder={this.onCloseNewFolder}
+                        showNewFolderForm={this.state.showNewFolderForm}
                         sorterProps={sorterProps}
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
@@ -458,11 +483,14 @@ class StorageContents extends Component {
                   onDrop={this.onDrop}
                   uploadPath={uploadPath}
                 >
-                  {hasContents
+                  {hasContents || this.state.showNewFolderForm
                     ?
                       <StorageContentBrowser
                         contents={sortedContents}
                         openDirectoryHandler={this.openDirectoryHandler}
+                        onSaveNewFolder={this.onSaveNewFolder}
+                        onCloseNewFolder={this.onCloseNewFolder}
+                        showNewFolderForm={this.state.showNewFolderForm}
                         backButtonHandler={this.backButtonHandler}
                         isRootDirectory={isRootDirectory}
                         sorterProps={sorterProps}
@@ -491,6 +519,7 @@ StorageContents.propTypes = {
   asperaInstance: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
   contents: PropTypes.instanceOf(List),
+  createNewFolder: PropTypes.func,
   fetchStorageContents: PropTypes.func,
   gatewayHostname: PropTypes.string,
   httpInstance: PropTypes.instanceOf(Map),
@@ -527,6 +556,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
   removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
+  createNewFolder: (params) => dispatch(storageContentsActions.create({...params, forceReload: true})),
   uploadHandlers: bindActionCreators(uploadActions, dispatch)
 })
 

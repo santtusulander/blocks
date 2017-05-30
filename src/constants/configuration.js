@@ -74,3 +74,9 @@ export const MAX_TTL = 2147483647
 export const CT_DEFAULT_STATUS_CODE = 200
 
 export const DEFAULT_HOST_SERVICE_TYPE = 'large'
+
+export const HOST_SERVICE_TYPES = {
+  MEDIA_DELIVERY: 'large',
+  VOD_STREAMING: 'msd',
+  LIVE_STREAMING: 'livestream'
+}

@@ -34,8 +34,3 @@ export const LANGUAGE_OPTIONS = [
   {value: LANGUAGE_CODE_SPANISH, label: 'Español', secondLabel: 'ES'},
   {value: LANGUAGE_CODE_FRENCH, label: 'Françias', secondLabel: 'FR'}
 ]
-
-export const DATE_FORMAT_OPTIONS = [
-  {value: 'MM/DD/YYYY', label: 'MM/DD/YYYY'},
-  {value: 'DD/MM/YYYY', label: 'DD/MM/YYYY'}
-]

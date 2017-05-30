@@ -13,20 +13,26 @@ import FieldFormGroupMultiOptionSelector from '../shared/form-fields/field-form-
 import FormFooterButtons from '../shared/form-elements/form-footer-buttons'
 import FieldTelephoneInput from '../shared/form-fields/field-telephone-input'
 
+import { LOG_TYPES_OPTIONS, FILE_FORMAT_OPTIONS, AGGREGATION_INTERVAL_OPTIONS } from '../../constants/log-delivery'
+
 import { isValidPhoneNumber, isValidEmail, isValidTextField } from '../../util/validators'
 
-const validate = ({contact_email, contact_first_name, contact_second_name, phone_number, log_delivery_enabled}) => {
 
+const validate = ({contact_email, contact_first_name, contact_second_name, phone_number, is_enabled}) => {
   const errors = {}
 
   /*
     Disable validation when logDeliveryService is disabled
   */
-  if (!log_delivery_enabled) {
+  if (!is_enabled) {
     return errors
   }
 
-  if (contact_email && !isValidEmail(contact_email)) {
+  if (!contact_email) {
+    errors.contact_email = <FormattedMessage id="portal.account.editUser.emailNameRequired.text"/>
+  }
+
+  if (contact_email  && !isValidEmail(contact_email)) {
     errors.contact_email = <FormattedMessage id="portal.common.error.invalid.email.text"/>
   }
 
@@ -53,33 +59,20 @@ class LogDeliveryConfigureForm extends React.Component {
   }
 
   saveChanges(values) {
-    /*
-      Save an empty object if logDeliveryService is disabled
-    */
-    const {ldsEnabled, onSave} = this.props
-    onSave(ldsEnabled ? values : {})
+    values.contact_phone = values.full_phone_number
+    delete values.phone_country_code
+    delete values.phone_number
+    delete values.full_phone_number
+
+    this.props.onSave(values)
   }
 
   render() {
-    const { onCancel, handleSubmit, invalid, ldsEnabled } = this.props
-    const logTypesOptions = [
-      {value: "conductor", label: "Conductor", options: []}
-    ]
-
-    const fileFormatOptions = [
-      {value: "zip", label: ".zip"}
-    ]
-
-    const aggIntervalOptions = [
-      {value: 30, label: "30 min"}
-    ]
+    const { onCancel, handleSubmit, submitting, invalid, ldsEnabled } = this.props
 
     return (
       <div>
-        <form
-          className="log-delivery-form"
-          onSubmit={handleSubmit(this.saveChanges)}
-        >
+        <form className="log-delivery-form" onSubmit={handleSubmit(this.saveChanges)}>
           <Row className="form-group">
             <Col xs={4} className="toggle-label">
               <ControlLabel>
@@ -89,7 +82,7 @@ class LogDeliveryConfigureForm extends React.Component {
             <Col xs={8}>
               <Field
                 className="pull-right"
-                name="log_delivery_enabled"
+                name="is_enabled"
                 component={FieldFormGroupToggle}
               />
             </Col>
@@ -111,7 +104,6 @@ class LogDeliveryConfigureForm extends React.Component {
                 name="contact_email"
                 component={FieldFormGroup}
                 label={<FormattedMessage id="portal.services.logDelivery.email.text"/>}
-                required={false}
                 disabled={!ldsEnabled}
               />
             </Col>
@@ -157,7 +149,7 @@ class LogDeliveryConfigureForm extends React.Component {
               <Field
                 name="log_types"
                 component={FieldFormGroupMultiOptionSelector}
-                options={logTypesOptions}
+                options={LOG_TYPES_OPTIONS}
                 label={<FormattedMessage id="portal.services.logDelivery.requestedLogTypes.text" />}
                 normalize={(v) => v && v.map(item => item.id)}
                 format={(v) => v && v.map(item => ({id: item}))}
@@ -166,22 +158,19 @@ class LogDeliveryConfigureForm extends React.Component {
               />
             </Col>
           </Row>
-
+          {/* Hide addonAfter until Log Delivery Phase 2 */}
           <Row className="form-group">
             <Col xs={6}>
               <Field
-                name="export_file_format"
+                name="log_export_file_format"
                 className='input-select'
                 component={FieldFormGroupSelect}
-                options={fileFormatOptions}
+                options={FILE_FORMAT_OPTIONS}
                 label={<FormattedMessage id="portal.services.logDelivery.exportFileFormat.text" />}
                 required={false}
                 disabled={true}
-                addonAfter={
-                  <HelpTooltip
-                    id="tooltip-help"
-                    title={<FormattedMessage id="portal.services.logDelivery.exportFileFormat.text"/>}
-                  >
+                addonAfter={'' &&
+                  <HelpTooltip id="tooltip-help" title={<FormattedMessage id="portal.services.logDelivery.exportFileFormat.text"/>}>
                     <FormattedMessage id="portal.services.logDelivery.exportFileFormat.tooltip.message" />
                   </HelpTooltip>
                 }
@@ -192,19 +181,16 @@ class LogDeliveryConfigureForm extends React.Component {
           <Row className="form-group">
             <Col xs={6}>
               <Field
-                name="aggregation_interval"
+                name="log_aggregation_interval"
                 className='input-select'
                 component={FieldFormGroupSelect}
-                options={aggIntervalOptions}
+                options={AGGREGATION_INTERVAL_OPTIONS}
                 label={<FormattedMessage id="portal.services.logDelivery.logAggregationInterval.text" />}
                 addonBefore={<FormattedMessage id="portal.services.logDelivery.every.text" />}
                 disabled={true}
                 required={false}
-                addonAfter={
-                  <HelpTooltip
-                    id="tooltip-help"
-                    title={<FormattedMessage id="portal.services.logDelivery.logAggregationInterval.text"/>}
-                  >
+                addonAfter={'' &&
+                  <HelpTooltip id="tooltip-help" title={<FormattedMessage id="portal.services.logDelivery.logAggregationInterval.text"/>}>
                     <FormattedMessage id="portal.services.logDelivery.logAggregationInterval.tooltip.message" />
                   </HelpTooltip>
                 }
@@ -213,19 +199,11 @@ class LogDeliveryConfigureForm extends React.Component {
           </Row>
 
           <FormFooterButtons>
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}
-            >
+            <Button id="cancel-btn" className="btn-secondary" onClick={onCancel}>
               <FormattedMessage id="portal.services.logDelivery.cancel.text"/>
             </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid}
-            >
+            <Button type="submit" bsStyle="primary" disabled={submitting || invalid}>
               <FormattedMessage id="portal.services.logDelivery.save.text"/>
             </Button>
           </FormFooterButtons>
@@ -245,7 +223,7 @@ LogDeliveryConfigureForm.propTypes = {
 
 LogDeliveryConfigureForm.defaultProps = {
   initialValues: {
-    log_delivery_enabled: false,
+    is_enabled: false,
     aggregation_interval: 30,
     log_types: ['conductor'],
     export_file_format: 'zip'
@@ -255,9 +233,14 @@ LogDeliveryConfigureForm.defaultProps = {
 /* istanbul ignore next */
 const mapStateToProps = (state, { config }) => {
   const selector = formValueSelector('log-delivery-configure-form')
+  // Set default value for few disabled fields until Phase 2
+  config.log_export_file_format = FILE_FORMAT_OPTIONS[0].value
+  config.log_aggregation_interval = AGGREGATION_INTERVAL_OPTIONS[0].value
+  config.log_types = [LOG_TYPES_OPTIONS[0].value]
+  config.full_phone_number = config.contact_phone
 
   return {
-    ldsEnabled: selector(state, 'log_delivery_enabled'),
+    ldsEnabled: selector(state, 'is_enabled'),
     initialValues: {
       ...config
     }

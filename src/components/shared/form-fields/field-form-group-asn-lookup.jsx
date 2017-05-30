@@ -10,13 +10,14 @@ import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY, ASN_ITEMS_COUNT_TO_SEARCH 
 import { formatASN } from '../../../util/helpers'
 
 const fetchAsns = (filterBy, filterValue) => {
-  const queryParams = qsBuilder({ filter_by: filterBy, filter_value: filterValue, page_size: ASN_ITEMS_COUNT_TO_SEARCH })
+  const queryParams = qsBuilder({ filter_by: filterBy, sort_by: 'asn', filter_value: filterValue, page_size: ASN_ITEMS_COUNT_TO_SEARCH })
 
   return axios.get(`${BASE_URL_NORTH}/asns${queryParams}`)
     .then((res) => {
       return res ? res.data.data : []
     })
 }
+
 class FieldFormGroupAsnLookup extends Component {
   constructor(props) {
     super(props)
