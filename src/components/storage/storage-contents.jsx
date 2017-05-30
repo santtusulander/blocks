@@ -430,60 +430,64 @@ class StorageContents extends Component {
           />
         </SectionHeader>
 
-        {isFetchingContents
+        {asperaUpload
           ?
-            <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+            <AsperaUpload
+              params={params}
+              multiple={true}
+              asperaGetaway={gatewayHostname}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+              uploadPath={uploadPath}
+              handleTransferEvents={this.handleAsperaEvents}
+            >
+              {isFetchingContents
+                ?
+                  <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+                  :
+                    hasContents || this.state.showNewFolderForm
+                      ?
+                        <StorageContentBrowser
+                          contents={sortedContents}
+                          openDirectoryHandler={this.openDirectoryHandler}
+                          backButtonHandler={this.backButtonHandler}
+                          isRootDirectory={isRootDirectory}
+                          onSaveNewFolder={this.onSaveNewFolder}
+                          onCloseNewFolder={this.onCloseNewFolder}
+                          showNewFolderForm={this.state.showNewFolderForm}
+                          sorterProps={sorterProps}
+                          highlightedItem={highlightedItem}
+                          userDateFormat={userDateFormat}
+                          removeStorageContents={removeStorageContents}
+                          params={params}
+                        />
+                      :
+                        null
+              }
+            </AsperaUpload>
           :
-            asperaUpload
-              ?
-                <AsperaUpload
-                  params={params}
-                  multiple={true}
-                  asperaGetaway={gatewayHostname}
-                  renderDropZone={renderDropZone}
-                  highlightZoneOnDrag={highlightZoneOnDrag}
-                  onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  uploadPath={uploadPath}
-                  handleTransferEvents={this.handleAsperaEvents}
-                >
-                  {hasContents || this.state.showNewFolderForm
-                    ?
-                      <StorageContentBrowser
-                        contents={sortedContents}
-                        openDirectoryHandler={this.openDirectoryHandler}
-                        backButtonHandler={this.backButtonHandler}
-                        isRootDirectory={isRootDirectory}
-                        onSaveNewFolder={this.onSaveNewFolder}
-                        onCloseNewFolder={this.onCloseNewFolder}
-                        showNewFolderForm={this.state.showNewFolderForm}
-                        sorterProps={sorterProps}
-                        highlightedItem={highlightedItem}
-                        userDateFormat={userDateFormat}
-                        removeStorageContents={removeStorageContents}
-                        params={params}
-                      />
-                    :
-                      null
-                  }
-                </AsperaUpload>
-              :
-                <HttpUpload
-                  params={params}
-                  uploadHandlers={uploadHandlers}
-                  gatewayHostname={gatewayHostname}
-                  openFileDialog={openFileDialog}
-                  renderDropZone={renderDropZone}
-                  highlightZoneOnDrag={highlightZoneOnDrag}
-                  onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  uploadPath={uploadPath}
-                >
-                  {hasContents || this.state.showNewFolderForm
+            <HttpUpload
+              params={params}
+              uploadHandlers={uploadHandlers}
+              gatewayHostname={gatewayHostname}
+              openFileDialog={openFileDialog}
+              renderDropZone={renderDropZone}
+              highlightZoneOnDrag={highlightZoneOnDrag}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onDragOver={this.onDragOver}
+              onDrop={this.onDrop}
+              uploadPath={uploadPath}
+            >
+              {isFetchingContents
+                ?
+                  <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+                :
+                  hasContents || this.state.showNewFolderForm
                     ?
                       <StorageContentBrowser
                         contents={sortedContents}
@@ -501,8 +505,8 @@ class StorageContents extends Component {
                       />
                     :
                       null
-                  }
-                </HttpUpload>
+            }
+            </HttpUpload>
         }
 
         { this.state.isDragging &&
