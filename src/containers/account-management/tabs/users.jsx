@@ -109,6 +109,9 @@ export class AccountManagementAccountUsers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.account.get('id') !== this.props.account.get('id')) {
+      this.setState({search: ''})
+    }
     const {brand, account} = nextProps.params
     const { sortBy, sortOrder, filterBy, filterValue} = nextProps.location.query
     const page = nextProps.location.query.page ? nextProps.location.query.page : 1
@@ -512,7 +515,7 @@ export class AccountManagementAccountUsers extends Component {
 
         {!fetching && users && users.size === 0 &&
           <div className="text-center">
-            {this.state.search.length > 0 ?
+            {filterValue ?
               <span><FormattedMessage id="portal.user.list.noUsersFoundWithTerm.text" values={{term: filterValue}} /></span>
             :
               <span><FormattedMessage id="portal.user.list.noUsersFound.text" /></span>
