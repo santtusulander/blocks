@@ -29,7 +29,7 @@ import { getSortData, formatBytes, hasService } from '../../../util/helpers'
 import { getByGroup as getStoragesByGroup } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getByGroup as getPropetiesByGroup } from '../../../redux/modules/entities/properties/selectors'
-import { getByGroupId as getMetricsByGroup } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByStorageId } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
@@ -144,8 +144,8 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, storages, clusters, properties, metrics, params,
-            accountManagementModal, toggleModal, intl, isFetching } = this.props
+    const { account, group, storages, clusters, properties, params,
+            accountManagementModal, toggleModal, intl, isFetching, getStorageMetrics } = this.props
 
     const hasStorageService = hasService(group, STORAGE_SERVICE_ID)
     const sorterProps  = {
@@ -177,7 +177,7 @@ class AccountManagementStorages extends Component {
         }
       })
       const locationsString = locations.join(', ')
-      const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
+      const storageMetrics = getStorageMetrics(storage.get('ingest_point_id'))
       const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
       const filesCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
 
@@ -343,10 +343,10 @@ AccountManagementStorages.propTypes = {
   fetchProperties: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
+  getStorageMetrics: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
-  metrics: PropTypes.instanceOf(List),
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
   showNotification: PropTypes.func,
@@ -369,7 +369,7 @@ function mapStateToProps(state, ownProps) {
     storages: getStoragesByGroup(state, ownProps.params.group),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroup(state, ownProps.params.group),
-    metrics: getMetricsByGroup(state, ownProps.params.group),
+    getStorageMetrics: storageId => getByStorageId(state, storageId),
     isFetching: getGlobalFetching(state)
   }
 }
