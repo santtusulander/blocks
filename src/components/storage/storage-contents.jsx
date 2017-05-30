@@ -445,28 +445,28 @@ class StorageContents extends Component {
               uploadPath={uploadPath}
               handleTransferEvents={this.handleAsperaEvents}
             >
-              {hasContents || this.state.showNewFolderForm
+              {isFetchingContents
                 ?
-                isFetchingContents
-                  ?
-                    <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
+                  <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
                   :
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      onSaveNewFolder={this.onSaveNewFolder}
-                      onCloseNewFolder={this.onCloseNewFolder}
-                      showNewFolderForm={this.state.showNewFolderForm}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                      userDateFormat={userDateFormat}
-                      removeStorageContents={removeStorageContents}
-                      params={params}
-                    />
-                :
-                  null
+                    hasContents || this.state.showNewFolderForm
+                      ?
+                        <StorageContentBrowser
+                          contents={sortedContents}
+                          openDirectoryHandler={this.openDirectoryHandler}
+                          backButtonHandler={this.backButtonHandler}
+                          isRootDirectory={isRootDirectory}
+                          onSaveNewFolder={this.onSaveNewFolder}
+                          onCloseNewFolder={this.onCloseNewFolder}
+                          showNewFolderForm={this.state.showNewFolderForm}
+                          sorterProps={sorterProps}
+                          highlightedItem={highlightedItem}
+                          userDateFormat={userDateFormat}
+                          removeStorageContents={removeStorageContents}
+                          params={params}
+                        />
+                      :
+                        null
               }
             </AsperaUpload>
           :
@@ -483,29 +483,29 @@ class StorageContents extends Component {
               onDrop={this.onDrop}
               uploadPath={uploadPath}
             >
-              {hasContents || this.state.showNewFolderForm
+              {isFetchingContents
                 ?
-                isFetchingContents
-                  ?
-                    <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
-                  :
-                    <StorageContentBrowser
-                      contents={sortedContents}
-                      openDirectoryHandler={this.openDirectoryHandler}
-                      onSaveNewFolder={this.onSaveNewFolder}
-                      onCloseNewFolder={this.onCloseNewFolder}
-                      showNewFolderForm={this.state.showNewFolderForm}
-                      backButtonHandler={this.backButtonHandler}
-                      isRootDirectory={isRootDirectory}
-                      sorterProps={sorterProps}
-                      highlightedItem={highlightedItem}
-                      userDateFormat={userDateFormat}
-                      removeStorageContents={removeStorageContents}
-                      params={params}
-                    />
+                  <div className='storage-contents-spinner'><LoadingSpinnerSmall /></div>
                 :
-                  null
-              }
+                  hasContents || this.state.showNewFolderForm
+                    ?
+                      <StorageContentBrowser
+                        contents={sortedContents}
+                        openDirectoryHandler={this.openDirectoryHandler}
+                        onSaveNewFolder={this.onSaveNewFolder}
+                        onCloseNewFolder={this.onCloseNewFolder}
+                        showNewFolderForm={this.state.showNewFolderForm}
+                        backButtonHandler={this.backButtonHandler}
+                        isRootDirectory={isRootDirectory}
+                        sorterProps={sorterProps}
+                        highlightedItem={highlightedItem}
+                        userDateFormat={userDateFormat}
+                        removeStorageContents={removeStorageContents}
+                        params={params}
+                      />
+                    :
+                      null
+            }
             </HttpUpload>
         }
 
