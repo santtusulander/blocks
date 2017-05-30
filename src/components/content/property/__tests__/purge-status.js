@@ -6,12 +6,14 @@ jest.unmock('../purge-status.jsx')
 import PurgeHistoryReport from '../purge-status'
 
 jest.mock('../../../../util/helpers', () => ({
-  getSortData: val => val
+  getSortData: val => val,
+  unixTimestampToDate: time => time
 }))
 
 function intlMaker() {
   return {
-    formatMessage: jest.fn()
+    formatMessage: jest.fn(),
+    formatDate: jest.fn()
   }
 }
 

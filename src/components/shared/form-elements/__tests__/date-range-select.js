@@ -7,7 +7,8 @@ import moment from 'moment'
 
 const intlMaker = () => {
   return {
-    formatMessage: jest.fn()
+    formatMessage: jest.fn(),
+    formatDate: jest.fn()
   }
 }
 

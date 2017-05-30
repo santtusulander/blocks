@@ -10,12 +10,19 @@ jest.mock('../../../util/helpers', () => { return {
   separateUnit: bytes => bytes
 }})
 
+function intlMaker() {
+  return {
+    formatDate: jest.fn(),
+    formatTime: jest.fn()
+  }
+}
+
 import Styleguide from '../styleguide.jsx'
 
 describe('Styleguide', () => {
   it('should exist', () => {
     let styleguide = shallow(
-      <Styleguide />
+      <Styleguide intl={ intlMaker() }/>
     );
     expect(styleguide.length).toBe(1);
   });

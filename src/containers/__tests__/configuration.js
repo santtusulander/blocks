@@ -21,6 +21,14 @@ function hostActionsMaker() {
   }
 }
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn(),
+    formatDate: jest.fn(),
+    formatTime: jest.fn()
+  }
+}
+
 function uiActionsMaker() {
   return {
     changeNotification: jest.fn()
@@ -244,7 +252,7 @@ describe('Configuration', () => {
     uiActions = uiActionsMaker()
     config = shallow(
       <Configuration
-        intl={{formatMessage() {}}}
+        intl={intlMaker()}
         hostActions={hostActions}
         currentUser={new Immutable.Map()}
         accountActions={accountActionsMaker()}
