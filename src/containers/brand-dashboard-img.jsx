@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import PageHeader from '../components/shared/layout/page-header'
 import Content from '../components/shared/layout/content'
 import TruncatedTitle from '../components/shared/page-elements/truncated-title'
+import PageContainer from '../components/shared/layout/page-container'
 
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
@@ -44,15 +45,16 @@ export class BrandDashboardImg extends React.Component {
               className="account-property-title"/>
           </h1>
         </PageHeader>
-        <div onClick={() => this.toggleImage()}>
+        <PageContainer>
           <Image
+            onClick={() => this.toggleImage()}
             responsive={true}
             src={this.state.showMarker
                 ? '/assets/img/dashboard-content-with-tooltip.png'
                 : '/assets/img/dashboard-content.png'
             }
           />
-        </div>
+        </PageContainer>
       </Content>
     )
   }
