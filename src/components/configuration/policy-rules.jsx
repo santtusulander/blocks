@@ -78,7 +78,15 @@ class ConfigurationPolicyRules extends React.Component {
   }
 
   getListOfConditionActionNames(items = []) {
-    return items.map((item, j) => <span key={j}>{item.name}</span>)
+    let iterable
+
+    if (!(items instanceof Array)) {
+      iterable = []
+    } else {
+      iterable = items
+    }
+
+    return iterable.map((item, j) => <span key={j}>{item.name}</span>)
                 .reduce((prev, curr) => {
                   return prev === null ? [curr] : [prev, ', ', curr]
                 }, null)

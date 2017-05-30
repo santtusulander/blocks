@@ -101,7 +101,7 @@ class ServiceOptionSelector extends React.Component {
         <div className="tick">{isEnabled ? <IconCheck /> : ''}</div>
         <div className="name">{itemInfo.label}</div>
         <div className="flex-item">{regions && regions.size ? `${regions.size} regions` : ''}</div>
-        <div className="flex-item">{isEnabled 
+        <div className="flex-item">{isEnabled
                                     ? <FormattedMessage id='portal.account.chargeNumbersForm.enabled.title'/>
                                     : <FormattedMessage id='portal.account.chargeNumbersForm.disabled.title'/>}
         </div>

@@ -7,6 +7,7 @@ $slider-width: 120px;
 $slider-top: 62px;
 $slider-left: -44px;
 $thumb-margin: -11px;
+$spinner-height: 36px;
 
 .mapboxgl-popup {
   min-width: 150px;
@@ -119,6 +120,12 @@ $thumb-margin: -11px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .loading-spinner-sm {
+    position: absolute;
+    bottom: - $spinner-height;
+    left: -2px;
   }
 
   .control {
