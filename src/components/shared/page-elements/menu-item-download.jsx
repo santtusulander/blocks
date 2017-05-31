@@ -57,6 +57,7 @@ MenuItemDownload.propTypes = {
   params: PropTypes.object
 }
 
+/* istanbul ignore next */
 const mapStateToProps = (state, ownProps) => {
   const { params: { brand, account, group, storage, splat }, name } = ownProps
   const publishedUrlsId = buildReduxId(brand, account, group, storage, `${splat ? `/${splat}/` : '/'}${name}`)
