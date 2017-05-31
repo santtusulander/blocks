@@ -73,7 +73,11 @@ class Select extends Component {
   }
 
   getOptionValue(option) {
-    return Array.isArray(option) ? option[0] : option.value
+    if (!option) {
+      return undefined
+    } else {
+      return Array.isArray(option) ? option[0] : option.value
+    }
   }
 
   getSelected(props = this.props) {
