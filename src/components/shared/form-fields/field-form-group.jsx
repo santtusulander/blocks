@@ -10,9 +10,12 @@ const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, place
 
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
 
-  const originalOnBlur = input && input.onBlur
+  const originalOnBlur = input.onBlur || (() => {
+    /* no-op */
+  })
+
   const trimmSpacesOnBlur = (e) => {
-    /* trimm spaces */
+    /* trim spaces */
     e.target.value = e.target.value.trim()
     originalOnBlur(e)
   }
