@@ -4,7 +4,7 @@ import { reduxForm, Field, Fields, initialize, change, blur, propTypes as reduxF
 import { Link } from 'react-router'
 import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl'
 import axios from 'axios'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
@@ -93,7 +93,7 @@ class UserEditForm extends React.Component {
       continent: props.initialValues.continent
     }
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this)
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.toggleRecoveryKeyModal = this.toggleRecoveryKeyModal.bind(this)
@@ -503,6 +503,7 @@ class UserEditForm extends React.Component {
               component={FieldFormGroupSelect}
               options={TIME_ZONES[this.state.continent]}
               autoselectFirst={true}
+              disabled={!TIME_ZONES[this.state.continent]}
             />
           </Col>
         </Row>
