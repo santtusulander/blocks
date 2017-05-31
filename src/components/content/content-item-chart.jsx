@@ -17,6 +17,9 @@ import DifferenceTooltip from './difference-tooltip'
 import ContentItemTag from './content-item-tag'
 import TrafficTooltip from './traffic-tooltip'
 import { formatBitsPerSecond } from '../../util/helpers'
+
+import { startOfLast28 } from '../../constants/date-ranges.js'
+
 import LinkWrapper from './link-wrapper'
 import { HOST_SERVICE_TYPES } from '../../constants/configuration'
 
@@ -163,7 +166,8 @@ class ContentItemChart extends React.Component {
     let { avgTransfer, maxTransfer, minTransfer } = this.props
     const { tagText } = this.props
     const endDate = moment.utc().format('MMM D')
-    const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
+    // TODO: UDNP-3770: Replace all date and time with FormattedDate and FormattedTime from React-intl
+    const startDate = startOfLast28().format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
     let link = this.props.linkTo
     const activeSlice = this.state.activeSlice

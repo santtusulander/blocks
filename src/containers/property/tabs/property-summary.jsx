@@ -28,11 +28,8 @@ import {
   getCISname
 } from '../../../util/helpers'
 
-import DateRanges from '../../../constants/date-ranges'
+import DateRanges, { endOfThisDay, startOfLast28 } from '../../../constants/date-ranges'
 import { paleblue } from "../../../constants/colors";
-
-const endOfThisDay = () => moment().utc().endOf('day')
-const startOfLast28 = () => endOfThisDay().endOf('day').add(1, 'second').subtract(28, 'days')
 
 // default dates to last 28 days
 function safeMomentStartDate(date) {

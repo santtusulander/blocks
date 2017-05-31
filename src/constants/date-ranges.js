@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
   MONTH_TO_DATE: 'portal.constants.date-ranges.month_to_date',
   LAST_28: 'portal.constants.date-ranges.last_28',
@@ -8,3 +10,14 @@ export default {
   YESTERDAY: 'portal.constants.date-ranges.yesterday',
   CUSTOM_TIMERANGE: 'portal.constants.date-ranges.custom_timerange'
 }
+
+export const startOfThisMonth = () => moment().utc().startOf('month')
+export const startOfThisDay = () => moment().utc().startOf('day')
+export const endOfThisDay = () => moment().utc().endOf('day')
+export const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
+export const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')
+export const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
+export const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
+export const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
+export const startOfThisWeek = () => moment().utc().startOf('week')
+export const endOfThisWeek = () => moment().utc().endOf('week')
