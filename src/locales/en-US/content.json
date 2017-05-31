@@ -6,9 +6,6 @@
   "portal.content.TTFB.text": " TTFB",
   "portal.content.contentProvider": "CP",
   "portal.content.serviceProvider": "SP",
-  "portal.content.property.topBar.property.label": "Back to Groups",
-  "portal.content.property.topBar.group.label": "Back to Accounts",
-  "portal.content.property.topBar.account.label": "UDN Mgmt",
   "portal.content.property.topBar.brand.label": "UDN Mgmt",
 
   "portal.content.property.tabs.summary.label": "Summary",
@@ -36,14 +33,8 @@
   "portal.content.property.summary.low.label": "Low",
 
   "portal.content.property.purgeStatus.section.title": "Purge History",
-  "portal.content.property.purgeStatus.all.label": "All",
-  "portal.content.property.purgeStatus.created.label": "Created",
-  "portal.content.property.purgeStatus.running.label": "In Progress",
-  "portal.content.property.purgeStatus.completed.label": "Completed",
-  "portal.content.property.purgeStatus.notFound.label": "No purge data found",
   "portal.content.property.purgeStatus.search.placeholder": "Search",
 
-  "portal.content.property.purgeStatus.table.status.label": "Status",
   "portal.content.property.purgeStatus.table.startTime.label": "Start Time",
   "portal.content.property.purgeStatus.table.endTime.label": "End Time",
   "portal.content.property.purgeStatus.table.initiatedBy.label": "Initiated By",
@@ -109,8 +100,6 @@
   "portal.content.sortOrder.traffic_low_to_high": "Low to High",
   "portal.content.sortOrder.name_a_to_z": "Name A to Z",
   "portal.content.sortOrder.name_z_to_a": "Name Z to A",
-
-  "portal.purge.purgeSubmitted.text": "Purge request successfully submitted",
 
   "portal.properties.propertyContentSummary.text": "PROPERTY SUMMARY",
 
