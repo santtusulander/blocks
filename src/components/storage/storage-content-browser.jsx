@@ -109,9 +109,7 @@ class StorageContentBrowser extends Component {
             const menuOptions = [
               {
                 label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.download"/>,
-                handleClick: (/*fileName*/) => {
-                  //TODO: Implement download logic
-                }
+                isDownloadButton: true
               },
               {
                 label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
@@ -152,7 +150,7 @@ class StorageContentBrowser extends Component {
                 <td>{isDirectory ? '-' : formatBytes(size)}</td>
                 <td>
                   <IsAllowed to={SHOW_STORAGE_CONTEXT_MENU}>
-                    <ContextMenu header={name} options={menuOptions}/>
+                    <ContextMenu header={name} params={params} options={menuOptions}/>
                   </IsAllowed>
                 </td>
               </tr>
