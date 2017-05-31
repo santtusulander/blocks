@@ -5,9 +5,26 @@ import { getReduxFormValidationState } from '../../../util/helpers'
 import DefaultErrorBlock from '../form-elements/default-error-block'
 
 const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, placeholder,
-                          type, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
+                          type, label, inputRef, meta, ErrorComponent, className, disabled,
+                          required, trimSpaces }) => {
 
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
+
+  const originalOnBlur = input.onBlur || (() => {
+    /* no-op */
+  })
+
+  const trimmSpacesOnBlur = (e) => {
+    /* trim spaces */
+    e.target.value = e.target.value.trim()
+    originalOnBlur(e)
+  }
+
+  /* Override existing onBlur with wrapper */
+  if (trimSpaces) {
+    input.onBlur = trimmSpacesOnBlur
+  }
+
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label &&
@@ -56,7 +73,8 @@ const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, place
 FieldFormGroup.displayName = 'FieldFormGroup'
 FieldFormGroup.defaultProps = {
   ErrorComponent: DefaultErrorBlock,
-  required: true
+  required: true,
+  trimSpaces: true
 }
 
 FieldFormGroup.propTypes = {
@@ -72,6 +90,7 @@ FieldFormGroup.propTypes = {
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
+  trimSpaces: PropTypes.bool,
   type: PropTypes.string
 }
 
