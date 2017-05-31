@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react'
 import { Map, List} from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import {
   getAnalyticsUrlFromParams,
@@ -33,6 +32,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import { parseResponseError } from '../../redux/util'
 
 import PROVIDER_TYPES from '../../constants/provider-types'
+import { startOfLast28, endOfThisDay } from '../../constants/date-ranges'
 
 import Content from '../../components/shared/layout/content'
 import ModalWindow from '../../components/shared/modal'
@@ -312,8 +312,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   const metricsOpts = {
     account: account,
-    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
-    endDate: moment.utc().endOf('day').format('X')
+    startDate: startOfLast28().format('X'),
+    endDate: endOfThisDay().format('X')
   }
   const fetchData = () => {
     return Promise.all([

@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import moment from 'moment'
 
 import SectionContainer from '../shared/layout/section-container'
 import MiniAreaChart from '../charts/mini-area-chart'
@@ -19,6 +18,8 @@ import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actio
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+
+import { startOfThisMonth, endOfThisDay } from '../../constants/date-ranges'
 
 const chartAreas = [{
   "dataKey": "bytes",
@@ -209,8 +210,8 @@ const mapDispatchToProps = (dispatch) => {
       group: group,
       ingest_point: storage,
       list_children: false,
-      startDate: moment().utc().startOf('month').format('X'),
-      endDate: moment().utc().endOf('day').format('X')
+      startDate: startOfThisMonth().format('X'),
+      endDate: endOfThisDay().format('X')
     }
 
     return Promise.all([

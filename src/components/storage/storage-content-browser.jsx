@@ -7,6 +7,8 @@ import classNames from 'classnames'
 import { unixTimestampToDate } from '../../util/helpers'
 
 import StorageItemProperties from './storage-item-properties'
+import NewFolder from './storage-content-folder-creator'
+
 import TableSorter from '../shared/table-sorter'
 import TruncatedTitle from '../shared/page-elements/truncated-title'
 import IsAllowed from '../shared/permission-wrappers/is-allowed'
@@ -42,7 +44,10 @@ class StorageContentBrowser extends Component {
       openDirectoryHandler,
       params,
       removeStorageContents,
-      sorterProps
+      sorterProps,
+      showNewFolderForm,
+      onCloseNewFolder,
+      onSaveNewFolder
     } = this.props
 
     return (
@@ -73,6 +78,15 @@ class StorageContentBrowser extends Component {
           </tr>
         </thead>
         <tbody className={classNames({'highlight': (highlightedItem === null)})}>
+          {showNewFolderForm &&
+            <tr>
+              <td colSpan="6">
+                <NewFolder
+                  onClose={onCloseNewFolder}
+                  onSave={onSaveNewFolder} />
+              </td>
+            </tr>
+          }
           {contents.map((item, index) => {
             const name = item.get('name')
             const type = item.get('type')
@@ -180,9 +194,12 @@ StorageContentBrowser.propTypes = {
   contents: PropTypes.instanceOf(List),
   highlightedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   isRootDirectory: PropTypes.bool,
+  onCloseNewFolder: PropTypes.func,
+  onSaveNewFolder: PropTypes.func,
   openDirectoryHandler: PropTypes.func,
   params: PropTypes.object,
   removeStorageContents: PropTypes.func,
+  showNewFolderForm: PropTypes.bool,
   sorterProps: PropTypes.object
 }
 

@@ -1,0 +1,35 @@
+.storage-content-folder-creator {
+  display: flex;
+  height: 80px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: space-between;
+  align-items: center;
+
+  .form-group {
+    position: relative;
+    padding-bottom: 0;
+    margin: 18px;
+    vertical-align: middle;
+    flex-grow: 1;
+
+    .input-group {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+
+      .form-control {
+        width: 100%;
+        max-width: none;
+      }
+    }
+  }
+
+  .form-buttons {
+    display: inline;
+
+    .cancel-btn {
+      margin-right: 20px;
+    }
+  }
+}

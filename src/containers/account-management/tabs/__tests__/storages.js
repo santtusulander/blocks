@@ -100,6 +100,7 @@ const fakefullStorage = Immutable.fromJS([
 
 const storagesComponent =
   <Storages
+    getStorageMetrics={jest.fn()}
     account={fakeAccount}
     group={fakeGroup}
     storages={fakeStorages}
