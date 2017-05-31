@@ -113,7 +113,15 @@ class StorageContentBrowser extends Component {
               },
               {
                 label: <FormattedMessage id="portal.storage.summaryPage.contentBrowser.menu.delete"/>,
-                handleClick: () => removeStorageContents(name)
+                handleClick: () => {
+                  return removeStorageContents(name)
+                    .then(() => {
+                      const message = isDirectory
+                                      ? <FormattedMessage id="portal.storage.summaryPage.contentBrowser.folder.removed"/>
+                                      : <FormattedMessage id="portal.storage.summaryPage.contentBrowser.file.removed"/>
+                      this.props.showNotification(message)
+                    })
+                }
               }
             ]
 
@@ -198,6 +206,7 @@ StorageContentBrowser.propTypes = {
   params: PropTypes.object,
   removeStorageContents: PropTypes.func,
   showNewFolderForm: PropTypes.bool,
+  showNotification: PropTypes.func,
   sorterProps: PropTypes.object
 }
 

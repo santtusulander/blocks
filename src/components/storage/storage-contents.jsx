@@ -24,6 +24,7 @@ import storageContentsActions from '../../redux/modules/entities/CIS-ingest-poin
 import { getById as getStorageContentsById } from '../../redux/modules/entities/CIS-ingest-point-contents/selectors'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 import { buildReduxId } from '../../redux/util'
+import { changeNotification } from '../../redux/modules/ui'
 
 import {
   ASPERA_DEFAULT_DESTINATION_FOLDER,
@@ -46,6 +47,8 @@ class StorageContents extends Component {
       showNewFolderForm: false
     }
 
+    this.notificationTimeout = null
+
     this.changeSort = this.changeSort.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
     this.backButtonHandler = this.backButtonHandler.bind(this)
@@ -62,6 +65,7 @@ class StorageContents extends Component {
     this.onDragOver = this.onDragOver.bind(this)
     this.onDrop = this.onDrop.bind(this)
     this.openNewFolderForm = this.openNewFolderForm.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   componentWillMount() {
@@ -85,6 +89,12 @@ class StorageContents extends Component {
 
     this.generateUploadPath()
     this.appendTargetDirNameToPath()
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
   }
 
   /**
@@ -188,6 +198,7 @@ class StorageContents extends Component {
     .then(() => {
       this.setState({ showNewFolderForm: false })
       this.fetchStorageContents({forceReload: true, ...this.props.params})
+      this.showNotification(<FormattedMessage id="portal.storage.summaryPage.contentBrowser.folder.created" />)
     })
   }
 
@@ -335,7 +346,7 @@ class StorageContents extends Component {
     } = this.props
 
     const removeStorageContents = (fileName) => {
-      return  this.props.removeStorageContents({...params, fileName})
+      return this.props.removeStorageContents({...params, fileName})
     }
 
     const { storage: storageId} = params
@@ -463,6 +474,7 @@ class StorageContents extends Component {
                           highlightedItem={highlightedItem}
                           userDateFormat={userDateFormat}
                           removeStorageContents={removeStorageContents}
+                          showNotification={this.showNotification}
                           params={params}
                         />
                       :
@@ -501,6 +513,7 @@ class StorageContents extends Component {
                         highlightedItem={highlightedItem}
                         userDateFormat={userDateFormat}
                         removeStorageContents={removeStorageContents}
+                        showNotification={this.showNotification}
                         params={params}
                       />
                     :
@@ -522,6 +535,7 @@ StorageContents.displayName = 'StorageContents'
 StorageContents.propTypes = {
   asperaInstance: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
+  changeNotification: PropTypes.func,
   contents: PropTypes.instanceOf(List),
   createNewFolder: PropTypes.func,
   fetchStorageContents: PropTypes.func,
@@ -558,6 +572,9 @@ const mapStateToProps = (state, ownProps) => {
 
 /* istanbul ignore next */
 const mapDispatchToProps = (dispatch) => ({
+  changeNotification: (message) => {
+    dispatch(changeNotification(message))
+  },
   fetchStorageContents: (params) => dispatch(storageContentsActions.fetchAll(params)),
   removeStorageContents: (params) => dispatch(storageContentsActions.remove(params)),
   createNewFolder: (params) => dispatch(storageContentsActions.create({...params, forceReload: true})),

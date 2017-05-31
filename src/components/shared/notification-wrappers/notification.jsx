@@ -6,7 +6,7 @@ const Notification = (props) => {
   if (props.className) {
     className += ' ' + props.className
   }
-
+  
   return (
     <div className={className}>
       {props.children}
