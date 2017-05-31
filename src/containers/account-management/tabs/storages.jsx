@@ -6,6 +6,7 @@ import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
 import { Map, List } from 'immutable'
 import moment from 'moment'
 
+import ArrayTd from '../../../components/shared/page-elements/array-td'
 import PageContainer from '../../../components/shared/layout/page-container'
 import SectionHeader from '../../../components/shared/layout/section-header'
 import IconAdd from '../../../components/shared/icons/icon-add'
@@ -139,7 +140,11 @@ class AccountManagementStorages extends Component {
     if (origins.length === 1) {
       return origins[0]
     } else {
-      return <FormattedMessage id="portal.common.andMore" values={{firstItem: origins[0], count: origins.length-1}} />
+      return (<ArrayTd
+                maxItemsShown={1}
+                items={origins}
+                customText={<FormattedMessage id="portal.common.andMore" values={{ count: origins.length - 1}} />}
+              />)
     }
   }
 
