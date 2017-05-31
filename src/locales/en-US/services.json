@@ -1,7 +1,5 @@
 {
-  "portal.services.xxx": "value xxx",
   "portal.services.header.text": "SERVICES",
-  "portal.services.comingSoon.text": "Coming soon!",
   "portal.services.tab.logDelivery.text": "Log Delivery",
   "portal.services.logDelivery.properties.text": "PROPERTIES",
   "portal.services.logDelivery.configureLogDelivery.text": "Configure Log Delivery",

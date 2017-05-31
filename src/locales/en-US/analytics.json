@@ -1,7 +1,6 @@
 {
   "portal.analytics.tabs.contribution.label": "Contribution",
 
-  "portal.analytics.allAccounts.text": "All Accounts",
   "portal.analytics.selectAccount.text": "Please select an account{br}from top left to see reports",
   "portal.analytics.selectServiceProviderAccount.text": "You must first select a Service Provider Account to view this Report",
   "portal.analytics.selectContentProviderAccount.text": "You must first select a Content Provider Account to view this Report",
@@ -41,7 +40,6 @@
   "portal.analytics.purgeModal.hostname.title": "Hostnames to Purge",
   "portal.analytics.purgeModal.invalidate.section.title": "Content Removal Method",
   "portal.analytics.purgeModal.invalidate.label": "Invalidate content",
-  "portal.analytics.purgeModal.invalidate.value": "Invalidate",
   "portal.analytics.purgeModal.invalidate.urls": "Check url(s): {errors}",
   "portal.analytics.purgeModal.invalidate.directories": "Check directory(s): {errors}",
   "portal.analytics.purgeModal.delete.label": "Delete content",
@@ -50,7 +48,6 @@
   "portal.analytics.purgeModal.email.label": "Enter Email address",
   "portal.analytics.purgeModal.note.section.title": "Note",
   "portal.analytics.purgeModal.note.placeholder": "A note about the purge",
-  "portal.analytics.purgeModal.group.text": "All hostnames have been selected to purge.",
   "portal.analytics.purgeModal.button.purge.text": "Purge",
 
   "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
@@ -61,8 +58,6 @@
   "portal.analytics.offNet.title": "Off-Net",
   "portal.analytics.udnCore.title": "UDN Core",
   "portal.analytics.spEdge.title": "SP Edge",
-  "portal.analytics.prod.title": "Production Traffic",
-  "portal.analytics.trial.title": "Trial Traffic",
 
   "portal.analytics.onOffNet.text": "ON/OFF NET",
   "portal.analytics.onOffNet.noOptionsSelected.text": "There must be at least one option selected.",
@@ -184,13 +179,10 @@
   "portal.analysis.filters.chart.title": "Chart Type",
   "portal.analysis.filters.dateRange.title": "Date Range",
   "portal.analysis.filters.customDateRange.title": "Date Range",
-  "portal.analysis.filters.dateRangeFrom.title": "From",
-  "portal.analysis.filters.dateRangeTo.title": "To",
   "portal.analysis.filters.includeComparison.label": "Comparison Data",
   "portal.analysis.filters.onOffNet.title": "On-Net/Off-Net",
   "portal.analysis.filters.property.title": "Properties",
   "portal.analysis.filters.recordType.title": "Show as",
-  "portal.analysis.filters.responseCode.title": "Response Code",
   "portal.analysis.filters.statusCodes.title": "Status Codes",
   "portal.analysis.filters.serviceTypes.title": "Service Types",
   "portal.analysis.filters.storageType.title": "Show as",
@@ -209,8 +201,6 @@
   "portal.analytics.fileErrors.label": "File Errors",
   "portal.analytics.fileErrors.clientErrors.label": "Client errors",
   "portal.analytics.fileErrors.serverErrors.label": "Server errors",
-
-  "portal.analytics.dataRangeFilter.pleaseSelect.label": "Server errors",
 
   "portal.analytics.map.total": "Total",
   "portal.analytics.map.low": "Low",
