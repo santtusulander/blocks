@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedDate } from 'react-intl'
 import Dropzone from 'react-dropzone'
-import moment from 'moment'
 
 import IconClose from '../shared/icons/icon-close'
 import IconFile from '../shared/icons/icon-file'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
+
+import { DATE_FORMATS } from '../../constants/date-formats'
 
 class CsvUploadArea extends Component {
   constructor(props) {
@@ -149,7 +150,7 @@ class CsvUploadArea extends Component {
                 <span className="file-name">{file.name}</span>
                 <br />
                 <span className="file-detail">
-                  <span>{moment(file.lastModified).format("L")} </span>
+                  <span><FormattedDate value={new Date(file.lastModified)} format={DATE_FORMATS.FULL_DATE}/></span>
                   <span><FormattedMessage id="portal.fileInput.bytes.text" values={{size: file.size}}/></span>
                 </span>
               </div>

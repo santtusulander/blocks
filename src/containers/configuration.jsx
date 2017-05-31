@@ -27,6 +27,7 @@ import { checkUserPermissions, getStoragePermissions } from '../util/permissions
 import { hasService, hasOption } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY, VIEW_ADVANCED, MODIFY_ADVANCED } from '../constants/permissions'
+import { DATE_FORMATS, TIME_FORMATS } from '../constants/date-formats'
 
 import { deploymentModes, serviceTypes } from '../constants/configuration'
 import { STORAGE_SERVICE_ID, GTM_SERVICE_ID, MEDIA_DELIVERY_SECURITY_OPTION_ID } from '../constants/service-permissions'
@@ -255,7 +256,7 @@ export class Configuration extends React.Component {
   }
   render() {
     const {
-      intl: { formatMessage },
+      intl: { formatMessage, formatDate, formatTime },
       activeHost,
       deleteProperty ,
       params: { brand, account, group, property },
@@ -290,12 +291,12 @@ export class Configuration extends React.Component {
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
-            updateMoment.format('MMM, D YYYY'),
-            updateMoment.format('h:mm a')
+            formatDate(updateMoment, DATE_FORMATS.FULL_DATE_SHORT),
+            formatTime(updateMoment, TIME_FORMATS.TIME_12)
           ]}
           pageHeaderDetailsDeployed={[
-            deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('h:mm a'),
+            formatDate(deployMoment, DATE_FORMATS.FULL_DATE_SHORT),
+            formatTime(deployMoment, TIME_FORMATS.TIME_12),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector

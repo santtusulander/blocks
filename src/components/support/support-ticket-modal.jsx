@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
 import { Modal } from 'react-bootstrap'
+import { FormattedDate } from 'react-intl'
 
 import IconEdit from '../shared/icons/icon-configuration'
 import IconClose from '../shared/icons/icon-close'
@@ -8,7 +9,8 @@ import UDNButton from '../shared/form-elements/button'
 import Toggle from '../shared/form-elements/toggle'
 import SupportTicketAttachments from './support-ticket-attachments'
 import SupportTicketComments from './support-ticket-comments'
-import { formatDate } from '../../util/helpers'
+
+import { DATE_FORMATS } from '../../constants/date-formats'
 
 import {
   isStatusOpen,
@@ -150,7 +152,7 @@ class SupportTicketModal extends React.Component {
               </tr>
               <tr>
                 <th>Creation Date:</th>
-                <td>{formatDate(ticket.get('created_at'))}</td>
+                <td><FormattedDate value={ticket.get('created_at')} format={DATE_FORMATS.FULL_DATE}/></td>
               </tr>
               </tbody>
             </table>

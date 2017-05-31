@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { FormattedMessage, FormattedDate, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
-import { formatUnixTimestamp } from '../../../util/helpers'
+import { unixTimestampToDate } from '../../../util/helpers'
 import { SubmissionError } from 'redux-form'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
@@ -21,10 +21,10 @@ import SidePanel from '../../../components/shared/side-panel'
 import ModalWindow from '../../../components/shared/modal'
 import HelpPopover from '../../../components/shared/tooltips/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
-import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 import {checkUserPermissions} from '../../../util/permissions'
 import * as PERMISSIONS from '../../../constants/permissions'
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 /**
  * build a subtitle for the modal using URL params
@@ -74,7 +74,7 @@ class EditNodeFormContainer extends React.Component {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (const dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], NETWORK_DATE_FORMAT)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td><FormattedDate value={unixTimestampToDate(node[dateProp])} format={DATE_FORMATS.DATE_HOUR_12_SHORT} /></td></tr>)
         }
       }
     }
@@ -103,7 +103,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, NETWORK_DATE_FORMAT)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date"><FormattedDate value={unixTimestampToDate(firstNode.created)} format={DATE_FORMATS.DATE_HOUR_12_SHORT} /></span>}
         </span>
         <FormattedMessage id="portal.pipeWithSpaces" />
         <span className="edit-node__dates edit-node__dates--updated">
@@ -120,7 +120,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, NETWORK_DATE_FORMAT)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date"><FormattedDate value={unixTimestampToDate(firstNode.updated)} format={DATE_FORMATS.DATE_HOUR_12_SHORT} /></span>}
         </span>
       </div>
     )

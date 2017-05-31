@@ -9,7 +9,8 @@ import SectionContainer from '../../shared/layout/section-container'
 import TableSorter from '../../shared/table-sorter'
 import Paginator from '../../shared/paginator/paginator'
 
-import { formatUnixTimestamp } from '../../../util/helpers'
+import { unixTimestampToDate } from '../../../util/helpers'
+import { DATE_FORMATS } from '../../../constants/date-formats'
 
 const PurgeHistoryReport = (props) => {
   const {
@@ -27,7 +28,7 @@ const PurgeHistoryReport = (props) => {
     activateSort: onSortingChange
   };
 
-  const formatTime = timestamp => formatUnixTimestamp(timestamp, 'MM/DD/YYYY HH:mm');
+  const formatTime = timestamp => intl.formatDate(unixTimestampToDate(timestamp), DATE_FORMATS.DATE_HOUR_24);
   const selectOptions = [
     {
       value: 'created_by',

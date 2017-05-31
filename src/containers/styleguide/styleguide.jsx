@@ -29,7 +29,7 @@ import {
   Row,
   Table
 } from 'react-bootstrap';
-import { FormattedDate } from 'react-intl'
+import { FormattedDate, injectIntl } from 'react-intl'
 import StyleguideIcons from './styleguide-icons'
 import StyleguideCharts from './styleguide-charts'
 
@@ -70,7 +70,9 @@ import { formatBytes, separateUnit } from '../../util/helpers'
 
 import DateRanges, { startOfThisMonth, endOfThisDay, startOfThisDay } from '../../constants/date-ranges'
 import country_list from '../../constants/country-list'
+import { DATE_FORMATS, TIME_FORMATS } from '../../constants/date-formats'
 import { HOST_SERVICE_TYPES } from '../../constants/configuration'
+
 import { cityData, filterCheckboxOptions, spDashboardData,
          countryData, multiOptionSelectorOptions, typeaheadOptions,
          miniChartKPIData, storageKPIData, starburstPrimaryData, starburstSecondaryData, starburstTrafficData, starburstDifferenceData } from '../__mocks__/styleguide-data.js'
@@ -111,6 +113,7 @@ class Styleguide extends React.Component {
   }
 
   render() {
+    const { intl } = this.props
 
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
@@ -608,15 +611,15 @@ class Styleguide extends React.Component {
           <Row>
             <Col xs={4}>
               <p>Current Date</p>
-              <p><FormattedDate value={new Date()} format="datenum" /></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.FULL_DATE} /></p>
             </Col>
             <Col xs={4}>
               <p>Date in your timezone </p>
-              <p><FormattedDate value={new Date()} format="datehourTimezone"/></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.DATE_HOUR}/></p>
             </Col>
             <Col xs={4}>
               <p>UTC Date</p>
-              <p><FormattedDate value={new Date()} format="datehourInUTC"/></p>
+              <p><FormattedDate value={new Date()} format={DATE_FORMATS.DATE_HOUR_UTC}/></p>
             </Col>
           </Row>
 
@@ -652,8 +655,8 @@ class Styleguide extends React.Component {
                 }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
-              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${intl.formatDate(this.state.datePickerStartDate, DATE_FORMATS.DATE_HOUR_24)})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${intl.formatDate(this.state.datePickerEndDate, DATE_FORMATS.DATE_HOUR_24)})`}</p>
             </Col>
           </Row>
 
@@ -666,10 +669,10 @@ class Styleguide extends React.Component {
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${intl.formatDate(this.state.customDatePickerStartDate, DATE_FORMATS.DATE_HOUR_24)})`}</p>
             </Col>
             <Col xs={4}>
-              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate} (${intl.formatDate(this.state.customDatePickerEndDate, DATE_FORMATS.DATE_HOUR_24)})`}</p>
             </Col>
           </Row>
 
@@ -682,7 +685,7 @@ class Styleguide extends React.Component {
                 onChange={(time) => this.setState({ timePickerTime: time })} />
             </Col>
             <Col xs={8}>
-              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
+              <p>{`time: ${this.state.timePickerTime} (${intl.formatTime(this.state.timePickerTime, TIME_FORMATS.TIME_24_UTC)})`}</p>
             </Col>
           </Row>
 
@@ -959,6 +962,7 @@ class Styleguide extends React.Component {
 
 Styleguide.displayName = 'Styleguide'
 Styleguide.propTypes = {
+  intl: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
@@ -969,4 +973,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Styleguide)
+export default connect(mapStateToProps)(injectIntl(Styleguide))

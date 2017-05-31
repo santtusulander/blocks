@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -22,9 +22,10 @@ import IsAllowed from '../../../components/shared/permission-wrappers/is-allowed
 import MultilineTextFieldError from '../../../components/shared/form-elements/multiline-text-field-error'
 import Paginator from '../../../components/shared/paginator/paginator'
 
-import { formatUnixTimestamp, checkForErrors, getSortData, getPage } from '../../../util/helpers'
+import { unixTimestampToDate, checkForErrors, getSortData, getPage } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
+import { DATE_FORMATS } from '../../../constants/date-formats'
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 import { PAGE_SIZE, MAX_PAGINATION_ITEMS } from '../../../constants/content-item-sort-options'
 
@@ -234,7 +235,7 @@ class AccountManagementAccountGroups extends Component {
               <tr key={i}>
                 <td>{group.get('name')}</td>
                 <ArrayTd items={userEmails.size ? userEmails.toArray() : [this.props.intl.formatMessage({id: 'portal.account.groups.table.noMembers.text'})]} />
-                <td>{formatUnixTimestamp(group.get('created'))}</td>
+                <td><FormattedDate value={unixTimestampToDate(group.get('created'))} format={DATE_FORMATS.FULL_DATE}/></td>
                 <IsAllowed to={MODIFY_GROUP}>
                   <td className="nowrap-column">
                       <ActionButtons
