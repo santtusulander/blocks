@@ -167,7 +167,7 @@
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
   "portal.common.search.no-results.text": "No results found.",
   "portal.common.current": "Current",
-  "portal.common.andMore": "{firstItem} and {count} more",
+  "portal.common.andMore": "and {count} more",
   "portal.common.typeahead.asnLookup.label": "Autonomous System Number (ASN)",
   "portal.common.typeahead.asnLookup.placeholder": "Enter ASN or company name",
 
@@ -275,6 +275,7 @@
 
   "portal.asterisk": "*",
   "portal.plus": "+",
+  "portal.plusWithCount": "+{count}",
   "portal.question": "?",
   "portal.percentage": "%",
   "portal.colon": ":",

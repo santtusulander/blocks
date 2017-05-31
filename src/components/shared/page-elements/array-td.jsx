@@ -11,6 +11,8 @@ const ArrayTd = (props) => {
   const maxItemsShown = props.maxItemsShown || 3
   const shownItems = props.items.slice(0,maxItemsShown).join(', ')
   const hiddenItems = props.items.slice(maxItemsShown)
+  const moreLink = props.customText ? props.customText : <FormattedMessage id='portal.plusWithCount' values={{count: hiddenItems.length}}/>
+
   return (
     <td className={classNames}>
       {shownItems}
@@ -24,7 +26,7 @@ const ArrayTd = (props) => {
             </Tooltip>
           }>
           <a className="array-td-more-link">
-            <FormattedMessage id='portal.plus' />{hiddenItems.length}
+            {moreLink}
           </a>
         </OverlayTrigger>
       : null}
@@ -32,8 +34,10 @@ const ArrayTd = (props) => {
   )
 }
 ArrayTd.displayName = 'ArrayTd'
+
 ArrayTd.propTypes = {
   className: React.PropTypes.string,
+  customText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   items: React.PropTypes.array,
   maxItemsShown: React.PropTypes.number
 };
