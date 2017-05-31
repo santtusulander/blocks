@@ -63,10 +63,5 @@
   "portal.storage.summaryPage.itemProperties.url.label": "Published URLs",
   "portal.storage.summaryPage.itemProperties.copyLink.label": "Copy Link",
   "portal.storage.summaryPage.itemProperties.copyToClipboard.successful.label": "URL Copied to the clipboard.",
-  "portal.storage.summaryPage.itemProperties.copyToClipboard.failed.label": "Copying URL to clipboard failed.",
-
-  "portal.storage.topBar.storage.label": "Back to Groups",
-  "portal.storage.topBar.group.label": "Back to Accounts",
-  "portal.storage.topBar.account.label": "UDN Mgmt",
-  "portal.storage.topBar.brand.label": "UDN Mgmt"
+  "portal.storage.summaryPage.itemProperties.copyToClipboard.failed.label": "Copying URL to clipboard failed."
 }
