@@ -1,16 +1,25 @@
 .configuration-advanced {
   .section-header-container {
+
+    h3 {
+      min-width: 500px;
+      text-transform: none;
+    }
+
     .section-header-layout {
       justify-content: flex-start;
-
-      .section-header-addon.before {
-        margin-top: 7px;
-        margin-right: 10px;
-      }
     }
+  }
+
+  .section-container {
+    max-width: 900px;
   }
 
   .input-group textarea {
     min-height: 50rem;
+  }
+
+  .config-area {
+    padding-bottom: 10px;
   }
 }

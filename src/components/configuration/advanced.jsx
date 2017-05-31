@@ -2,14 +2,13 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { Row, Col, FormGroup } from 'react-bootstrap'
 import { Map, is } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm, formValueSelector, Field, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../shared/form-fields/field-form-group'
-import FieldFormGroupCheckbox from '../shared/form-fields/field-form-group-checkbox'
+import FieldFormGroupToggle from '../shared/form-fields/field-form-group-toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../shared/layout/section-header'
 import SectionContainer from '../shared/layout/section-container'
@@ -166,10 +165,10 @@ class ConfigurationAdvanced extends React.Component {
         {/* Override Request Policies */}
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.requestPolicies.label"/>}
-          addonBefore={
+          addonAfter={
             <Field
               name={FIELD_USE_REQUEST}
-              component={FieldFormGroupCheckbox}
+              component={FieldFormGroupToggle}
               disabled={advancedTabReadOnly}
             />
           }
@@ -177,27 +176,23 @@ class ConfigurationAdvanced extends React.Component {
 
         {isRequestEnabled &&
           <SectionContainer className="request-config">
-            <Row>
-              <FormGroup>
-                <Col xs={4}>
-                  <Field
-                    name={FIELD_REQUEST}
-                    type="textarea"
-                    placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
-                    component={FieldFormGroup}
-                    disabled={!isRequestEnabled || advancedTabReadOnly}
-                  />
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    onClick={() => this.restoreConfig(FIELD_REQUEST)}
-                    bsStyle="primary"
-                    disabled={invalid || submitting || (!isRequestEnabled) || advancedTabReadOnly}>
-                    <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
-                  </Button>
-                </Col>
-              </FormGroup>
-            </Row>
+            <div className="config-area">
+              <Field
+                name={FIELD_REQUEST}
+                type="textarea"
+                placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
+                component={FieldFormGroup}
+                disabled={!isRequestEnabled || advancedTabReadOnly}
+              />
+
+              <Button
+                className="pull-right"
+                onClick={() => this.restoreConfig(FIELD_REQUEST)}
+                bsStyle="primary"
+                disabled={invalid || submitting || (!isRequestEnabled) || advancedTabReadOnly}>
+                <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
+              </Button>
+            </div>
           </SectionContainer>
         }
         <hr />
@@ -205,10 +200,10 @@ class ConfigurationAdvanced extends React.Component {
         {/* Override Response Policies */}
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.responsePolicies.label"/>}
-          addonBefore={
+          addonAfter={
             <Field
               name={FIELD_USE_RESPONSE}
-              component={FieldFormGroupCheckbox}
+              component={FieldFormGroupToggle}
               disabled={advancedTabReadOnly}
             />
           }
@@ -216,27 +211,23 @@ class ConfigurationAdvanced extends React.Component {
 
         {isResponseEnabled &&
           <SectionContainer className="response-config">
-            <Row>
-              <FormGroup>
-                <Col xs={4}>
-                  <Field
-                    name={FIELD_RESPONSE}
-                    type="textarea"
-                    placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
-                    component={FieldFormGroup}
-                    disabled={!isResponseEnabled || advancedTabReadOnly}
-                  />
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    onClick={() => this.restoreConfig(FIELD_RESPONSE)}
-                    bsStyle="primary"
-                    disabled={invalid || submitting || (!isResponseEnabled) || advancedTabReadOnly}>
-                    <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
-                  </Button>
-                </Col>
-              </FormGroup>
-            </Row>
+            <div className="config-area">
+              <Field
+                name={FIELD_RESPONSE}
+                type="textarea"
+                placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
+                component={FieldFormGroup}
+                disabled={!isResponseEnabled || advancedTabReadOnly}
+              />
+
+              <Button
+                onClick={() => this.restoreConfig(FIELD_RESPONSE)}
+                bsStyle="primary"
+                className="pull-right"
+                disabled={invalid || submitting || (!isResponseEnabled) || advancedTabReadOnly}>
+                <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
+              </Button>
+            </div>
           </SectionContainer>
         }
         <hr />
@@ -244,10 +235,10 @@ class ConfigurationAdvanced extends React.Component {
         {/* Override Final Request Policies */}
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.finalRequestPolicies.label"/>}
-          addonBefore={
+          addonAfter={
             <Field
               name={FIELD_USE_FINAL_REQUEST}
-              component={FieldFormGroupCheckbox}
+              component={FieldFormGroupToggle}
               disabled={advancedTabReadOnly}
             />
           }
@@ -255,27 +246,23 @@ class ConfigurationAdvanced extends React.Component {
 
         {isFinalRequestEnabled &&
           <SectionContainer className="final-request-config">
-            <Row>
-              <FormGroup>
-                <Col xs={4}>
-                  <Field
-                    name={FIELD_FINAL_REQUEST}
-                    type="textarea"
-                    placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
-                    component={FieldFormGroup}
-                    disabled={!isFinalRequestEnabled || advancedTabReadOnly}
-                  />
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    onClick={() => this.restoreConfig(FIELD_FINAL_REQUEST)}
-                    bsStyle="primary"
-                    disabled={invalid || submitting || (!isFinalRequestEnabled) || advancedTabReadOnly}>
-                    <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
-                  </Button>
-                </Col>
-              </FormGroup>
-            </Row>
+            <div className="config-area">
+              <Field
+                name={FIELD_FINAL_REQUEST}
+                type="textarea"
+                placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
+                component={FieldFormGroup}
+                disabled={!isFinalRequestEnabled || advancedTabReadOnly}
+              />
+
+              <Button
+                onClick={() => this.restoreConfig(FIELD_FINAL_REQUEST)}
+                bsStyle="primary"
+                className="pull-right"
+                disabled={invalid || submitting || (!isFinalRequestEnabled) || advancedTabReadOnly}>
+                <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
+              </Button>
+            </div>
           </SectionContainer>
         }
         <hr />
@@ -283,10 +270,10 @@ class ConfigurationAdvanced extends React.Component {
         {/* Override Final Response Policies */}
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.configuration.advanced.finalResponsePolicies.label"/>}
-          addonBefore={
+          addonAfter={
             <Field
               name={FIELD_USE_FINAL_RESPONSE}
-              component={FieldFormGroupCheckbox}
+              component={FieldFormGroupToggle}
               disabled={advancedTabReadOnly}
             />
           }
@@ -294,27 +281,23 @@ class ConfigurationAdvanced extends React.Component {
 
         {isFinalResponseEnabled &&
           <SectionContainer className="final-response-config">
-            <Row>
-              <FormGroup>
-                <Col xs={4}>
-                  <Field
-                    name={FIELD_FINAL_RESPONSE}
-                    type="textarea"
-                    placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
-                    component={FieldFormGroup}
-                    disabled={!isFinalResponseEnabled || advancedTabReadOnly}
-                  />
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    onClick={() => this.restoreConfig(FIELD_FINAL_RESPONSE)}
-                    bsStyle="primary"
-                    disabled={invalid || submitting || (!isFinalResponseEnabled) || advancedTabReadOnly}>
-                    <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
-                  </Button>
-                </Col>
-              </FormGroup>
-            </Row>
+            <div className="config-area">
+              <Field
+                name={FIELD_FINAL_RESPONSE}
+                type="textarea"
+                placeholder={intl.formatMessage({id: 'portal.configuration.advanced.text.placeholder'})}
+                component={FieldFormGroup}
+                disabled={!isFinalResponseEnabled || advancedTabReadOnly}
+              />
+
+              <Button
+                onClick={() => this.restoreConfig(FIELD_FINAL_RESPONSE)}
+                bsStyle="primary"
+                className="pull-right"
+                disabled={invalid || submitting || (!isFinalResponseEnabled) || advancedTabReadOnly}>
+                <FormattedMessage id="portal.configuration.advanced.restore.button.label"/>
+              </Button>
+            </div>
           </SectionContainer>
         }
         <hr />
